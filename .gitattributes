@@ -1,0 +1,46 @@
+# Auto-detect text files and normalize line endings
+* text=auto
+
+# Force text files to use LF in repository
+*.cs     text diff=csharp
+*.shader text
+*.txt    text
+*.json   text
+*.xml    text
+*.asmdef text
+
+# Treat Unity YAML files as text for proper merging
+*.unity  text merge=unityyamlmerge eol=lf
+*.prefab text merge=unityyamlmerge eol=lf
+*.mat    text merge=unityyamlmerge eol=lf
+*.anim   text merge=unityyamlmerge eol=lf
+*.controller text merge=unityyamlmerge eol=lf
+*.asset  text merge=unityyamlmerge eol=lf
+*.mask   text merge=unityyamlmerge eol=lf
+*.meta   text merge=unityyamlmerge eol=lf
+
+# Binary files
+*.fbx    binary
+*.png    binary
+*.jpg    binary
+*.jpeg   binary
+*.tga    binary
+*.ico    binary
+*.mp3    binary
+*.wav    binary
+*.ogg    binary
+*.mp4    binary
+*.mov    binary
+*.ttf    binary
+*.otf    binary
+*.dll    binary
+*.so     binary
+*.dylib  binary
+*.exe    binary
+*.zip    binary
+*.7z     binary
+*.unitypackage binary
+
+# Ignore merge for lock and cache files
+[Ll]ibrary/** merge=ours
+[Tt]emp/**    merge=ours

@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 609213134ef6fd9458fdccdda973bd19, type: 3}
+  m_Name: Pickaxe
+  m_EditorClassIdentifier: Assembly-CSharp::ItemData
+  itemId: Flint_Pickaxe
+  itemName: Pickaxe
+  itemType: 3
+  itemIcon: {fileID: 5807921338739458136, guid: dee1d3e5103f0044c87c9a05124be77b, type: 3}
+  maxStackSize: 1
+  description: Just A flint pickaxe
+  itemHashId: 0
