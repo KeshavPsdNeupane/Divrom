@@ -11,6 +11,7 @@ using TMPro;
 /// - Handles UI refresh via ParentDisplay.RefreshSlot(...)
 /// </summary>
 [RequireComponent(typeof(CanvasGroup))]
+[RequireComponent(typeof(ItemSlotDoubleTap))]
 public class ItemSlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler
 {
     [Header("UI References")]
@@ -19,29 +20,45 @@ public class ItemSlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     [Header("Inventory Slot")]
     [SerializeField] private ItemSlot assignedInventorySlot;
+
+    [Header("Button Ref for Splitting")]
+    [SerializeField] private ItemSlotDoubleTap splitActionButtonAssignment;
+
     public ItemSlot AssignedInventorySlot => assignedInventorySlot;
 
-    [field: SerializeField] public InventoryDisplay ParentDisplay { get; private set; }
+    public InventoryDisplay ParentDisplay { get; private set; }
 
     private Canvas parentCanvas;
     private CanvasGroup canvasGroup;
 
     private void Awake()
     {
-        if (ParentDisplay == null)
-            ParentDisplay = GetComponentInParent<InventoryDisplay>();
+        if (this.ParentDisplay == null)
+            this.ParentDisplay = GetComponentInParent<InventoryDisplay>();
 
-        parentCanvas = GetComponentInParent<Canvas>();
-        canvasGroup = GetComponent<CanvasGroup>();
-        if (canvasGroup == null) canvasGroup = gameObject.AddComponent<CanvasGroup>();
-
+        this.parentCanvas = GetComponentInParent<Canvas>();
+        this.canvasGroup = GetComponent<CanvasGroup>();
+        if (this.canvasGroup == null) this.canvasGroup = this.gameObject.AddComponent<CanvasGroup>();
         // initial visuals
         UpdateUiSlot();
     }
 
+
+    private void OnEnable()
+    {
+        if (splitActionButtonAssignment != null)
+            splitActionButtonAssignment.onDoubleTapEvent += SplitItem;
+    }
+
+    private void OnDisable()
+    {
+        if (splitActionButtonAssignment != null)
+            splitActionButtonAssignment.onDoubleTapEvent -= SplitItem;
+    }
+
     public void Init(ItemSlot slot)
     {
-        assignedInventorySlot = slot;
+        this.assignedInventorySlot = slot;
         UpdateUiSlot(slot);
     }
 
@@ -49,9 +66,9 @@ public class ItemSlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     {
         if (slot != null && slot.ItemData != null && slot.ItemData.itemIcon != null)
         {
-            itemSprite.sprite = slot.ItemData.itemIcon;
-            itemSprite.color = Color.white;
-            itemCount.text = slot.StackCount > 1 ? slot.StackCount.ToString() : "";
+            this.itemSprite.sprite = slot.ItemData.itemIcon;
+            this.itemSprite.color = Color.white;
+            this.itemCount.text = slot.StackCount > 1 ? slot.StackCount.ToString() : "";
         }
         else
         {
@@ -61,24 +78,24 @@ public class ItemSlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     public void UpdateUiSlot()
     {
-        if (assignedInventorySlot != null)
-            UpdateUiSlot(assignedInventorySlot);
+        if (this.assignedInventorySlot != null)
+            UpdateUiSlot(this.assignedInventorySlot);
     }
 
     public void ClearSlot()
     {
-        itemSprite.sprite = null;
-        itemSprite.color = Color.clear;
-        itemCount.text = "";
+        this.itemSprite.sprite = null;
+        this.itemSprite.color = Color.clear;
+        this.itemCount.text = "";
     }
 
     #region Drag handlers
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if (assignedInventorySlot == null || assignedInventorySlot.ItemData == null) return;
+        if (this.assignedInventorySlot == null || this.assignedInventorySlot.ItemData == null) return;
 
         // create a copy of the slot so the manager can work with it safely
-        ItemSlot tempCopy = new ItemSlot(assignedInventorySlot.ItemData, assignedInventorySlot.StackCount);
+        ItemSlot tempCopy = new ItemSlot(this.assignedInventorySlot.ItemData, this.assignedInventorySlot.StackCount);
 
         // ensure DragDropManager exists in scene
         if (DragDropManager.Instance == null)
@@ -87,11 +104,11 @@ public class ItemSlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             go.AddComponent<DragDropManager>();
         }
 
-        DragDropManager.Instance.BeginDrag(tempCopy, this, parentCanvas, assignedInventorySlot.ItemData.itemIcon);
+        DragDropManager.Instance.BeginDrag(tempCopy, this, this.parentCanvas, this.assignedInventorySlot.ItemData.itemIcon);
 
         // optional: visually hide the original while dragging (makes it obvious)
-        canvasGroup.alpha = 0.5f;
-        canvasGroup.blocksRaycasts = false; // so raycasts pass to drop targets
+        this.canvasGroup.alpha = 0.5f;
+        this.canvasGroup.blocksRaycasts = false; // so raycasts pass to drop targets
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -103,15 +120,15 @@ public class ItemSlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     public void OnEndDrag(PointerEventData eventData)
     {
         // if nothing was dropped, just reset
-        canvasGroup.alpha = 1f;
-        canvasGroup.blocksRaycasts = true;
+        this.canvasGroup.alpha = 1f;
+        this.canvasGroup.blocksRaycasts = true;
 
         // EndDrag always clears manager state to avoid stale references
         if (DragDropManager.Instance != null)
             DragDropManager.Instance.EndDrag();
 
         // Refresh this slot UI (in case it changed)
-        ParentDisplay?.RefreshSlot(assignedInventorySlot);
+        this.ParentDisplay?.RefreshSlot(assignedInventorySlot);
     }
     #endregion
 
@@ -120,18 +137,17 @@ public class ItemSlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     {
         // Get the manager and dragged slot
         var mgr = DragDropManager.Instance;
-        if (mgr == null || mgr.DraggedSlot == null || mgr.SourceSlotUI == null) return;
+        if (mgr == null || mgr.CopyOfDraggedSourceItemSlot == null || mgr.SourceSlotUI == null) return;
 
-        ItemSlot draggedSlot = mgr.DraggedSlot;         // what’s being dragged
-        ItemSlotUI sourceUISlot = mgr.SourceSlotUI;     // where it came from
-        ItemSlot targetSlot = this.assignedInventorySlot; // where it’s being dropped
+        ItemSlot draggedSlot = mgr.CopyOfDraggedSourceItemSlot;   
+        ItemSlotUI sourceUISlot = mgr.SourceSlotUI;    
+        ItemSlot targetSlot = this.assignedInventorySlot;
 
 
         // If source and target are same UI, nothing to do
         if (sourceUISlot == this)
         {
-            // no-op, but still ensure UI resets
-            ParentDisplay?.RefreshSlot(assignedInventorySlot);
+            this.ParentDisplay?.RefreshSlot(assignedInventorySlot);
             return;
         }
 
@@ -154,15 +170,16 @@ public class ItemSlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         // CASE 2: Same item type -> try to merge stacks
         if (targetSlot.ItemData == draggedSlot.ItemData)
         {
-            int availableSpace = targetSlot.ItemData.maxStackSize - targetSlot.StackCount;
-            if (availableSpace >= draggedSlot.StackCount)
+           // int availableSpace = targetSlot.ItemData.maxStackSize - targetSlot.StackCount;
+            bool IsEnoughtSpaceAvailable = targetSlot.EnoughRoomLeftInTheStack(draggedSlot.StackCount, out int availableSpace);
+            if (/*availableSpace >= draggedSlot.StackCount*/ IsEnoughtSpaceAvailable)
             {
                 // can put all dragged into target
                 targetSlot.AddToStack(draggedSlot.StackCount);
                 sourceUISlot.assignedInventorySlot.ClearSlot();
 
                 sourceUISlot.ParentDisplay?.RefreshSlot(sourceUISlot.assignedInventorySlot);
-                ParentDisplay?.RefreshSlot(targetSlot);
+                this.ParentDisplay?.RefreshSlot(targetSlot);
 
                 mgr.EndDrag();
                 return;
@@ -183,7 +200,7 @@ public class ItemSlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             {
                 // target full - nothing changes
                 sourceUISlot.ParentDisplay?.RefreshSlot(sourceUISlot.assignedInventorySlot);
-                ParentDisplay?.RefreshSlot(targetSlot);
+               this.ParentDisplay?.RefreshSlot(targetSlot);
                 mgr.EndDrag();
                 return;
             }
@@ -195,13 +212,43 @@ public class ItemSlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         ItemSlot targetCopy = new ItemSlot(targetSlot.ItemData, targetSlot.StackCount);
 
         // perform swap
-        sourceUISlot.assignedInventorySlot.SetInventorySlot(targetCopy.ItemData, targetCopy.StackCount);
-        targetSlot.SetInventorySlot(sourceCopy.ItemData, sourceCopy.StackCount);
+        sourceUISlot.assignedInventorySlot.SetInventorySlot(targetCopy);
+        targetSlot.SetInventorySlot(sourceCopy);
 
         sourceUISlot.ParentDisplay?.RefreshSlot(sourceUISlot.assignedInventorySlot);
-        ParentDisplay?.RefreshSlot(targetSlot);
-
+        this.ParentDisplay?.RefreshSlot(targetSlot);
         mgr.EndDrag();
     }
     #endregion
+
+
+    #region SplitItemStack
+    public void SplitItem()
+    {
+        if (this.assignedInventorySlot == null || this.assignedInventorySlot.ItemData == null)
+            return;
+
+        int count = this.assignedInventorySlot.StackCount;
+        if (count <= 1)
+            return;
+
+        var inventory = this.ParentDisplay?.PrimaryInventorySystem;
+        bool hasFreeSlot = inventory.HasFreeSlot(out ItemSlot freeSlot);
+
+        if (!hasFreeSlot) return;
+
+        bool canSplit = this.assignedInventorySlot.SplitStack(out ItemSlot halfStack);
+        
+        if (!canSplit || halfStack == null) return;
+
+        freeSlot.SetInventorySlot(halfStack);
+
+        this.ParentDisplay?.RefreshSlot(assignedInventorySlot);
+        this.ParentDisplay?.RefreshSlot(freeSlot);
+    }
+
+    #endregion
+
+
+
 }

@@ -30,10 +30,15 @@ public class ItemSlot
         this.stackCount = amount;
     }
 
+    public void SetInventorySlot(ItemSlot slot)
+    {
+        SetInventorySlot(slot.ItemData, slot.stackCount);
+    }
+
     public void ClearSlot()
     {
         this.itemData = null;
-        this.stackCount = -1;
+        this.stackCount = 0;
     }
 
     public void AssignItem(ItemSlot invSlot)
@@ -49,7 +54,7 @@ public class ItemSlot
     }
     public void AddToStack(int amount)
     {
-        stackCount += amount; //todo - need to add above func here 
+        stackCount += amount;
     }
 
 

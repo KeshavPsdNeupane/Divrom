@@ -3,36 +3,32 @@
   "WorkspaceRootPath": "E:\\GameDevelopment\\Unity\\projects\\example\\Divrom\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{0D348395-041F-06A8-7DA2-8AE41FAF558D}|Assembly-CSharp.csproj|e:\\gamedevelopment\\unity\\projects\\example\\divrom\\assets\\scripts\\managers\\dragdropmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{0D348395-041F-06A8-7DA2-8AE41FAF558D}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\managers\\dragdropmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{0D348395-041F-06A8-7DA2-8AE41FAF558D}|Assembly-CSharp.csproj|e:\\gamedevelopment\\unity\\projects\\example\\divrom\\assets\\scripts\\ui\\inventory\\itemslotui.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0D348395-041F-06A8-7DA2-8AE41FAF558D}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\ui\\inventory\\itemslotui.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{0D348395-041F-06A8-7DA2-8AE41FAF558D}|Assembly-CSharp.csproj|E:\\GameDevelopment\\Unity\\projects\\example\\Divrom\\Assets\\Scripts\\Inventory\\InventoryHolder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{0D348395-041F-06A8-7DA2-8AE41FAF558D}|Assembly-CSharp.csproj|solutionrelative:Assets\\Scripts\\Inventory\\InventoryHolder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{0D348395-041F-06A8-7DA2-8AE41FAF558D}|Assembly-CSharp.csproj|e:\\gamedevelopment\\unity\\projects\\example\\divrom\\assets\\scripts\\inventory\\slot\\itemslot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0D348395-041F-06A8-7DA2-8AE41FAF558D}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\inventory\\slot\\itemslot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{0D348395-041F-06A8-7DA2-8AE41FAF558D}|Assembly-CSharp.csproj|e:\\gamedevelopment\\unity\\projects\\example\\divrom\\assets\\scripts\\inventory\\inventorysystem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{0D348395-041F-06A8-7DA2-8AE41FAF558D}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\inventory\\inventorysystem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{0D348395-041F-06A8-7DA2-8AE41FAF558D}|Assembly-CSharp.csproj|E:\\GameDevelopment\\Unity\\projects\\example\\Divrom\\assets\\scripts\\ui\\inventory\\playerinventorydisplay.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{0D348395-041F-06A8-7DA2-8AE41FAF558D}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\ui\\inventory\\playerinventorydisplay.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{0D348395-041F-06A8-7DA2-8AE41FAF558D}|Assembly-CSharp.csproj|E:\\GameDevelopment\\Unity\\projects\\example\\Divrom\\assets\\scripts\\item\\itempickup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{0D348395-041F-06A8-7DA2-8AE41FAF558D}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\item\\itempickup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{0D348395-041F-06A8-7DA2-8AE41FAF558D}|Assembly-CSharp.csproj|e:\\gamedevelopment\\unity\\projects\\example\\divrom\\assets\\scripts\\item\\itemslotdoubletap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0D348395-041F-06A8-7DA2-8AE41FAF558D}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\item\\itemslotdoubletap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{0D348395-041F-06A8-7DA2-8AE41FAF558D}|Assembly-CSharp.csproj|E:\\GameDevelopment\\Unity\\projects\\example\\Divrom\\assets\\scripts\\ui\\inventory\\inventorydisplay.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{0D348395-041F-06A8-7DA2-8AE41FAF558D}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\ui\\inventory\\inventorydisplay.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{0D348395-041F-06A8-7DA2-8AE41FAF558D}|Assembly-CSharp.csproj|E:\\GameDevelopment\\Unity\\projects\\example\\Divrom\\assets\\scripts\\item\\playeritemcollector.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{0D348395-041F-06A8-7DA2-8AE41FAF558D}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\item\\playeritemcollector.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{0D348395-041F-06A8-7DA2-8AE41FAF558D}|Assembly-CSharp.csproj|E:\\GameDevelopment\\Unity\\projects\\example\\Divrom\\assets\\scripts\\item\\itempickup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0D348395-041F-06A8-7DA2-8AE41FAF558D}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\item\\itempickup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{0D348395-041F-06A8-7DA2-8AE41FAF558D}|Assembly-CSharp.csproj|E:\\GameDevelopment\\Unity\\projects\\example\\Divrom\\assets\\scripts\\item\\itemdata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{0D348395-041F-06A8-7DA2-8AE41FAF558D}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\item\\itemdata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{0D348395-041F-06A8-7DA2-8AE41FAF558D}|Assembly-CSharp.csproj|E:\\GameDevelopment\\Unity\\projects\\example\\Divrom\\assets\\scripts\\managers\\dragdropmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0D348395-041F-06A8-7DA2-8AE41FAF558D}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\managers\\dragdropmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -42,94 +38,8 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 5,
           "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "DragDropManager.cs",
-              "DocumentMoniker": "E:\\GameDevelopment\\Unity\\projects\\example\\Divrom\\Assets\\Scripts\\Managers\\DragDropManager.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\Managers\\DragDropManager.cs",
-              "ToolTip": "E:\\GameDevelopment\\Unity\\projects\\example\\Divrom\\Assets\\Scripts\\Managers\\DragDropManager.cs",
-              "RelativeToolTip": "Assets\\Scripts\\Managers\\DragDropManager.cs",
-              "ViewState": "AgIAAC8AAAAAAAAAAAD4v0EAAAAUAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-10T09:49:06.306Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "ItemData.cs",
-              "DocumentMoniker": "E:\\GameDevelopment\\Unity\\projects\\example\\Divrom\\Assets\\Scripts\\Item\\ItemData.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\Item\\ItemData.cs",
-              "ToolTip": "E:\\GameDevelopment\\Unity\\projects\\example\\Divrom\\Assets\\Scripts\\Item\\ItemData.cs",
-              "RelativeToolTip": "Assets\\Scripts\\Item\\ItemData.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-10T08:39:30.176Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "PlayerItemCollector.cs",
-              "DocumentMoniker": "E:\\GameDevelopment\\Unity\\projects\\example\\Divrom\\Assets\\Scripts\\Item\\PlayerItemCollector.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\Item\\PlayerItemCollector.cs",
-              "ToolTip": "E:\\GameDevelopment\\Unity\\projects\\example\\Divrom\\Assets\\Scripts\\Item\\PlayerItemCollector.cs",
-              "RelativeToolTip": "Assets\\Scripts\\Item\\PlayerItemCollector.cs",
-              "ViewState": "AgIAABIAAAAAAAAAAAAiwC0AAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-10T08:12:52.487Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "InventoryDisplay.cs",
-              "DocumentMoniker": "E:\\GameDevelopment\\Unity\\projects\\example\\Divrom\\Assets\\Scripts\\Ui\\Inventory\\InventoryDisplay.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\Ui\\Inventory\\InventoryDisplay.cs",
-              "ToolTip": "E:\\GameDevelopment\\Unity\\projects\\example\\Divrom\\Assets\\Scripts\\Ui\\Inventory\\InventoryDisplay.cs",
-              "RelativeToolTip": "Assets\\Scripts\\Ui\\Inventory\\InventoryDisplay.cs",
-              "ViewState": "AgIAAAcAAAAAAAAAAAAwwB4AAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-10T08:13:22.498Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "ItemPickup.cs",
-              "DocumentMoniker": "E:\\GameDevelopment\\Unity\\projects\\example\\Divrom\\Assets\\Scripts\\Item\\ItemPickup.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\Item\\ItemPickup.cs",
-              "ToolTip": "E:\\GameDevelopment\\Unity\\projects\\example\\Divrom\\Assets\\Scripts\\Item\\ItemPickup.cs",
-              "RelativeToolTip": "Assets\\Scripts\\Item\\ItemPickup.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-10T07:17:56.705Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "PlayerInventoryDisplay.cs",
-              "DocumentMoniker": "E:\\GameDevelopment\\Unity\\projects\\example\\Divrom\\Assets\\Scripts\\Ui\\Inventory\\PlayerInventoryDisplay.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\Ui\\Inventory\\PlayerInventoryDisplay.cs",
-              "ToolTip": "E:\\GameDevelopment\\Unity\\projects\\example\\Divrom\\Assets\\Scripts\\Ui\\Inventory\\PlayerInventoryDisplay.cs",
-              "RelativeToolTip": "Assets\\Scripts\\Ui\\Inventory\\PlayerInventoryDisplay.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAAA2wB0AAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-10T06:01:51.748Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "InventoryHolder.cs",
-              "DocumentMoniker": "E:\\GameDevelopment\\Unity\\projects\\example\\Divrom\\Assets\\Scripts\\Inventory\\InventoryHolder.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\Inventory\\InventoryHolder.cs",
-              "ToolTip": "E:\\GameDevelopment\\Unity\\projects\\example\\Divrom\\Assets\\Scripts\\Inventory\\InventoryHolder.cs",
-              "RelativeToolTip": "Assets\\Scripts\\Inventory\\InventoryHolder.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-10T05:24:09.206Z",
-              "EditorCaption": ""
-            },
             {
               "$type": "Document",
               "DocumentIndex": 2,
@@ -138,10 +48,87 @@
               "RelativeDocumentMoniker": "Assets\\Scripts\\Inventory\\InventorySystem.cs",
               "ToolTip": "E:\\GameDevelopment\\Unity\\projects\\example\\Divrom\\Assets\\Scripts\\Inventory\\InventorySystem.cs",
               "RelativeToolTip": "Assets\\Scripts\\Inventory\\InventorySystem.cs",
-              "ViewState": "AgIAACIAAAAAAAAAAAAcwDwAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAACcAAAAAAAAAAAAYwDoAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-10T05:07:28.663Z",
+              "WhenOpened": "2025-10-12T01:56:48.974Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ItemSlot.cs",
+              "DocumentMoniker": "E:\\GameDevelopment\\Unity\\projects\\example\\Divrom\\Assets\\Scripts\\Inventory\\Slot\\ItemSlot.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Inventory\\Slot\\ItemSlot.cs",
+              "ToolTip": "E:\\GameDevelopment\\Unity\\projects\\example\\Divrom\\Assets\\Scripts\\Inventory\\Slot\\ItemSlot.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Inventory\\Slot\\ItemSlot.cs",
+              "ViewState": "AgIAADYAAAAAAAAAAAAIwAsAAAALAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-12T01:55:36.299Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ItemSlotDoubleTap.cs",
+              "DocumentMoniker": "E:\\GameDevelopment\\Unity\\projects\\example\\Divrom\\Assets\\Scripts\\Item\\ItemSlotDoubleTap.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Item\\ItemSlotDoubleTap.cs",
+              "ToolTip": "E:\\GameDevelopment\\Unity\\projects\\example\\Divrom\\Assets\\Scripts\\Item\\ItemSlotDoubleTap.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Item\\ItemSlotDoubleTap.cs",
+              "ViewState": "AgIAABsAAAAAAAAAAAAYwA0AAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-12T01:46:26.811Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "ItemPickup.cs",
+              "DocumentMoniker": "E:\\GameDevelopment\\Unity\\projects\\example\\Divrom\\Assets\\Scripts\\Item\\ItemPickup.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Item\\ItemPickup.cs",
+              "ToolTip": "E:\\GameDevelopment\\Unity\\projects\\example\\Divrom\\Assets\\Scripts\\Item\\ItemPickup.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Item\\ItemPickup.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAgwAIAAAAPAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-12T01:22:40.888Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "InventoryDisplay.cs",
+              "DocumentMoniker": "E:\\GameDevelopment\\Unity\\projects\\example\\Divrom\\Assets\\Scripts\\Ui\\Inventory\\InventoryDisplay.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Ui\\Inventory\\InventoryDisplay.cs",
+              "ToolTip": "E:\\GameDevelopment\\Unity\\projects\\example\\Divrom\\Assets\\Scripts\\Ui\\Inventory\\InventoryDisplay.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Ui\\Inventory\\InventoryDisplay.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAQwA8AAAAaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-12T01:20:17.572Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ItemSlotUI.cs",
+              "DocumentMoniker": "E:\\GameDevelopment\\Unity\\projects\\example\\Divrom\\Assets\\Scripts\\Ui\\Inventory\\ItemSlotUI.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Ui\\Inventory\\ItemSlotUI.cs",
+              "ToolTip": "E:\\GameDevelopment\\Unity\\projects\\example\\Divrom\\Assets\\Scripts\\Ui\\Inventory\\ItemSlotUI.cs*",
+              "RelativeToolTip": "Assets\\Scripts\\Ui\\Inventory\\ItemSlotUI.cs*",
+              "ViewState": "AgIAAMwAAAAAAAAAAAAmwNIAAAAxAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-11T00:36:13.749Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "DragDropManager.cs",
+              "DocumentMoniker": "E:\\GameDevelopment\\Unity\\projects\\example\\Divrom\\Assets\\Scripts\\Managers\\DragDropManager.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Managers\\DragDropManager.cs",
+              "ToolTip": "E:\\GameDevelopment\\Unity\\projects\\example\\Divrom\\Assets\\Scripts\\Managers\\DragDropManager.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Managers\\DragDropManager.cs",
+              "ViewState": "AgIAACYAAAAAAAAAAAA9wDoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-11T00:34:41.218Z"
             }
           ]
         }

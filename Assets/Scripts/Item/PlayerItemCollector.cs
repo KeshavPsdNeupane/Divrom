@@ -34,7 +34,6 @@ public class PlayerItemCollector : MonoBehaviour
 
         if (inventory.AddToInventory(itemPickup.ItemData, itemPickup.StackCount))
         {
-            Debug.Log($"Picked up {itemPickup.ItemData}x {itemPickup.ItemData.itemName}");
             Destroy(other.gameObject);
         }
         else

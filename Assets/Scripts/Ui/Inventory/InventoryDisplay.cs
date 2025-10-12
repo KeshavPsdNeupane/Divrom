@@ -27,4 +27,13 @@ public abstract class InventoryDisplay : MonoBehaviour
         UpdateSlot(slot);
     }
 
+
+    public void RefreshAllSlot()
+    {
+       foreach (var slot in this.slotDict.Keys)
+       {
+            UpdateSlot(slot);
+       }
+    }
+
 }

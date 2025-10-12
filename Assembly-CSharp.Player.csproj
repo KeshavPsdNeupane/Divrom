@@ -93,6 +93,7 @@
     <Compile Include="Assets\Scripts\Item\ItemData.cs" />
     <Compile Include="Assets\Input\InputManager.cs" />
     <Compile Include="Assets\Scripts\Utils\SerializableDictionary.cs" />
+    <Compile Include="Assets\Scripts\Item\ItemSlotDoubleTap.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

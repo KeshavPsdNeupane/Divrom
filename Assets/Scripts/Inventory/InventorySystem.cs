@@ -53,6 +53,6 @@ public class InventorySystem
     public bool HasFreeSlot(out ItemSlot freeSlot)
     {
         freeSlot = this.inventorySlots.FirstOrDefault(slot => slot.ItemData == null);
-        return !(freeSlot == null);
+        return !(freeSlot == null);  // Return true if a free slot is found
     }
 }

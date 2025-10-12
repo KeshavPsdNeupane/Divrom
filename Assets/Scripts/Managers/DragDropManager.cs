@@ -9,11 +9,7 @@ using System;
 public class DragDropManager : MonoBehaviour
 {
     public static DragDropManager Instance { get; private set; }
-
-    // The temporary dragged slot (a copy of the source slot content)
-    public ItemSlot DraggedSlot { get; private set; }
-
-    // The UI that originally provided the dragged slot
+    public ItemSlot CopyOfDraggedSourceItemSlot { get; private set; }
     public ItemSlotUI SourceSlotUI { get; private set; }
 
     private GameObject dragIcon;
@@ -26,14 +22,9 @@ public class DragDropManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(this.gameObject);
     }
-
-    /// <summary>
-    /// Begin dragging: store a copy of the item data and the source UI,
-    /// create a UI icon that follows the cursor.
-    /// </summary>
     public void BeginDrag(ItemSlot slotCopy, ItemSlotUI sourceUI, Canvas canvas, Sprite icon)
     {
-        this.DraggedSlot = slotCopy;
+        this.CopyOfDraggedSourceItemSlot = slotCopy;
         this.SourceSlotUI = sourceUI;
         this.parentCanvas = canvas;
 
@@ -45,34 +36,18 @@ public class DragDropManager : MonoBehaviour
         dragIconImage.sprite = icon;
         dragIconImage.preserveAspect = true;
     }
-
-    /// <summary>
-    /// Update drag icon position (call from OnDrag).
-    /// </summary>
     public void UpdateDragPosition(Vector2 screenPosition)
     {
         if (dragIcon != null)
             dragIcon.transform.position = screenPosition;
     }
 
-    /// <summary>
-    /// End dragging: remove icon and clear the dragged references.
-    /// </summary>
     public void EndDrag()
     {
         if (dragIcon != null) Destroy(dragIcon);
         dragIcon = null;
         dragIconImage = null;
-        DraggedSlot = null;
-        SourceSlotUI = null;
-    }
-
-    /// <summary>
-    /// Clean only the dragged references (keeps icon), used if you want to temporarily release references.
-    /// </summary>
-    public void ClearDragged()
-    {
-        DraggedSlot = null;
+        CopyOfDraggedSourceItemSlot = null;
         SourceSlotUI = null;
     }
 

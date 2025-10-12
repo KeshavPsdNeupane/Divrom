@@ -10153,7 +10153,7 @@ GameObject:
   - component: {fileID: 486882649}
   m_Layer: 0
   m_Name: CmCamera
-  m_TagString: Untagged
+  m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10229,7 +10229,7 @@ MonoBehaviour:
     CustomLookAtTarget: 0
   Lens:
     FieldOfView: 60
-    OrthographicSize: 4
+    OrthographicSize: 7
     NearClipPlane: 0.3
     FarClipPlane: 1000
     Dutch: 0
@@ -10394,11 +10394,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1355389577248215569, guid: 0203bd80da2ff4146ae95634b9d96dcc, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -7.44
+      value: -6.82
       objectReference: {fileID: 0}
     - target: {fileID: 1355389577248215569, guid: 0203bd80da2ff4146ae95634b9d96dcc, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.31
+      value: 4.13
       objectReference: {fileID: 0}
     - target: {fileID: 1355389577248215569, guid: 0203bd80da2ff4146ae95634b9d96dcc, type: 3}
       propertyPath: m_LocalPosition.z
@@ -10440,6 +10440,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Axe (6)
       objectReference: {fileID: 0}
+    - target: {fileID: 6168704208381868533, guid: 0203bd80da2ff4146ae95634b9d96dcc, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -5825250732961213246, guid: 2106a81af818b1c47a06aa97fa242c77, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -10597,6 +10601,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PickAxe (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 6168704208381868533, guid: 0203bd80da2ff4146ae95634b9d96dcc, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 5807921338739458136, guid: dee1d3e5103f0044c87c9a05124be77b, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -10749,11 +10757,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1355389577248215569, guid: 0203bd80da2ff4146ae95634b9d96dcc, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -8.22
+      value: -7.48
       objectReference: {fileID: 0}
     - target: {fileID: 1355389577248215569, guid: 0203bd80da2ff4146ae95634b9d96dcc, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.1
+      value: 2.14
       objectReference: {fileID: 0}
     - target: {fileID: 1355389577248215569, guid: 0203bd80da2ff4146ae95634b9d96dcc, type: 3}
       propertyPath: m_LocalPosition.z
@@ -10795,6 +10803,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Axe (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 6168704208381868533, guid: 0203bd80da2ff4146ae95634b9d96dcc, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -5825250732961213246, guid: 2106a81af818b1c47a06aa97fa242c77, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -10902,6 +10914,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Axe
       objectReference: {fileID: 0}
+    - target: {fileID: 6168704208381868533, guid: 0203bd80da2ff4146ae95634b9d96dcc, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -5825250732961213246, guid: 2106a81af818b1c47a06aa97fa242c77, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -11732,6 +11748,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Axe (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 6168704208381868533, guid: 0203bd80da2ff4146ae95634b9d96dcc, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -5825250732961213246, guid: 2106a81af818b1c47a06aa97fa242c77, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -11974,6 +11994,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PickAxe
       objectReference: {fileID: 0}
+    - target: {fileID: 6168704208381868533, guid: 0203bd80da2ff4146ae95634b9d96dcc, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 5807921338739458136, guid: dee1d3e5103f0044c87c9a05124be77b, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -12285,7 +12309,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 4
+  orthographic size: 7
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -12388,6 +12412,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Axe (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 6168704208381868533, guid: 0203bd80da2ff4146ae95634b9d96dcc, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -5825250732961213246, guid: 2106a81af818b1c47a06aa97fa242c77, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -12449,6 +12477,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Axe (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 6168704208381868533, guid: 0203bd80da2ff4146ae95634b9d96dcc, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -5825250732961213246, guid: 2106a81af818b1c47a06aa97fa242c77, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -13759,6 +13791,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PickAxe (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 6168704208381868533, guid: 0203bd80da2ff4146ae95634b9d96dcc, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 5807921338739458136, guid: dee1d3e5103f0044c87c9a05124be77b, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -14988,7 +15024,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 309.54144, y: 1.0054932}
+  m_AnchoredPosition: {x: 345, y: -15}
   m_SizeDelta: {x: -700.6854, y: -170.2611}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1987017556
@@ -15561,6 +15597,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Axe (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 6168704208381868533, guid: 0203bd80da2ff4146ae95634b9d96dcc, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -5825250732961213246, guid: 2106a81af818b1c47a06aa97fa242c77, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
