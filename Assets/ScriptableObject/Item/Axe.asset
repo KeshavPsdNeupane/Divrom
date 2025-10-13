@@ -16,6 +16,6 @@ MonoBehaviour:
   itemName: Axe
   itemType: 3
   itemIcon: {fileID: -5825250732961213246, guid: 2106a81af818b1c47a06aa97fa242c77, type: 3}
-  maxStackSize: 4
+  maxStackSize: 1
   description: Just a flint axe
   itemHashId: 0

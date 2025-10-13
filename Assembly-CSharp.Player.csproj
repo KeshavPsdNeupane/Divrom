@@ -65,10 +65,12 @@
     <Compile Include="Assets\Scripts\Actors\Enemy\TestEnemyComponent.cs" />
     <Compile Include="Assets\Scripts\Ui\Menu\MenuController.cs" />
     <Compile Include="Assets\Scripts\Item\PlayerItemCollector.cs" />
+    <Compile Include="Assets\Scripts\Stats\StatusEffect\StatusEffectCollector.cs" />
     <Compile Include="Assets\Scripts\Actors\Player\States\PlayerAttack.cs" />
     <Compile Include="Assets\Scripts\Ui\Menu\TabController.cs" />
     <Compile Include="Assets\Scripts\Inventory\Slot\ItemSlot.cs" />
     <Compile Include="Assets\Scripts\Ui\Inventory\ItemSlotUI.cs" />
+    <Compile Include="Assets\Scripts\Stats\StatusEffect\StatusEffect.cs" />
     <Compile Include="Assets\Scripts\Actors\Player\PlayerBaseState.cs" />
     <Compile Include="Assets\Scripts\Actors\Player\States\PlayerIdle.cs" />
     <Compile Include="Assets\Scripts\Component\Animation\AnimationVariableHashes.cs" />
@@ -76,13 +78,20 @@
     <Compile Include="Assets\Scripts\Ui\Inventory\PlayerInventoryDisplay.cs" />
     <Compile Include="Assets\Scripts\Actors\Player\States\PlayerMove.cs" />
     <Compile Include="Assets\Scripts\Actors\Player\PlayerStateController.cs" />
+    <Compile Include="Assets\Scripts\Utils\ItemSlotDoubleTap.cs" />
+    <Compile Include="Assets\Scripts\Stats\BaseStats\PerkAdditiveStat.cs" />
     <Compile Include="Assets\Scripts\Managers\DragDropManager.cs" />
+    <Compile Include="Assets\Scripts\Stats\BaseStats\CurrentStatsModifier.cs" />
+    <Compile Include="Assets\Scripts\Stats\CharacterStats\CharacterStatsGUI.cs" />
     <Compile Include="Assets\Scripts\Actors\Player\PlayerStateManager.cs" />
+    <Compile Include="Assets\Scripts\Stats\BaseStats\CurrentStat.cs" />
+    <Compile Include="Assets\Scripts\Stats\CharacterStats\CharacterStats.cs" />
     <Compile Include="Assets\Scripts\Component\Animation\AnimationComponent.cs" />
     <Compile Include="Assets\Game\CoreScript\SelectionBase.cs" />
     <Compile Include="Assets\Scripts\Utils\HashUtility.cs" />
     <Compile Include="Assets\Scripts\Ui\Inventory\InventoryDisplay.cs" />
     <Compile Include="Assets\Scripts\Actors\Player\PlayerStates.cs" />
+    <Compile Include="Assets\Scripts\Utils\Timer.cs" />
     <Compile Include="Assets\Scripts\Inventory\InventorySystem.cs" />
     <Compile Include="Assets\Scripts\Item\ItemDatabaseSO.cs" />
     <Compile Include="Assets\Scripts\Component\Movement\MovementComponent.cs" />
@@ -91,9 +100,11 @@
     <Compile Include="Assets\Scripts\Actors\Enemy\ChasePlayer.cs" />
     <Compile Include="Assets\Scripts\Inventory\InventoryHolder.cs" />
     <Compile Include="Assets\Scripts\Item\ItemData.cs" />
-    <Compile Include="Assets\Input\InputManager.cs" />
+    <Compile Include="Assets\Game\Input\InputManager.cs" />
     <Compile Include="Assets\Scripts\Utils\SerializableDictionary.cs" />
-    <Compile Include="Assets\Scripts\Item\ItemSlotDoubleTap.cs" />
+    <Compile Include="Assets\Scripts\Stats\CharacterStats\CharacterStatsSO.cs" />
+    <Compile Include="Assets\Scripts\Stats\StatusEffect\StatusEffectContainer.cs" />
+    <Compile Include="Assets\Scripts\Stats\BaseStats\LevelingStat.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
