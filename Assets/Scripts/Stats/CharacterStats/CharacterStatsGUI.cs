@@ -40,7 +40,7 @@ public class CharacterStatsGUI : MonoBehaviour
 
         foreach (CharacterStatType type in Enum.GetValues(typeof(CharacterStatType)))
         {
-            int value = characterStats.GetStatValue(type);
+            float value = characterStats.GetStatValue(type);
             GUI.Label(new Rect(startX + 2 * padding, yOffset, panelWidth - 3 * padding, lineHeight), $"{type}: {value}", labelStyle);
             yOffset += lineHeight;
         }
@@ -51,7 +51,7 @@ public class CharacterStatsGUI : MonoBehaviour
 
         foreach (CharacterResistanceType type in Enum.GetValues(typeof(CharacterResistanceType)))
         {
-            int value = characterStats.GetResistanceValue(type);
+            float value = characterStats.GetResistanceValue(type);
             GUI.Label(new Rect(startX + 2 * padding, yOffset, panelWidth - 3 * padding, lineHeight), $"{type}: {value}", labelStyle);
             yOffset += lineHeight;
         }

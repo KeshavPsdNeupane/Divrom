@@ -8,7 +8,7 @@ public class StatusEffect
     [SerializeField] public string source;
     [SerializeField] public string effectName;
     [SerializeField] public CharacterStatType statType; 
-    [SerializeField] public int modifierAmount;
+    [SerializeField] public float modifierAmount;
     [SerializeField] public float totalDuration;
     [SerializeField] public bool isPercentage;
     [SerializeField] public bool isDebuffFromArmor;

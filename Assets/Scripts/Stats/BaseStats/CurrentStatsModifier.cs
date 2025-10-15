@@ -12,7 +12,7 @@ public class CurrentStatModifier
     public bool IsDebuff => this.statusEffect.isDebuff;
     public string EffectName => this.statusEffect.effectName;
     public string Source => this.statusEffect.source;
-    public int ModifierAmount => this.statusEffect.modifierAmount;
+    public float ModifierAmount => this.statusEffect.modifierAmount;
     public bool IsPercentage => this.statusEffect.isPercentage;
     public bool IsDebuffFromArmor => this.statusEffect.isDebuffFromArmor;
     public bool IsDebuffFromEnemy => this.statusEffect.isDebuffFromEnemy;

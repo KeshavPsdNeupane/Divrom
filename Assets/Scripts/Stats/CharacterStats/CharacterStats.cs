@@ -76,7 +76,7 @@ public class CharacterStats : MonoBehaviour
     }
 
 
-    public int GetStatValue(CharacterStatType type)
+    public float GetStatValue(CharacterStatType type)
     {
         if (this.currentestats.TryGetValue(type, out CurrentStat stat))
             return stat.GetValue();
@@ -84,7 +84,7 @@ public class CharacterStats : MonoBehaviour
         return 0;
     }
 
-    public int GetResistanceValue(CharacterResistanceType type)
+    public float GetResistanceValue(CharacterResistanceType type)
     {
         if (this.resistanceStats.TryGetValue(type, out CurrentStat stat))
             return stat.GetValue();

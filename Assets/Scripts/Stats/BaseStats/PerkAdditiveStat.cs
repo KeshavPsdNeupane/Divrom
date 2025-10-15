@@ -6,9 +6,9 @@ using System;
 public struct PerkStatData
 {
     public string perkName;
-    public int perkStatModifier;
+    public float perkStatModifier;
     public bool isPercentage;
-    public PerkStatData(string statName, int modifier,bool isPercentage)
+    public PerkStatData(string statName, float modifier,bool isPercentage)
     {
         this.perkName = statName;
         this.perkStatModifier = modifier;
@@ -23,12 +23,12 @@ public class PerkAdditiveStat
     [SerializeField] public LevelingStat levelingStat { get; private set; }
     [SerializeField, HideInInspector] private List<PerkStatData> modifiers;
 
-    private int cachedValue;
+    private float cachedValue;
     private bool isDirty = true;
 
     public Action OnDirtyEventAction { get; set; }
 
-    public PerkAdditiveStat(int baseLevelStat)
+    public PerkAdditiveStat(float baseLevelStat)
     {
       this.  levelingStat = new LevelingStat(baseLevelStat);
         this.modifiers = new List<PerkStatData>();
@@ -55,16 +55,16 @@ public class PerkAdditiveStat
         MarkDirty();
     }
 
-    public int GetValue()
+    public float GetValue()
     {
         if (!this.isDirty) return this.cachedValue;
 
-        int baseValue = levelingStat.GetValue();
-        int value = levelingStat.GetValue();
+        float baseValue = levelingStat.GetValue();
+        float value = levelingStat.GetValue();
         foreach (var m in modifiers)
         {
             if (m.isPercentage)
-                value += (int)(baseValue * (m.perkStatModifier * 0.01));
+                value += (baseValue * (m.perkStatModifier * 0.01f));
             else
                 value += m.perkStatModifier;
         }

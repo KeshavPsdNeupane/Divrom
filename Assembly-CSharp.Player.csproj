@@ -76,6 +76,7 @@
     <Compile Include="Assets\Scripts\Component\Animation\AnimationVariableHashes.cs" />
     <Compile Include="Assets\Scripts\Managers\DatabaseManager.cs" />
     <Compile Include="Assets\Scripts\Ui\Inventory\PlayerInventoryDisplay.cs" />
+    <Compile Include="Assets\Scripts\Ui\Inventory\SimpleItemUIDragAndDropInteractionHelperClass.cs" />
     <Compile Include="Assets\Scripts\Actors\Player\States\PlayerMove.cs" />
     <Compile Include="Assets\Scripts\Actors\Player\PlayerStateController.cs" />
     <Compile Include="Assets\Scripts\Utils\ItemSlotDoubleTap.cs" />

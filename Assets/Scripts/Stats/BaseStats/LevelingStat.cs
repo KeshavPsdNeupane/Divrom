@@ -6,25 +6,25 @@ using UnityEngine;
 [System.Serializable]
 public class BaseLevelingIncreasingStatSaveData
 {
-    public int baseValue;
+    public float baseValue;
 }
 
 
 public class LevelingStat
 {
-    [SerializeField] private int baseValue;
-    private int cachedValue;
+    [SerializeField] private float baseValue;
+    private float cachedValue;
     private bool isDirty = true;
 
     public Action OnDirtyEventAction { get; set; }
 
-    public LevelingStat(int baseValue)
+    public LevelingStat(float baseValue)
     {
         this.baseValue = baseValue;
         this.cachedValue = baseValue;
     }
 
-    public int GetValue()
+    public float GetValue()
     {
         if (!isDirty) return cachedValue;
         this.cachedValue = baseValue;
@@ -32,7 +32,7 @@ public class LevelingStat
         return cachedValue;
     }
 
-    public void LevelUp(int increaseAmount)
+    public void LevelUp(float increaseAmount)
     {
         this.baseValue += increaseAmount;
         MarkDirty();

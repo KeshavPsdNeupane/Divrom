@@ -10,7 +10,7 @@ public class CurrentStat
     [SerializeField] public PerkAdditiveStat perkAdditiveAndLevelingStat { get; set; }
     [SerializeField, HideInInspector] private List<CurrentStatModifier> modifiers = new List<CurrentStatModifier>();
 
-    private int cachedValue;
+    private float cachedValue;
     private bool isDirty = true;
 
     public CurrentStat(int baseLevelStat)
@@ -88,7 +88,11 @@ public class CurrentStat
     private bool AddToList(StatusEffect effect)
     {
         // Prevent duplicate permanent modifiers from same source
-        bool alreadyApplied = modifiers.Exists(m => m.Source == effect.source && m.ModifierAmount == effect.modifierAmount);
+        bool alreadyApplied = modifiers.Exists(
+            m => m.Source == effect.source &&
+            m.ModifierAmount == effect.modifierAmount &&
+            m.IsPercentage == effect.isPercentage);
+
         if (alreadyApplied)
             return false;
 
@@ -139,16 +143,16 @@ public class CurrentStat
         this.isDirty = true;
     }
 
-    public int GetValue()
+    public float GetValue()
     {
         if (!this.isDirty) return this.cachedValue;
 
-        int baseValue = this.perkAdditiveAndLevelingStat.GetValue();
-        int value = this.perkAdditiveAndLevelingStat.GetValue();
+        float baseValue = this.perkAdditiveAndLevelingStat.GetValue();
+        float value = this.perkAdditiveAndLevelingStat.GetValue();
         foreach (var m in this.modifiers)
         {
             if (m.IsPercentage)
-                value += (int)(baseValue * (m.ModifierAmount * 0.01));
+                value += (baseValue * (m.ModifierAmount * 0.01f));
             else
                 value += m.ModifierAmount;
         }
