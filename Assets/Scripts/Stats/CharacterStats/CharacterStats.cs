@@ -22,7 +22,7 @@ public class CharacterStats : MonoBehaviour
 {
     [SerializeField, HideInInspector] public SerializableDictionary<CharacterStatType, CurrentStat> currentestats;
     [SerializeField, HideInInspector] public SerializableDictionary<CharacterResistanceType, CurrentStat> resistanceStats;
-    [SerializeField,HideInInspector] public SerializableDictionary<CharacterStatType, int> levelIncreasingStatWithLevelingValue;
+    [SerializeField,HideInInspector] public SerializableDictionary<CharacterStatType, float> levelIncreasingStatWithLevelingValue;
 
     [SerializeField] private CharacterStatsSO characterStateSO;
 
@@ -31,7 +31,7 @@ public class CharacterStats : MonoBehaviour
         // Initialize if null
         this.currentestats ??= new SerializableDictionary<CharacterStatType, CurrentStat>();
         this.resistanceStats ??= new SerializableDictionary<CharacterResistanceType, CurrentStat>();
-        this.levelIncreasingStatWithLevelingValue ??= new SerializableDictionary<CharacterStatType, int>();
+        this.levelIncreasingStatWithLevelingValue ??= new SerializableDictionary<CharacterStatType, float>();
 
         OnFirstWorldLoad();
     }
@@ -41,7 +41,7 @@ public class CharacterStats : MonoBehaviour
 
         if (this.currentestats != null) {
             foreach (var stat in currentestats.Values)
-                stat.OnEnable();
+                stat?.OnEnable();
         }
 
         if(this.resistanceStats != null) {
@@ -55,7 +55,7 @@ public class CharacterStats : MonoBehaviour
         if (this.currentestats != null)
         {
             foreach (var stat in currentestats.Values)
-                stat.OnDisable();
+                stat?.OnDisable();
         }
 
         if (this.resistanceStats != null)
@@ -70,9 +70,9 @@ public class CharacterStats : MonoBehaviour
     private void Update()
     {
         foreach (var stat in currentestats.Values)
-            stat.Update();
+            stat?.Update();
         foreach (var res in resistanceStats.Values)
-            res.Update();
+            res?.Update();
     }
 
 
@@ -127,8 +127,6 @@ public class CharacterStats : MonoBehaviour
         var levelingStats =this. characterStateSO.GetLevelingStatsWithoutZero();
         foreach (var kvp in levelingStats)
             this.levelIncreasingStatWithLevelingValue[kvp.Key] = kvp.Value;
-
-        this.characterStateSO = null;
     }
 
 

@@ -16,6 +16,6 @@ MonoBehaviour:
   itemName: Meat
   itemType: 0
   itemIcon: {fileID: 8984754096541894249, guid: 9718bf947a923fa4ea6f495817a0d015, type: 3}
-  maxStackSize: 32
+  maxStackSize: 4
   description: 'Meat '
   itemHashId: 0

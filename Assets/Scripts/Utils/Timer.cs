@@ -50,22 +50,14 @@ public abstract class Timer
 
 public class CountdownTimer : Timer
 {
-    bool isPermanent = false;
-    public CountdownTimer(float coolDownTime) : base(coolDownTime) {
-        if(coolDownTime <= 0)
-          this.isPermanent = true;
-    }
-
+    public CountdownTimer(float coolDownTime) : base(coolDownTime) {}
     public override void Tick(float deltaTime)
     {
-        if (isPermanent) return;
-
         if (IsRunning && Time > 0)
             Time -= deltaTime;
         if (IsRunning && Time <= 0)
             Stop();
     }
-
     public bool IsFinished => Time <= 0;
 
     public void Reset() => Time = initialTime;

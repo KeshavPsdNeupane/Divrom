@@ -14,10 +14,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CharacterStatsSO
   Basestats:
     keys: 00000000010000000200000003000000040000000500000006000000
-    values: 640000000a0000000f0000000c000000040000000500000064000000
+    values:
+    - 100
+    - 10
+    - 15
+    - 12
+    - 5
+    - 5
+    - 100
   resistanceStats:
     keys: 000000000100000002000000
-    values: 050000000300000000000000
+    values:
+    - 5
+    - 3
+    - 0
   levelIncreasingStatWithLevelingValue:
     keys: 00000000010000000200000003000000040000000500000006000000
-    values: 0a000000010000000200000000000000000000000000000000000000
+    values:
+    - 10
+    - 1
+    - 2
+    - 0
+    - 0
+    - 0
+    - 0

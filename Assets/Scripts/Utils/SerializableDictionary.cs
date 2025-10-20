@@ -26,11 +26,15 @@ public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IS
     public void OnAfterDeserialize()
     {
         this.Clear();
-
         if (keys.Count != values.Count)
-            throw new System.Exception(string.Format("there are {0} keys and {1} values after deserialization. Make sure that both key and value types are serializable."));
-
+        {
+            Debug.LogWarning($"SerializableDictionary<{typeof(TKey)}, {typeof(TValue)}> mismatch: {keys.Count} keys, {values.Count} values. Clearing...");
+            keys = new List<TKey>();
+            values = new List<TValue>();
+            return;
+        }
         for (int i = 0; i < keys.Count; i++)
             this.Add(keys[i], values[i]);
     }
+
 }

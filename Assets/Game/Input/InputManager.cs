@@ -6,7 +6,8 @@ public enum InputActionType
 {
     Player,
     UI,
-    Global
+    Menu,
+    Inventory,
 }
 
 public class InputManager : MonoBehaviour
@@ -30,14 +31,12 @@ public class InputManager : MonoBehaviour
                 this.actionMaps[type] = map;
         }
 
-        DisableAllExcept(InputActionType.Global);
-        EnableActionType(InputActionType.Global);
-        EnableActionType(InputActionType.Player);
+        DisableAllExcept(InputActionType.Player);
     }
 
     public void SwitchActionMap(InputActionType actionType)
     {
-        DisableAllExcept(InputActionType.Global);
+        DisableAll();
         EnableActionType(actionType);
     }
 
@@ -57,7 +56,15 @@ public class InputManager : MonoBehaviour
         return map;
     }
 
-    private void DisableAllExcept(InputActionType exception = InputActionType.Global)
+
+    private void DisableAll()
+    {
+        foreach (var kvp in this.actionMaps)
+        {
+            kvp.Value.Disable();
+        }
+    }
+    private void DisableAllExcept(InputActionType exception)
     {
         foreach (var kvp in this.actionMaps)
         {

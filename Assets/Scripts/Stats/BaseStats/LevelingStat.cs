@@ -44,7 +44,10 @@ public class LevelingStat
         this.OnDirtyEventAction?.Invoke();
     }
 
-    // Save & Load
+
+
+
+
     public BaseLevelingIncreasingStatSaveData GetSaveData() => new BaseLevelingIncreasingStatSaveData { baseValue = baseValue };
     public void LoadFromData(BaseLevelingIncreasingStatSaveData data) { baseValue = data.baseValue; MarkDirty(); }
 }

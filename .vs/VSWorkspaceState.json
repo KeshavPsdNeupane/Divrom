@@ -6,9 +6,11 @@
     "\\Assets\\Scripts\\Inventory",
     "\\Assets\\Scripts\\Inventory\\Slot",
     "\\Assets\\Scripts\\Item",
+    "\\Assets\\Scripts\\Stats",
+    "\\Assets\\Scripts\\Stats\\CharacterStats",
     "\\Assets\\Scripts\\Ui",
     "\\Assets\\Scripts\\Ui\\Inventory"
   ],
-  "SelectedNode": "\\Assets\\Scripts\\Ui\\Inventory\\InventoryDisplay.cs",
+  "SelectedNode": "\\Assets\\Scripts\\Stats\\CharacterStats\\CharacterStats.cs",
   "PreviewInSolutionExplorer": false
 }

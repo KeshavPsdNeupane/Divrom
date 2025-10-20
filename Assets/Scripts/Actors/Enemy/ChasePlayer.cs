@@ -6,6 +6,7 @@ public class ChasePlayer : MonoBehaviour
     [Header("References")]
     [SerializeField] private CircleCollider2D chaseRadius;
     [SerializeField] private MovementComponent movementComponent;
+    [SerializeField] private float chaseRadiusValue = 3f;
 
     [Header("Chase Settings")]
     [Tooltip("How smoothly the enemy turns toward the player. Lower = slower turn.")]
@@ -16,13 +17,14 @@ public class ChasePlayer : MonoBehaviour
 
     private void Awake()
     {
-        if (chaseRadius == null)
-            chaseRadius = GetComponent<CircleCollider2D>();
+        if (this.chaseRadius == null)
+            this.chaseRadius = GetComponent<CircleCollider2D>();
 
-        if (movementComponent == null)
-            movementComponent = GetComponent<MovementComponent>();
+        if (this.movementComponent == null)
+            this.movementComponent = GetComponent<MovementComponent>();
 
-        chaseRadius.isTrigger = true;
+        this.chaseRadius.isTrigger = true;
+        this.chaseRadius.radius = chaseRadiusValue;
     }
 
     private void Update()
@@ -45,7 +47,6 @@ public class ChasePlayer : MonoBehaviour
     {
         if (collision.CompareTag("Player") && playerTransform == null)
         {
-            Debug.Log("Player entered chase radius");
             playerTransform = collision.transform;
         }
     }
@@ -54,7 +55,6 @@ public class ChasePlayer : MonoBehaviour
     {
         if (collision.CompareTag("Player") && playerTransform != null)
         {
-            Debug.Log("Player exited chase radius");
             playerTransform = null;
             movementComponent.direction = Vector2.zero;
         }
@@ -63,7 +63,7 @@ public class ChasePlayer : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
-        float radius = chaseRadius != null ? chaseRadius.radius : 1f;
-        Gizmos.DrawWireSphere(transform.position, radius);
+        float radius = chaseRadius != null ? this.chaseRadius.radius : 1f;
+        Gizmos.DrawWireSphere(this.transform.position, radius);
     }
 }

@@ -13,7 +13,7 @@ public class CurrentStat
     private float cachedValue;
     private bool isDirty = true;
 
-    public CurrentStat(int baseLevelStat)
+    public CurrentStat(float baseLevelStat)
     {
         this.perkAdditiveAndLevelingStat = new PerkAdditiveStat(baseLevelStat);
     }
@@ -37,9 +37,8 @@ public class CurrentStat
     {
         foreach (var mod in modifiers)
         {
-            mod.durationCountDownTimer.Tick();
+            mod.durationCountDownTimer?.Tick();
         }
-
         for (int i = modifiers.Count - 1; i >= 0; i--)
         {
             var mod = modifiers[i];
@@ -55,39 +54,33 @@ public class CurrentStat
        
         if (!effect.isDebuff)
         {
-            // Positive buffs just get added
             return AddToList(effect);
         }
-        // Determine debuff type
+
         bool isEnemy = effect.isDebuffFromEnemy;
         bool isArmor = effect.isDebuffFromArmor;
         bool isEnv = !isEnemy && !isArmor;
 
-
-        // Handle stacking rules.
-        // enemy debuffs and environmental debuffs can exist together, but not multiple of same type
-        // only one enemy or environment debuff can exist at a time, higher priority replaces lower priority
         if (isEnemy || isEnv)
         {  
             var existing = modifiers.Find(m => m.IsDebuff &&
                                                ((isEnemy && m.IsDebuffFromEnemy) ||
-                                                (isEnv && !m.IsDebuffFromEnemy && !m.IsDebuffFromArmor)));
+                                               (isEnv && !m.IsDebuffFromEnemy && !m.IsDebuffFromArmor)));
             if (existing != null)
             {
                 if (effect.debuffPriority >= existing.DebuffPriority)
                     RemoveModifier(existing);
                 else
-                    return false; // Lower priority, do not add
+                    return false; 
             }
         }
-        // Armor debuffs are always additive, no conflicts, just add
       return  AddToList(effect);
         
     }
 
     private bool AddToList(StatusEffect effect)
     {
-        // Prevent duplicate permanent modifiers from same source
+        // Prevent  duplicate permanent buff modifiers from same source
         bool alreadyApplied = modifiers.Exists(
             m => m.Source == effect.source &&
             m.ModifierAmount == effect.modifierAmount &&
@@ -97,25 +90,23 @@ public class CurrentStat
             return false;
 
         var mod = new CurrentStatModifier(effect);
-        if (mod.durationCountDownTimer == null)
-            mod.InitializeTimer();
 
         // Subscribe to timer stop if temporary
         if (mod.Duration > 0)
+        {
+            mod.InitializeTimer();
             mod.durationCountDownTimer.OnTimerStop += () => CanRemoveModifier(mod);
-
-        mod.StartTimer();
-        modifiers.Add(mod);
-        isDirty = true;
+            mod.StartTimer();
+        }
+        this.modifiers.Add(mod);
+        this.isDirty = true;
         return true;
     }
-
 
     private void CanRemoveModifier(CurrentStatModifier csm)
     {
         csm.canRemove = true;
     }
-
 
     public void RemoveModifier(CurrentStatModifier csm)
     {
@@ -128,6 +119,7 @@ public class CurrentStat
         this.modifiers.RemoveAll(m => m.Source == sourceName);
         this.isDirty = true;
     }
+
     public void RemoveAllModifiers()
     {
         this.modifiers.Clear();
@@ -148,7 +140,7 @@ public class CurrentStat
         if (!this.isDirty) return this.cachedValue;
 
         float baseValue = this.perkAdditiveAndLevelingStat.GetValue();
-        float value = this.perkAdditiveAndLevelingStat.GetValue();
+        float value = baseValue;
         foreach (var m in this.modifiers)
         {
             if (m.IsPercentage)

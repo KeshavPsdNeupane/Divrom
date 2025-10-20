@@ -6,8 +6,7 @@ public class CurrentStatModifier
     [HideInInspector] public bool canRemove = false;
     [HideInInspector] public CountdownTimer durationCountDownTimer;
 
-    [SerializeField] public StatusEffect statusEffect;
-
+    [SerializeField] private StatusEffect statusEffect;
 
     public bool IsDebuff => this.statusEffect.isDebuff;
     public string EffectName => this.statusEffect.effectName;
@@ -25,7 +24,6 @@ public class CurrentStatModifier
     public CurrentStatModifier(StatusEffect effect)
     {
         this.statusEffect = effect;
-        InitializeTimer();
     }
 
     public void InitializeTimer()
@@ -40,7 +38,6 @@ public class CurrentStatModifier
 
     public void StartTimer()
     {
-        if (this.durationCountDownTimer != null)
-            this.durationCountDownTimer.Start();
-    }   
+        this.durationCountDownTimer?.Start();
+    }
 }

@@ -16,8 +16,7 @@ public class MenuController : MonoBehaviour
         if (ctx.performed)
         {
             this.menuPanel.SetActive(!this.menuPanel.activeSelf);
-            this.inputManager.SwitchActionMap(this.menuPanel.activeSelf ? InputActionType.UI : InputActionType.Player);
+            this.inputManager.SwitchActionMap(this.menuPanel.activeSelf ? InputActionType.Menu : InputActionType.Player);
         }
     }
-
 }

@@ -60,7 +60,7 @@ public class PerkAdditiveStat
         if (!this.isDirty) return this.cachedValue;
 
         float baseValue = levelingStat.GetValue();
-        float value = levelingStat.GetValue();
+        float value = baseValue;
         foreach (var m in modifiers)
         {
             if (m.isPercentage)
@@ -68,7 +68,6 @@ public class PerkAdditiveStat
             else
                 value += m.perkStatModifier;
         }
-
         this.cachedValue = value;
         this.isDirty = false;
         return value;

@@ -4,51 +4,54 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "CharacterStateSO", menuName = "Scriptable Character/CharacterStateSO")]
 public class CharacterStatsSO : ScriptableObject
 {
-  [SerializeField]  public SerializableDictionary<CharacterStatType, int> Basestats = new SerializableDictionary<CharacterStatType, int>();
+  [SerializeField]  public SerializableDictionary<CharacterStatType, float> Basestats =
+        new SerializableDictionary<CharacterStatType, float>();
 
-    [SerializeField] public SerializableDictionary<CharacterResistanceType, int> resistanceStats = new SerializableDictionary<CharacterResistanceType, int>();
+    [SerializeField] public SerializableDictionary<CharacterResistanceType, float> resistanceStats = 
+        new SerializableDictionary<CharacterResistanceType, float >();
 
-    [SerializeField] public SerializableDictionary<CharacterStatType, int> levelIncreasingStatWithLevelingValue = new SerializableDictionary<CharacterStatType, int>();
+    [SerializeField] public SerializableDictionary<CharacterStatType, float> levelIncreasingStatWithLevelingValue = 
+        new SerializableDictionary<CharacterStatType, float>();
 
     private void OnEnable()
     {
-        if (Basestats.Count == 0)
+        if (this.Basestats.Count == 0)
         {
-            Basestats.Add(CharacterStatType.Health, 100);
-            Basestats.Add(CharacterStatType.Defense, 10);
-            Basestats.Add(CharacterStatType.Attack, 15);
-            Basestats.Add(CharacterStatType.MagicAttack, 12);
-            Basestats.Add(CharacterStatType.MovementSpeed, 5);
-            Basestats.Add(CharacterStatType.CriticalRate, 5);
-            Basestats.Add(CharacterStatType.CriticalDamage, 100);
+          this. Basestats?.Add(CharacterStatType.Health, 100f);
+            this.Basestats?.Add(CharacterStatType.Defense, 10f);
+            this.Basestats?.Add(CharacterStatType.Attack, 15f);
+            this.Basestats?.Add(CharacterStatType.MagicAttack, 12f);
+            this.Basestats?.Add(CharacterStatType.MovementSpeed, 5f);
+            this.Basestats?.Add(CharacterStatType.CriticalRate, 5f);
+            this.Basestats?.Add(CharacterStatType.CriticalDamage, 100f);
         }
 
         if (resistanceStats.Count == 0)
         {
-            resistanceStats.Add(CharacterResistanceType.Physical, 5);
-            resistanceStats.Add(CharacterResistanceType.Magical, 3);
-            resistanceStats.Add(CharacterResistanceType.Poison, 0);
+            this.resistanceStats?.Add(CharacterResistanceType.Physical, 5f);
+            this.resistanceStats?.Add(CharacterResistanceType.Magical, 3f);
+            this.resistanceStats?.Add(CharacterResistanceType.Poison, 0f);
         }
 
-        if (levelIncreasingStatWithLevelingValue.Count == 0)
+        if (this.levelIncreasingStatWithLevelingValue.Count == 0)
         {
-            levelIncreasingStatWithLevelingValue.Add(CharacterStatType.Health, 10);
-            levelIncreasingStatWithLevelingValue.Add(CharacterStatType.Defense, 1);
-            levelIncreasingStatWithLevelingValue.Add(CharacterStatType.Attack, 2);
-            levelIncreasingStatWithLevelingValue.Add(CharacterStatType.MagicAttack, 0);
-            levelIncreasingStatWithLevelingValue.Add(CharacterStatType.MovementSpeed, 0);
-            levelIncreasingStatWithLevelingValue.Add(CharacterStatType.CriticalRate, 0);
-            levelIncreasingStatWithLevelingValue.Add(CharacterStatType.CriticalDamage, 0);
+            this.levelIncreasingStatWithLevelingValue?.Add(CharacterStatType.Health, 10f);
+            this.levelIncreasingStatWithLevelingValue?.Add(CharacterStatType.Defense, 1f);
+            this.levelIncreasingStatWithLevelingValue?.Add(CharacterStatType.Attack, 2f);
+            this.levelIncreasingStatWithLevelingValue?.Add(CharacterStatType.MagicAttack, 0f);
+            this.levelIncreasingStatWithLevelingValue?.Add(CharacterStatType.MovementSpeed, 0f);
+            this.levelIncreasingStatWithLevelingValue?.Add(CharacterStatType.CriticalRate, 0f);
+            this.levelIncreasingStatWithLevelingValue?.Add(CharacterStatType.CriticalDamage, 0f);
         }
     }
 
-    public Dictionary<CharacterStatType, int> GetLevelingStatsWithoutZero()
+    public SerializableDictionary<CharacterStatType, float> GetLevelingStatsWithoutZero()
     {
-        var filtered = new Dictionary<CharacterStatType, int>();
-        foreach (var kvp in levelIncreasingStatWithLevelingValue)
+        var filtered = new SerializableDictionary<CharacterStatType, float>();
+        foreach (var kvp in this.levelIncreasingStatWithLevelingValue)
         {
-            if (kvp.Value != 0)
-                filtered.Add(kvp.Key, kvp.Value);
+            if (kvp.Value > 0f)
+                filtered?.Add(kvp.Key, kvp.Value);
         }
         return filtered;
     }
