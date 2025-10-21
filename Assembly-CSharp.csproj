@@ -625,14 +625,6 @@
       <HintPath>Library/PackageCache/com.unity.collections@d49facba0036/Unity.Collections.Tests/System.Runtime.CompilerServices.Unsafe/System.Runtime.CompilerServices.Unsafe.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Unity.Android.Types">
-      <HintPath>/home/keshav/Unity/Hub/Editor/6000.2.7f2/Editor/Data/PlaybackEngines/AndroidPlayer/Unity.Android.Types.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.Android.Gradle">
-      <HintPath>/home/keshav/Unity/Hub/Editor/6000.2.7f2/Editor/Data/PlaybackEngines/AndroidPlayer/Unity.Android.Gradle.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="netstandard">
       <HintPath>/home/keshav/Unity/Hub/Editor/6000.2.7f2/Editor/Data/NetStandard/ref/2.1.0/netstandard.dll</HintPath>
       <Private>False</Private>

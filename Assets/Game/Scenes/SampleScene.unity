@@ -8426,7 +8426,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &731899372
 Transform:
   m_ObjectHideFlags: 0
@@ -9387,7 +9387,7 @@ MonoBehaviour:
     source: Environment
     effectName: IncreasseHp
     statType: 0
-    modifierAmount: -50
+    modifierAmount: 50
     totalDuration: 10
     isPercentage: 0
     isDebuffFromArmor: 0
@@ -9494,7 +9494,7 @@ MonoBehaviour:
     source: Environment
     effectName: IncreasseHp
     statType: 0
-    modifierAmount: -50
+    modifierAmount: 50
     totalDuration: 10
     isPercentage: 0
     isDebuffFromArmor: 0
@@ -13018,7 +13018,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1543983337
 Transform:
   m_ObjectHideFlags: 0
@@ -15934,7 +15934,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2887829890570317727, guid: 99150169951534f41ab614ace9d49c8d, type: 3}
       propertyPath: CanShowState
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6049217348541250187, guid: 99150169951534f41ab614ace9d49c8d, type: 3}
       propertyPath: m_Name
