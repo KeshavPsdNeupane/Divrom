@@ -296,10 +296,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MovementComponent
   rb: {fileID: 3683206385522943912}
-  characterStats: {fileID: 7504979294679685710}
+  characterStats: {fileID: 6086364781477239200}
   direction: {x: 0, y: 0}
   lastDirection: {x: 0, y: 0}
   movementSpeedUseThisOnlyIfUDontWantToUseCharacterStat: 2
+  canCapMovementSpeed: 0
+  upperLimitMovementSpeed: 10
 --- !u!1 &5670956036724153890
 GameObject:
   m_ObjectHideFlags: 0
@@ -381,12 +383,12 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 3204804179256810908}
   - {fileID: 4338212243135174512}
   - {fileID: 5882105371156310893}
   - {fileID: 7003031078553305460}
   - {fileID: 1441866983085192948}
   - {fileID: 5766849970599657429}
-  - {fileID: 3204804179256810908}
   - {fileID: 6553322934377924266}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -520,8 +522,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3204804179256810908}
-  - component: {fileID: 7504979294679685710}
-  - component: {fileID: 2887829890570317727}
+  - component: {fileID: 6086364781477239200}
+  - component: {fileID: 5493181140607922475}
   m_Layer: 0
   m_Name: Stats
   m_TagString: Untagged
@@ -544,7 +546,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 7554677529560786835}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7504979294679685710
+--- !u!114 &6086364781477239200
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -553,10 +555,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 6839903290555184110}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0b53d8dbc74d1a949b032aa626209371, type: 3}
+  m_Script: {fileID: 11500000, guid: 7b704fae97497b629a70cd2df1251f15, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CharacterStats
-  currentestats:
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterStatsSystem
+  currentStats:
     keys: 
     values: []
   resistanceStats:
@@ -564,9 +566,9 @@ MonoBehaviour:
     values: []
   levelIncreasingStatWithLevelingValue:
     keys: 
-    values: 
-  characterStateSO: {fileID: 11400000, guid: e06becc107dbd2a41bc1b329d3a6b6b4, type: 2}
---- !u!114 &2887829890570317727
+    values: []
+  characterStateSo: {fileID: 11400000, guid: e06becc107dbd2a41bc1b329d3a6b6b4, type: 2}
+--- !u!114 &5493181140607922475
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -578,8 +580,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 646427d8cf8bcde43b703170e9c02f3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterStatsGUI
-  characterStats: {fileID: 7504979294679685710}
-  CanShowState: 1
+  characterStats: {fileID: 6086364781477239200}
+  canShowState: 1
   scale: 2
 --- !u!1 &9192595247981085754
 GameObject:
@@ -662,7 +664,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10ca6cbcd6ccab44ba17ff59bcf73a28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StatusEffectConnector
-  characterStats: {fileID: 7504979294679685710}
+  characterStats: {fileID: 6086364781477239200}
   effectArea: {fileID: 628610100222114359}
   StatusObjectTagName: StatusEffect
   radius: 0.75

@@ -7,8 +7,8 @@ public class CharacterStatsSO : ScriptableObject
   [SerializeField]  public SerializableDictionary<CharacterStatType, float> Basestats =
         new SerializableDictionary<CharacterStatType, float>();
 
-    [SerializeField] public SerializableDictionary<CharacterResistanceType, float> resistanceStats = 
-        new SerializableDictionary<CharacterResistanceType, float >();
+    [SerializeField] public SerializableDictionary<DamageType, float> resistanceStats = 
+        new SerializableDictionary<DamageType, float >();
 
     [SerializeField] public SerializableDictionary<CharacterStatType, float> levelIncreasingStatWithLevelingValue = 
         new SerializableDictionary<CharacterStatType, float>();
@@ -28,9 +28,9 @@ public class CharacterStatsSO : ScriptableObject
 
         if (resistanceStats.Count == 0)
         {
-            this.resistanceStats?.Add(CharacterResistanceType.Physical, 5f);
-            this.resistanceStats?.Add(CharacterResistanceType.Magical, 3f);
-            this.resistanceStats?.Add(CharacterResistanceType.Poison, 0f);
+            this.resistanceStats?.Add(DamageType.Physical, 5f);
+            this.resistanceStats?.Add(DamageType.Magical, 3f);
+            this.resistanceStats?.Add(DamageType.Poison, 0f);
         }
 
         if (this.levelIncreasingStatWithLevelingValue.Count == 0)

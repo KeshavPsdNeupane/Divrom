@@ -23,8 +23,8 @@ public class PerkAdditiveStat
     [SerializeField] public LevelingStat levelingStat { get; private set; }
     [SerializeField, HideInInspector] private List<PerkStatData> modifiers;
 
-    private float cachedValue;
     private bool isDirty = true;
+    private float cachedValue;
 
     public Action OnDirtyEventAction { get; set; }
 

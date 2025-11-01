@@ -3,15 +3,15 @@ using UnityEngine;
 
 public class CharacterStatsGUI : MonoBehaviour
 {
-    [SerializeField] private CharacterStats characterStats;
-    [SerializeField] public bool CanShowState = true;
-    [SerializeField][Range(0.5f, 3f)] private float scale = 2f; 
+    [SerializeField] private CharacterStatsSystem characterStats;
+    [SerializeField] public bool canShowState = true;
+    [SerializeField][Range(0.5f, 3f)] private float scale = 2f;
 
     private GUIStyle labelStyle;
 
     private void OnGUI()
     {
-        if (!CanShowState || characterStats == null)
+        if (!canShowState || characterStats == null)
             return;
 
         // Initialize style
@@ -49,7 +49,7 @@ public class CharacterStatsGUI : MonoBehaviour
         GUI.Label(new Rect(startX + padding, yOffset, panelWidth - 2 * padding, lineHeight), "Resistances:", labelStyle);
         yOffset += lineHeight;
 
-        foreach (CharacterResistanceType type in Enum.GetValues(typeof(CharacterResistanceType)))
+        foreach (DamageType type in Enum.GetValues(typeof(DamageType)))
         {
             float value = characterStats.GetResistanceValue(type);
             GUI.Label(new Rect(startX + 2 * padding, yOffset, panelWidth - 3 * padding, lineHeight), $"{type}: {value}", labelStyle);

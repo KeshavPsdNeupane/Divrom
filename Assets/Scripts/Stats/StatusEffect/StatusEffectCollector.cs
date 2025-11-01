@@ -4,7 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(CircleCollider2D))]
 public class StatusEffectConnector : MonoBehaviour
 {
-    [SerializeField] private CharacterStats characterStats;
+    [SerializeField] private CharacterStatsSystem characterStats;
     [SerializeField] private CircleCollider2D effectArea;
     [SerializeField] private string StatusObjectTagName = "StatusEffect";
     [SerializeField] private float radius = 2f;

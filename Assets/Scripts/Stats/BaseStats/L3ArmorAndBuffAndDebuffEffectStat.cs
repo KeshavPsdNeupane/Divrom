@@ -1,47 +1,36 @@
+using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
-
-
-[System.Serializable]
-public class CurrentStat
+public class L3ArmorAndBuffAndDeBuffEffectStat : IBaseStatProvider
 {
-    [SerializeField] public PerkAdditiveStat perkAdditiveAndLevelingStat { get; set; }
-    [SerializeField, HideInInspector] private List<CurrentStatModifier> modifiers = new List<CurrentStatModifier>();
+    private IBaseStatProvider baseStat;
+    [SerializeField, HideInInspector] private List<L3BuffDebuffArmorStatusModifier> modifiers = new();
 
-    private float cachedValue;
     private bool isDirty = true;
+    private float cachedValue;
 
-    public CurrentStat(float baseLevelStat)
-    {
-        this.perkAdditiveAndLevelingStat = new PerkAdditiveStat(baseLevelStat);
-    }
+    public void SetBase(IBaseStatProvider baseStat) => this.baseStat = baseStat;
 
-    public void OnEnable()
-    {
-        this.perkAdditiveAndLevelingStat.OnDirtyEventAction += DirtyFlag;
-        this.perkAdditiveAndLevelingStat.OnEnable();
-    }
+    public void MarkDirty() => this.isDirty = true;
 
-    public void OnDisable()
+    private void CanRemoveModifier(L3BuffDebuffArmorStatusModifier csm) => csm.canRemove = true;
+
+    public void RemoveModifier(L3BuffDebuffArmorStatusModifier csm)
     {
-        this.perkAdditiveAndLevelingStat.OnDirtyEventAction -= DirtyFlag;
-        this.perkAdditiveAndLevelingStat.OnDisable();
-    }
-    void DirtyFlag()
-    {
+        this.modifiers.Remove(csm);
         this.isDirty = true;
     }
+
     public void Update()
     {
-        foreach (var mod in modifiers)
+        foreach (var mod in this.modifiers)
         {
             mod.durationCountDownTimer?.Tick();
         }
-        for (int i = modifiers.Count - 1; i >= 0; i--)
+        for (int i = this.modifiers.Count - 1; i >= 0; i--)
         {
-            var mod = modifiers[i];
+            var mod = this.modifiers[i];
             if (mod.canRemove)
             {
                 RemoveModifier(mod);
@@ -49,9 +38,11 @@ public class CurrentStat
         }
 
     }
+
+
+
     public bool AddModifier(StatusEffect effect)
     {
-       
         if (!effect.isDebuff)
         {
             return AddToList(effect);
@@ -62,7 +53,7 @@ public class CurrentStat
         bool isEnv = !isEnemy && !isArmor;
 
         if (isEnemy || isEnv)
-        {  
+        {
             var existing = modifiers.Find(m => m.IsDebuff &&
                                                ((isEnemy && m.IsDebuffFromEnemy) ||
                                                (isEnv && !m.IsDebuffFromEnemy && !m.IsDebuffFromArmor)));
@@ -71,11 +62,11 @@ public class CurrentStat
                 if (effect.debuffPriority >= existing.DebuffPriority)
                     RemoveModifier(existing);
                 else
-                    return false; 
+                    return false;
             }
         }
-      return  AddToList(effect);
-        
+        return AddToList(effect);
+
     }
 
     private bool AddToList(StatusEffect effect)
@@ -89,7 +80,7 @@ public class CurrentStat
         if (alreadyApplied)
             return false;
 
-        var mod = new CurrentStatModifier(effect);
+        var mod = new L3BuffDebuffArmorStatusModifier(effect);
 
         // Subscribe to timer stop if temporary
         if (mod.Duration > 0)
@@ -103,16 +94,6 @@ public class CurrentStat
         return true;
     }
 
-    private void CanRemoveModifier(CurrentStatModifier csm)
-    {
-        csm.canRemove = true;
-    }
-
-    public void RemoveModifier(CurrentStatModifier csm)
-    {
-        this.modifiers.Remove(csm);
-        this.isDirty = true;
-    }
 
     public void RemoveAllModifiersFromSource(string sourceName)
     {
@@ -127,45 +108,23 @@ public class CurrentStat
     }
 
 
- 
-
-    public void ClearModifiers()
-    {
-        this.modifiers.Clear();
-        this.isDirty = true;
-    }
-
     public float GetValue()
     {
         if (!this.isDirty) return this.cachedValue;
 
-        float baseValue = this.perkAdditiveAndLevelingStat.GetValue();
+        float baseValue = this.baseStat?.GetValue() ?? 0f;
         float value = baseValue;
-        foreach (var m in this.modifiers)
+
+        foreach (var m in modifiers)
         {
             if (m.IsPercentage)
-                value += (baseValue * (m.ModifierAmount * 0.01f));
+                value += baseValue * (m.ModifierAmount * 0.01f);
             else
                 value += m.ModifierAmount;
         }
+
         this.cachedValue = value;
         this.isDirty = false;
         return value;
     }
-
-    public bool AddPerks(PerkStatData perkData)
-    {
-        if (perkData.perkStatModifier <= 0) return false;
-        this.perkAdditiveAndLevelingStat.AddModifier(perkData);
-        this.isDirty = true;
-        return true;
-    }
-
-
-    public void FacilateLevelup(int levelingStatAmount)
-    {
-        this.perkAdditiveAndLevelingStat.levelingStat.LevelUp(levelingStatAmount);
-    }
-
 }
-  

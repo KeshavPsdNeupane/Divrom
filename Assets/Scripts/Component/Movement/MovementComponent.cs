@@ -3,7 +3,7 @@ using UnityEngine;
 public class MovementComponent : MonoBehaviour
 {
     public Rigidbody2D rb;
-    [SerializeField] private CharacterStats characterStats;
+    [SerializeField] private CharacterStatsSystem characterStats;
     [HideInInspector] public Vector2 direction;
     [HideInInspector] public Vector2 lastDirection;
     [SerializeField]public float movementSpeedUseThisOnlyIfUDontWantToUseCharacterStat = 2.0f;

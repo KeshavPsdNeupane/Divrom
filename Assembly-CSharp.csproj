@@ -35,7 +35,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <UnityProjectGenerator>Package</UnityProjectGenerator>
-    <UnityProjectGeneratorVersion>2.0.23</UnityProjectGeneratorVersion>
+    <UnityProjectGeneratorVersion>2.0.25</UnityProjectGeneratorVersion>
     <UnityProjectGeneratorStyle>SDK</UnityProjectGeneratorStyle>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneLinux64:24</UnityBuildTarget>
@@ -59,19 +59,20 @@
     <Compile Include="Assets/Scripts/Stats/StatusEffect/StatusEffect.cs" />
     <Compile Include="Assets/Scripts/Actors/Player/PlayerBaseState.cs" />
     <Compile Include="Assets/Scripts/Actors/Player/States/PlayerIdle.cs" />
+    <Compile Include="Assets/Scripts/Stats/BaseStats/L3BuffDebuffArmorStatusModifier.cs" />
     <Compile Include="Assets/Scripts/Component/Animation/AnimationVariableHashes.cs" />
     <Compile Include="Assets/Scripts/Managers/DatabaseManager.cs" />
     <Compile Include="Assets/Scripts/Ui/Inventory/ItemSlot/SimpleItemUIDragAndDropInteractionHelperClass.cs" />
+    <Compile Include="Assets/Scripts/Stats/BaseStats/L2PerkStat.cs" />
+    <Compile Include="Assets/Scripts/Stats/BaseStats/Stat.cs" />
     <Compile Include="Assets/Scripts/Actors/Player/States/PlayerMove.cs" />
     <Compile Include="Assets/Scripts/Actors/Player/PlayerStateController.cs" />
     <Compile Include="Assets/Scripts/Utils/ItemSlotDoubleTap.cs" />
-    <Compile Include="Assets/Scripts/Stats/BaseStats/PerkAdditiveStat.cs" />
     <Compile Include="Assets/Scripts/Managers/DragDropManager.cs" />
-    <Compile Include="Assets/Scripts/Stats/BaseStats/CurrentStatsModifier.cs" />
     <Compile Include="Assets/Scripts/Stats/CharacterStats/CharacterStatsGUI.cs" />
     <Compile Include="Assets/Scripts/Actors/Player/PlayerStateManager.cs" />
-    <Compile Include="Assets/Scripts/Stats/BaseStats/CurrentStat.cs" />
-    <Compile Include="Assets/Scripts/Stats/CharacterStats/CharacterStats.cs" />
+    <Compile Include="Assets/Scripts/Stats/BaseStats/L3ArmorAndBuffAndDebuffEffectStat.cs" />
+    <Compile Include="Assets/Scripts/Stats/BaseStats/L1LevelingStat.cs" />
     <Compile Include="Assets/Scripts/Component/Animation/AnimationComponent.cs" />
     <Compile Include="Assets/Scripts/Ui/Inventory/ItemSlot/ItemSlotUI.cs" />
     <Compile Include="Assets/Game/CoreScript/SelectionBase.cs" />
@@ -86,14 +87,15 @@
     <Compile Include="Assets/Scripts/Ui/Inventory/InventoryDisplays/InventoryDisplay.cs" />
     <Compile Include="Assets/Scripts/Item/ItemPickup.cs" />
     <Compile Include="Assets/Scripts/Actors/Enemy/ChasePlayer.cs" />
+    <Compile Include="Assets/Scripts/Stats/BaseStats/IBaseStatProvider.cs" />
     <Compile Include="Assets/Scripts/Inventory/InventoryHolder.cs" />
     <Compile Include="Assets/Scripts/Item/ItemData.cs" />
     <Compile Include="Assets/Game/Input/InputManager.cs" />
     <Compile Include="Assets/Scripts/Ui/InventoryPanelController.cs" />
+    <Compile Include="Assets/Scripts/Stats/CharacterStats/CharacterStatsSystem.cs" />
     <Compile Include="Assets/Scripts/Utils/SerializableDictionary.cs" />
     <Compile Include="Assets/Scripts/Stats/CharacterStats/CharacterStatsSO.cs" />
     <Compile Include="Assets/Scripts/Stats/StatusEffect/StatusEffectContainer.cs" />
-    <Compile Include="Assets/Scripts/Stats/BaseStats/LevelingStat.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets/TextMesh Pro/Shaders/TMPro.cginc" />
@@ -1243,6 +1245,10 @@
     </Reference>
     <Reference Include="Unity.SysrootPackage.Editor">
       <HintPath>Library/ScriptAssemblies/Unity.SysrootPackage.Editor.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.Rider.Editor">
+      <HintPath>Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.2D.Aseprite.Editor">

@@ -1,27 +1,11 @@
 using System;
 using UnityEngine;
 
-public enum CharacterStatType
-{
-    Health,
-    Defense,
-    Attack,
-    MagicAttack,
-    MovementSpeed,
-    CriticalRate,
-    CriticalDamage,
-}
-public enum CharacterResistanceType
-{
-    Physical,
-    Magical,
-    Poison,
-}
 
 public class CharacterStats : MonoBehaviour
 {
     [SerializeField, HideInInspector] public SerializableDictionary<CharacterStatType, CurrentStat> currentestats;
-    [SerializeField, HideInInspector] public SerializableDictionary<CharacterResistanceType, CurrentStat> resistanceStats;
+    [SerializeField, HideInInspector] public SerializableDictionary<DamageType, CurrentStat> resistanceStats;
     [SerializeField,HideInInspector] public SerializableDictionary<CharacterStatType, float> levelIncreasingStatWithLevelingValue;
 
     [SerializeField] private CharacterStatsSO characterStateSO;
@@ -30,7 +14,7 @@ public class CharacterStats : MonoBehaviour
     {
         // Initialize if null
         this.currentestats ??= new SerializableDictionary<CharacterStatType, CurrentStat>();
-        this.resistanceStats ??= new SerializableDictionary<CharacterResistanceType, CurrentStat>();
+        this.resistanceStats ??= new SerializableDictionary<DamageType, CurrentStat>();
         this.levelIncreasingStatWithLevelingValue ??= new SerializableDictionary<CharacterStatType, float>();
 
         OnFirstWorldLoad();
@@ -84,7 +68,7 @@ public class CharacterStats : MonoBehaviour
         return 0;
     }
 
-    public float GetResistanceValue(CharacterResistanceType type)
+    public float GetResistanceValue(DamageType type)
     {
         if (this.resistanceStats.TryGetValue(type, out CurrentStat stat))
             return stat.GetValue();

@@ -26,8 +26,8 @@ public class LevelingStat
 
     public float GetValue()
     {
-        if (!isDirty) return cachedValue;
-        this.cachedValue = baseValue;
+        if (!isDirty) return this.cachedValue;
+        this.cachedValue = this.baseValue;
         this.isDirty = false;
         return cachedValue;
     }
