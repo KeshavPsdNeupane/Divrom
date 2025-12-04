@@ -1,5 +1,6 @@
 using UnityEngine;
-using UnityEngine.Serialization;
+using UnityEngine.Events;
+using System.Collections.Generic;
 
 public enum CharacterStatType
 {
@@ -14,54 +15,56 @@ public enum CharacterStatType
 public enum DamageType
 {
     Physical,
-    Magical,
+    Fire,
+    Ice,
+    Lightning,
     Poison,
 }
 
 public class CharacterStatsSystem : MonoBehaviour
 {
-    [SerializeField, HideInInspector] public SerializableDictionary<CharacterStatType, Stat> currentStats;
-    [SerializeField, HideInInspector] public SerializableDictionary<DamageType, Stat> resistanceStats;
-    [SerializeField, HideInInspector] public SerializableDictionary<CharacterStatType, float> levelIncreasingStatWithLevelingValue;
+    [SerializeField, HideInInspector] public Dictionary<CharacterStatType, Stat> currentStats;
+    [SerializeField, HideInInspector] public Dictionary<DamageType, Stat> resistanceStats;
+    [SerializeField, HideInInspector] public Dictionary<CharacterStatType, float> levelIncreasingStatWithLevelingValue;
 
-     [SerializeField] private CharacterStatsSO characterStateSo;
+    [SerializeField] private CharacterStatsSO characterStateSo;
 
     private void Awake()
     {
-         this.currentStats ??= new SerializableDictionary<CharacterStatType, Stat>();
-         this.resistanceStats ??= new SerializableDictionary<DamageType, Stat>();
-         this.levelIncreasingStatWithLevelingValue ??= new SerializableDictionary<CharacterStatType, float>();
+        this.currentStats ??= new Dictionary<CharacterStatType, Stat>();
+        this.resistanceStats ??= new Dictionary<DamageType, Stat>();
+        this.levelIncreasingStatWithLevelingValue ??= new Dictionary<CharacterStatType, float>();
 
         OnFirstWorldLoad();
     }
     private void OnFirstWorldLoad()
     {
-        foreach (var kvp in  this.characterStateSo.Basestats)
-            this. currentStats[kvp.Key] = new Stat(kvp.Value);
+        foreach (var kvp in this.characterStateSo.Basestats)
+            this.currentStats[kvp.Key] = new Stat(kvp.Value);
 
-        foreach (var kvp in  this.characterStateSo.resistanceStats)
-             this.resistanceStats[kvp.Key] = new Stat(kvp.Value);
+        foreach (var kvp in this.characterStateSo.resistanceStats)
+            this.resistanceStats[kvp.Key] = new Stat(kvp.Value);
 
         var levelingStats = characterStateSo.GetLevelingStatsWithoutZero();
         foreach (var kvp in levelingStats)
-            this. levelIncreasingStatWithLevelingValue[kvp.Key] = kvp.Value;
+            this.levelIncreasingStatWithLevelingValue[kvp.Key] = kvp.Value;
     }
-    
+
     private void OnEnable()
     {
-        foreach (var stat in  this.currentStats.Values)
+        foreach (var stat in this.currentStats.Values)
             stat?.OnEnable();
 
-        foreach (var stat in  this.resistanceStats.Values)
+        foreach (var stat in this.resistanceStats.Values)
             stat?.OnEnable();
     }
 
     private void OnDisable()
     {
-        foreach (var stat in  this.currentStats.Values)
+        foreach (var stat in this.currentStats.Values)
             stat?.OnDisable();
 
-        foreach (var stat in  this.resistanceStats.Values)
+        foreach (var stat in this.resistanceStats.Values)
             stat?.OnDisable();
     }
 
@@ -73,10 +76,35 @@ public class CharacterStatsSystem : MonoBehaviour
         foreach (var stat in this.resistanceStats.Values)
             stat?.currentStat.Update();
     }
-    
+
+
+    public void StatsSubscribe(CharacterStatType type, UnityAction<float> callback)
+    {
+        if (currentStats.TryGetValue(type, out Stat stat))
+            stat.OnStatsModified += callback;
+    }
+
+    public void StatsUnsubscribe(CharacterStatType type, UnityAction<float> callback)
+    {
+        if (currentStats.TryGetValue(type, out Stat stat))
+            stat.OnStatsModified -= callback;
+    }
+
+    public void ResistanceSubscribe(DamageType type, UnityAction<float> callback)
+    {
+        if (resistanceStats.TryGetValue(type, out Stat stat))
+            stat.OnStatsModified += callback;
+    }
+
+    public void ResistanceUnsubscribe(DamageType type, UnityAction<float> callback)
+    {
+        if (resistanceStats.TryGetValue(type, out Stat stat))
+            stat.OnStatsModified -= callback;
+    }
+
     public float GetStatValue(CharacterStatType type)
     {
-        if ( this.currentStats.TryGetValue(type, out Stat stat))
+        if (this.currentStats.TryGetValue(type, out Stat stat))
             return stat.GetValue();
 
         Debug.LogWarning($"Stat {type} not found!");
@@ -85,7 +113,7 @@ public class CharacterStatsSystem : MonoBehaviour
 
     public float GetResistanceValue(DamageType type)
     {
-        if ( this.resistanceStats.TryGetValue(type, out Stat stat))
+        if (this.resistanceStats.TryGetValue(type, out Stat stat))
             return stat.GetValue();
 
         Debug.LogWarning($"Resistance {type} not found!");
@@ -94,7 +122,7 @@ public class CharacterStatsSystem : MonoBehaviour
 
     public bool AddStatModifier(StatusEffect effect)
     {
-        if ( this.currentStats.TryGetValue(effect.statType, out Stat stat))
+        if (this.currentStats.TryGetValue(effect.statType, out Stat stat))
             return stat.currentStat.AddModifier(effect);
 
         Debug.LogWarning($"Stat {effect.statType} not found for adding modifier!");
@@ -103,9 +131,9 @@ public class CharacterStatsSystem : MonoBehaviour
 
     public void TriggerLevelUp()
     {
-        foreach (var kvp in  this.levelIncreasingStatWithLevelingValue)
+        foreach (var kvp in this.levelIncreasingStatWithLevelingValue)
         {
-            if ( this.currentStats.TryGetValue(kvp.Key, out Stat stat))
+            if (this.currentStats.TryGetValue(kvp.Key, out Stat stat))
                 stat.levelingStat.LevelUp(kvp.Value);
             else
                 Debug.LogWarning($"Stat {kvp.Key} not found for leveling up!");

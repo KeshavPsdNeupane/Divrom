@@ -5,14 +5,14 @@ using TMPro;
 [System.Serializable]
 public class Tab
 {
-    public Image tabImage;     
-    public GameObject tabPage;  
+    public Image tabImage;
+    public GameObject tabPage;
 }
 
 public class TabController : MonoBehaviour
 {
-    [SerializeField] private Tab[] tabs;     
-    [SerializeField] private Button[] buttons; 
+    [SerializeField] private Tab[] tabs;
+    [SerializeField] private Button[] buttons;
 
     void Awake()
     {

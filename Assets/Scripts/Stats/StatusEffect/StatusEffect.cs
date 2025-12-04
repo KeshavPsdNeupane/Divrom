@@ -3,21 +3,35 @@ using UnityEngine;
 [System.Serializable]
 public class StatusEffect
 {
-    [Header("Info")]
+    public const float PERMANENT_BUFF_DURATION = -1f;
 
-    [SerializeField] public string source;
-    [SerializeField] public string effectName;
-    [SerializeField] public CharacterStatType statType; 
-    [SerializeField] public float modifierAmount;
-    [SerializeField] public float totalDuration;
-    [SerializeField] public bool isPercentage;
-    [SerializeField] public bool isDebuffFromArmor;
-    [SerializeField] public bool isDebuffFromEnemy;
-    [SerializeField] public int debuffPriority;
+    [Header("Info")]
+    public string source;
+    public string effectName;
+    public CharacterStatType statType;
+    public float modifierAmount;
+
+    [Tooltip("If you put the value exact -1, it means the buff is permanent")]
+    [Min(-1f)]
+    public float totalDuration;
+
+    public bool isPercentage;
+    public bool isDebuffFromArmor;
+    public bool isDebuffFromEnemy;
+    public int debuffPriority;
 
     [TextArea]
-    [SerializeField] public string description;
+    public string description;
 
+    [HideInInspector] public bool IsDebuff => modifierAmount < 0;
+    [HideInInspector] public bool IsPermanentEffect => totalDuration == PERMANENT_BUFF_DURATION;
 
-    [HideInInspector]public bool isDebuff => this.modifierAmount < 0;    
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        // Clamp duration: allow -1 for permanent, otherwise >= 0
+        if (!(totalDuration == PERMANENT_BUFF_DURATION))
+            totalDuration = Mathf.Max(0f, totalDuration);
+    }
+#endif
 }

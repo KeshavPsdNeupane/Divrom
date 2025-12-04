@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class CharacterStatsGUI : MonoBehaviour
 {
@@ -9,16 +11,69 @@ public class CharacterStatsGUI : MonoBehaviour
 
     private GUIStyle labelStyle;
 
+    // Local copies of values
+    private Dictionary<CharacterStatType, float> statsValues = new();
+    private Dictionary<DamageType, float> resistanceValues = new();
+
+    // Store callbacks for safe unsubscription
+    private Dictionary<CharacterStatType, UnityAction<float>> statsCallbacksDict = new();
+    private Dictionary<DamageType, UnityAction<float>> resistanceCallbacksDict = new();
+
+    private void Awake()
+    {
+        if (characterStats == null)
+            characterStats = GetComponent<CharacterStatsSystem>();
+    }
+
+    private void Start()
+    {
+        if (characterStats == null) return;
+
+        // Subscribe normal stats
+        foreach (CharacterStatType type in Enum.GetValues(typeof(CharacterStatType)))
+        {
+            statsValues[type] = characterStats.GetStatValue(type);
+
+            void callback(float val) => statsValues[type] = val;
+            statsCallbacksDict[type] = callback;
+
+            characterStats.StatsSubscribe(type, callback);
+        }
+
+        // Subscribe resistances
+        foreach (DamageType type in Enum.GetValues(typeof(DamageType)))
+        {
+            resistanceValues[type] = characterStats.GetResistanceValue(type);
+
+            void callback(float val) => resistanceValues[type] = val;
+            resistanceCallbacksDict[type] = callback;
+
+            characterStats.ResistanceSubscribe(type, callback);
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (characterStats == null) return;
+
+        // Unsubscribe normal stats
+        foreach (var kvp in statsCallbacksDict)
+            characterStats.StatsUnsubscribe(kvp.Key, kvp.Value);
+        statsCallbacksDict.Clear();
+
+        // Unsubscribe resistances
+        foreach (var kvp in resistanceCallbacksDict)
+            characterStats.ResistanceUnsubscribe(kvp.Key, kvp.Value);
+        resistanceCallbacksDict.Clear();
+    }
+
     private void OnGUI()
     {
-        if (!canShowState || characterStats == null)
-            return;
+        if (!canShowState) return;
 
-        // Initialize style
         if (labelStyle == null)
-        {
             labelStyle = new GUIStyle(GUI.skin.label);
-        }
+
         labelStyle.fontSize = Mathf.RoundToInt(12 * scale);
         labelStyle.normal.textColor = Color.white;
 
@@ -29,19 +84,18 @@ public class CharacterStatsGUI : MonoBehaviour
         int lineHeight = Mathf.RoundToInt(20 * scale);
         int padding = Mathf.RoundToInt(10 * scale);
 
-        // Panel
         GUI.Box(new Rect(startX, startY, panelWidth, panelHeight), "Character Stats");
 
         int yOffset = startY + padding;
 
-        // Stats
+        // Display normal stats
         GUI.Label(new Rect(startX + padding, yOffset, panelWidth - 2 * padding, lineHeight), "Stats:", labelStyle);
         yOffset += lineHeight;
 
-        foreach (CharacterStatType type in Enum.GetValues(typeof(CharacterStatType)))
+        foreach (var kvp in statsValues)
         {
-            float value = characterStats.GetStatValue(type);
-            GUI.Label(new Rect(startX + 2 * padding, yOffset, panelWidth - 3 * padding, lineHeight), $"{type}: {value}", labelStyle);
+            GUI.Label(new Rect(startX + 2 * padding, yOffset, panelWidth - 3 * padding, lineHeight),
+                $"{kvp.Key}: {kvp.Value}", labelStyle);
             yOffset += lineHeight;
         }
 
@@ -49,10 +103,10 @@ public class CharacterStatsGUI : MonoBehaviour
         GUI.Label(new Rect(startX + padding, yOffset, panelWidth - 2 * padding, lineHeight), "Resistances:", labelStyle);
         yOffset += lineHeight;
 
-        foreach (DamageType type in Enum.GetValues(typeof(DamageType)))
+        foreach (var kvp in resistanceValues)
         {
-            float value = characterStats.GetResistanceValue(type);
-            GUI.Label(new Rect(startX + 2 * padding, yOffset, panelWidth - 3 * padding, lineHeight), $"{type}: {value}", labelStyle);
+            GUI.Label(new Rect(startX + 2 * padding, yOffset, panelWidth - 3 * padding, lineHeight),
+                $"{kvp.Key}: {kvp.Value}", labelStyle);
             yOffset += lineHeight;
         }
     }

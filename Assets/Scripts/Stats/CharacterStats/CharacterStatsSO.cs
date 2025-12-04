@@ -4,46 +4,51 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "CharacterStateSO", menuName = "Scriptable Character/CharacterStateSO")]
 public class CharacterStatsSO : ScriptableObject
 {
-  [SerializeField]  public SerializableDictionary<CharacterStatType, float> Basestats =
-        new SerializableDictionary<CharacterStatType, float>();
+    [SerializeField]
+    public SerializableDictionary<CharacterStatType, float> Basestats =
+        new();
 
-    [SerializeField] public SerializableDictionary<DamageType, float> resistanceStats = 
-        new SerializableDictionary<DamageType, float >();
+    [SerializeField]
+    public SerializableDictionary<DamageType, float> resistanceStats =
+         new();
 
-    [SerializeField] public SerializableDictionary<CharacterStatType, float> levelIncreasingStatWithLevelingValue = 
-        new SerializableDictionary<CharacterStatType, float>();
+    [SerializeField]
+    public SerializableDictionary<CharacterStatType, float> levelIncreasingStatWithLevelingValue =
+        new();
 
     private void OnEnable()
     {
-        if (this.Basestats.Count == 0)
-        {
-          this. Basestats?.Add(CharacterStatType.Health, 100f);
-            this.Basestats?.Add(CharacterStatType.Defense, 10f);
-            this.Basestats?.Add(CharacterStatType.Attack, 15f);
-            this.Basestats?.Add(CharacterStatType.MagicAttack, 12f);
-            this.Basestats?.Add(CharacterStatType.MovementSpeed, 5f);
-            this.Basestats?.Add(CharacterStatType.CriticalRate, 5f);
-            this.Basestats?.Add(CharacterStatType.CriticalDamage, 100f);
-        }
+        // Base stats
+        AddIfMissing(Basestats, CharacterStatType.Health, 100f);
+        AddIfMissing(Basestats, CharacterStatType.Defense, 10f);
+        AddIfMissing(Basestats, CharacterStatType.Attack, 15f);
+        AddIfMissing(Basestats, CharacterStatType.MagicAttack, 12f);
+        AddIfMissing(Basestats, CharacterStatType.MovementSpeed, 5f);
+        AddIfMissing(Basestats, CharacterStatType.CriticalRate, 5f);
+        AddIfMissing(Basestats, CharacterStatType.CriticalDamage, 100f);
 
-        if (resistanceStats.Count == 0)
-        {
-            this.resistanceStats?.Add(DamageType.Physical, 5f);
-            this.resistanceStats?.Add(DamageType.Magical, 3f);
-            this.resistanceStats?.Add(DamageType.Poison, 0f);
-        }
+        // Resistance stats (auto-adds missing ones)
+        AddIfMissing(resistanceStats, DamageType.Physical, 5f);
+        AddIfMissing(resistanceStats, DamageType.Fire, 5f);
+        AddIfMissing(resistanceStats, DamageType.Ice, 5f);
+        AddIfMissing(resistanceStats, DamageType.Lightning, 5f);
+        AddIfMissing(resistanceStats, DamageType.Poison, 5f);
 
-        if (this.levelIncreasingStatWithLevelingValue.Count == 0)
-        {
-            this.levelIncreasingStatWithLevelingValue?.Add(CharacterStatType.Health, 10f);
-            this.levelIncreasingStatWithLevelingValue?.Add(CharacterStatType.Defense, 1f);
-            this.levelIncreasingStatWithLevelingValue?.Add(CharacterStatType.Attack, 2f);
-            this.levelIncreasingStatWithLevelingValue?.Add(CharacterStatType.MagicAttack, 0f);
-            this.levelIncreasingStatWithLevelingValue?.Add(CharacterStatType.MovementSpeed, 0f);
-            this.levelIncreasingStatWithLevelingValue?.Add(CharacterStatType.CriticalRate, 0f);
-            this.levelIncreasingStatWithLevelingValue?.Add(CharacterStatType.CriticalDamage, 0f);
-        }
+        // Leveling stats
+        AddIfMissing(levelIncreasingStatWithLevelingValue, CharacterStatType.Health, 10f);
+        AddIfMissing(levelIncreasingStatWithLevelingValue, CharacterStatType.Defense, 1f);
+        AddIfMissing(levelIncreasingStatWithLevelingValue, CharacterStatType.Attack, 2f);
+        AddIfMissing(levelIncreasingStatWithLevelingValue, CharacterStatType.MagicAttack, 0f);
+        AddIfMissing(levelIncreasingStatWithLevelingValue, CharacterStatType.MovementSpeed, 0f);
+        AddIfMissing(levelIncreasingStatWithLevelingValue, CharacterStatType.CriticalRate, 0f);
+        AddIfMissing(levelIncreasingStatWithLevelingValue, CharacterStatType.CriticalDamage, 0f);
+
+
+        FillMissingEnumKeys(Basestats);
+        FillMissingEnumKeys(resistanceStats);
+        FillMissingEnumKeys(levelIncreasingStatWithLevelingValue);
     }
+
 
     public SerializableDictionary<CharacterStatType, float> GetLevelingStatsWithoutZero()
     {
@@ -55,4 +60,20 @@ public class CharacterStatsSO : ScriptableObject
         }
         return filtered;
     }
+
+    private void AddIfMissing<T>(SerializableDictionary<T, float> dict, T key, float value)
+    {
+        if (!dict.ContainsKey(key))
+            dict.Add(key, value);
+    }
+
+    private void FillMissingEnumKeys<T>(SerializableDictionary<T, float> dict, float defaultValue = 0f) where T : System.Enum
+    {
+        foreach (T key in System.Enum.GetValues(typeof(T)))
+        {
+            if (!dict.ContainsKey(key))
+                dict[key] = defaultValue;
+        }
+    }
 }
+

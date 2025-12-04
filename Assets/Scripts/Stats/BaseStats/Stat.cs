@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 [System.Serializable]
 public class Stat
@@ -7,6 +8,8 @@ public class Stat
     public L1LevelingStat levelingStat;
     public L2PerkStat perkStat;
     public L3ArmorAndBuffAndDeBuffEffectStat currentStat;
+
+    public event UnityAction<float> OnStatsModified;
 
     public Stat(float baseValue)
     {
@@ -16,9 +19,14 @@ public class Stat
 
         perkStat.SetBase(levelingStat);
         currentStat.SetBase(perkStat);
-
-
     }
+
+    private void NotifyStatModified()
+    {    
+        float newValue = GetValue();
+        this.OnStatsModified?.Invoke(newValue);
+    }
+
 
     public float GetValue()
     {
@@ -29,12 +37,14 @@ public class Stat
     {
         levelingStat.OnDirtyEventAction += this.perkStat.MarkDirty;
         perkStat.OnDirtyEventAction += currentStat.MarkDirty;
+        currentStat.OnDirtyEventAction += this.NotifyStatModified;
     }
 
     public void OnDisable()
     {
         levelingStat.OnDirtyEventAction -= this.perkStat.MarkDirty;
         perkStat.OnDirtyEventAction -= this.currentStat.MarkDirty;
+        currentStat.OnDirtyEventAction -= this.NotifyStatModified;
 
     }
 }

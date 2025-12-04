@@ -10,16 +10,22 @@ public class L3ArmorAndBuffAndDeBuffEffectStat : IBaseStatProvider
     private bool isDirty = true;
     private float cachedValue;
 
+    public event Action OnDirtyEventAction;
     public void SetBase(IBaseStatProvider baseStat) => this.baseStat = baseStat;
 
-    public void MarkDirty() => this.isDirty = true;
+    public void MarkDirty()
+    {
+        this.isDirty = true;
+        OnDirtyEventAction?.Invoke();
+    }
 
-    private void CanRemoveModifier(L3BuffDebuffArmorStatusModifier csm) => csm.canRemove = true;
+    private void CanRemoveModifier(L3BuffDebuffArmorStatusModifier csm)
+    => csm.canRemove = true;
 
     public void RemoveModifier(L3BuffDebuffArmorStatusModifier csm)
     {
         this.modifiers.Remove(csm);
-        this.isDirty = true;
+        MarkDirty();
     }
 
     public void Update()
@@ -39,11 +45,9 @@ public class L3ArmorAndBuffAndDeBuffEffectStat : IBaseStatProvider
 
     }
 
-
-
     public bool AddModifier(StatusEffect effect)
     {
-        if (!effect.isDebuff)
+        if (!effect.IsDebuff)
         {
             return AddToList(effect);
         }
@@ -83,14 +87,14 @@ public class L3ArmorAndBuffAndDeBuffEffectStat : IBaseStatProvider
         var mod = new L3BuffDebuffArmorStatusModifier(effect);
 
         // Subscribe to timer stop if temporary
-        if (mod.Duration > 0)
+        if (!mod.IsPermanentBuff)
         {
             mod.InitializeTimer();
             mod.durationCountDownTimer.OnTimerStop += () => CanRemoveModifier(mod);
             mod.StartTimer();
         }
         this.modifiers.Add(mod);
-        this.isDirty = true;
+        MarkDirty();
         return true;
     }
 
@@ -98,13 +102,13 @@ public class L3ArmorAndBuffAndDeBuffEffectStat : IBaseStatProvider
     public void RemoveAllModifiersFromSource(string sourceName)
     {
         this.modifiers.RemoveAll(m => m.Source == sourceName);
-        this.isDirty = true;
+        MarkDirty();
     }
 
     public void RemoveAllModifiers()
     {
         this.modifiers.Clear();
-        this.isDirty = true;
+        MarkDirty();
     }
 
 

@@ -251,6 +251,51 @@ MonoBehaviour:
   inventoryHolder: {fileID: 7497465890913298284}
   detectionCollider: {fileID: 6800492162840743801}
   detectionRadius: 2
+--- !u!1 &4587433470359711600
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4237057792508296817}
+  - component: {fileID: 5800124157191849082}
+  m_Layer: 0
+  m_Name: AttackComponent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4237057792508296817
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4587433470359711600}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3204804179256810908}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5800124157191849082
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4587433470359711600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2dcc3c998b5f98b6891e422fd5e29ded, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AttackComponent
+  statsSystem: {fileID: 6086364781477239200}
 --- !u!1 &5455322508036677526
 GameObject:
   m_ObjectHideFlags: 0
@@ -281,7 +326,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 7554677529560786835}
+  m_Father: {fileID: 3204804179256810908}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8750556214948449428
 MonoBehaviour:
@@ -385,7 +430,6 @@ Transform:
   m_Children:
   - {fileID: 3204804179256810908}
   - {fileID: 4338212243135174512}
-  - {fileID: 5882105371156310893}
   - {fileID: 7003031078553305460}
   - {fileID: 1441866983085192948}
   - {fileID: 5766849970599657429}
@@ -543,7 +587,9 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 5882105371156310893}
+  - {fileID: 4237057792508296817}
   m_Father: {fileID: 7554677529560786835}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6086364781477239200

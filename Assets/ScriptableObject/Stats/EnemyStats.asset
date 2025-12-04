@@ -15,7 +15,7 @@ MonoBehaviour:
   Basestats:
     keys: 00000000010000000200000003000000040000000500000006000000
     values:
-    - 100
+    - 200
     - 10
     - 15
     - 12
@@ -23,11 +23,13 @@ MonoBehaviour:
     - 5
     - 100
   resistanceStats:
-    keys: 000000000100000002000000
+    keys: 0000000001000000020000000300000004000000
     values:
     - 5
     - 3
     - 0
+    - 5
+    - 5
   levelIncreasingStatWithLevelingValue:
     keys: 00000000010000000200000003000000040000000500000006000000
     values:

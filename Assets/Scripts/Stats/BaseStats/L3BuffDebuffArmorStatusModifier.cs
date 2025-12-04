@@ -8,7 +8,7 @@ public class L3BuffDebuffArmorStatusModifier
 
     [SerializeField] private StatusEffect statusEffect;
 
-    public bool IsDebuff => this.statusEffect.isDebuff;
+    public bool IsDebuff => this.statusEffect.IsDebuff;
     public string EffectName => this.statusEffect.effectName;
     public string Source => this.statusEffect.source;
     public float ModifierAmount => this.statusEffect.modifierAmount;
@@ -18,6 +18,8 @@ public class L3BuffDebuffArmorStatusModifier
     public int DebuffPriority => this.statusEffect.debuffPriority;
     public float Duration => this.statusEffect.totalDuration;
     public CharacterStatType StatType => this.statusEffect.statType;
+
+    public bool IsPermanentBuff => this.statusEffect.IsPermanentEffect;
 
 
 
