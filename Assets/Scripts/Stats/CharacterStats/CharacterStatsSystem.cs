@@ -2,16 +2,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using System.Collections.Generic;
 
-public enum CharacterStatType
-{
-    Health,
-    Defense,
-    Attack,
-    MagicAttack,
-    MovementSpeed,
-    CriticalRate,
-    CriticalDamage,
-}
+public enum CharacterStatType { HP, ATK, DEF, MATK, SPD, CRATE, CDMG, }
 public enum DamageType
 {
     Physical,

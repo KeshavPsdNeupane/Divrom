@@ -19,13 +19,13 @@ public class CharacterStatsSO : ScriptableObject
     private void OnEnable()
     {
         // Base stats
-        AddIfMissing(Basestats, CharacterStatType.Health, 100f);
-        AddIfMissing(Basestats, CharacterStatType.Defense, 10f);
-        AddIfMissing(Basestats, CharacterStatType.Attack, 15f);
-        AddIfMissing(Basestats, CharacterStatType.MagicAttack, 12f);
-        AddIfMissing(Basestats, CharacterStatType.MovementSpeed, 5f);
-        AddIfMissing(Basestats, CharacterStatType.CriticalRate, 5f);
-        AddIfMissing(Basestats, CharacterStatType.CriticalDamage, 100f);
+        AddIfMissing(Basestats, CharacterStatType.HP, 100f);
+        AddIfMissing(Basestats, CharacterStatType.DEF, 10f);
+        AddIfMissing(Basestats, CharacterStatType.ATK, 15f);
+        AddIfMissing(Basestats, CharacterStatType.MATK, 12f);
+        AddIfMissing(Basestats, CharacterStatType.SPD, 5f);
+        AddIfMissing(Basestats, CharacterStatType.CRATE, 5f);
+        AddIfMissing(Basestats, CharacterStatType.CDMG, 100f);
 
         // Resistance stats (auto-adds missing ones)
         AddIfMissing(resistanceStats, DamageType.Physical, 5f);
@@ -35,13 +35,13 @@ public class CharacterStatsSO : ScriptableObject
         AddIfMissing(resistanceStats, DamageType.Poison, 5f);
 
         // Leveling stats
-        AddIfMissing(levelIncreasingStatWithLevelingValue, CharacterStatType.Health, 10f);
-        AddIfMissing(levelIncreasingStatWithLevelingValue, CharacterStatType.Defense, 1f);
-        AddIfMissing(levelIncreasingStatWithLevelingValue, CharacterStatType.Attack, 2f);
-        AddIfMissing(levelIncreasingStatWithLevelingValue, CharacterStatType.MagicAttack, 0f);
-        AddIfMissing(levelIncreasingStatWithLevelingValue, CharacterStatType.MovementSpeed, 0f);
-        AddIfMissing(levelIncreasingStatWithLevelingValue, CharacterStatType.CriticalRate, 0f);
-        AddIfMissing(levelIncreasingStatWithLevelingValue, CharacterStatType.CriticalDamage, 0f);
+        AddIfMissing(levelIncreasingStatWithLevelingValue, CharacterStatType.HP, 10f);
+        AddIfMissing(levelIncreasingStatWithLevelingValue, CharacterStatType.DEF, 1f);
+        AddIfMissing(levelIncreasingStatWithLevelingValue, CharacterStatType.ATK, 2f);
+        AddIfMissing(levelIncreasingStatWithLevelingValue, CharacterStatType.MATK, 0f);
+        AddIfMissing(levelIncreasingStatWithLevelingValue, CharacterStatType.SPD, 0f);
+        AddIfMissing(levelIncreasingStatWithLevelingValue, CharacterStatType.CRATE, 0f);
+        AddIfMissing(levelIncreasingStatWithLevelingValue, CharacterStatType.CDMG, 0f);
 
 
         FillMissingEnumKeys(Basestats);

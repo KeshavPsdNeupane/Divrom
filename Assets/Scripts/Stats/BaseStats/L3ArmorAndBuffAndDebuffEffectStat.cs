@@ -16,7 +16,7 @@ public class L3ArmorAndBuffAndDeBuffEffectStat : IBaseStatProvider
     public void MarkDirty()
     {
         this.isDirty = true;
-        OnDirtyEventAction?.Invoke();
+        this.OnDirtyEventAction?.Invoke();
     }
 
     private void CanRemoveModifier(L3BuffDebuffArmorStatusModifier csm)

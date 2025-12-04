@@ -10,29 +10,37 @@ public class AttackComponent : MonoBehaviour
 
     void Awake()
     {
-        if (statsSystem == null)
+        if (this.statsSystem == null)
         {
-            statsSystem = GetComponent<CharacterStatsSystem>();
+            Debug.LogWarning("CharacterStatsSystem not assigned in AttackComponent, trying to get it from the GameObject.");
+            this.statsSystem = GetComponent<CharacterStatsSystem>();
         }
 
     }
     private void Start()
     {
-        this.statsSystem.StatsSubscribe(CharacterStatType.Attack, AttackCallback);
-        this.statsSystem.StatsSubscribe(CharacterStatType.CriticalRate, CriticalRateCallback);
-        this.statsSystem.StatsSubscribe(CharacterStatType.CriticalDamage, CalculateDamage);
-
-        // Initial fetch
-        AttackCallback(this.statsSystem.currentStats[CharacterStatType.Attack].GetValue());
-        CriticalRateCallback(this.statsSystem.currentStats[CharacterStatType.CriticalRate].GetValue());
-        CalculateDamage(this.statsSystem.currentStats[CharacterStatType.CriticalDamage].GetValue());
+        // this func is also here to ensure subscription in case OnEnable is missed
+        // and if we disable and enable the component later, we still
+        // want to subscribe to the stats updates in OnEnable   
+        Subscribe();
+    }
+    void OnEnable()
+    {
+        // Checking So all the stats exist and are initialized
+        if (this.statsSystem != null &&
+            this.statsSystem.currentStats != null &&
+            this.statsSystem.currentStats.ContainsKey(CharacterStatType.ATK))
+        {
+            Subscribe();
+        }
 
     }
+
     void OnDisable()
     {
-        this.statsSystem.StatsUnsubscribe(CharacterStatType.Attack, AttackCallback);
-        this.statsSystem.StatsUnsubscribe(CharacterStatType.CriticalRate, CriticalRateCallback);
-        this.statsSystem.StatsUnsubscribe(CharacterStatType.CriticalDamage, CalculateDamage);
+        this.statsSystem.StatsUnsubscribe(CharacterStatType.ATK, AttackCallback);
+        this.statsSystem.StatsUnsubscribe(CharacterStatType.CRATE, CriticalRateCallback);
+        this.statsSystem.StatsUnsubscribe(CharacterStatType.CDMG, CalculateDamage);
     }
     private void AttackCallback(float attack) => this.attack = attack;
 
@@ -40,6 +48,23 @@ public class AttackComponent : MonoBehaviour
      => this.normalizedCriticalChance = criticalChance / 100f;
     private void CalculateDamage(float criticalDamage)
      => this.normalizedCriticalDamage = (100 + criticalDamage) / 100f;
+
+
+    private void Subscribe()
+    {
+
+
+        this.statsSystem.StatsSubscribe(CharacterStatType.ATK, AttackCallback);
+        this.statsSystem.StatsSubscribe(CharacterStatType.CRATE, CriticalRateCallback);
+        this.statsSystem.StatsSubscribe(CharacterStatType.CDMG, CalculateDamage);
+
+        AttackCallback(this.statsSystem.currentStats[CharacterStatType.ATK].GetValue());
+        CriticalRateCallback(this.statsSystem.currentStats[CharacterStatType.CRATE].GetValue());
+        CalculateDamage(this.statsSystem.currentStats[CharacterStatType.CDMG].GetValue());
+
+    }
+
+
 
 
     private float CalculateDamage()
