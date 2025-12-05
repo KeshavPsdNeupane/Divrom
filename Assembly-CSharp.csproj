@@ -56,6 +56,7 @@
     <Compile Include="Assets/Scripts/Actors/Player/States/PlayerAttack.cs" />
     <Compile Include="Assets/Scripts/Ui/Menu/TabController.cs" />
     <Compile Include="Assets/Scripts/Inventory/Slot/ItemSlot.cs" />
+    <Compile Include="Assets/Scripts/Init/IInitializable.cs" />
     <Compile Include="Assets/Scripts/Stats/StatusEffect/StatusEffect.cs" />
     <Compile Include="Assets/Scripts/Actors/Player/PlayerBaseState.cs" />
     <Compile Include="Assets/Scripts/Actors/Player/States/PlayerIdle.cs" />
@@ -63,6 +64,8 @@
     <Compile Include="Assets/Scripts/Component/Animation/AnimationVariableHashes.cs" />
     <Compile Include="Assets/Scripts/Managers/DatabaseManager.cs" />
     <Compile Include="Assets/Scripts/Ui/Inventory/ItemSlot/SimpleItemUIDragAndDropInteractionHelperClass.cs" />
+    <Compile Include="Assets/Scripts/Player/TestPlayerDirectionGUI.cs" />
+    <Compile Include="Assets/Scripts/Init/InitializableBase.cs" />
     <Compile Include="Assets/Scripts/Stats/BaseStats/L2PerkStat.cs" />
     <Compile Include="Assets/Scripts/Component/AttackComponent.cs" />
     <Compile Include="Assets/Scripts/Stats/BaseStats/Stat.cs" />
@@ -72,12 +75,14 @@
     <Compile Include="Assets/Scripts/Managers/DragDropManager.cs" />
     <Compile Include="Assets/Scripts/Stats/CharacterStats/CharacterStatsGUI.cs" />
     <Compile Include="Assets/Scripts/Actors/Player/PlayerStateManager.cs" />
+    <Compile Include="Assets/Scripts/Player/PlayerMovement.cs" />
     <Compile Include="Assets/Scripts/Ui/PanelFader.cs" />
     <Compile Include="Assets/Scripts/Stats/BaseStats/L3ArmorAndBuffAndDebuffEffectStat.cs" />
     <Compile Include="Assets/Scripts/Stats/BaseStats/L1LevelingStat.cs" />
     <Compile Include="Assets/Scripts/Component/Animation/AnimationComponent.cs" />
     <Compile Include="Assets/Scripts/Ui/Inventory/ItemSlot/ItemSlotUI.cs" />
     <Compile Include="Assets/Game/CoreScript/SelectionBase.cs" />
+    <Compile Include="Assets/Scripts/Init/InitCallerManager.cs" />
     <Compile Include="Assets/Scripts/Utils/HashUtility.cs" />
     <Compile Include="Assets/Scripts/Actors/Player/PlayerStates.cs" />
     <Compile Include="Assets/Scripts/Ui/Inventory/InventoryDisplays/PlayerInventoryDisplay.cs" />
@@ -94,6 +99,7 @@
     <Compile Include="Assets/Scripts/Inventory/InventoryHolder.cs" />
     <Compile Include="Assets/Scripts/Item/ItemData.cs" />
     <Compile Include="Assets/Game/Input/InputManager.cs" />
+    <Compile Include="Assets/Scripts/Player/PlayerDependencyManager.cs" />
     <Compile Include="Assets/Scripts/Ui/InventoryPanelController.cs" />
     <Compile Include="Assets/Scripts/Stats/CharacterStats/CharacterStatsSystem.cs" />
     <Compile Include="Assets/Scripts/Utils/SerializableDictionary.cs" />
