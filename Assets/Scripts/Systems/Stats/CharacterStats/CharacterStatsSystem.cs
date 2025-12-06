@@ -12,7 +12,7 @@ public enum DamageType
     Poison,
 }
 
-public class CharacterStatsSystem : MonoBehaviour
+public class CharacterStatsSystem : InitializableBase
 {
     [SerializeField, HideInInspector] public Dictionary<CharacterStatType, Stat> currentStats;
     [SerializeField, HideInInspector] public Dictionary<DamageType, Stat> resistanceStats;
@@ -20,7 +20,7 @@ public class CharacterStatsSystem : MonoBehaviour
 
     [SerializeField] private CharacterStatsSO characterStateSo;
 
-    private void Awake()
+    public override void Init()
     {
         this.currentStats ??= new Dictionary<CharacterStatType, Stat>();
         this.resistanceStats ??= new Dictionary<DamageType, Stat>();
@@ -28,6 +28,7 @@ public class CharacterStatsSystem : MonoBehaviour
 
         OnFirstWorldLoad();
     }
+
     private void OnFirstWorldLoad()
     {
         foreach (var kvp in this.characterStateSo.Basestats)

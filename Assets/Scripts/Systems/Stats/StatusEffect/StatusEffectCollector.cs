@@ -2,7 +2,7 @@ using UnityEngine;
 
 
 [RequireComponent(typeof(CircleCollider2D))]
-public class StatusEffectConnector : MonoBehaviour
+public class StatusEffectConnector : InitializableBase
 {
     [SerializeField] private CharacterStatsSystem characterStats;
     [SerializeField] private CircleCollider2D effectArea;
@@ -11,7 +11,7 @@ public class StatusEffectConnector : MonoBehaviour
     [SerializeField] bool isTrigger = true;
 
 
-    private void Awake()
+    public override void Init()
     {
         if (this.effectArea == null)
             this.effectArea = this.gameObject.GetComponent<CircleCollider2D>();
@@ -24,7 +24,7 @@ public class StatusEffectConnector : MonoBehaviour
         if (effectCollidor.CompareTag(StatusObjectTagName))
         {
             StatusEffectContainer effect = effectCollidor.GetComponent<StatusEffectContainer>();
-            if (effect != null && effect.statusEffect!=null && this.characterStats != null)
+            if (effect != null && effect.statusEffect != null && this.characterStats != null)
             {
                 if (this.characterStats.AddStatModifier(effect.statusEffect))
                 {

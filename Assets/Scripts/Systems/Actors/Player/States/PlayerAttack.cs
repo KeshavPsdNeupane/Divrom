@@ -2,8 +2,8 @@
 
 public class PlayerAttack : PlayerBaseState
 {
-    private MovementComponent movementComponent;
-    private AnimationComponent animationComponent;
+    private readonly MovementComponent movementComponent;
+    private readonly AnimationComponent animationComponent;
 
     public PlayerAttack(PlayerStateManager baseStateManager,
         PlayerStateController playerStateController, string animationBoolName,

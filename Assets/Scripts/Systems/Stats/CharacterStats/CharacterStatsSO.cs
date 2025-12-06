@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "CharacterStateSO", menuName = "Scriptable Character/CharacterStateSO")]
@@ -16,7 +15,7 @@ public class CharacterStatsSO : ScriptableObject
     public SerializableDictionary<CharacterStatType, float> levelIncreasingStatWithLevelingValue =
         new();
 
-    private void OnEnable()
+    private void Awake()
     {
         // Base stats
         AddIfMissing(Basestats, CharacterStatType.HP, 100f);

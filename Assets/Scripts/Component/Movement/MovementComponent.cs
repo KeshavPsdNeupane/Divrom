@@ -1,6 +1,7 @@
 using UnityEngine;
-
-public class MovementComponent : MonoBehaviour
+using UnityEngine.Events;
+using UnityEngine.InputSystem;
+public class MovementComponent : InitializableBase
 {
     public Rigidbody2D rb;
     [SerializeField] private CharacterStatsSystem characterStats;
@@ -11,17 +12,16 @@ public class MovementComponent : MonoBehaviour
     [SerializeField] private bool canCapMovementSpeed = false;
     [SerializeField] private float upperLimitMovementSpeed = 10.0f;
 
-    private void Awake()
+    public override void Init()
     {
         if (this.characterStats == null)
         {
             Debug.LogWarning("CharacterStatsSystem not assigned in MovementComponent, trying to get it from the GameObject.");
             this.characterStats = GetComponent<CharacterStatsSystem>();
+
         }
     }
-
-    private void Start() => SubscribeToMovementSpeed();
-
+    //void Start() => SubscribeToMovementSpeed(); 
     void OnEnable() => SubscribeToMovementSpeed();
 
     void OnDisable() => UnsubscribeFromMovementSpeed();
@@ -30,8 +30,7 @@ public class MovementComponent : MonoBehaviour
     private void SubscribeToMovementSpeed()
     {
         if (this.characterStats != null &&
-            this.characterStats.currentStats != null &&
-            this.characterStats.currentStats.ContainsKey(CharacterStatType.SPD))
+            this.characterStats.currentStats != null)
         {
             this.characterStats.StatsSubscribe(CharacterStatType.SPD, MovementSpeedCallBack);
             // Initial fetch
@@ -42,8 +41,7 @@ public class MovementComponent : MonoBehaviour
     private void UnsubscribeFromMovementSpeed()
     {
         if (this.characterStats != null &&
-           this.characterStats.currentStats != null &&
-            this.characterStats.currentStats.ContainsKey(CharacterStatType.SPD))
+           this.characterStats.currentStats != null)
         {
             this.characterStats.StatsUnsubscribe(CharacterStatType.SPD, MovementSpeedCallBack);
         }
@@ -52,15 +50,28 @@ public class MovementComponent : MonoBehaviour
     private void MovementSpeedCallBack(float newMovementSpeed)
         => this.movementSpeed = newMovementSpeed;
 
+
+    // putting it here so other systems can call it too
+    // e.g. AI movement system
+    // or other player movement systems
+    // this decouples State Controller from movement logic
+    public void MoveForInputSystem(InputAction.CallbackContext context)
+    {
+        this.direction = context.ReadValue<Vector2>();
+    }
+
+
     public virtual void ApplyMovement(float movementSpeedMult = 1.0f)
     {
-        float camMoveSpeed = (this.characterStats == null)
+        float canMoveSpeed = (this.characterStats == null)
             ? movementSpeedUseThisOnlyIfUDontWantToUseCharacterStat
             : movementSpeed;
 
+        float lowerLimitMovementSpeed = 0f;
+
         float finalSpeed = !canCapMovementSpeed
-            ? Mathf.Max(0, camMoveSpeed)
-            : Mathf.Clamp(camMoveSpeed, 0, upperLimitMovementSpeed);
+            ? Mathf.Max(lowerLimitMovementSpeed, canMoveSpeed)
+            : Mathf.Clamp(canMoveSpeed, lowerLimitMovementSpeed, upperLimitMovementSpeed);
 
         this.rb.linearVelocity = finalSpeed * movementSpeedMult * direction.normalized;
 

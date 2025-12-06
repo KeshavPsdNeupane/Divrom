@@ -12,8 +12,8 @@ public class CharacterStatsGUI : MonoBehaviour
     private GUIStyle labelStyle;
 
     // Local copies of values
-    private Dictionary<CharacterStatType, float> statsValues = new();
-    private Dictionary<DamageType, float> resistanceValues = new();
+    private readonly Dictionary<CharacterStatType, float> statsValues = new();
+    private readonly Dictionary<DamageType, float> resistanceValues = new();
 
     // Store callbacks for safe unsubscription
     private Dictionary<CharacterStatType, UnityAction<float>> statsCallbacksDict = new();

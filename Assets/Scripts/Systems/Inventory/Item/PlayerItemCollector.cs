@@ -1,12 +1,13 @@
 using UnityEngine;
 
 [RequireComponent(typeof(CircleCollider2D))]
-public class PlayerItemCollector : MonoBehaviour
+public class PlayerItemCollector : InitializableBase
 {
     [SerializeField] private InventoryHolder inventoryHolder;
     [SerializeField] private CircleCollider2D detectionCollider;
     [SerializeField] private float detectionRadius = 1.5f;
-    private void Awake()
+
+    public override void Init()
     {
         if (this.detectionCollider == null)
             this.detectionCollider = GetComponent<CircleCollider2D>();
@@ -38,7 +39,7 @@ public class PlayerItemCollector : MonoBehaviour
         }
         else
         {
-            Debug.Log("Inventory full — cannot pick up item");
+            Debug.Log("Inventory full ï¿½ cannot pick up item");
         }
     }
 }

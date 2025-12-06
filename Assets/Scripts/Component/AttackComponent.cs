@@ -1,14 +1,16 @@
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.InputSystem;
 
-public class AttackComponent : MonoBehaviour
+public class AttackComponent : InitializableBase
 {
     [SerializeField] private CharacterStatsSystem statsSystem;
     private float attack;
     private float normalizedCriticalChance;
     private float normalizedCriticalDamage;
+    public event UnityAction OnAttackPerformed;
 
-    void Awake()
+    public override void Init()
     {
         if (this.statsSystem == null)
         {
@@ -17,33 +19,29 @@ public class AttackComponent : MonoBehaviour
         }
 
     }
-    private void Start()
-    {
-        // this func is also here to ensure subscription in case OnEnable is missed
-        // and if we disable and enable the component later, we still
-        // want to subscribe to the stats updates in OnEnable   
-        Subscribe();
-    }
+    // Making this since we are using New Init Lifecycle 
+    // that will 100% garuntee th CharacterStatsSystem is initialized before this component
+    // so we can subscribe to the stats updates safely
+    // leaving Start commented for reference
+    // private void Start()
+    // {
+    //     // this func is also here to ensure subscription in case OnEnable is missed
+    //     // and if we disable and enable the component later, we still
+    //     // want to subscribe to the stats updates in OnEnable   
+    //     Subscribe();
+    // }
+
     void OnEnable()
     {
         // Checking So all the stats exist and are initialized
+        // Checking still in just case for someone who doesn't use the Init Lifecycle
         if (this.statsSystem != null &&
-            this.statsSystem.currentStats != null &&
-            this.statsSystem.currentStats.ContainsKey(CharacterStatType.ATK))
-        {
-            Subscribe();
-        }
-
+            this.statsSystem.currentStats != null) Subscribe();
     }
 
-    void OnDisable()
-    {
-        this.statsSystem.StatsUnsubscribe(CharacterStatType.ATK, AttackCallback);
-        this.statsSystem.StatsUnsubscribe(CharacterStatType.CRATE, CriticalRateCallback);
-        this.statsSystem.StatsUnsubscribe(CharacterStatType.CDMG, CalculateDamage);
-    }
+    void OnDisable() => Unsubscribe();
+
     private void AttackCallback(float attack) => this.attack = attack;
-
     private void CriticalRateCallback(float criticalChance)
      => this.normalizedCriticalChance = criticalChance / 100f;
     private void CalculateDamage(float criticalDamage)
@@ -52,18 +50,32 @@ public class AttackComponent : MonoBehaviour
 
     private void Subscribe()
     {
-
-
         this.statsSystem.StatsSubscribe(CharacterStatType.ATK, AttackCallback);
         this.statsSystem.StatsSubscribe(CharacterStatType.CRATE, CriticalRateCallback);
         this.statsSystem.StatsSubscribe(CharacterStatType.CDMG, CalculateDamage);
-
+        // Initial fetch
         AttackCallback(this.statsSystem.currentStats[CharacterStatType.ATK].GetValue());
         CriticalRateCallback(this.statsSystem.currentStats[CharacterStatType.CRATE].GetValue());
         CalculateDamage(this.statsSystem.currentStats[CharacterStatType.CDMG].GetValue());
 
     }
 
+    private void Unsubscribe()
+    {
+        this.statsSystem.StatsUnsubscribe(CharacterStatType.ATK, AttackCallback);
+        this.statsSystem.StatsUnsubscribe(CharacterStatType.CRATE, CriticalRateCallback);
+        this.statsSystem.StatsUnsubscribe(CharacterStatType.CDMG, CalculateDamage);
+    }
+
+    public void AttackForInputSystem(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            float damage = CalculateDamage();
+            Debug.Log($"Attack performed! Damage dealt: {damage}");
+            this.OnAttackPerformed?.Invoke();
+        }
+    }
 
 
 

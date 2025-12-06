@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [System.Serializable]
-public class InventoryHolder : MonoBehaviour
+public class InventoryHolder : InitializableBase
 {
     [SerializeField] private int primaryInventorySize;
     [SerializeField] protected InventorySystem primaryInventorySystem;
@@ -11,7 +11,7 @@ public class InventoryHolder : MonoBehaviour
 
     public static UnityAction<InventorySystem> onDynamicInventoryDisplayRequested;
 
-    protected virtual void Awake()
+    public override void Init()
     {
         primaryInventorySystem = new InventorySystem(this.primaryInventorySize);
     }

@@ -2,13 +2,13 @@ using UnityEngine;
 
 public class PlayerIdle : PlayerBaseState
 {
-    private MovementComponent movementComponent;
-    private AnimationComponent animationComponent;
+    private readonly MovementComponent movementComponent;
+    private readonly AnimationComponent animationComponent;
 
     public PlayerIdle(PlayerStateManager baseStateManager,
         PlayerStateController playerStateController, string animationBoolName,
         string name = "PlayerIdle")
-        : base(baseStateManager, playerStateController,animationBoolName, name)
+        : base(baseStateManager, playerStateController, animationBoolName, name)
     {
         this.movementComponent = this.playerStateController.movementComponent;
         this.animationComponent = this.playerStateController.animationComponent;

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerInventoryDisplay : InventoryDisplay
+public class PlayerInventoryDisplayUI : InventoryDisplay
 {
     [SerializeField] private InventoryHolder inventoryHolder;
     [SerializeField] private GameObject slotPrefab;
