@@ -5968,8 +5968,8 @@ MonoBehaviour:
     m_ActionName: UI/TrackedDeviceOrientation
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1788062144}
-        m_TargetAssemblyTypeName: GameplayUIController, Assembly-CSharp
+      - m_Target: {fileID: 1788062142}
+        m_TargetAssemblyTypeName: UIController, Assembly-CSharp
         m_MethodName: TabPressed
         m_Mode: 0
         m_Arguments:
@@ -5984,8 +5984,8 @@ MonoBehaviour:
     m_ActionName: 'Player/InventoryToggleOn[/Keyboard/tab]'
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1788062144}
-        m_TargetAssemblyTypeName: GameplayUIController, Assembly-CSharp
+      - m_Target: {fileID: 1788062142}
+        m_TargetAssemblyTypeName: UIController, Assembly-CSharp
         m_MethodName: EsePressed
         m_Mode: 0
         m_Arguments:
@@ -6000,7 +6000,7 @@ MonoBehaviour:
     m_ActionName: 'Player/MenuToggleOn[/Keyboard/escape]'
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1788062144}
+      - m_Target: {fileID: 1788062142}
         m_TargetAssemblyTypeName: GameplayUIController, Assembly-CSharp
         m_MethodName: EsePressed
         m_Mode: 0
@@ -6016,7 +6016,7 @@ MonoBehaviour:
     m_ActionName: 'Menu/ToggleMenu[/Keyboard/escape]'
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1788062144}
+      - m_Target: {fileID: 1788062142}
         m_TargetAssemblyTypeName: GameplayUIController, Assembly-CSharp
         m_MethodName: TabPressed
         m_Mode: 0
@@ -10724,7 +10724,7 @@ GameObject:
   - component: {fileID: 1788062139}
   - component: {fileID: 1788062138}
   - component: {fileID: 1788062143}
-  - component: {fileID: 1788062144}
+  - component: {fileID: 1788062142}
   m_Layer: 5
   m_Name: UI
   m_TagString: Untagged
@@ -10817,6 +10817,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1788062142
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1788062137}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0df82d644eb8bfac8a22e676de6dd4cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIController
+  inGameplayMenu: {fileID: 2128690284}
+  inventoryMenu: {fileID: 576055918}
 --- !u!114 &1788062143
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10831,29 +10845,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InGameUIInitCaller
   initializables:
   - {fileID: 1650404415}
-  - {fileID: 2128690284}
-  - {fileID: 576055918}
   - {fileID: 76764298}
   - {fileID: 1987017559}
-  - {fileID: 1788062144}
+  - {fileID: 0}
   canCallInAwake: 1
   autoPopulate: 0
   includeChildren: 1
   traversal: 0
---- !u!114 &1788062144
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1788062137}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8d61ad6cc40b4a8d894aa4ff5f62b45d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GameplayUIController
-  inGameplayMenu: {fileID: 2128690284}
-  inventoryMenu: {fileID: 576055918}
 --- !u!1 &1793515979
 GameObject:
   m_ObjectHideFlags: 0

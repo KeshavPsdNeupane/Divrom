@@ -1,44 +1,57 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerInventoryDisplay : InventoryDisplay
+public class PlayerInventoryDisplayUI : InventoryDisplay
 {
     [SerializeField] private InventoryHolder inventoryHolder;
     [SerializeField] private GameObject slotPrefab;
     [SerializeField] private Transform slotParent;
 
-    protected override void Start()
+    public override void Init()
     {
-        base.Start();
-        if (inventoryHolder != null)
+        base.Init();
+        if (inventoryHolder == null)
         {
-            primaryInventorySystem = inventoryHolder.PrimaryInventorySystem;
-            primaryInventorySystem.onInventoryShotChanged += UpdateSlot;
-        }
-        else
-        {
-            Debug.LogWarning($"No inventory assigned to {gameObject}");
+            Debug.LogError($"PlayerInventoryDisplayUI ({gameObject.name}):" +
+            " InventoryHolder is not assigned!");
             return;
         }
-        AssignSlot(primaryInventorySystem);
+
+        if (inventoryHolder.PrimaryInventorySystem == null)
+        {
+            Debug.LogError($"PlayerInventoryDisplayUI ({gameObject.name}):" +
+            " InventoryHolder.PrimaryInventorySystem is null! Make " +
+            "sure InventoryHolder is initialized before PlayerInventoryDisplayUI" +
+            " in the InitLifecycleManager.");
+            return;
+        }
+
+        this.primaryInventorySystem = inventoryHolder.PrimaryInventorySystem;
+        this.primaryInventorySystem.onInventoryShotChanged += UpdateSlot;
+        AssignSlot(this.primaryInventorySystem);
+
+
+        // so i can init the display on Start if needed
+        if (this.inventoryHolder.IsInitialized) SetInitialized();
+        else Init();
     }
 
     public override void AssignSlot(InventorySystem invToDisplay)
     {
-        if (slotParent != null)
+        if (this.slotParent != null)
         {
             foreach (Transform child in slotParent)
                 Destroy(child.gameObject);
         }
         slotDictionary = new Dictionary<ItemSlot, ItemSlotUI>();
 
-        for (int i = 0; i < primaryInventorySystem.InventorySize; i++)
+        for (int i = 0; i < this.primaryInventorySystem.InventorySize; i++)
         {
             GameObject newSlotObj = Instantiate(slotPrefab, slotParent ?? transform);
             ItemSlotUI slotUI = newSlotObj.GetComponent<ItemSlotUI>();
 
-            slotUI.Init(primaryInventorySystem.InventorySlots[i]);
-            slotDictionary.Add(primaryInventorySystem.InventorySlots[i], slotUI);
+            slotUI.Init(this.primaryInventorySystem.InventorySlots[i]);
+            slotDictionary.Add(this.primaryInventorySystem.InventorySlots[i], slotUI);
         }
     }
 }

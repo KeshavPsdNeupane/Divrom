@@ -5,7 +5,7 @@ using UnityEngine.Events;
 using TMPro;
 using UnityEngine.UI;
 
-public class StatDescription : MonoBehaviour
+public class StatDescription : InitializableBase
 {
     [SerializeField] private GameObject statDescriptionUIPanel;
     [SerializeField] private CharacterStatsSystem characterStats;
@@ -16,51 +16,30 @@ public class StatDescription : MonoBehaviour
     private Dictionary<CharacterStatType, TextMeshProUGUI> statTextObjects = new();
 
     private RectTransform panelRect; // cache panelRect to avoid fetching multiple times
-    private Image panelImage; // cache Image component for controlling transparency
-    void Awake()
+    public override void Init()
     {
-        if (this.characterStats == null)
-            this.characterStats = GetComponent<CharacterStatsSystem>();
-        if (this.statDescriptionUIPanel == null)
-        {
-            Debug.LogError("StatDescriptionUIPanel is not assigned.");
-            return;
-        }
-        // else
-        // {
-        //     panelImage = statDescriptionUIPanel.GetComponent<Image>();
-        //     if (panelImage != null)
-        //     {
-        //         // Make the panel fully transparent
-        //         Color c = panelImage.color;
-        //         c.a = 0f;
-        //         panelImage.color = c;
-        //     }
-        //     else
-        //     {
-        //         Debug.LogWarning("StatDescriptionUIPanel does not have an Image component.");
-        //     }
-        // }
-
+        Validate();
     }
 
-    private void Start()
-    {
-        // it is also here to ensure initialization in case OnEnable is missed
-        // and if we disable and enable the component later, we still
-        // want to initialize the TMP objects and subscribe to stats
-        CachePanelRect();
-        CreateTMPObjects();
-        SubscribeToStats();
-    }
+    // for now marking Start as commented out so i can test OnEnable initialization
+    // on Init lifecycle manager
+
+    // private void Start()
+    // {
+    //     // it is also here to ensure initialization in case OnEnable is missed
+    //     // and if we disable and enable the component later, we still
+    //     // want to initialize the TMP objects and subscribe to stats
+    //     CachePanelRect();
+    //     CreateTMPObjects();
+    //     SubscribeToStats();
+    // }
 
     void OnEnable()
     {
         if (this.characterStats != null &&
-            this.characterStats.currentStats != null &&
+            this.characterStats.CurrentStats != null &&
             this.statDescriptionUIPanel != null)
-        {
-            CachePanelRect();
+        { // with Init , no need to Validate again here 
             CreateTMPObjects();
             SubscribeToStats();
         }
@@ -76,14 +55,25 @@ public class StatDescription : MonoBehaviour
         this.statsCallbacksDict.Clear();
     }
 
-    private void CachePanelRect()
+    private void Validate()
     {
+        if (this.characterStats == null)
+        {
+            Debug.LogWarning("CharacterStatsSystem reference was missing," +
+         " attempting to get from the same GameObject.");
+        }
+        if (this.statDescriptionUIPanel == null)
+        {
+            Debug.LogError("StatDescriptionUIPanel is not assigned.");
+            return;
+        }
         if (this.panelRect == null && this.statDescriptionUIPanel != null)
         {
             this.panelRect = this.statDescriptionUIPanel.GetComponent<RectTransform>();
             if (this.panelRect == null)
                 Debug.LogError("Stat Panel requires RectTransform.");
         }
+        SetInitialized();
     }
 
     private void CreateTMPObjects()
@@ -126,12 +116,12 @@ public class StatDescription : MonoBehaviour
 
     private void SubscribeToStats()
     {
-        if (this.characterStats == null || this.characterStats.currentStats == null) return;
+        if (this.characterStats == null || this.characterStats.CurrentStats == null) return;
 
         foreach (CharacterStatType type in Enum.GetValues(typeof(CharacterStatType)))
         {
             // check if the stat exists to avoid errors
-            if (!this.characterStats.currentStats.ContainsKey(type)) continue;
+            if (!this.characterStats.CurrentStats.ContainsKey(type)) continue;
 
             this.statsValues[type] = this.characterStats.GetStatValue(type);
 
