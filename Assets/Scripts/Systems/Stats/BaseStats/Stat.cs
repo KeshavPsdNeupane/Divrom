@@ -5,24 +5,34 @@ using UnityEngine.Events;
 [System.Serializable]
 public class Stat
 {
-    public L1LevelingStat levelingStat;
-    public L2PerkStat perkStat;
-    public L3ArmorAndBuffAndDeBuffEffectStat currentStat;
+    private readonly LevelingStat levelingStat;
+    private readonly PointStats pointStats;
+    private readonly PerkStat perkStat;
+    private readonly ArmorAndBuffAndDeBuffEffectStat currentStat;
+
+
+    // public getters
+    public LevelingStat LevelingStat => this.levelingStat;
+    public PointStats PointStats => this.pointStats;
+    public PerkStat PerkStat => this.perkStat;
+    public ArmorAndBuffAndDeBuffEffectStat CurrentStat => this.currentStat;
 
     public event UnityAction<float> OnStatsModified;
 
     public Stat(float baseValue)
     {
-        levelingStat = new L1LevelingStat(baseValue);
-        perkStat = new L2PerkStat();
-        currentStat = new L3ArmorAndBuffAndDeBuffEffectStat();
+        this.levelingStat = new LevelingStat(baseValue);
+        this.pointStats = new PointStats();
+        this.perkStat = new PerkStat();
+        this.currentStat = new ArmorAndBuffAndDeBuffEffectStat();
 
-        perkStat.SetBase(levelingStat);
-        currentStat.SetBase(perkStat);
+        this.pointStats.SetBase(this.levelingStat);
+        this.perkStat.SetBase(this.pointStats);
+        this.currentStat.SetBase(this.perkStat);
     }
 
     private void NotifyStatModified()
-    {    
+    {
         float newValue = GetValue();
         this.OnStatsModified?.Invoke(newValue);
     }
@@ -35,16 +45,18 @@ public class Stat
 
     public void OnEnable()
     {
-        levelingStat.OnDirtyEventAction += this.perkStat.MarkDirty;
-        perkStat.OnDirtyEventAction += currentStat.MarkDirty;
-        currentStat.OnDirtyEventAction += this.NotifyStatModified;
+        this.levelingStat.OnDirtyEventAction += this.pointStats.MarkDirty;
+        this.pointStats.OnDirtyEventAction += this.perkStat.MarkDirty;
+        this.perkStat.OnDirtyEventAction += this.currentStat.MarkDirty;
+        this.currentStat.OnDirtyEventAction += this.NotifyStatModified;
     }
 
     public void OnDisable()
     {
-        levelingStat.OnDirtyEventAction -= this.perkStat.MarkDirty;
-        perkStat.OnDirtyEventAction -= this.currentStat.MarkDirty;
-        currentStat.OnDirtyEventAction -= this.NotifyStatModified;
+        this.levelingStat.OnDirtyEventAction -= this.pointStats.MarkDirty;
+        this.pointStats.OnDirtyEventAction -= this.perkStat.MarkDirty;
+        this.perkStat.OnDirtyEventAction -= this.currentStat.MarkDirty;
+        this.currentStat.OnDirtyEventAction -= this.NotifyStatModified;
 
     }
 }

@@ -14,11 +14,16 @@ public enum DamageType
 
 public class CharacterStatsSystem : InitializableBase
 {
-    [SerializeField, HideInInspector] public Dictionary<CharacterStatType, Stat> currentStats;
-    [SerializeField, HideInInspector] public Dictionary<DamageType, Stat> resistanceStats;
-    [SerializeField, HideInInspector] public Dictionary<CharacterStatType, float> levelIncreasingStatWithLevelingValue;
+    private Dictionary<CharacterStatType, Stat> currentStats;
+    private Dictionary<DamageType, Stat> resistanceStats;
+    private Dictionary<CharacterStatType, float> levelIncreasingStatWithLevelingValue;
 
     [SerializeField] private CharacterStatsSO characterStateSo;
+
+
+    public Dictionary<CharacterStatType, Stat> CurrentStats => this.currentStats;
+    public Dictionary<DamageType, Stat> ResistanceStats => this.resistanceStats;
+
 
     public override void Init()
     {
@@ -27,6 +32,7 @@ public class CharacterStatsSystem : InitializableBase
         this.levelIncreasingStatWithLevelingValue ??= new Dictionary<CharacterStatType, float>();
 
         OnFirstWorldLoad();
+        SetInitialized();
     }
 
     private void OnFirstWorldLoad()
@@ -63,10 +69,10 @@ public class CharacterStatsSystem : InitializableBase
     private void Update()
     {
         foreach (var stat in this.currentStats.Values)
-            stat?.currentStat.Update();
+            stat?.CurrentStat.Update();
 
         foreach (var stat in this.resistanceStats.Values)
-            stat?.currentStat.Update();
+            stat?.CurrentStat.Update();
     }
 
 
@@ -115,7 +121,7 @@ public class CharacterStatsSystem : InitializableBase
     public bool AddStatModifier(StatusEffect effect)
     {
         if (this.currentStats.TryGetValue(effect.statType, out Stat stat))
-            return stat.currentStat.AddModifier(effect);
+            return stat.CurrentStat.AddModifier(effect);
 
         Debug.LogWarning($"Stat {effect.statType} not found for adding modifier!");
         return false;
@@ -126,11 +132,26 @@ public class CharacterStatsSystem : InitializableBase
         foreach (var kvp in this.levelIncreasingStatWithLevelingValue)
         {
             if (this.currentStats.TryGetValue(kvp.Key, out Stat stat))
-                stat.levelingStat.LevelUp(kvp.Value);
+                stat.LevelingStat.LevelUp(kvp.Value);
             else
                 Debug.LogWarning($"Stat {kvp.Key} not found for leveling up!");
         }
     }
+
+    public void AddPointToStat(CharacterStatType type, float points)
+    {
+        if (this.currentStats.TryGetValue(type, out Stat stat))
+        {
+            stat.PointStats.AddPointModifier(points);
+        }
+        else
+        {
+            Debug.LogWarning($"Stat {type} not found for adding points!");
+        }
+    }
+
+
+
 
 
 }

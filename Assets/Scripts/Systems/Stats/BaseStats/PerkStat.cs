@@ -7,7 +7,7 @@ public struct PerkStatData
     public string perkName;
     public float perkStatModifier;
     public bool isPercentage;
-    public PerkStatData(string statName, float modifier,bool isPercentage)
+    public PerkStatData(string statName, float modifier, bool isPercentage)
     {
         this.perkName = statName;
         this.perkStatModifier = modifier;
@@ -15,8 +15,7 @@ public struct PerkStatData
     }
 }
 
-
-public class L2PerkStat : IBaseStatProvider
+public class PerkStat : IBaseStatProvider
 {
     private IBaseStatProvider baseStat;
     [SerializeField, HideInInspector] private List<PerkStatData> modifiers = new();
@@ -25,6 +24,8 @@ public class L2PerkStat : IBaseStatProvider
     private float cachedValue;
 
     public event Action OnDirtyEventAction;
+
+
 
     public void SetBase(IBaseStatProvider baseStat) => this.baseStat = baseStat;
 

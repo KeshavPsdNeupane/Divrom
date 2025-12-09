@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class L1LevelingStat : IBaseStatProvider
+public class LevelingStat : IBaseStatProvider
 {
     [SerializeField] private float baseValue;
     private bool isDirty = true;
@@ -9,7 +9,7 @@ public class L1LevelingStat : IBaseStatProvider
 
     public event Action OnDirtyEventAction;
 
-    public L1LevelingStat(float baseValue)
+    public LevelingStat(float baseValue)
     {
         this.baseValue = baseValue;
         this.cachedValue = baseValue;
@@ -23,14 +23,14 @@ public class L1LevelingStat : IBaseStatProvider
 
     public void MarkDirty()
     {
-       this. isDirty = true;
-       this. OnDirtyEventAction?.Invoke();
+        this.isDirty = true;
+        this.OnDirtyEventAction?.Invoke();
     }
 
     public float GetValue()
     {
         if (!this.isDirty) return this.cachedValue;
-        this.cachedValue =this. baseValue;
+        this.cachedValue = this.baseValue;
         this.isDirty = false;
         return this.cachedValue;
     }

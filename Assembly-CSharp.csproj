@@ -50,8 +50,8 @@
   <ItemGroup>
     <Compile Include="Assets/Scripts/Systems/Actors/Player/PlayerStateController.cs" />
     <Compile Include="Assets/Scripts/Systems/Actors/Player/States/PlayerAttack.cs" />
-    <Compile Include="Assets/Scripts/Ui/Menu/MenuController.cs" />
     <Compile Include="Assets/Scripts/Systems/Inventory/InventorySystem.cs" />
+    <Compile Include="Assets/Scripts/Systems/Stats/BaseStats/ArmorAndBuffAndDebuffEffectStat.cs" />
     <Compile Include="Assets/Scripts/Systems/Stats/StatusEffect/StatusEffectContainer.cs" />
     <Compile Include="Assets/Scripts/Systems/Actors/Player/PlayerInitCaller.cs" />
     <Compile Include="Assets/Scripts/Systems/Stats/StatusEffect/StatusEffect.cs" />
@@ -62,16 +62,24 @@
     <Compile Include="Assets/Scripts/Managers/DatabaseManager.cs" />
     <Compile Include="Assets/Scripts/Ui/Inventory/ItemSlot/SimpleItemUIDragAndDropInteractionHelperClass.cs" />
     <Compile Include="Assets/Scripts/Component/AttackComponent.cs" />
+    <Compile Include="Assets/Scripts/Ui/State/InGameUI/GameplayUIController.cs" />
     <Compile Include="Assets/Scripts/Systems/Inventory/InventoryHolder.cs" />
     <Compile Include="Assets/Scripts/Managers/Init/InitCallerManager.cs" />
     <Compile Include="Assets/Scripts/Utils/ItemSlotDoubleTap.cs" />
+    <Compile Include="Assets/Scripts/Systems/Stats/BaseStats/BuffDebuffArmorStatusModifier.cs" />
+    <Compile Include="Assets/Scripts/Ui/State/UIStateManager.cs" />
     <Compile Include="Assets/Scripts/Managers/DragDropManager.cs" />
     <Compile Include="Assets/Scripts/Systems/Actors/Player/PlayerBaseState.cs" />
+    <Compile Include="Assets/Scripts/Systems/Stats/BaseStats/LevelingStat.cs" />
     <Compile Include="Assets/Scripts/Systems/Stats/CharacterStats/CharacterStatsSystem.cs" />
+    <Compile Include="Assets/Scripts/Ui/State/InGameUI/InGameUIInitCaller.cs" />
+    <Compile Include="Assets/Scripts/Systems/Stats/BaseStats/PointStats.cs" />
     <Compile Include="Assets/Scripts/Systems/Inventory/Item/ItemPickup.cs" />
     <Compile Include="Assets/Scripts/Ui/PanelFader.cs" />
     <Compile Include="Assets/Scripts/Component/Animation/AnimationComponent.cs" />
     <Compile Include="Assets/Scripts/Ui/Inventory/ItemSlot/ItemSlotUI.cs" />
+    <Compile Include="Assets/Scripts/Ui/PanelController.cs" />
+    <Compile Include="Assets/Scripts/Systems/Stats/BaseStats/PerkStat.cs" />
     <Compile Include="Assets/Game/CoreScript/SelectionBase.cs" />
     <Compile Include="Assets/Scripts/Systems/Actors/Player/States/PlayerMove.cs" />
     <Compile Include="Assets/Scripts/Systems/Stats/CharacterStats/CharacterStatsGUI.cs" />
@@ -87,20 +95,16 @@
     <Compile Include="Assets/Scripts/Ui/Inventory/InventoryDisplays/InventoryDisplay.cs" />
     <Compile Include="Assets/Scripts/Systems/Actors/Enemy/TestEnemyComponent.cs" />
     <Compile Include="Assets/Scripts/Ui/Stat/StatDescription.cs" />
-    <Compile Include="Assets/Scripts/Systems/Stats/BaseStats/L3BuffDebuffArmorStatusModifier.cs" />
-    <Compile Include="Assets/Scripts/Systems/Stats/BaseStats/L3ArmorAndBuffAndDebuffEffectStat.cs" />
     <Compile Include="Assets/Scripts/Systems/Inventory/Slot/ItemSlot.cs" />
     <Compile Include="Assets/Game/Input/InputManager.cs" />
     <Compile Include="Assets/Scripts/Managers/Init/IInitializable.cs" />
     <Compile Include="Assets/Scripts/Systems/Actors/Player/PlayerAnimationThreshold.cs" />
-    <Compile Include="Assets/Scripts/Systems/Stats/BaseStats/L2PerkStat.cs" />
     <Compile Include="Assets/Scripts/Systems/Stats/BaseStats/Stat.cs" />
-    <Compile Include="Assets/Scripts/Ui/InventoryPanelController.cs" />
+    <Compile Include="Assets/Scripts/Ui/State/UIState.cs" />
     <Compile Include="Assets/Scripts/Utils/SerializableDictionary.cs" />
     <Compile Include="Assets/Scripts/Systems/Actors/Player/States/PlayerIdle.cs" />
     <Compile Include="Assets/Scripts/Systems/Stats/CharacterStats/CharacterStatsSO.cs" />
     <Compile Include="Assets/Scripts/Systems/Inventory/Item/ItemDatabaseSO.cs" />
-    <Compile Include="Assets/Scripts/Systems/Stats/BaseStats/L1LevelingStat.cs" />
     <Compile Include="Assets/Scripts/Systems/Actors/Player/PlayerStateManager.cs" />
     <Compile Include="Assets/Scripts/Systems/Actors/Player/PlayerStates.cs" />
   </ItemGroup>

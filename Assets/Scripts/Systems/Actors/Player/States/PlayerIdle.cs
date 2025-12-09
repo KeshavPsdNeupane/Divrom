@@ -10,8 +10,8 @@ public class PlayerIdle : PlayerBaseState
         string name = "PlayerIdle")
         : base(baseStateManager, playerStateController, animationBoolName, name)
     {
-        this.movementComponent = this.playerStateController.movementComponent;
-        this.animationComponent = this.playerStateController.animationComponent;
+        this.movementComponent = this.playerStateController.MovementComponent;
+        this.animationComponent = this.playerStateController.AnimationComponent;
     }
 
     public override void Enter()
@@ -21,8 +21,11 @@ public class PlayerIdle : PlayerBaseState
 
     public override void Update()
     {
-        if (this.movementComponent.direction.sqrMagnitude >= PlayerAnimationThreshold.WALKING_THRESHOLD)
-            this.stateManager.ChangeState(this.playerStateController.playerStates.playermove);
+        if (this.movementComponent.direction.sqrMagnitude
+        >= AnimationThreshold.WALKING_THRESHOLD)
+            this.stateManager.ChangeState(
+                this.playerStateController.PlayerStates.PlayerMove
+                );
     }
 
     public override void PhysicUpdate()

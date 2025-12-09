@@ -9,37 +9,39 @@ public class Tab
     public GameObject tabPage;
 }
 
-public class TabController : MonoBehaviour
+public class TabController : InitializableBase
 {
     [SerializeField] private Tab[] tabs;
     [SerializeField] private Button[] buttons;
 
-    void Awake()
+    public override void Init()
     {
         for (int i = 0; i < buttons.Length; i++)
         {
             int index = i;
-            buttons[i].onClick.AddListener(() => ActivateTab(index));
+            this.buttons[i].onClick.AddListener(() => ActivateTab(index));
         }
+        SetInitialized();
     }
 
     void Start()
     {
-        ActivateTab(0);
+        int firstTabIndex = 0;
+        ActivateTab(firstTabIndex);
     }
 
     public void ActivateTab(int tabIndex)
     {
         for (int i = 0; i < tabs.Length; i++)
         {
-            bool isActive = (i == tabIndex);
+            bool isActive = i == tabIndex;
 
-            if (tabs[i].tabImage != null)
-                tabs[i].tabImage.color = isActive ? Color.white : Color.gray;
+            if (this.tabs[i].tabImage != null)
+                this.tabs[i].tabImage.color = isActive ? Color.white : Color.gray;
 
-            if (tabs[i].tabPage != null)
-                tabs[i].tabPage.SetActive(isActive);
-            TMP_Text tmpText = tabs[i].tabPage?.GetComponentInChildren<TMP_Text>();
+            if (this.tabs[i].tabPage != null)
+                this.tabs[i].tabPage.SetActive(isActive);
+            TMP_Text tmpText = this.tabs[i].tabPage?.GetComponentInChildren<TMP_Text>();
             if (tmpText != null)
             {
                 tmpText.color = isActive ? Color.white : Color.gray;

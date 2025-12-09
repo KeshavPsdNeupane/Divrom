@@ -14,6 +14,7 @@ public class InventoryHolder : InitializableBase
     public override void Init()
     {
         primaryInventorySystem = new InventorySystem(this.primaryInventorySize);
+        SetInitialized();
     }
 
 }

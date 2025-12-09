@@ -22,13 +22,13 @@ public class PlayerItemCollector : InitializableBase
 
         if (this.inventoryHolder == null)
             Debug.LogError("No InventoryHolder assigned to PlayerItemCollector", this);
+        SetInitialized();
     }
 
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        var itemPickup = other.GetComponent<ItemPickup>();
-        if (itemPickup == null) return;
+        if (!other.TryGetComponent<ItemPickup>(out var itemPickup)) return;
 
         var inventory = this.inventoryHolder.PrimaryInventorySystem;
         if (inventory == null) return;

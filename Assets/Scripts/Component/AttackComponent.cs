@@ -17,6 +17,7 @@ public class AttackComponent : InitializableBase
             Debug.LogWarning("CharacterStatsSystem not assigned in AttackComponent, trying to get it from the GameObject.");
             this.statsSystem = GetComponent<CharacterStatsSystem>();
         }
+        SetInitialized();
 
     }
     // Making this since we are using New Init Lifecycle 
@@ -36,7 +37,7 @@ public class AttackComponent : InitializableBase
         // Checking So all the stats exist and are initialized
         // Checking still in just case for someone who doesn't use the Init Lifecycle
         if (this.statsSystem != null &&
-            this.statsSystem.currentStats != null) Subscribe();
+            this.statsSystem.CurrentStats != null) Subscribe();
     }
 
     void OnDisable() => Unsubscribe();
@@ -54,9 +55,9 @@ public class AttackComponent : InitializableBase
         this.statsSystem.StatsSubscribe(CharacterStatType.CRATE, CriticalRateCallback);
         this.statsSystem.StatsSubscribe(CharacterStatType.CDMG, CalculateDamage);
         // Initial fetch
-        AttackCallback(this.statsSystem.currentStats[CharacterStatType.ATK].GetValue());
-        CriticalRateCallback(this.statsSystem.currentStats[CharacterStatType.CRATE].GetValue());
-        CalculateDamage(this.statsSystem.currentStats[CharacterStatType.CDMG].GetValue());
+        AttackCallback(this.statsSystem.CurrentStats[CharacterStatType.ATK].GetValue());
+        CriticalRateCallback(this.statsSystem.CurrentStats[CharacterStatType.CRATE].GetValue());
+        CalculateDamage(this.statsSystem.CurrentStats[CharacterStatType.CDMG].GetValue());
 
     }
 

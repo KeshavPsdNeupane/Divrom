@@ -6,6 +6,11 @@ using UnityEngine;
 /// </summary>
 public abstract class InitializableBase : MonoBehaviour, IInitializable
 {
+    public bool IsInitialized { get; protected set; } = false;
+
+    protected void SetInitialized(bool initialized = true)
+    => this.IsInitialized = initialized;
+
     /// <summary>
     /// Called once after dependencies are injected. Override or use method-injection.
     /// </summary>

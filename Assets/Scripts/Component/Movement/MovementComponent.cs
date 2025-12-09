@@ -18,8 +18,8 @@ public class MovementComponent : InitializableBase
         {
             Debug.LogWarning("CharacterStatsSystem not assigned in MovementComponent, trying to get it from the GameObject.");
             this.characterStats = GetComponent<CharacterStatsSystem>();
-
         }
+        SetInitialized();
     }
     //void Start() => SubscribeToMovementSpeed(); 
     void OnEnable() => SubscribeToMovementSpeed();
@@ -30,18 +30,18 @@ public class MovementComponent : InitializableBase
     private void SubscribeToMovementSpeed()
     {
         if (this.characterStats != null &&
-            this.characterStats.currentStats != null)
+            this.characterStats.CurrentStats != null)
         {
             this.characterStats.StatsSubscribe(CharacterStatType.SPD, MovementSpeedCallBack);
             // Initial fetch
-            MovementSpeedCallBack(this.characterStats.currentStats[CharacterStatType.SPD].GetValue());
+            MovementSpeedCallBack(this.characterStats.CurrentStats[CharacterStatType.SPD].GetValue());
         }
     }
 
     private void UnsubscribeFromMovementSpeed()
     {
         if (this.characterStats != null &&
-           this.characterStats.currentStats != null)
+           this.characterStats.CurrentStats != null)
         {
             this.characterStats.StatsUnsubscribe(CharacterStatType.SPD, MovementSpeedCallBack);
         }
@@ -75,7 +75,7 @@ public class MovementComponent : InitializableBase
 
         this.rb.linearVelocity = finalSpeed * movementSpeedMult * direction.normalized;
 
-        if (direction.sqrMagnitude > PlayerAnimationThreshold.WALKING_THRESHOLD)
+        if (direction.sqrMagnitude > AnimationThreshold.WALKING_THRESHOLD)
             lastDirection = direction;
     }
 }

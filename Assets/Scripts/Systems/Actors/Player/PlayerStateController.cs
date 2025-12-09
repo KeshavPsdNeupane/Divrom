@@ -8,21 +8,39 @@ using UnityEngine.InputSystem;
 ///</summary>
 public class PlayerStateController : InitializableBase
 {
-    [field: SerializeField] public MovementComponent movementComponent { get; private set; }
-    [field: SerializeField] public AnimationComponent animationComponent { get; private set; }
-    [field: SerializeField] public AttackComponent attackComponent { get; private set; }
+    // Need the [field: SerializeField] syntax to make auto-properties
+    // serializable in Unity, since we cant use SerializeField with Geter and Setter
+    // So i have to use this syntax to keep the properties encapsulated
+    // while still allowing Unity to serialize them.
+    [SerializeField] private MovementComponent movementComponent;
+    [SerializeField] private AnimationComponent animationComponent;
+    [SerializeField] private AttackComponent attackComponent;
+    private PlayerStateManager stateMachine;
+    private PlayerStates playerStates;
 
-    public PlayerStateManager stateMachine { get; private set; }
-    public PlayerStates playerStates { get; private set; }
+
+    // Public getters for the components
+    public MovementComponent MovementComponent => movementComponent;
+    public AnimationComponent AnimationComponent => animationComponent;
+    public AttackComponent AttackComponent => attackComponent;
+
+    public PlayerStateManager StateMachine => stateMachine;
+    public PlayerStates PlayerStates => playerStates;
+
+
 
     public override void Init()
     {
         this.stateMachine = new PlayerStateManager();
         this.playerStates = new PlayerStates(this.stateMachine, this);
-        this.stateMachine.Initialize(this.playerStates.playerIdle);
+        this.stateMachine.Initialize(this.playerStates.PlayerIdle);
+        SetInitialized();
+    }
+
+    private void OnEnable()
+    {
         this.animationComponent.OnAnimationTrigger += HandleAnimationTrigger;
         this.attackComponent.OnAttackPerformed += Attack;
-
     }
 
     private void OnDisable()
@@ -31,8 +49,8 @@ public class PlayerStateController : InitializableBase
         this.attackComponent.OnAttackPerformed -= Attack;
     }
 
-    private void Update() => this.stateMachine.currentState.Update();
-    private void FixedUpdate() => this.stateMachine.currentState.PhysicUpdate();
+    private void Update() => this.stateMachine.CurrentState.Update();
+    private void FixedUpdate() => this.stateMachine.CurrentState.PhysicUpdate();
 
 
     // this delegate func called when AttackComponent invokes OnAttackPerformed event
@@ -41,7 +59,7 @@ public class PlayerStateController : InitializableBase
     // and allows for more flexible attack triggering
     private void Attack()
     {
-        this.stateMachine.ChangeState(this.playerStates.playerAttack);
+        this.stateMachine.ChangeState(this.playerStates.PlayerAttack);
     }
 
     // this delegate func called when AnimationComponent invokes OnAnimationTrigger event
@@ -52,6 +70,6 @@ public class PlayerStateController : InitializableBase
     // this class on Root Player GameObject
     public void HandleAnimationTrigger()
     {
-        this.stateMachine.currentState.OnAnimationTrigger();
+        this.stateMachine.CurrentState.OnAnimationTrigger();
     }
 }

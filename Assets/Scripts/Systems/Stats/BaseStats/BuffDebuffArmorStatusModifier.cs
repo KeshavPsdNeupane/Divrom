@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [System.Serializable]
-public class L3BuffDebuffArmorStatusModifier
+public class BuffDebuffArmorStatusModifier
 {
     [HideInInspector] public bool canRemove = false;
     [HideInInspector] public CountdownTimer durationCountDownTimer;
@@ -23,7 +23,7 @@ public class L3BuffDebuffArmorStatusModifier
 
 
 
-    public L3BuffDebuffArmorStatusModifier(StatusEffect effect)
+    public BuffDebuffArmorStatusModifier(StatusEffect effect)
     {
         this.statusEffect = effect;
     }

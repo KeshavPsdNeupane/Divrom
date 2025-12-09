@@ -3,13 +3,22 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
-public abstract class InventoryDisplay : MonoBehaviour
+public abstract class InventoryDisplay : InitializableBase
 {
     protected InventorySystem primaryInventorySystem;
     protected Dictionary<ItemSlot, ItemSlotUI> slotDictionary;
     public InventorySystem PrimaryInventorySystem => this.primaryInventorySystem;
     public abstract void AssignSlot(InventorySystem invToDisplay);
-    protected virtual void Start() { }
+
+    public virtual void Start()
+    {
+        if (!this.IsInitialized)
+        {
+            Init();
+            SetInitialized();
+        }
+
+    }
 
     protected virtual void UpdateSlot(ItemSlot updatedSlot)
     {
@@ -24,10 +33,10 @@ public abstract class InventoryDisplay : MonoBehaviour
     }
     public void RefreshAllSlot()
     {
-       foreach (var slot in this.slotDictionary.Keys)
-       {
+        foreach (var slot in this.slotDictionary.Keys)
+        {
             UpdateSlot(slot);
-       }
+        }
     }
 
 }

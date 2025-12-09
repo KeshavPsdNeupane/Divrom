@@ -230,8 +230,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5882105371156310893}
-  - {fileID: 4237057792508296817}
   - {fileID: 7003031078553305460}
+  - {fileID: 4237057792508296817}
   m_Father: {fileID: 7554677529560786835}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2859627847546138103
@@ -630,6 +630,7 @@ MonoBehaviour:
   - {fileID: 7497465890913298284}
   - {fileID: 9282068593721592}
   - {fileID: 8605701593970286928}
+  canCallInAwake: 1
   autoPopulate: 0
   includeChildren: 1
   traversal: 0
@@ -645,9 +646,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ec997d50bf99354ca4f5fa2cdd69c8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerStateController
-  <movementComponent>k__BackingField: {fileID: 8750556214948449428}
-  <animationComponent>k__BackingField: {fileID: 883778599025567934}
-  <attackComponent>k__BackingField: {fileID: 5800124157191849082}
+  movementComponent: {fileID: 8750556214948449428}
+  animationComponent: {fileID: 883778599025567934}
+  attackComponent: {fileID: 5800124157191849082}
 --- !u!1 &6839903290555184110
 GameObject:
   m_ObjectHideFlags: 0

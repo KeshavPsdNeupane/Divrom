@@ -10,8 +10,8 @@ public class PlayerAttack : PlayerBaseState
         string name = "PlayerAttack")
         : base(baseStateManager, playerStateController, animationBoolName, name)
     {
-        this.movementComponent = this.playerStateController.movementComponent;
-        this.animationComponent = this.playerStateController.animationComponent;
+        this.movementComponent = this.playerStateController.MovementComponent;
+        this.animationComponent = this.playerStateController.AnimationComponent;
     }
 
     public override void Enter()
@@ -26,7 +26,7 @@ public class PlayerAttack : PlayerBaseState
     }
     public override void OnAnimationTrigger()
     {
-        this.stateManager.ChangeState(this.playerStateController.playerStates.playerIdle);
+        this.stateManager.ChangeState(this.playerStateController.PlayerStates.PlayerIdle);
     }
     public override void Exit()
     {

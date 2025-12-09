@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class L3ArmorAndBuffAndDeBuffEffectStat : IBaseStatProvider
+public class ArmorAndBuffAndDeBuffEffectStat : IBaseStatProvider
 {
     private IBaseStatProvider baseStat;
-    [SerializeField, HideInInspector] private List<L3BuffDebuffArmorStatusModifier> modifiers = new();
+    private List<BuffDebuffArmorStatusModifier> modifiers = new();
 
     private bool isDirty = true;
     private float cachedValue;
@@ -19,10 +19,10 @@ public class L3ArmorAndBuffAndDeBuffEffectStat : IBaseStatProvider
         this.OnDirtyEventAction?.Invoke();
     }
 
-    private void CanRemoveModifier(L3BuffDebuffArmorStatusModifier csm)
+    private void CanRemoveModifier(BuffDebuffArmorStatusModifier csm)
     => csm.canRemove = true;
 
-    public void RemoveModifier(L3BuffDebuffArmorStatusModifier csm)
+    public void RemoveModifier(BuffDebuffArmorStatusModifier csm)
     {
         this.modifiers.Remove(csm);
         MarkDirty();
@@ -84,7 +84,7 @@ public class L3ArmorAndBuffAndDeBuffEffectStat : IBaseStatProvider
         if (alreadyApplied)
             return false;
 
-        var mod = new L3BuffDebuffArmorStatusModifier(effect);
+        var mod = new BuffDebuffArmorStatusModifier(effect);
 
         // Subscribe to timer stop if temporary
         if (!mod.IsPermanentBuff)

@@ -17,6 +17,7 @@ public class StatusEffectConnector : InitializableBase
             this.effectArea = this.gameObject.GetComponent<CircleCollider2D>();
         this.effectArea.isTrigger = this.isTrigger;
         this.effectArea.radius = this.radius;
+        SetInitialized();
     }
 
     private void OnTriggerEnter2D(Collider2D effectCollidor)

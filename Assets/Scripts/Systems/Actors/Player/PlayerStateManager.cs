@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class PlayerStateManager
 {
-    public PlayerBaseState currentState { get; private set; }
+    private PlayerBaseState currentState;
+    public PlayerBaseState CurrentState => this.currentState;
     public void Initialize(PlayerBaseState state)
     {
         this.currentState = state;
@@ -14,5 +15,5 @@ public class PlayerStateManager
         this.currentState = state;
         this.currentState?.Enter();
     }
-   
+
 }

@@ -1,5 +1,7 @@
 public interface IInitializable
 {
+    bool IsInitialized { get; }
+
     /// <summary>
     /// Called once after dependencies are injected.
     /// </summary>
