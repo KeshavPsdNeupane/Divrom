@@ -1,7 +1,4 @@
-﻿using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 public abstract class InventoryDisplay : InitializableBase
 {
@@ -10,15 +7,7 @@ public abstract class InventoryDisplay : InitializableBase
     public InventorySystem PrimaryInventorySystem => this.primaryInventorySystem;
     public abstract void AssignSlot(InventorySystem invToDisplay);
 
-    public virtual void Start()
-    {
-        if (!this.IsInitialized)
-        {
-            Init();
-            SetInitialized();
-        }
-
-    }
+    protected virtual void Start() { }
 
     protected virtual void UpdateSlot(ItemSlot updatedSlot)
     {

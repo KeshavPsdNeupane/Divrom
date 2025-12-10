@@ -9,7 +9,6 @@ public class PlayerInventoryDisplayUI : InventoryDisplay
 
     public override void Init()
     {
-        base.Init();
         if (inventoryHolder == null)
         {
             Debug.LogError($"PlayerInventoryDisplayUI ({gameObject.name}):" +
@@ -26,15 +25,15 @@ public class PlayerInventoryDisplayUI : InventoryDisplay
             return;
         }
 
+    }
+
+    protected override void Start()
+    {
         this.primaryInventorySystem = inventoryHolder.PrimaryInventorySystem;
         this.primaryInventorySystem.onInventoryShotChanged += UpdateSlot;
         AssignSlot(this.primaryInventorySystem);
-
-
-        // so i can init the display on Start if needed
-        if (this.inventoryHolder.IsInitialized) SetInitialized();
-        else Init();
     }
+
 
     public override void AssignSlot(InventorySystem invToDisplay)
     {
