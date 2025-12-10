@@ -20,8 +20,8 @@ public class ItemSlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     public InventoryDisplay ParentDisplay { get; private set; }
 
-    private Canvas parentCanvas;
-    private CanvasGroup canvasGroup;
+    [SerializeField] private Canvas parentCanvas;
+    [SerializeField] private CanvasGroup canvasGroup;
     private SimpleItemUIDragAndDropInteractionHelperClass simpleDragDropHelperClass;
 
     private void Awake()
@@ -31,7 +31,7 @@ public class ItemSlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
         this.parentCanvas = GetComponentInParent<Canvas>();
         this.canvasGroup = GetComponent<CanvasGroup>();
-        this.simpleDragDropHelperClass = new SimpleItemUIDragAndDropInteractionHelperClass();
+        this.simpleDragDropHelperClass = new();
         if (this.canvasGroup == null) this.canvasGroup = this.gameObject.AddComponent<CanvasGroup>();
         UpdateUiSlot();
     }
@@ -49,9 +49,9 @@ public class ItemSlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             splitActionButtonAssignment.onDoubleTapEvent -= SplitItem;
 
         if (this.simpleDragDropHelperClass != null && this.canvasGroup != null)
-        {   
+        {
             this.simpleDragDropHelperClass.EndTheDrag(this.canvasGroup, this);
-        }   
+        }
     }
 
     public void Init(ItemSlot slot)
@@ -76,8 +76,6 @@ public class ItemSlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     public void UpdateUiSlot()
     {
-
-
         if (this.assignedInventorySlot != null)
             UpdateUiSlot(this.assignedInventorySlot);
     }
@@ -100,7 +98,7 @@ public class ItemSlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     }
     public void OnEndDrag(PointerEventData eventData)
     {
-        this.simpleDragDropHelperClass.EndTheDrag(this.canvasGroup,this);
+        this.simpleDragDropHelperClass.EndTheDrag(this.canvasGroup, this);
     }
     #endregion
 

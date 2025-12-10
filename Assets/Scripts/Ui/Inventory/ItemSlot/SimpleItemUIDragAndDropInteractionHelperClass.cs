@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -9,10 +10,13 @@ public class SimpleItemUIDragAndDropInteractionHelperClass
         ItemSlot tempCopy = new ItemSlot(itemUISlot.AssignedInventorySlot.ItemData, itemUISlot.AssignedInventorySlot.StackCount);
         if (DragDropManager.Instance == null)
         {
-            GameObject go = new GameObject("DragDropManager");
+            GameObject go = new("DragDropManager");
             go.AddComponent<DragDropManager>();
         }
-        DragDropManager.Instance.BeginDrag(tempCopy, itemUISlot, parentCanvas, itemUISlot.AssignedInventorySlot.ItemData.itemIcon);
+        DragDropManager.Instance.BeginDrag(
+            tempCopy, itemUISlot, parentCanvas,
+            itemUISlot.AssignedInventorySlot.ItemData.itemIcon);
+
         canvasGroup.alpha = 0.5f;
         canvasGroup.blocksRaycasts = false;
     }
@@ -30,7 +34,9 @@ public class SimpleItemUIDragAndDropInteractionHelperClass
         if (DragDropManager.Instance != null)
             DragDropManager.Instance.EndDrag();
 
-        if (itemUISlot.ParentDisplay != null && itemUISlot.AssignedInventorySlot != null && itemUISlot.ParentDisplay.isActiveAndEnabled)
+        if (itemUISlot.ParentDisplay != null
+        && itemUISlot.AssignedInventorySlot != null
+        && itemUISlot.ParentDisplay.isActiveAndEnabled)
         {
             itemUISlot.ParentDisplay.RefreshSlot(itemUISlot.AssignedInventorySlot);
         }
@@ -74,14 +80,14 @@ public class SimpleItemUIDragAndDropInteractionHelperClass
             }
             else if (availableSpace > 0)
             {
-               SameItemButCannotFullyMergeOnTargetSlot(targetUISlot, draggedSlot, sourceUISlot, availableSpace);
+                SameItemButCannotFullyMergeOnTargetSlot(targetUISlot, draggedSlot, sourceUISlot, availableSpace);
                 mgr.EndDrag();
                 return;
             }
             else
             {
-                // target full - nothing changes
-               RefreshBothInventorySlot(sourceUISlot, targetUISlot);
+                // same item but target full - nothing changes
+                RefreshBothInventorySlot(sourceUISlot, targetUISlot);
                 mgr.EndDrag();
                 return;
             }
@@ -91,18 +97,9 @@ public class SimpleItemUIDragAndDropInteractionHelperClass
         mgr.EndDrag();
     }
 
-
-
-
-
-    public void TargetIsEmptyMovingAllItemAndClearTheScource(ItemSlotUI targetUISlot, ItemSlot draggedSlot, ItemSlotUI sourceUISlot)
-    {
-        targetUISlot.AssignedInventorySlot.SetInventorySlot(draggedSlot.ItemData, draggedSlot.StackCount);
-        sourceUISlot.AssignedInventorySlot.ClearSlot();
-        RefreshBothInventorySlot(sourceUISlot, targetUISlot);
-    }
-
-    public void SameItemAndCanMergeFullyOnTargetSlot(ItemSlotUI targetUISlot, ItemSlot draggedSlot, ItemSlotUI sourceUISlot)
+    private void SameItemAndCanMergeFullyOnTargetSlot(
+        ItemSlotUI targetUISlot, ItemSlot draggedSlot,
+        ItemSlotUI sourceUISlot)
     {
         targetUISlot.AssignedInventorySlot.AddToStack(draggedSlot.StackCount);
         sourceUISlot.AssignedInventorySlot.ClearSlot();
@@ -110,28 +107,54 @@ public class SimpleItemUIDragAndDropInteractionHelperClass
 
     }
 
-    public void SameItemButCannotFullyMergeOnTargetSlot(
-        ItemSlotUI targetUISlot, ItemSlot draggedSlot, ItemSlotUI sourceUISlot, int availableSpace)
+    private void SameItemButCannotFullyMergeOnTargetSlot(
+    ItemSlotUI targetUISlot, ItemSlot draggedSlot,
+    ItemSlotUI sourceUISlot, int availableSpace)
     {
         targetUISlot.AssignedInventorySlot.AddToStack(availableSpace);
-        sourceUISlot.AssignedInventorySlot.AddToStack(-availableSpace); // subtract from source
+        // subtract from source 
+        sourceUISlot.AssignedInventorySlot.AddToStack(-availableSpace);
+        RefreshBothInventorySlot(sourceUISlot, targetUISlot);
+    }
+    private void TargetIsEmptyMovingAllItemAndClearTheScource(ItemSlotUI targetUISlot, ItemSlot draggedSlot, ItemSlotUI sourceUISlot)
+    {
+        targetUISlot.AssignedInventorySlot.SetInventorySlot(draggedSlot.ItemData, draggedSlot.StackCount);
+        sourceUISlot.AssignedInventorySlot.ClearSlot();
         RefreshBothInventorySlot(sourceUISlot, targetUISlot);
     }
 
-    public void RefreshBothInventorySlot(ItemSlotUI sourceUISlot, ItemSlotUI targetUISlot)
-    {
-        sourceUISlot.ParentDisplay?.RefreshSlot(sourceUISlot.AssignedInventorySlot);
-        targetUISlot.ParentDisplay?.RefreshSlot(targetUISlot.AssignedInventorySlot);
-    }
-
-    public void SwapItemSlot(ItemSlotUI sourceUISlot, ItemSlotUI targetUISlot)
+    private void SwapItemSlot(ItemSlotUI sourceUISlot, ItemSlotUI targetUISlot)
     {
         // Create deep copies to avoid referencing the same ItemData incorrectly
-        ItemSlot sourceCopy = new ItemSlot(sourceUISlot.AssignedInventorySlot.ItemData, sourceUISlot.AssignedInventorySlot.StackCount);
-        ItemSlot targetCopy = new ItemSlot(targetUISlot.AssignedInventorySlot.ItemData, targetUISlot.AssignedInventorySlot.StackCount);
+        ItemSlot sourceCopy = new(sourceUISlot.AssignedInventorySlot.ItemData, sourceUISlot.AssignedInventorySlot.StackCount);
+        ItemSlot targetCopy = new(targetUISlot.AssignedInventorySlot.ItemData, targetUISlot.AssignedInventorySlot.StackCount);
+
         sourceUISlot.AssignedInventorySlot.SetInventorySlot(targetCopy);
         targetUISlot.AssignedInventorySlot.SetInventorySlot(sourceCopy);
         RefreshBothInventorySlot(sourceUISlot, targetUISlot);
+    }
+    private void RefreshBothInventorySlot(ItemSlotUI sourceUISlot, ItemSlotUI targetUISlot)
+    {
+        if (sourceUISlot == null || targetUISlot == null
+        || sourceUISlot.ParentDisplay == null
+        || targetUISlot.ParentDisplay == null) return;
+
+        sourceUISlot.ParentDisplay.RefreshSlot(sourceUISlot.AssignedInventorySlot);
+        targetUISlot.ParentDisplay.RefreshSlot(targetUISlot.AssignedInventorySlot);
+    }
+
+
+    // just in case we want to add drop item feature outside of UI
+    // right now might create deleting item using Dustbin feature
+    private bool IsDroppedOnUIElement()
+    {
+        PointerEventData pointerData = new(EventSystem.current)
+        {
+            position = Input.mousePosition
+        };
+        List<RaycastResult> raycastResults = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(pointerData, raycastResults);
+        return raycastResults.Count > 0;
     }
 
 }

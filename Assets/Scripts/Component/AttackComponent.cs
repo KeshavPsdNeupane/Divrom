@@ -2,6 +2,10 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
+/// <summary>
+/// Component responsible for handling attack logic based on character stats.
+/// Must be used In Init Lifecycle Manager.
+/// </summary>
 public class AttackComponent : InitializableBase
 {
     [SerializeField] private CharacterStatsSystem statsSystem;
@@ -20,18 +24,6 @@ public class AttackComponent : InitializableBase
         SetInitialized();
 
     }
-    // Making this since we are using New Init Lifecycle 
-    // that will 100% garuntee th CharacterStatsSystem is initialized before this component
-    // so we can subscribe to the stats updates safely
-    // leaving Start commented for reference
-    // private void Start()
-    // {
-    //     // this func is also here to ensure subscription in case OnEnable is missed
-    //     // and if we disable and enable the component later, we still
-    //     // want to subscribe to the stats updates in OnEnable   
-    //     Subscribe();
-    // }
-
     void OnEnable()
     {
         // Checking So all the stats exist and are initialized
@@ -43,29 +35,28 @@ public class AttackComponent : InitializableBase
     void OnDisable() => Unsubscribe();
 
     private void AttackCallback(float attack) => this.attack = attack;
-    private void CriticalRateCallback(float criticalChance)
-     => this.normalizedCriticalChance = criticalChance / 100f;
-    private void CalculateDamage(float criticalDamage)
-     => this.normalizedCriticalDamage = (100 + criticalDamage) / 100f;
+    private void CriticalRateCallBack(float criticalChance)
+     => this.normalizedCriticalChance = criticalChance * 0.01f;
+    private void CriticalDamageCallBack(float criticalDamage)
+     => this.normalizedCriticalDamage = 1 + criticalDamage * 0.01f;
 
 
     private void Subscribe()
     {
         this.statsSystem.StatsSubscribe(CharacterStatType.ATK, AttackCallback);
-        this.statsSystem.StatsSubscribe(CharacterStatType.CRATE, CriticalRateCallback);
-        this.statsSystem.StatsSubscribe(CharacterStatType.CDMG, CalculateDamage);
+        this.statsSystem.StatsSubscribe(CharacterStatType.CRATE, CriticalRateCallBack);
+        this.statsSystem.StatsSubscribe(CharacterStatType.CDMG, CriticalDamageCallBack);
         // Initial fetch
         AttackCallback(this.statsSystem.CurrentStats[CharacterStatType.ATK].GetValue());
-        CriticalRateCallback(this.statsSystem.CurrentStats[CharacterStatType.CRATE].GetValue());
-        CalculateDamage(this.statsSystem.CurrentStats[CharacterStatType.CDMG].GetValue());
-
+        CriticalRateCallBack(this.statsSystem.CurrentStats[CharacterStatType.CRATE].GetValue());
+        CriticalDamageCallBack(this.statsSystem.CurrentStats[CharacterStatType.CDMG].GetValue());
     }
 
     private void Unsubscribe()
     {
         this.statsSystem.StatsUnsubscribe(CharacterStatType.ATK, AttackCallback);
-        this.statsSystem.StatsUnsubscribe(CharacterStatType.CRATE, CriticalRateCallback);
-        this.statsSystem.StatsUnsubscribe(CharacterStatType.CDMG, CalculateDamage);
+        this.statsSystem.StatsUnsubscribe(CharacterStatType.CRATE, CriticalRateCallBack);
+        this.statsSystem.StatsUnsubscribe(CharacterStatType.CDMG, CriticalDamageCallBack);
     }
 
     public void AttackForInputSystem(InputAction.CallbackContext context)
@@ -83,7 +74,7 @@ public class AttackComponent : InitializableBase
     private float CalculateDamage()
     {
         float damage = this.attack;
-        if (normalizedCriticalChance >= 1f) { return damage * this.normalizedCriticalDamage; }
+        if (this.normalizedCriticalChance >= 1f) { return damage * this.normalizedCriticalDamage; }
 
         bool isCriticalHit = Random.value < this.normalizedCriticalChance;
         if (isCriticalHit)
@@ -92,5 +83,21 @@ public class AttackComponent : InitializableBase
         }
         return damage;
     }
+
+    private float CalculateDamage(float baseScalerStats)
+    {
+        float damage = baseScalerStats;
+        if (this.normalizedCriticalChance >= 1f) { return damage * this.normalizedCriticalDamage; }
+
+        bool isCriticalHit = Random.value < this.normalizedCriticalChance;
+        if (isCriticalHit)
+        {
+            return damage * this.normalizedCriticalDamage;
+        }
+        return damage;
+    }
+
+
+
 
 }
