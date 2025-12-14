@@ -1,6 +1,3 @@
-using UnityEngine;
-
-
 /// <summary>
 /// Simple InitLifecycleManager for In-Game UI components.
 /// </summary>

@@ -30,6 +30,5 @@ public class AnimationComponent : InitializableBase
     {
         this.anim.SetFloat(AnimationVariableHashes.DirectionX, direction.x);
         this.anim.SetFloat(AnimationVariableHashes.DirectionY, direction.y);
-
     }
 }

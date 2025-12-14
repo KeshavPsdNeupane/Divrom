@@ -1,15 +1,11 @@
-using UnityEngine;
-
 public class PlayerMove : PlayerBaseState
 {
     private readonly MovementComponent movementComponent;
     private readonly AnimationComponent animationComponent;
 
-
-
     public PlayerMove(PlayerStateManager baseStateManager,
         PlayerStateController playerStateController, string animationBoolName,
-        string name = "PlayerMove")
+        string name = "Move")
         : base(baseStateManager, playerStateController, animationBoolName, name)
     {
         this.movementComponent = this.playerStateController.MovementComponent;
@@ -18,8 +14,7 @@ public class PlayerMove : PlayerBaseState
 
     public override void Enter()
     {
-        this.animationComponent.MoveAnimation(this.movementComponent.direction);
-        this.animationComponent.anim.SetBool(this.animationBoolHash, true);
+        this.animationComponent.anim.Play(this.animationStateHash, 0, 0f);
     }
 
     public override void Update()
@@ -30,8 +25,7 @@ public class PlayerMove : PlayerBaseState
                 this.playerStateController.PlayerStates.PlayerIdle);
             return;
         }
-        this.animationComponent.MoveAnimation(
-            this.movementComponent.direction);
+        this.animationComponent.MoveAnimation(this.movementComponent.direction);
     }
 
     public override void PhysicUpdate()
@@ -39,8 +33,5 @@ public class PlayerMove : PlayerBaseState
         this.movementComponent.ApplyMovement();
     }
 
-    public override void Exit()
-    {
-        this.animationComponent.anim.SetBool(this.animationBoolHash, false);
-    }
+    public override void Exit() { }
 }

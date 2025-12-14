@@ -1,6 +1,4 @@
-using UnityEngine;
-
-public class TestEnemyComponent:PlayerStateController
+public class TestEnemyComponent : PlayerStateController
 {
-   
+
 }

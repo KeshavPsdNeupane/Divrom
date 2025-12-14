@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 /// <summary>
@@ -21,9 +19,9 @@ public class DragDropManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance != null && Instance != this) { Destroy(this.gameObject); return; }
+        if (Instance != null && Instance != this)
+        { Destroy(this.gameObject); return; }
         Instance = this;
-        DontDestroyOnLoad(this.gameObject);
     }
     public void BeginDrag(ItemSlot slotCopy, ItemSlotUI sourceUI, Canvas canvas, Sprite icon)
     {

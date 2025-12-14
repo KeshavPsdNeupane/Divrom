@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public class PlayerStates
 {
     private readonly PlayerIdle playerIdle;
@@ -12,6 +10,8 @@ public class PlayerStates
 
     public PlayerStates(PlayerStateManager baseStateMachine, PlayerStateController playerStateController)
     {
+        // write the string as the exact name of the animation state blendspace in the Animator
+        // to avoid typos use consts or enums in future refactorings
         this.playerIdle = new PlayerIdle(baseStateMachine, playerStateController, "Idle");
         this.playerMove = new PlayerMove(baseStateMachine, playerStateController, "Walk");
         this.playerAttack = new PlayerAttack(baseStateMachine, playerStateController, "BasicAttack");
