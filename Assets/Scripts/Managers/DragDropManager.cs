@@ -23,6 +23,16 @@ public class DragDropManager : MonoBehaviour
         { Destroy(this.gameObject); return; }
         Instance = this;
     }
+    public static DragDropManager GetOrCreateInstance()
+    {
+        if (Instance == null)
+        {
+            GameObject go = new("DragDropManager");
+            go.AddComponent<DragDropManager>();
+        }
+        return Instance;
+    }
+
     public void BeginDrag(ItemSlot slotCopy, ItemSlotUI sourceUI, Canvas canvas, Sprite icon)
     {
         this.CopyOfDraggedSourceItemSlot = slotCopy;

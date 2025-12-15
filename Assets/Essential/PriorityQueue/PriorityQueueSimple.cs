@@ -41,6 +41,8 @@ public class PriorityQueueSimple<TElement, TPriority>
     private const int Log2Arity = 2;
     private readonly Comparer<TPriority> _comparer;
     private readonly bool _useIndex;
+    // here the int stores the index array of the element in the heap
+    // so we can do O(log n) priority updates
     private readonly Dictionary<TElement, int> _indexMap;
 
     #region Constructors
