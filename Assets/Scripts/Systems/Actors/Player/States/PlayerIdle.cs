@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public class PlayerIdle : PlayerBaseState
 {
     private readonly MovementComponent movementComponent;
@@ -7,7 +5,7 @@ public class PlayerIdle : PlayerBaseState
 
     public PlayerIdle(PlayerStateManager baseStateManager,
         PlayerStateController playerStateController, string animationBoolName,
-        string name = "PlayerIdle")
+        string name = "Idle")
         : base(baseStateManager, playerStateController, animationBoolName, name)
     {
         this.movementComponent = this.playerStateController.MovementComponent;
@@ -16,7 +14,7 @@ public class PlayerIdle : PlayerBaseState
 
     public override void Enter()
     {
-        this.animationComponent.anim.SetBool(this.animationBoolHash, true);
+        this.animationComponent.anim.Play(this.animationStateHash, 0, 0f);
     }
 
     public override void Update()
@@ -32,8 +30,6 @@ public class PlayerIdle : PlayerBaseState
     {
         this.movementComponent.ApplyMovement();
     }
-    public override void Exit()
-    {
-        this.animationComponent.anim.SetBool(this.animationBoolHash, false);
-    }
+
+    public override void Exit() { }
 }

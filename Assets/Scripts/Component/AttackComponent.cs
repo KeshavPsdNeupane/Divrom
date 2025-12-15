@@ -72,32 +72,21 @@ public class AttackComponent : InitializableBase
 
 
     private float CalculateDamage()
-    {
-        float damage = this.attack;
-        if (this.normalizedCriticalChance >= 1f) { return damage * this.normalizedCriticalDamage; }
-
-        bool isCriticalHit = Random.value < this.normalizedCriticalChance;
-        if (isCriticalHit)
-        {
-            return damage * this.normalizedCriticalDamage;
-        }
-        return damage;
-    }
+    => CalculateDamage(this.attack);
 
     private float CalculateDamage(float baseScalerStats)
     {
         float damage = baseScalerStats;
-        if (this.normalizedCriticalChance >= 1f) { return damage * this.normalizedCriticalDamage; }
+        if (this.normalizedCriticalChance >= 1f)
+        { return damage * this.normalizedCriticalDamage; }
 
         bool isCriticalHit = Random.value < this.normalizedCriticalChance;
+
         if (isCriticalHit)
-        {
-            return damage * this.normalizedCriticalDamage;
-        }
+        { return damage * this.normalizedCriticalDamage; }
+
         return damage;
     }
-
-
 
 
 }

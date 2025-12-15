@@ -1,5 +1,4 @@
 using System;
-using UnityEngine;
 
 /// <summary>
 /// Credit belong to GitAmend 
@@ -50,7 +49,7 @@ public abstract class Timer
 
 public class CountdownTimer : Timer
 {
-    public CountdownTimer(float coolDownTime) : base(coolDownTime) {}
+    public CountdownTimer(float coolDownTime) : base(coolDownTime) { }
     public override void Tick(float deltaTime)
     {
         if (IsRunning && Time > 0)

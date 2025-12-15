@@ -1,22 +1,21 @@
 using UnityEngine;
 
-public class PlayerBaseState 
+public class PlayerBaseState
 {
     protected PlayerStateController playerStateController;
     protected PlayerStateManager stateManager;
-    protected int animationBoolHash;
-    protected bool animationTrigger;
+    protected int animationStateHash;
+
     public string stateName;
 
     public PlayerBaseState(PlayerStateManager StateManager,
-        PlayerStateController playerStateController,string animationBoolName,
+        PlayerStateController playerStateController, string animationBoolName,
         string name)
-    { 
+    {
         this.stateManager = StateManager;
         this.stateName = name;
         this.playerStateController = playerStateController;
-        this.animationBoolHash = Animator.StringToHash(animationBoolName);
-        this.animationTrigger = false;
+        this.animationStateHash = Animator.StringToHash(animationBoolName);
     }
 
     public virtual void Enter() { }
@@ -27,5 +26,5 @@ public class PlayerBaseState
 
     public virtual void Exit() { }
 
-    public virtual void OnAnimationTrigger() {}
+    public virtual void OnAnimationTrigger() { }
 }

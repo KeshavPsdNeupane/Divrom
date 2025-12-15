@@ -83,11 +83,13 @@
     <Compile Include="Assets/Game/CoreScript/SelectionBase.cs" />
     <Compile Include="Assets/Scripts/Systems/Actors/Player/States/PlayerMove.cs" />
     <Compile Include="Assets/Scripts/Systems/Stats/CharacterStats/CharacterStatsGUI.cs" />
+    <Compile Include="Assets/Essential/PriorityQueue/KeyedEquatable.cs" />
     <Compile Include="Assets/Scripts/Utils/HashUtility.cs" />
     <Compile Include="Assets/Scripts/Systems/Stats/StatusEffect/StatusEffectCollector.cs" />
     <Compile Include="Assets/Scripts/Systems/Inventory/Item/ItemData.cs" />
     <Compile Include="Assets/Scripts/Ui/Inventory/InventoryDisplays/PlayerInventoryDisplay.cs" />
     <Compile Include="Assets/Scripts/Utils/Timer.cs" />
+    <Compile Include="Assets/Essential/PriorityQueue/PriorityQueueSimple.cs" />
     <Compile Include="Assets/Scripts/Managers/Init/InitializableBase.cs" />
     <Compile Include="Assets/Scripts/Component/Movement/MovementComponent.cs" />
     <Compile Include="Assets/Scripts/Systems/Actors/Enemy/ChasePlayer.cs" />

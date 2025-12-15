@@ -112,14 +112,16 @@ public class ItemSlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     #region SplitItemStack
     public void SplitItem()
     {
-        if (this.assignedInventorySlot == null || this.assignedInventorySlot.ItemData == null)
+        if (this.assignedInventorySlot == null
+        || this.assignedInventorySlot.ItemData == null
+        || this.ParentDisplay == null)
             return;
 
         int count = this.assignedInventorySlot.StackCount;
         if (count <= 1)
             return;
 
-        var inventory = this.ParentDisplay?.PrimaryInventorySystem;
+        var inventory = this.ParentDisplay.PrimaryInventorySystem;
         bool hasFreeSlot = inventory.HasFreeSlot(out ItemSlot freeSlot);
 
         if (!hasFreeSlot) return;
@@ -130,8 +132,9 @@ public class ItemSlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
         freeSlot.SetInventorySlot(halfStack);
 
-        this.ParentDisplay?.RefreshSlot(assignedInventorySlot);
-        this.ParentDisplay?.RefreshSlot(freeSlot);
+        this.ParentDisplay.RefreshSlot(this.assignedInventorySlot);
+        this.ParentDisplay.RefreshSlot(freeSlot);
+
     }
     #endregion
 
