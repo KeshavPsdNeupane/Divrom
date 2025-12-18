@@ -7,25 +7,19 @@
 ///</summary>
 public class PlayerStateController : InitializableBase
 {
-    // Need the [field: SerializeField] syntax to make auto-properties
-    // serializable in Unity, since we cant use SerializeField with Geter and Setter
-    // So i have to use this syntax to keep the properties encapsulated
-    // while still allowing Unity to serialize them.
-    [SerializeField] private MovementComponent movementComponent;
+    [SerializeField] private PlayerMovementComponent movementComponent;
     [SerializeField] private AnimationComponent animationComponent;
-    [SerializeField] private AttackComponent attackComponent;
+    [SerializeField] private PlayerAttackComponent attackComponent;
     private PlayerStateManager stateMachine;
     private PlayerStates playerStates;
 
-
     // Public getters for the components
-    public MovementComponent MovementComponent => movementComponent;
+    public PlayerMovementComponent MovementComponent => movementComponent;
     public AnimationComponent AnimationComponent => animationComponent;
-    public AttackComponent AttackComponent => attackComponent;
+    public PlayerAttackComponent PlayerAttackComponent => attackComponent;
 
     public PlayerStateManager StateMachine => stateMachine;
     public PlayerStates PlayerStates => playerStates;
-
 
 
     public override void Init()

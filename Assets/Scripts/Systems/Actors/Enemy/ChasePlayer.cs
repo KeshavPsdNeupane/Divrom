@@ -5,7 +5,7 @@ public class ChasePlayer : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private CircleCollider2D chaseRadius;
-    [SerializeField] private MovementComponent movementComponent;
+    [SerializeField] private PlayerMovementComponent movementComponent;
     [SerializeField] private float chaseRadiusValue = 3f;
 
     [Header("Chase Settings")]
@@ -21,7 +21,7 @@ public class ChasePlayer : MonoBehaviour
             this.chaseRadius = GetComponent<CircleCollider2D>();
 
         if (this.movementComponent == null)
-            this.movementComponent = GetComponent<MovementComponent>();
+            this.movementComponent = GetComponent<PlayerMovementComponent>();
 
         this.chaseRadius.isTrigger = true;
         this.chaseRadius.radius = chaseRadiusValue;
@@ -31,16 +31,16 @@ public class ChasePlayer : MonoBehaviour
     {
         if (playerTransform == null)
         {
-            movementComponent.direction = Vector2.zero;
+            movementComponent.SetDirection(Vector2.zero);
             return;
         }
 
         Vector2 targetDirection = (playerTransform.position - transform.position).normalized;
-        movementComponent.direction = Vector2.Lerp(
-            movementComponent.direction,
+        movementComponent.SetDirection(Vector2.Lerp(
+            movementComponent.Direction,
             targetDirection,
             chaseSmoothing
-        );
+        ));
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -56,7 +56,7 @@ public class ChasePlayer : MonoBehaviour
         if (collision.CompareTag("Player") && playerTransform != null)
         {
             playerTransform = null;
-            movementComponent.direction = Vector2.zero;
+            movementComponent.SetDirection(Vector2.zero);
         }
     }
 

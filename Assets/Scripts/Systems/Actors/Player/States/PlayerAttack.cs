@@ -2,7 +2,7 @@
 
 public class PlayerAttack : PlayerBaseState
 {
-    private readonly MovementComponent movementComponent;
+    private readonly PlayerMovementComponent movementComponent;
     private readonly AnimationComponent animationComponent;
 
     public PlayerAttack(PlayerStateManager baseStateManager,

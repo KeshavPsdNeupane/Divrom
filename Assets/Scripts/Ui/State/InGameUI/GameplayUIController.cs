@@ -6,6 +6,7 @@ public class GameplayUIController : InitializableBase
     [SerializeField] private UIState inGameplayMenu;
     [SerializeField] private UIState inventoryMenu;
     private UIStateManager uiStateManager;
+    private InputManager inputManager;
 
     public UIStateManager UIStateManager => this.uiStateManager;
 
@@ -15,8 +16,15 @@ public class GameplayUIController : InitializableBase
     {
         this.uiStateManager = new();
         this.uiStateManager.Init();
+        // InputManager will be fetched in OnEnable when needed
+        this.inputManager = InputManager.GetOrCreateInstance();
+        SetInitialized();
     }
 
+    void OnEnable()
+    {
+        Subscribe();
+    }
     public void OnDisable()
     {
         if (this.uiStateManager != null)
@@ -27,7 +35,60 @@ public class GameplayUIController : InitializableBase
             }
             this.uiStateManager = null;
         }
+        Unsubscribe();
     }
+    private void Subscribe()
+    {
+        if (this.inputManager == null) return;
+        this.inputManager.SubscribeToInputAction(
+            PlayerInputActionMap.Player,
+            PlayerInputActionKey.ToggleMenu.ToString(),
+            EsePressed);
+
+        this.inputManager.SubscribeToInputAction(
+            PlayerInputActionMap.Menu,
+            PlayerInputActionKey.ToggleMenu.ToString(),
+            EsePressed);
+
+        this.inputManager.SubscribeToInputAction(
+            PlayerInputActionMap.Player,
+            PlayerInputActionKey.InventoryToggle.ToString(),
+            TabPressed);
+        this.inputManager.SubscribeToInputAction(
+            PlayerInputActionMap.Inventory,
+            PlayerInputActionKey.InventoryToggle.ToString(),
+            TabPressed);
+
+    }
+
+    private void Unsubscribe()
+    {
+        if (this.inputManager == null) return;
+        this.inputManager.UnsubscribeFromInputAction(
+            PlayerInputActionMap.Player,
+            PlayerInputActionKey.ToggleMenu.ToString(),
+            EsePressed
+        );
+        this.inputManager.UnsubscribeFromInputAction(
+            PlayerInputActionMap.Menu,
+            PlayerInputActionKey.ToggleMenu.ToString(),
+            EsePressed
+        );
+
+
+        this.inputManager.UnsubscribeFromInputAction(
+            PlayerInputActionMap.Player,
+            PlayerInputActionKey.InventoryToggle.ToString(),
+            TabPressed
+        );
+        this.inputManager.UnsubscribeFromInputAction(
+            PlayerInputActionMap.Inventory,
+            PlayerInputActionKey.InventoryToggle.ToString(),
+            TabPressed
+        );
+    }
+
+
 
     private void Update()
     {

@@ -1,6 +1,6 @@
 public class PlayerIdle : PlayerBaseState
 {
-    private readonly MovementComponent movementComponent;
+    private readonly PlayerMovementComponent movementComponent;
     private readonly AnimationComponent animationComponent;
 
     public PlayerIdle(PlayerStateManager baseStateManager,
@@ -19,7 +19,7 @@ public class PlayerIdle : PlayerBaseState
 
     public override void Update()
     {
-        if (this.movementComponent.direction.sqrMagnitude
+        if (this.movementComponent.Direction.sqrMagnitude
         >= AnimationThreshold.WALKING_THRESHOLD)
             this.stateManager.ChangeState(
                 this.playerStateController.PlayerStates.PlayerMove

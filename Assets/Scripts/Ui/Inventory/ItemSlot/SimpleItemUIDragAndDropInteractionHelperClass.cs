@@ -4,11 +4,11 @@ using UnityEngine.EventSystems;
 
 public class SimpleItemUIDragAndDropInteractionHelperClass
 {
-    private readonly DragDropManager mgr;
+    private readonly ItemDragDropManager mgr;
 
     public SimpleItemUIDragAndDropInteractionHelperClass()
     {
-        this.mgr = DragDropManager.GetOrCreateInstance();
+        this.mgr = ItemDragDropManager.GetOrCreateInstance();
     }
 
     public void BeginDrag(ItemSlotUI itemUISlot, CanvasGroup canvasGroup, Canvas parentCanvas)

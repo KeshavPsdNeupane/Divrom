@@ -34,7 +34,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "InventoryToggleOn",
+                    "name": "InventoryToggle",
                     "type": "Button",
                     "id": "d617b2c2-3910-43be-8825-d4d20f363ad0",
                     "expectedControlType": "",
@@ -43,7 +43,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "MenuToggleOn",
+                    "name": "ToggleMenu",
                     "type": "Button",
                     "id": "ac885c76-fc44-4376-9e0e-bd9ca14e861c",
                     "expectedControlType": "",
@@ -280,7 +280,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "InventoryToggleOn",
+                    "action": "InventoryToggle",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -291,7 +291,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "MenuToggleOn",
+                    "action": "ToggleMenu",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -846,7 +846,7 @@
             "id": "9c367ead-c1eb-4723-ab8f-b47201d49fd6",
             "actions": [
                 {
-                    "name": "InventoryToggleOff",
+                    "name": "InventoryToggle",
                     "type": "Button",
                     "id": "bcecc745-318e-4f41-86a6-f458c603dc73",
                     "expectedControlType": "",
@@ -863,7 +863,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "InventoryToggleOff",
+                    "action": "InventoryToggle",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -874,7 +874,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "InventoryToggleOff",
+                    "action": "InventoryToggle",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

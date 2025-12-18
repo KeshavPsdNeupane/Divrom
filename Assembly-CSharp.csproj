@@ -56,20 +56,20 @@
     <Compile Include="Assets/Scripts/Systems/Actors/Player/PlayerInitCaller.cs" />
     <Compile Include="Assets/Scripts/Systems/Stats/StatusEffect/StatusEffect.cs" />
     <Compile Include="Assets/Scripts/Ui/Menu/TabController.cs" />
+    <Compile Include="Assets/PlayerInput.cs" />
     <Compile Include="Assets/Scripts/Systems/Stats/BaseStats/IBaseStatProvider.cs" />
     <Compile Include="Assets/Scripts/Systems/Inventory/Item/PlayerItemCollector.cs" />
     <Compile Include="Assets/Scripts/Component/Animation/AnimationVariableHashes.cs" />
     <Compile Include="Assets/Scripts/Managers/DatabaseManager.cs" />
     <Compile Include="Assets/Scripts/Ui/Inventory/ItemSlot/SimpleItemUIDragAndDropInteractionHelperClass.cs" />
-    <Compile Include="Assets/Scripts/Component/AttackComponent.cs" />
     <Compile Include="Assets/Scripts/Ui/State/InGameUI/GameplayUIController.cs" />
     <Compile Include="Assets/Scripts/Systems/Inventory/InventoryHolder.cs" />
     <Compile Include="Assets/Scripts/Managers/Init/InitCallerManager.cs" />
     <Compile Include="Assets/Scripts/Utils/ItemSlotDoubleTap.cs" />
     <Compile Include="Assets/Scripts/Systems/Stats/BaseStats/BuffDebuffArmorStatusModifier.cs" />
     <Compile Include="Assets/Scripts/Ui/State/UIStateManager.cs" />
-    <Compile Include="Assets/Scripts/Managers/DragDropManager.cs" />
     <Compile Include="Assets/Scripts/Systems/Actors/Player/PlayerBaseState.cs" />
+    <Compile Include="Assets/Scripts/Component/Movement/PlayerMovementComponent.cs" />
     <Compile Include="Assets/Scripts/Systems/Stats/BaseStats/LevelingStat.cs" />
     <Compile Include="Assets/Scripts/Systems/Stats/CharacterStats/CharacterStatsSystem.cs" />
     <Compile Include="Assets/Scripts/Ui/State/InGameUI/InGameUIInitCaller.cs" />
@@ -91,13 +91,13 @@
     <Compile Include="Assets/Scripts/Utils/Timer.cs" />
     <Compile Include="Assets/Essential/PriorityQueue/PriorityQueueSimple.cs" />
     <Compile Include="Assets/Scripts/Managers/Init/InitializableBase.cs" />
-    <Compile Include="Assets/Scripts/Component/Movement/MovementComponent.cs" />
     <Compile Include="Assets/Scripts/Systems/Actors/Enemy/ChasePlayer.cs" />
     <Compile Include="Assets/Game/CoreScript/SetSpriteToPivot.cs" />
     <Compile Include="Assets/Scripts/Ui/Inventory/InventoryDisplays/InventoryDisplay.cs" />
     <Compile Include="Assets/Scripts/Systems/Actors/Enemy/TestEnemyComponent.cs" />
     <Compile Include="Assets/Scripts/Ui/Stat/StatDescription.cs" />
     <Compile Include="Assets/Scripts/Systems/Inventory/Slot/ItemSlot.cs" />
+    <Compile Include="Assets/Scripts/Managers/ItemDragDropManager.cs" />
     <Compile Include="Assets/Game/Input/InputManager.cs" />
     <Compile Include="Assets/Scripts/Managers/Init/IInitializable.cs" />
     <Compile Include="Assets/Scripts/Systems/Actors/Player/PlayerAnimationThreshold.cs" />
@@ -107,8 +107,11 @@
     <Compile Include="Assets/Scripts/Systems/Actors/Player/States/PlayerIdle.cs" />
     <Compile Include="Assets/Scripts/Systems/Stats/CharacterStats/CharacterStatsSO.cs" />
     <Compile Include="Assets/Scripts/Systems/Inventory/Item/ItemDatabaseSO.cs" />
+    <Compile Include="Assets/Scripts/Component/Attack/PlayerAttackComponent.cs" />
     <Compile Include="Assets/Scripts/Systems/Actors/Player/PlayerStateManager.cs" />
     <Compile Include="Assets/Scripts/Systems/Actors/Player/PlayerStates.cs" />
+    <Compile Include="Assets/Scripts/Component/Movement/MovementComponentBase.cs" />
+    <Compile Include="Assets/Scripts/Component/Attack/AttackComponentBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets/TextMesh Pro/Shaders/TMPro.cginc" />

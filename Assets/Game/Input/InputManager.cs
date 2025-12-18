@@ -1,8 +1,13 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
+using System;
 
-public enum InputActionType
+/// <summary>
+/// Maps input action map types to their corresponding action map names.
+/// Used to dynamically enable/disable action maps without hardcoding.
+/// </summary>
+public enum PlayerInputActionMap
 {
     Player,
     UI,
@@ -10,66 +15,182 @@ public enum InputActionType
     Inventory,
 }
 
+
+public enum PlayerInputActionKey
+{
+    Move,
+    Fire,
+    ToggleMenu,
+    InventoryToggle,
+    Pause,
+    OpenInventory,
+}
+
+
+
+
+
+/// <summary>
+/// Centralized input manager using the generated PlayerInputs class.
+/// Dynamically manages action maps without hardcoding individual disable calls.
+/// </summary>
+
+
+[DefaultExecutionOrder(-100)]
 public class InputManager : MonoBehaviour
 {
-    [SerializeField] private PlayerInput playerInput;
+    public static InputManager Instance;
+    private PlayerInput playerInput;
+    private readonly Dictionary<PlayerInputActionMap, InputActionMap> actionMaps = new();
 
-    private Dictionary<InputActionType, InputActionMap> actionMaps = new Dictionary<InputActionType, InputActionMap>();
+    public PlayerInput PlayerInputs => this.playerInput;
 
     private void Awake()
     {
-        if (this.playerInput == null)
+        // If another instance exists and it's not this one, destroy this one
+        if (Instance != null && Instance != this)
         {
-            Debug.LogError("PlayerInput reference not assigned in InputManager!");
+            Destroy(this.gameObject);
             return;
         }
 
-        foreach (InputActionType type in System.Enum.GetValues(typeof(InputActionType)))
+        // This is the instance to keep
+        Instance = this;
+        InitializeActionMaps();
+    }
+    public static InputManager GetOrCreateInstance()
+    {
+        if (Instance == null)
         {
-            var map = this.playerInput.actions.FindActionMap(type.ToString(), true);
-            if (map != null)
-                this.actionMaps[type] = map;
+            // Create new one if truly none exists
+            GameObject go = new("InputManager");
+            InputManager manager = go.AddComponent<InputManager>();
+            return manager;
         }
-
-        DisableAllExcept(InputActionType.Player);
+        return Instance;
     }
 
-    public void SwitchActionMap(InputActionType actionType)
+    private void InitializeActionMaps()
     {
-        DisableAll();
+        this.playerInput = new PlayerInput();
+        this.playerInput.Enable();
+
+        // Map each InputMapType enum to the corresponding action map from PlayerInputs
+        foreach (PlayerInputActionMap type in Enum.GetValues(typeof(PlayerInputActionMap)))
+        {
+            InputActionMap map = GetActionMapByType(type);
+            if (map != null)
+            {
+                actionMaps[type] = map;
+            }
+            else
+            {
+                Debug.LogWarning($"Failed to load action map: {type}");
+            }
+        }
+
+        DisableAllInputs();
+        EnableActionType(PlayerInputActionMap.Player);
+    }
+
+    /// <summary>
+    /// Returns the InputActionMap for a given InputMapType.
+    /// </summary>
+    private InputActionMap GetActionMapByType(PlayerInputActionMap type)
+    {
+        return type switch
+        {
+            PlayerInputActionMap.Player => this.playerInput.Player,
+            PlayerInputActionMap.UI => this.playerInput.UI,
+            PlayerInputActionMap.Menu => this.playerInput.Menu,
+            PlayerInputActionMap.Inventory => this.playerInput.Inventory,
+            _ => null
+        };
+    }
+
+    /// <summary>
+    /// Enables a specific action map type.
+    /// </summary>
+    public void EnableActionType(PlayerInputActionMap actionType)
+    {
+        if (actionMaps.TryGetValue(actionType, out var map))
+        {
+            map.Enable();
+        }
+    }
+
+    /// <summary>
+    /// Disables a specific action map type.
+    /// </summary>
+    public void DisableActionType(PlayerInputActionMap actionType)
+    {
+        if (actionMaps.TryGetValue(actionType, out var map))
+        {
+            map.Disable();
+        }
+    }
+
+    /// <summary>
+    /// Switches to one action map type and disables all others.
+    /// </summary>
+    public void SwitchActionMap(PlayerInputActionMap actionType)
+    {
+        DisableAllInputs();
         EnableActionType(actionType);
     }
 
-    public void EnableActionType(InputActionType actionType)
+    /// <summary>
+    /// Disables all input action maps using a loop (no hardcoding).
+    /// </summary>
+    public void DisableAllInputs()
     {
-        GetActionMap(actionType)?.Enable();
-    }
-
-    public void DisableActionType(InputActionType actionType)
-    {
-        GetActionMap(actionType)?.Disable();
-    }
-
-    private InputActionMap GetActionMap(InputActionType actionType)
-    {
-        this.actionMaps.TryGetValue(actionType, out var map);
-        return map;
-    }
-
-
-    private void DisableAll()
-    {
-        foreach (var kvp in this.actionMaps)
+        foreach (var kvp in actionMaps)
         {
             kvp.Value.Disable();
         }
     }
-    private void DisableAllExcept(InputActionType exception)
+
+    private void OnDestroy()
     {
-        foreach (var kvp in this.actionMaps)
+        if (Instance == this)
         {
-            if (kvp.Key != exception)
-                kvp.Value.Disable();
+            Instance = null;
+            this.playerInput.Dispose();
+        }
+    }
+
+    public void SubscribeToInputAction(PlayerInputActionMap actionType, string actionName, Action<InputAction.CallbackContext> callback)
+    {
+        if (actionMaps.TryGetValue(actionType, out var map))
+        {
+            var action = map.FindAction(actionName);
+            if (action != null)
+            {
+                action.performed += callback;
+                if (actionName == PlayerInputActionKey.Move.ToString())
+                {
+                    action.canceled += callback;
+                }
+            }
+        }
+        else
+        {
+            print($"Action map not found for type: {actionType}, cannot subscribe to action: {actionName}");
+        }
+    }
+    public void UnsubscribeFromInputAction(PlayerInputActionMap actionType, string actionName, Action<InputAction.CallbackContext> callback)
+    {
+        if (actionMaps.TryGetValue(actionType, out var map))
+        {
+            var action = map.FindAction(actionName);
+            if (action != null)
+            {
+                action.performed -= callback;
+                if (actionName == PlayerInputActionKey.Move.ToString())
+                {
+                    action.canceled -= callback;
+                }
+            }
         }
     }
 }

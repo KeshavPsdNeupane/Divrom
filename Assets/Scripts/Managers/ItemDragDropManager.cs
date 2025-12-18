@@ -7,9 +7,9 @@ using UnityEngine.UI;
 /// Written by chatGPT-4 deep model with some adjustments.
 /// Simple manager to hold the currently dragged ItemSlot and source UI.
 /// </summary>
-public class DragDropManager : MonoBehaviour
+public class ItemDragDropManager : MonoBehaviour
 {
-    public static DragDropManager Instance { get; private set; }
+    public static ItemDragDropManager Instance { get; private set; }
     public ItemSlot CopyOfDraggedSourceItemSlot { get; private set; }
     public ItemSlotUI SourceSlotUI { get; private set; }
 
@@ -23,12 +23,12 @@ public class DragDropManager : MonoBehaviour
         { Destroy(this.gameObject); return; }
         Instance = this;
     }
-    public static DragDropManager GetOrCreateInstance()
+    public static ItemDragDropManager GetOrCreateInstance()
     {
         if (Instance == null)
         {
             GameObject go = new("DragDropManager");
-            go.AddComponent<DragDropManager>();
+            go.AddComponent<ItemDragDropManager>();
         }
         return Instance;
     }

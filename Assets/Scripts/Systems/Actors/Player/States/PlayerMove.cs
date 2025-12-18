@@ -1,6 +1,6 @@
 public class PlayerMove : PlayerBaseState
 {
-    private readonly MovementComponent movementComponent;
+    private readonly PlayerMovementComponent movementComponent;
     private readonly AnimationComponent animationComponent;
 
     public PlayerMove(PlayerStateManager baseStateManager,
@@ -19,13 +19,13 @@ public class PlayerMove : PlayerBaseState
 
     public override void Update()
     {
-        if (this.movementComponent.direction.sqrMagnitude < AnimationThreshold.WALKING_THRESHOLD)
+        if (this.movementComponent.Direction.sqrMagnitude < AnimationThreshold.WALKING_THRESHOLD)
         {
             this.stateManager.ChangeState(
                 this.playerStateController.PlayerStates.PlayerIdle);
             return;
         }
-        this.animationComponent.MoveAnimation(this.movementComponent.direction);
+        this.animationComponent.MoveAnimation(this.movementComponent.Direction);
     }
 
     public override void PhysicUpdate()

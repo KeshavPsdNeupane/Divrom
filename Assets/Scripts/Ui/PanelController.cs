@@ -5,9 +5,8 @@ public class PanelController : UIState
 {
     [SerializeField] private string panelName = "Menu";
     [SerializeField] private GameObject currentPanel;
-    [SerializeField] private InputManager inputManager;
-    [SerializeField] private InputActionType currentActionType = InputActionType.Menu;
-
+    [SerializeField] private PlayerInputActionMap inputActionMap = PlayerInputActionMap.Menu;
+    private InputManager inputManager;
     public string PanelName => this.panelName;
     public override void Init()
     {
@@ -17,15 +16,14 @@ public class PanelController : UIState
             + "Panel reference is missing!");
             return;
         }
-        if (this.inputManager == null)
-        {
-            Debug.LogError($"{this.panelName}Controller:" +
-            " InputManager reference is missing!");
-            return;
-        }
         this.currentPanel.SetActive(false);
+        SetInitialized();
+        inputManager = InputManager.GetOrCreateInstance();
     }
+    private void Start()
+    {
 
+    }
     public override void EnterState() => OpenMenu();
     public override void ExitState() => ClosePanel();
 
@@ -34,7 +32,11 @@ public class PanelController : UIState
         if (ctx.performed)
         {
             this.currentPanel.SetActive(!this.currentPanel.activeSelf);
-            this.inputManager.SwitchActionMap(this.currentPanel.activeSelf ? currentActionType : InputActionType.Player);
+            this.inputManager.SwitchActionMap(
+                this.currentPanel.activeSelf ?
+                this.inputActionMap :
+                PlayerInputActionMap.Player);
+
         }
     }
 
@@ -43,7 +45,7 @@ public class PanelController : UIState
         if (!this.currentPanel.activeSelf)
         {
             this.currentPanel.SetActive(true);
-            this.inputManager.SwitchActionMap(currentActionType);
+            this.inputManager.SwitchActionMap(this.inputActionMap);
         }
     }
 
@@ -52,7 +54,7 @@ public class PanelController : UIState
         if (this.currentPanel.activeSelf)
         {
             this.currentPanel.SetActive(false);
-            this.inputManager.SwitchActionMap(InputActionType.Player);
+            this.inputManager.SwitchActionMap(PlayerInputActionMap.Player);
         }
     }
 

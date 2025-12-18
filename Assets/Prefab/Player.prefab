@@ -408,12 +408,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MovementComponent
   rb: {fileID: 3683206385522943912}
+  characterStatsSystem: {fileID: 6086364781477239200}
+  movementSpeed: 2
   characterStats: {fileID: 6086364781477239200}
-  direction: {x: 0, y: 0}
-  lastDirection: {x: 0, y: 0}
-  movementSpeedUseThisOnlyIfUDontWantToUseCharacterStat: 2
-  canCapMovementSpeed: 0
-  upperLimitMovementSpeed: 10
 --- !u!1 &5670956036724153890
 GameObject:
   m_ObjectHideFlags: 0
