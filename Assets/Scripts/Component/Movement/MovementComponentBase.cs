@@ -15,8 +15,9 @@ public abstract class MovementComponentBase : InitializableBase
     {
         if (this.characterStatsSystem == null)
         {
-            Debug.LogWarning("CharacterStatsSystem not assigned in MovementComponentBase, trying to get it from the GameObject.");
             this.characterStatsSystem = GetComponent<CharacterStatsSystem>();
+            Debug.LogWarning($"MovementComponentBase ({gameObject.name}): " +
+            "CharacterStatsSystem not assigned, attempting to fetch from same GameObject.");
         }
         SetInitialized();
     }
@@ -26,7 +27,6 @@ public abstract class MovementComponentBase : InitializableBase
 
     private void SubscribeToStats()
     {
-        print("Called SubscribeToStats");
         if (this.characterStatsSystem != null &&
             this.characterStatsSystem.CurrentStats != null)
         {

@@ -1,4 +1,3 @@
-using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerAttackComponent : AttackComponentBase
@@ -8,31 +7,16 @@ public class PlayerAttackComponent : AttackComponentBase
     public override void Init()
     {
         base.Init();
-        // Fetch InputManager lazily - will find existing or create one
-        // This works even if InputManager hasn't Awake'd yet because
-        // GetOrCreateInstance uses FindFirstObjectByType which finds already-created instances
-        if (this.inputManager == null)
-        {
-            this.inputManager = InputManager.GetOrCreateInstance();
-        }
+        this.inputManager = InputManager.GetOrCreateInstance();
+
     }
 
     protected override void OnEnable()
     {
         base.OnEnable();
-
-        // Ensure InputManager is set (in case OnEnable runs before Init)
-        if (this.inputManager == null)
-        {
-            this.inputManager = InputManager.GetOrCreateInstance();
-        }
-
         Subscribe();
     }
-    void Start()
-    {
-        OnEnable();
-    }
+
     private void Subscribe()
     {
         if (inputManager != null)

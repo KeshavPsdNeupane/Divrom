@@ -10,20 +10,15 @@ public class PlayerMovementComponent : MovementComponentBase
 
     public override void Init()
     {
-        print("PlayerMovementComponent Init called");
         base.Init();
         this.inputManager = InputManager.GetOrCreateInstance();
     }
     protected override void OnEnable()
     {
-        print("PlayerMovementComponent OnEnable called");
         base.OnEnable();
         Subscribe();
     }
-    void Start()
-    {
-        OnEnable();
-    }
+
 
     protected override void OnDisable()
     {

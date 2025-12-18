@@ -33,7 +33,7 @@ public class CurrentStat
         this.isDirty = true;
     }
 
-        private void CanRemoveModifier(L3BuffDebuffArmorStatusModifier csm)
+    private void CanRemoveModifier(L3BuffDebuffArmorStatusModifier csm)
     {
         csm.canRemove = true;
     }
@@ -62,7 +62,7 @@ public class CurrentStat
     }
     public bool AddModifier(StatusEffect effect)
     {
-       
+
         if (!effect.isDebuff)
         {
             return AddToList(effect);
@@ -73,7 +73,7 @@ public class CurrentStat
         bool isEnv = !isEnemy && !isArmor;
 
         if (isEnemy || isEnv)
-        {  
+        {
             var existing = modifiers.Find(m => m.IsDebuff &&
                                                ((isEnemy && m.IsDebuffFromEnemy) ||
                                                (isEnv && !m.IsDebuffFromEnemy && !m.IsDebuffFromArmor)));
@@ -82,11 +82,11 @@ public class CurrentStat
                 if (effect.debuffPriority >= existing.DebuffPriority)
                     RemoveModifier(existing);
                 else
-                    return false; 
+                    return false;
             }
         }
-      return  AddToList(effect);
-        
+        return AddToList(effect);
+
     }
 
     private bool AddToList(StatusEffect effect)
@@ -160,4 +160,3 @@ public class CurrentStat
     }
 
 }
-  

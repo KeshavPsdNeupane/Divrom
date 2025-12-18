@@ -20,10 +20,7 @@ public class PanelController : UIState
         SetInitialized();
         inputManager = InputManager.GetOrCreateInstance();
     }
-    private void Start()
-    {
 
-    }
     public override void EnterState() => OpenMenu();
     public override void ExitState() => ClosePanel();
 

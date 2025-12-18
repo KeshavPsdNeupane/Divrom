@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets/Game/Editor/StatusEffectDrawer.cs" />
+    <Compile Include="Assets/Game/Editor/ReadOnlyDrawer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

@@ -53,6 +53,7 @@
     <Compile Include="Assets/Scripts/Systems/Inventory/InventorySystem.cs" />
     <Compile Include="Assets/Scripts/Systems/Stats/BaseStats/ArmorAndBuffAndDebuffEffectStat.cs" />
     <Compile Include="Assets/Scripts/Systems/Stats/StatusEffect/StatusEffectContainer.cs" />
+    <Compile Include="Assets/Game/SceneExecutionTracker.cs" />
     <Compile Include="Assets/Scripts/Systems/Actors/Player/PlayerInitCaller.cs" />
     <Compile Include="Assets/Scripts/Systems/Stats/StatusEffect/StatusEffect.cs" />
     <Compile Include="Assets/Scripts/Ui/Menu/TabController.cs" />
@@ -71,6 +72,7 @@
     <Compile Include="Assets/Scripts/Systems/Actors/Player/PlayerBaseState.cs" />
     <Compile Include="Assets/Scripts/Component/Movement/PlayerMovementComponent.cs" />
     <Compile Include="Assets/Scripts/Systems/Stats/BaseStats/LevelingStat.cs" />
+    <Compile Include="Assets/Game/CustomExecutionOrder.cs" />
     <Compile Include="Assets/Scripts/Systems/Stats/CharacterStats/CharacterStatsSystem.cs" />
     <Compile Include="Assets/Scripts/Ui/State/InGameUI/InGameUIInitCaller.cs" />
     <Compile Include="Assets/Scripts/Systems/Stats/BaseStats/PointStats.cs" />
@@ -86,6 +88,7 @@
     <Compile Include="Assets/Essential/PriorityQueue/KeyedEquatable.cs" />
     <Compile Include="Assets/Scripts/Utils/HashUtility.cs" />
     <Compile Include="Assets/Scripts/Systems/Stats/StatusEffect/StatusEffectCollector.cs" />
+    <Compile Include="Assets/Game/ReadOnlyAttribute.cs" />
     <Compile Include="Assets/Scripts/Systems/Inventory/Item/ItemData.cs" />
     <Compile Include="Assets/Scripts/Ui/Inventory/InventoryDisplays/PlayerInventoryDisplay.cs" />
     <Compile Include="Assets/Scripts/Utils/Timer.cs" />

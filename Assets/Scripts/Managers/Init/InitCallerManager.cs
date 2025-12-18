@@ -6,6 +6,8 @@ using UnityEngine;
 /// Simple manager that only calls Init()/Shutdown() on listed IInitializable components.
 /// No DI, no injection — just lifecycle ordering by the `initializables` list.
 /// </summary>
+
+[CustomExecutionOrder(-30)]
 public class InitLifecycleManager : InitializableBase
 {
     [Tooltip("Order matters: earlier items initialize first.")]

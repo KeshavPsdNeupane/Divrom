@@ -35,8 +35,7 @@ public enum PlayerInputActionKey
 /// Dynamically manages action maps without hardcoding individual disable calls.
 /// </summary>
 
-
-[DefaultExecutionOrder(-100)]
+[CustomExecutionOrder(-40)]
 public class InputManager : MonoBehaviour
 {
     public static InputManager Instance;

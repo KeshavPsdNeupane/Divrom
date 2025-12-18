@@ -16,7 +16,6 @@ public class GameplayUIController : InitializableBase
     {
         this.uiStateManager = new();
         this.uiStateManager.Init();
-        // InputManager will be fetched in OnEnable when needed
         this.inputManager = InputManager.GetOrCreateInstance();
         SetInitialized();
     }
