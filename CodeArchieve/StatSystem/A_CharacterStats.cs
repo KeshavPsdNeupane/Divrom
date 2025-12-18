@@ -6,7 +6,7 @@ public class CharacterStats : MonoBehaviour
 {
     [SerializeField, HideInInspector] public SerializableDictionary<CharacterStatType, CurrentStat> currentestats;
     [SerializeField, HideInInspector] public SerializableDictionary<DamageType, CurrentStat> resistanceStats;
-    [SerializeField,HideInInspector] public SerializableDictionary<CharacterStatType, float> levelIncreasingStatWithLevelingValue;
+    [SerializeField, HideInInspector] public SerializableDictionary<CharacterStatType, float> levelIncreasingStatWithLevelingValue;
 
     [SerializeField] private CharacterStatsSO characterStateSO;
 
@@ -23,12 +23,14 @@ public class CharacterStats : MonoBehaviour
     private void OnEnable()
     {
 
-        if (this.currentestats != null) {
+        if (this.currentestats != null)
+        {
             foreach (var stat in currentestats.Values)
                 stat?.OnEnable();
         }
 
-        if(this.resistanceStats != null) {
+        if (this.resistanceStats != null)
+        {
             foreach (var res in resistanceStats.Values)
                 res?.OnEnable();
         }
@@ -108,7 +110,7 @@ public class CharacterStats : MonoBehaviour
         foreach (var kvp in this.characterStateSO.resistanceStats)
             this.resistanceStats[kvp.Key] = new CurrentStat(kvp.Value);
 
-        var levelingStats =this. characterStateSO.GetLevelingStatsWithoutZero();
+        var levelingStats = this.characterStateSO.GetLevelingStatsWithoutZero();
         foreach (var kvp in levelingStats)
             this.levelIncreasingStatWithLevelingValue[kvp.Key] = kvp.Value;
     }

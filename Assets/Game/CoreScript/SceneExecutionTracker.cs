@@ -17,8 +17,7 @@ public class SceneExecutionOrderTracker : MonoBehaviour
     }
 
     [Tooltip("Automatically populated with all MonoBehaviours in the scene using CustomExecutionOrderAttribute")]
-    [SerializeField] private List<TrackedComponent> trackedComponents = new();
-
+    [SerializeField, ReadOnly] private List<TrackedComponent> trackedComponents = new();
     // Public read-only access at runtime
     public IReadOnlyList<TrackedComponent> TrackedComponents => trackedComponents;
 

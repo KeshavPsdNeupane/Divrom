@@ -8,7 +8,7 @@ public struct PerkStatData
     public string perkName;
     public float perkStatModifier;
     public bool isPercentage;
-    public PerkStatData(string statName, float modifier,bool isPercentage)
+    public PerkStatData(string statName, float modifier, bool isPercentage)
     {
         this.perkName = statName;
         this.perkStatModifier = modifier;
@@ -30,7 +30,7 @@ public class PerkAdditiveStat
 
     public PerkAdditiveStat(float baseLevelStat)
     {
-      this.  levelingStat = new LevelingStat(baseLevelStat);
+        this.levelingStat = new LevelingStat(baseLevelStat);
         this.modifiers = new List<PerkStatData>();
     }
 

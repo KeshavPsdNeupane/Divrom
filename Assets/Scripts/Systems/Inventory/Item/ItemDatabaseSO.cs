@@ -16,7 +16,7 @@ public class ItemDatabaseSO : ScriptableObject
         {
             if (string.IsNullOrEmpty(item.itemId))
             {
-                Debug.LogError($"Item '{item.name}' has no ID!");
+                Logger.LogError($"Item '{item.name}' has no ID!");
                 continue;
             }
 
@@ -25,7 +25,7 @@ public class ItemDatabaseSO : ScriptableObject
 
             if (itemDict.ContainsKey(hash))
             {
-                Debug.LogError($"[Collision] Hash collision between '{itemDict[hash].itemId}' and '{item.itemId}'. Please fix IDs manually.");
+                Logger.LogError($"[Collision] Hash collision between '{itemDict[hash].itemId}' and '{item.itemId}'. Please fix IDs manually.");
             }
             else
             {

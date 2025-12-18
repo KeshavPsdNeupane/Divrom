@@ -12,8 +12,8 @@ public class PanelController : UIState
     {
         if (this.currentPanel == null)
         {
-            Debug.LogError($"{this.panelName}Controller: {this.panelName} "
-            + "Panel reference is missing!");
+            Logger.LogError($"{this.panelName}Controller: {this.panelName} "
+              + "Panel reference is missing!");
             return;
         }
         this.currentPanel.SetActive(false);

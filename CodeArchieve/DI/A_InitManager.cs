@@ -71,7 +71,7 @@ public class InitManager : MonoBehaviour, IInitializable
             }
             else
             {
-                Debug.LogError($"{mono.name} does NOT implement IInitializable.");
+                ErrorLoggerFactory.Get().LogError($"{mono.name} does NOT implement IInitializable.");
             }
         }
 
@@ -204,7 +204,7 @@ public class InitManager : MonoBehaviour, IInitializable
             if (!TryResolve(field.FieldType, out var dependency))
             {
                 if (attr != null && attr.Optional) continue;
-                Debug.LogError($"InitManager: {type.Name} requires {field.FieldType.Name} for field {field.Name}, but it is not registered.");
+                ErrorLoggerFactory.Get().LogError($"InitManager: {type.Name} requires {field.FieldType.Name} for field {field.Name}, but it is not registered.");
                 continue;
             }
             field.SetValue(obj, dependency);
@@ -217,7 +217,7 @@ public class InitManager : MonoBehaviour, IInitializable
             if (!TryResolve(prop.PropertyType, out var dependency))
             {
                 if (attr != null && attr.Optional) continue;
-                Debug.LogError($"InitManager: {type.Name} requires {prop.PropertyType.Name} for property {prop.Name}, but it is not registered.");
+                ErrorLoggerFactory.Get().LogError($"InitManager: {type.Name} requires {prop.PropertyType.Name} for property {prop.Name}, but it is not registered.");
                 continue;
             }
             prop.SetValue(obj, dependency);
@@ -260,7 +260,7 @@ public class InitManager : MonoBehaviour, IInitializable
             }
             catch (Exception ex)
             {
-                Debug.LogError($"InitManager: Exception while invoking Init on {type.Name}: {ex}");
+                ErrorLoggerFactory.Get().LogError($"InitManager: Exception while invoking Init on {type.Name}: {ex}");
             }
             return;
         }
@@ -296,7 +296,7 @@ public class InitManager : MonoBehaviour, IInitializable
     // Optional IInitializable implementation for the manager
     public void Init()
     {
-        Debug.Log("InitManager.Init() called");
+        ErrorLoggerFactory.Get().Log("InitManager.Init() called");
     }
 
     public void Shutdown() { }

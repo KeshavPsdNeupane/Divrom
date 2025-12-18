@@ -55,7 +55,8 @@ public class PlayerAttackComponent : AttackComponentBase
     public override void PerformAttack()
     {
         float damage = CalculateDamage();
-        print($"Attack performed! Damage: {damage}, Base attack: {attack}");
+        // For testing so no need for logger
+        Logger.Log($"Attack performed! Damage: {damage}, Base attack: {attack}");
         RaiseOnAttackPerformedEvent();
     }
 }

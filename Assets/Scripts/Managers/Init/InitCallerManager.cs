@@ -56,7 +56,7 @@ public class InitLifecycleManager : InitializableBase
             {
                 if (initable.IsInitialized)
                 {
-                    Debug.LogWarning($"{mono.name} is already initialized " +
+                    Logger.LogWarning($"{mono.name} is already initialized " +
                     " and will be skipped by InitCallerManager.");
                     continue;
                 }
@@ -67,7 +67,7 @@ public class InitLifecycleManager : InitializableBase
             }
             else
             {
-                Debug.LogWarning($"{mono.name} does not implement IInitializable and will be skipped by InitCallerManager.");
+                Logger.LogWarning($"{mono.name} does not implement IInitializable and will be skipped by InitCallerManager.");
             }
         }
 
@@ -77,8 +77,8 @@ public class InitLifecycleManager : InitializableBase
             try { item.Init(); }
             catch (System.Exception ex)
             {
-                Debug.LogError($"InitCallerManager: " +
-                $"Exception in Init of {item.GetType().Name}: {ex}");
+                Logger.LogError($"InitCallerManager: " +
+               $"Exception in Init of {item.GetType().Name}: {ex}");
             }
         }
     }
@@ -89,7 +89,7 @@ public class InitLifecycleManager : InitializableBase
         {
             var item = this.ordered[i];
             try { item.Shutdown(); }
-            catch (System.Exception ex) { Debug.LogError($"InitCallerManager: Exception in Shutdown of {item.GetType().Name}: {ex}"); }
+            catch (System.Exception ex) { Logger.LogError($"InitCallerManager: Exception in Shutdown of {item.GetType().Name}: {ex}"); }
         }
         SetInitialized(false);
     }
@@ -160,7 +160,7 @@ public class InitLifecycleManager : InitializableBase
         }
 
         sb.AppendLine("===================");
-        Debug.Log(sb.ToString());
+        Logger.Log(sb.ToString());
     }
 
     private int GetDepth(Transform t, Transform root)

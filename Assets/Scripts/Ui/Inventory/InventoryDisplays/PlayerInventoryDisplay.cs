@@ -11,17 +11,17 @@ public class PlayerInventoryDisplayUI : InventoryDisplay
     {
         if (inventoryHolder == null)
         {
-            Debug.LogError($"PlayerInventoryDisplayUI ({gameObject.name}):" +
-            " InventoryHolder is not assigned!");
+            Logger.LogError($"PlayerInventoryDisplayUI ({gameObject.name}):" +
+             " InventoryHolder is not assigned!");
             return;
         }
 
         if (inventoryHolder.PrimaryInventorySystem == null)
         {
-            Debug.LogError($"PlayerInventoryDisplayUI ({gameObject.name}):" +
-            " InventoryHolder.PrimaryInventorySystem is null! Make " +
-            "sure InventoryHolder is initialized before PlayerInventoryDisplayUI" +
-            " in the InitLifecycleManager.");
+            Logger.LogError($"PlayerInventoryDisplayUI ({gameObject.name}):" +
+             " InventoryHolder.PrimaryInventorySystem is null! Make " +
+             "sure InventoryHolder is initialized before PlayerInventoryDisplayUI" +
+             " in the InitLifecycleManager.");
             return;
         }
 

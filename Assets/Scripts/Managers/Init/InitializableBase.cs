@@ -3,6 +3,7 @@ using UnityEngine;
 /// <summary>
 /// Convenience base class for MonoBehaviours that participate in InitManager lifecycle.
 /// Derive from this so components automatically implement IInitializable.
+/// Make sure your are placing the Init() call in the correct order in InitLifecycleManager.
 /// </summary>
 public abstract class InitializableBase : MonoBehaviour, IInitializable
 {

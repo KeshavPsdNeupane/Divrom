@@ -18,10 +18,10 @@ public class PlayerItemCollector : InitializableBase
             this.detectionCollider.isTrigger = true;
         }
         else
-            Debug.LogError("No CircleCollider2D assigned to PlayerItemCollector", this);
+            Logger.LogError($"No CircleCollider2D assigned to PlayerItemCollector = {this}");
 
         if (this.inventoryHolder == null)
-            Debug.LogError("No InventoryHolder assigned to PlayerItemCollector", this);
+            Logger.LogError($"No InventoryHolder assigned to PlayerItemCollector = {gameObject.name}");
         SetInitialized();
     }
 
@@ -39,7 +39,7 @@ public class PlayerItemCollector : InitializableBase
         }
         else
         {
-            Debug.Log("Inventory full � cannot pick up item");
+            Logger.LogWarning("Inventory full – cannot pick up item");
         }
     }
 }

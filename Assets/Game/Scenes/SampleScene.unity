@@ -7962,10 +7962,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 898564458}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 315203642eb85147294a618af571592f, type: 3}
+  m_Script: {fileID: 11500000, guid: ad1ed37927d3c1a6eb6da64a6887b8ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SceneExecutionOrderTracker
-  trackedComponents: []
+  trackedComponents:
+  - typeName: InputManager
+    order: -40
+    gameObjectName: InputsManagerInstance
+  - typeName: InGameUIInitCaller
+    order: -30
+    gameObjectName: UI
+  - typeName: PlayerInitCaller
+    order: -30
+    gameObjectName: InitCaller
 --- !u!1 &901993973
 GameObject:
   m_ObjectHideFlags: 0
