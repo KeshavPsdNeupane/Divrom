@@ -101,6 +101,7 @@
     <Compile Include="Assets/Scripts/Systems/Actors/Enemy/ChasePlayer.cs" />
     <Compile Include="Assets/Game/CoreScript/SetSpriteToPivot.cs" />
     <Compile Include="Assets/Scripts/Ui/Inventory/InventoryDisplays/InventoryDisplay.cs" />
+    <Compile Include="Assets/Scripts/Animation/AnimationFrame/AnimationLibraryData.cs" />
     <Compile Include="Assets/Scripts/Systems/Actors/Enemy/TestEnemyComponent.cs" />
     <Compile Include="Assets/Scripts/Ui/Stat/StatDescription.cs" />
     <Compile Include="Assets/Scripts/Systems/Inventory/Slot/ItemSlot.cs" />
@@ -116,6 +117,7 @@
     <Compile Include="Assets/Scripts/Systems/Inventory/Item/ItemDatabaseSO.cs" />
     <Compile Include="Assets/Scripts/Component/Attack/PlayerAttackComponent.cs" />
     <Compile Include="Assets/Scripts/Systems/Actors/Player/PlayerStateManager.cs" />
+    <Compile Include="Assets/Scripts/Animation/AnimationFrame/SpriteLibraryResolver.cs" />
     <Compile Include="Assets/Scripts/Systems/Actors/Player/PlayerStates.cs" />
     <Compile Include="Assets/Scripts/Component/Movement/MovementComponentBase.cs" />
     <Compile Include="Assets/Scripts/Component/Attack/AttackComponentBase.cs" />
