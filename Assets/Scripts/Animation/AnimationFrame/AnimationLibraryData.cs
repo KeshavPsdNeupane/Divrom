@@ -8,7 +8,7 @@ public enum EquipingPart { head, hair, helmet, ear, neck, body, arm, hand, torso
 
 public enum ItemColorPermutation { none, red, blue, green, yellow, purple, orange, black, white, grey, brown, pink, cyan, magenta, lime, navy, teal, maroon, olive, silver, gold, bronze }
 
-public enum AnimationCategory { spellcast, thrust, walk, idle, swing, shoot, death }
+public enum AnimationCategory { spell, thrust, walk, idle, swing, shoot, death }
 
 // here All mean this item is applicable to all races
 public enum Races { human, elf, dwarf, orc, goblin, troll, undead, giant, dragonborn, halfling, gnome, fairy, vampire, werewolf, All }

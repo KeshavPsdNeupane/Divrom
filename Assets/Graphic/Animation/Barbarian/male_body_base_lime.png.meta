@@ -631,7 +631,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: male_body_base_lime_0
+      name: spell_up_0
       rect:
         serializedVersion: 2
         x: 0
@@ -653,7 +653,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_1
+      name: spell_up_1
       rect:
         serializedVersion: 2
         x: 64
@@ -675,7 +675,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_2
+      name: spell_up_2
       rect:
         serializedVersion: 2
         x: 128
@@ -697,7 +697,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_3
+      name: spell_up_3
       rect:
         serializedVersion: 2
         x: 192
@@ -719,7 +719,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_4
+      name: spell_up_4
       rect:
         serializedVersion: 2
         x: 256
@@ -741,7 +741,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_5
+      name: spell_up_5
       rect:
         serializedVersion: 2
         x: 320
@@ -763,7 +763,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_6
+      name: spell_up_6
       rect:
         serializedVersion: 2
         x: 384
@@ -785,7 +785,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_7
+      name: spell_left_0
       rect:
         serializedVersion: 2
         x: 0
@@ -807,7 +807,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_8
+      name: spell_left_1
       rect:
         serializedVersion: 2
         x: 64
@@ -829,7 +829,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_9
+      name: spell_left_2
       rect:
         serializedVersion: 2
         x: 128
@@ -851,7 +851,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_10
+      name: spell_left_3
       rect:
         serializedVersion: 2
         x: 192
@@ -873,7 +873,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_11
+      name: spell_left_4
       rect:
         serializedVersion: 2
         x: 256
@@ -895,7 +895,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_12
+      name: spell_left_5
       rect:
         serializedVersion: 2
         x: 320
@@ -917,7 +917,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_13
+      name: spell_left_6
       rect:
         serializedVersion: 2
         x: 384
@@ -939,7 +939,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_14
+      name: spell_down_0
       rect:
         serializedVersion: 2
         x: 0
@@ -961,7 +961,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_15
+      name: spell_down_1
       rect:
         serializedVersion: 2
         x: 64
@@ -983,7 +983,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_16
+      name: spell_down_2
       rect:
         serializedVersion: 2
         x: 128
@@ -1005,7 +1005,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_17
+      name: spell_down_3
       rect:
         serializedVersion: 2
         x: 192
@@ -1027,7 +1027,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_18
+      name: spell_down_4
       rect:
         serializedVersion: 2
         x: 256
@@ -1049,7 +1049,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_19
+      name: spell_down_5
       rect:
         serializedVersion: 2
         x: 320
@@ -1071,7 +1071,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_20
+      name: spell_down_6
       rect:
         serializedVersion: 2
         x: 384
@@ -1093,7 +1093,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_21
+      name: spell_right_0
       rect:
         serializedVersion: 2
         x: 0
@@ -1115,7 +1115,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_22
+      name: spell_right_1
       rect:
         serializedVersion: 2
         x: 64
@@ -1137,7 +1137,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_23
+      name: spell_right_2
       rect:
         serializedVersion: 2
         x: 128
@@ -1159,7 +1159,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_24
+      name: spell_right_3
       rect:
         serializedVersion: 2
         x: 192
@@ -1181,7 +1181,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_25
+      name: spell_right_4
       rect:
         serializedVersion: 2
         x: 256
@@ -1203,7 +1203,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_26
+      name: spell_right_5
       rect:
         serializedVersion: 2
         x: 320
@@ -1225,7 +1225,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_27
+      name: spell_right_6
       rect:
         serializedVersion: 2
         x: 384
@@ -1247,7 +1247,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_28
+      name: thrust_up_0
       rect:
         serializedVersion: 2
         x: 0
@@ -1269,7 +1269,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_29
+      name: thrust_up_1
       rect:
         serializedVersion: 2
         x: 64
@@ -1291,7 +1291,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_30
+      name: thrust_up_2
       rect:
         serializedVersion: 2
         x: 128
@@ -1313,7 +1313,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_31
+      name: thrust_up_3
       rect:
         serializedVersion: 2
         x: 192
@@ -1335,7 +1335,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_32
+      name: thrust_up_4
       rect:
         serializedVersion: 2
         x: 256
@@ -1357,7 +1357,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_33
+      name: thrust_up_5
       rect:
         serializedVersion: 2
         x: 320
@@ -1379,7 +1379,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_34
+      name: thrust_up_6
       rect:
         serializedVersion: 2
         x: 384
@@ -1401,7 +1401,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_35
+      name: thrust_up_7
       rect:
         serializedVersion: 2
         x: 448
@@ -1423,7 +1423,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_36
+      name: thrust_left_0
       rect:
         serializedVersion: 2
         x: 0
@@ -1445,10 +1445,10 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_37
+      name: thrust_left_1
       rect:
         serializedVersion: 2
-        x: 64
+        x: 65
         y: 976
         width: 64
         height: 64
@@ -1467,7 +1467,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_38
+      name: thrust_left_2
       rect:
         serializedVersion: 2
         x: 128
@@ -1489,7 +1489,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_39
+      name: thrust_left_3
       rect:
         serializedVersion: 2
         x: 192
@@ -1511,7 +1511,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_40
+      name: thrust_left_4
       rect:
         serializedVersion: 2
         x: 256
@@ -1533,7 +1533,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_41
+      name: thrust_left_5
       rect:
         serializedVersion: 2
         x: 320
@@ -1555,10 +1555,10 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_42
+      name: thrust_left_6
       rect:
         serializedVersion: 2
-        x: 384
+        x: 383
         y: 976
         width: 64
         height: 64
@@ -1577,7 +1577,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_43
+      name: thrust_left_7
       rect:
         serializedVersion: 2
         x: 448
@@ -1599,7 +1599,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_44
+      name: thrust_down_0
       rect:
         serializedVersion: 2
         x: 0
@@ -1621,7 +1621,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_45
+      name: thrust_down_1
       rect:
         serializedVersion: 2
         x: 64
@@ -1643,7 +1643,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_46
+      name: thrust_down_2
       rect:
         serializedVersion: 2
         x: 128
@@ -1665,7 +1665,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_47
+      name: thrust_down_3
       rect:
         serializedVersion: 2
         x: 192
@@ -1687,7 +1687,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_48
+      name: thrust_down_4
       rect:
         serializedVersion: 2
         x: 256
@@ -1709,7 +1709,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_49
+      name: thrust_down_5
       rect:
         serializedVersion: 2
         x: 320
@@ -1731,7 +1731,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_50
+      name: thrust_down_6
       rect:
         serializedVersion: 2
         x: 384
@@ -1753,7 +1753,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_51
+      name: thrust_down_7
       rect:
         serializedVersion: 2
         x: 448
@@ -1775,7 +1775,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_52
+      name: thrust_right_0
       rect:
         serializedVersion: 2
         x: 0
@@ -1797,7 +1797,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_53
+      name: thrust_right_1
       rect:
         serializedVersion: 2
         x: 64
@@ -1819,7 +1819,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_54
+      name: thrust_right_2
       rect:
         serializedVersion: 2
         x: 128
@@ -1841,7 +1841,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_55
+      name: thrust_right_3
       rect:
         serializedVersion: 2
         x: 192
@@ -1863,7 +1863,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_56
+      name: thrust_right_4
       rect:
         serializedVersion: 2
         x: 256
@@ -1885,7 +1885,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_57
+      name: thrust_right_5
       rect:
         serializedVersion: 2
         x: 320
@@ -1907,7 +1907,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_58
+      name: thrust_right_6
       rect:
         serializedVersion: 2
         x: 384
@@ -1929,7 +1929,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_59
+      name: thrust_right_7
       rect:
         serializedVersion: 2
         x: 448
@@ -2743,7 +2743,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_96
+      name: swing_up_0
       rect:
         serializedVersion: 2
         x: 0
@@ -2765,7 +2765,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_97
+      name: swing_up_1
       rect:
         serializedVersion: 2
         x: 64
@@ -2787,7 +2787,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_98
+      name: swing_up_2
       rect:
         serializedVersion: 2
         x: 128
@@ -2809,7 +2809,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_99
+      name: swing_up_3
       rect:
         serializedVersion: 2
         x: 192
@@ -2831,7 +2831,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_100
+      name: swing_up_4
       rect:
         serializedVersion: 2
         x: 256
@@ -2853,7 +2853,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_101
+      name: swing_up_5
       rect:
         serializedVersion: 2
         x: 320
@@ -2875,7 +2875,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_102
+      name: swing_left_0
       rect:
         serializedVersion: 2
         x: 0
@@ -2897,7 +2897,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_103
+      name: swing_left_1
       rect:
         serializedVersion: 2
         x: 64
@@ -2919,7 +2919,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_104
+      name: swing_left_2
       rect:
         serializedVersion: 2
         x: 128
@@ -2941,7 +2941,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_105
+      name: swing_left_3
       rect:
         serializedVersion: 2
         x: 192
@@ -2963,7 +2963,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_106
+      name: swing_left_4
       rect:
         serializedVersion: 2
         x: 256
@@ -2985,7 +2985,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_107
+      name: swing_left_5
       rect:
         serializedVersion: 2
         x: 320
@@ -3007,7 +3007,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_108
+      name: swing_down_0
       rect:
         serializedVersion: 2
         x: 0
@@ -3029,7 +3029,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_109
+      name: swing_down_1
       rect:
         serializedVersion: 2
         x: 64
@@ -3051,7 +3051,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_110
+      name: swing_down_2
       rect:
         serializedVersion: 2
         x: 128
@@ -3073,7 +3073,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_111
+      name: swing_down_3
       rect:
         serializedVersion: 2
         x: 192
@@ -3095,7 +3095,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_112
+      name: swing_down_4
       rect:
         serializedVersion: 2
         x: 256
@@ -3117,7 +3117,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_113
+      name: swing_down_5
       rect:
         serializedVersion: 2
         x: 320
@@ -3139,7 +3139,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_114
+      name: swing_righ_0
       rect:
         serializedVersion: 2
         x: 0
@@ -3161,11 +3161,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_115
+      name: swing_right_1
       rect:
         serializedVersion: 2
         x: 64
-        y: 336
+        y: 337
         width: 64
         height: 64
       alignment: 0
@@ -3183,10 +3183,10 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_116
+      name: swing_right_2
       rect:
         serializedVersion: 2
-        x: 128
+        x: 129
         y: 336
         width: 64
         height: 64
@@ -3205,7 +3205,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_117
+      name: swing_right_3
       rect:
         serializedVersion: 2
         x: 192
@@ -3227,7 +3227,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_118
+      name: swing_right_4
       rect:
         serializedVersion: 2
         x: 256
@@ -3249,7 +3249,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_119
+      name: swing_right_5
       rect:
         serializedVersion: 2
         x: 320
@@ -3271,7 +3271,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_120
+      name: shoot_up_0
       rect:
         serializedVersion: 2
         x: 0
@@ -3293,7 +3293,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_121
+      name: shoot_up_1
       rect:
         serializedVersion: 2
         x: 64
@@ -3315,7 +3315,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_122
+      name: shoot_up_2
       rect:
         serializedVersion: 2
         x: 128
@@ -3337,7 +3337,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_123
+      name: shoot_up_3
       rect:
         serializedVersion: 2
         x: 192
@@ -3359,7 +3359,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_124
+      name: shoot_up_4
       rect:
         serializedVersion: 2
         x: 256
@@ -3381,7 +3381,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_125
+      name: shoot_up_5
       rect:
         serializedVersion: 2
         x: 320
@@ -3403,7 +3403,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_126
+      name: shoot_up_6
       rect:
         serializedVersion: 2
         x: 384
@@ -3425,7 +3425,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_127
+      name: shoot_up_7
       rect:
         serializedVersion: 2
         x: 448
@@ -3447,7 +3447,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_128
+      name: shoot_up_8
       rect:
         serializedVersion: 2
         x: 512
@@ -3469,7 +3469,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_129
+      name: shoot_up_9
       rect:
         serializedVersion: 2
         x: 576
@@ -3491,7 +3491,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_130
+      name: shoot_up_10
       rect:
         serializedVersion: 2
         x: 640
@@ -3513,7 +3513,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_131
+      name: shoot_up_11
       rect:
         serializedVersion: 2
         x: 704
@@ -3535,7 +3535,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_132
+      name: shoot_up_12
       rect:
         serializedVersion: 2
         x: 768
@@ -3557,7 +3557,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_133
+      name: shoot_left_0
       rect:
         serializedVersion: 2
         x: 0
@@ -3579,7 +3579,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_134
+      name: shoot_left_1
       rect:
         serializedVersion: 2
         x: 64
@@ -3601,7 +3601,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_135
+      name: shoot_left_2
       rect:
         serializedVersion: 2
         x: 128
@@ -3623,7 +3623,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_136
+      name: shoot_left_3
       rect:
         serializedVersion: 2
         x: 192
@@ -3645,7 +3645,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_137
+      name: shoot_left_4
       rect:
         serializedVersion: 2
         x: 256
@@ -3667,7 +3667,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_138
+      name: shoot_left_5
       rect:
         serializedVersion: 2
         x: 320
@@ -3689,7 +3689,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_139
+      name: shoot_left_6
       rect:
         serializedVersion: 2
         x: 384
@@ -3711,7 +3711,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_140
+      name: shoot_left_7
       rect:
         serializedVersion: 2
         x: 448
@@ -3733,7 +3733,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_141
+      name: shoot_left_8
       rect:
         serializedVersion: 2
         x: 512
@@ -3755,7 +3755,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_142
+      name: shoot_left_9
       rect:
         serializedVersion: 2
         x: 576
@@ -3777,7 +3777,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_143
+      name: shoot_left_10
       rect:
         serializedVersion: 2
         x: 640
@@ -3799,7 +3799,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_144
+      name: shoot_left_11
       rect:
         serializedVersion: 2
         x: 704
@@ -3821,7 +3821,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_145
+      name: shoot_left_12
       rect:
         serializedVersion: 2
         x: 768
@@ -3843,7 +3843,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_146
+      name: shoot_down_0
       rect:
         serializedVersion: 2
         x: 0
@@ -3865,7 +3865,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_147
+      name: shoot_down_1
       rect:
         serializedVersion: 2
         x: 64
@@ -3887,7 +3887,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_148
+      name: shoot_down_2
       rect:
         serializedVersion: 2
         x: 128
@@ -3909,7 +3909,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_149
+      name: shoot_down_3
       rect:
         serializedVersion: 2
         x: 192
@@ -3931,7 +3931,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_150
+      name: shoot_down_4
       rect:
         serializedVersion: 2
         x: 256
@@ -3953,7 +3953,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_151
+      name: shoot_down_5
       rect:
         serializedVersion: 2
         x: 320
@@ -3975,7 +3975,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_152
+      name: shoot_down_6
       rect:
         serializedVersion: 2
         x: 384
@@ -3997,7 +3997,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_153
+      name: shoot_down_7
       rect:
         serializedVersion: 2
         x: 448
@@ -4019,7 +4019,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_154
+      name: shoot_down_8
       rect:
         serializedVersion: 2
         x: 512
@@ -4041,7 +4041,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_155
+      name: shoot_down_9
       rect:
         serializedVersion: 2
         x: 576
@@ -4063,7 +4063,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_156
+      name: shoot_down_10
       rect:
         serializedVersion: 2
         x: 640
@@ -4085,7 +4085,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_157
+      name: shoot_down_11
       rect:
         serializedVersion: 2
         x: 704
@@ -4107,7 +4107,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_158
+      name: shoot_down_12
       rect:
         serializedVersion: 2
         x: 768
@@ -4129,7 +4129,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_159
+      name: shoot_right_0
       rect:
         serializedVersion: 2
         x: 0
@@ -4151,7 +4151,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_160
+      name: shoot_right_1
       rect:
         serializedVersion: 2
         x: 64
@@ -4173,7 +4173,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_161
+      name: shoot_right_2
       rect:
         serializedVersion: 2
         x: 128
@@ -4195,7 +4195,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_162
+      name: shoot_right_3
       rect:
         serializedVersion: 2
         x: 192
@@ -4217,7 +4217,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_163
+      name: shoot_right_4
       rect:
         serializedVersion: 2
         x: 256
@@ -4239,11 +4239,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_164
+      name: shoot_right_5
       rect:
         serializedVersion: 2
         x: 320
-        y: 80
+        y: 81
         width: 64
         height: 64
       alignment: 0
@@ -4261,7 +4261,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_165
+      name: shoot_right_6
       rect:
         serializedVersion: 2
         x: 384
@@ -4283,7 +4283,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_166
+      name: shoot_right_7
       rect:
         serializedVersion: 2
         x: 448
@@ -4305,10 +4305,10 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_167
+      name: shoot_right_8
       rect:
         serializedVersion: 2
-        x: 512
+        x: 511
         y: 80
         width: 64
         height: 64
@@ -4327,7 +4327,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_168
+      name: shoot_right_9
       rect:
         serializedVersion: 2
         x: 576
@@ -4349,7 +4349,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_169
+      name: shoot_right_10
       rect:
         serializedVersion: 2
         x: 640
@@ -4371,7 +4371,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_170
+      name: shoot_right_11
       rect:
         serializedVersion: 2
         x: 704
@@ -4393,12 +4393,12 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_171
+      name: shoot_right_12
       rect:
         serializedVersion: 2
         x: 768
         y: 80
-        width: 64
+        width: 63
         height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -4415,7 +4415,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_172
+      name: death_0
       rect:
         serializedVersion: 2
         x: 0
@@ -4437,7 +4437,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_173
+      name: death_1
       rect:
         serializedVersion: 2
         x: 64
@@ -4459,7 +4459,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_174
+      name: death_2
       rect:
         serializedVersion: 2
         x: 128
@@ -4481,7 +4481,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_175
+      name: death_3
       rect:
         serializedVersion: 2
         x: 192
@@ -4503,7 +4503,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_176
+      name: death_4
       rect:
         serializedVersion: 2
         x: 256
@@ -4525,7 +4525,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: male_body_base_lime_177
+      name: death_5
       rect:
         serializedVersion: 2
         x: 320
@@ -4562,148 +4562,148 @@ TextureImporter:
       - key: SpriteEditor.SliceSettings
         value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      male_body_base_lime_0: -4661736686195237159
-      male_body_base_lime_1: -5733930033259414014
-      male_body_base_lime_10: -9081881773797838092
-      male_body_base_lime_100: -1759042932582486538
-      male_body_base_lime_101: -6026770852094932679
-      male_body_base_lime_102: -2340813965917821680
-      male_body_base_lime_103: -6910976148924219577
-      male_body_base_lime_104: -8310248977934415494
-      male_body_base_lime_105: -180487924940185934
-      male_body_base_lime_106: 8739625315532524457
-      male_body_base_lime_107: -7640555778698600368
-      male_body_base_lime_108: -7601191079554652849
-      male_body_base_lime_109: -7267174694618797478
-      male_body_base_lime_11: -7017511052459744404
-      male_body_base_lime_110: -3849126542823299954
-      male_body_base_lime_111: 257623952027947018
-      male_body_base_lime_112: -3311593250764228087
-      male_body_base_lime_113: 8781730565302175657
-      male_body_base_lime_114: -8814863047879440414
-      male_body_base_lime_115: -6446729380811923451
-      male_body_base_lime_116: 7617308458467413859
-      male_body_base_lime_117: 4949353280216056328
-      male_body_base_lime_118: 5076456410800380965
-      male_body_base_lime_119: -3056984321758557412
-      male_body_base_lime_12: 2069321563644585882
-      male_body_base_lime_120: -3021229855669327908
-      male_body_base_lime_121: 3953557836821961393
-      male_body_base_lime_122: 3004236483346503812
-      male_body_base_lime_123: -7596521202587000663
-      male_body_base_lime_124: 4357053068547913351
-      male_body_base_lime_125: -6170990044776587456
-      male_body_base_lime_126: -7869735471870003169
-      male_body_base_lime_127: -117162817692664034
-      male_body_base_lime_128: -4406320369366008109
-      male_body_base_lime_129: -8452109444442899681
-      male_body_base_lime_13: -7538397456299813027
-      male_body_base_lime_130: -164182699424516053
-      male_body_base_lime_131: 8702306329650280672
-      male_body_base_lime_132: 4138648487430832565
-      male_body_base_lime_133: -870039795637434105
-      male_body_base_lime_134: 8764492181206451223
-      male_body_base_lime_135: -4048959844024345555
-      male_body_base_lime_136: 3030893822205913123
-      male_body_base_lime_137: -971865983428993096
-      male_body_base_lime_138: -5960222511923209142
-      male_body_base_lime_139: -2878262700798775341
-      male_body_base_lime_14: -3124770069433712693
-      male_body_base_lime_140: 1767965760251687434
-      male_body_base_lime_141: 5478766296757985450
-      male_body_base_lime_142: -4573132859310381765
-      male_body_base_lime_143: 2839748250390677625
-      male_body_base_lime_144: 6222563619762116496
-      male_body_base_lime_145: 5903534068078849721
-      male_body_base_lime_146: -8989899869463821535
-      male_body_base_lime_147: 3083350800592320993
-      male_body_base_lime_148: 5367005427466094079
-      male_body_base_lime_149: 2070074112101717862
-      male_body_base_lime_15: -7028638434857098637
-      male_body_base_lime_150: -8440301931128710391
-      male_body_base_lime_151: -2074555946587789282
-      male_body_base_lime_152: -558439188109859663
-      male_body_base_lime_153: 2801426195598053033
-      male_body_base_lime_154: 3589141409571871649
-      male_body_base_lime_155: -3853420525700054114
-      male_body_base_lime_156: 617477610727052884
-      male_body_base_lime_157: -8050754111748258903
-      male_body_base_lime_158: -3416659977216007679
-      male_body_base_lime_159: -6916737898917498012
-      male_body_base_lime_16: 2266359887069400281
-      male_body_base_lime_160: -5198613449321664521
-      male_body_base_lime_161: -3620569103117081171
-      male_body_base_lime_162: 5869414920351696731
-      male_body_base_lime_163: -6431173310520671997
-      male_body_base_lime_164: -8407064019347375018
-      male_body_base_lime_165: -5166977962332423714
-      male_body_base_lime_166: 6912791974646726587
-      male_body_base_lime_167: -4880884357729756088
-      male_body_base_lime_168: -3238213214299086228
-      male_body_base_lime_169: 3510760924432317954
-      male_body_base_lime_17: 1068605364689340965
-      male_body_base_lime_170: 7008538338725808405
-      male_body_base_lime_171: -87661998886338642
-      male_body_base_lime_172: -5646052449128652153
-      male_body_base_lime_173: 4855446895425872662
-      male_body_base_lime_174: 8186730277058300780
-      male_body_base_lime_175: 2852849534354539587
-      male_body_base_lime_176: 1950763975515708033
-      male_body_base_lime_177: -5742969195487387535
-      male_body_base_lime_18: 6260800948623850829
-      male_body_base_lime_19: 6899525277521908841
-      male_body_base_lime_2: 7077722039225216971
-      male_body_base_lime_20: 6446411925951007993
-      male_body_base_lime_21: -825108140415345417
-      male_body_base_lime_22: 696699310867938514
-      male_body_base_lime_23: -5367728319516446695
-      male_body_base_lime_24: 2024635717646125771
-      male_body_base_lime_25: -4391430462555530742
-      male_body_base_lime_26: -1137227989710725667
-      male_body_base_lime_27: 440188285358323884
-      male_body_base_lime_28: 5365203913829685204
-      male_body_base_lime_29: 6554203067938506372
-      male_body_base_lime_3: 5303796516478266964
-      male_body_base_lime_30: -5621621569231836484
-      male_body_base_lime_31: 6436683445512266104
-      male_body_base_lime_32: -3939517762837105830
-      male_body_base_lime_33: -457863244365657450
-      male_body_base_lime_34: -4599754867608819855
-      male_body_base_lime_35: -8471441135915497585
-      male_body_base_lime_36: -2411532802745298826
-      male_body_base_lime_37: -7736904227742009282
-      male_body_base_lime_38: 4551054981934004416
-      male_body_base_lime_39: -1518124223416698137
-      male_body_base_lime_4: 8538071285938332910
-      male_body_base_lime_40: 6255551334394032901
-      male_body_base_lime_41: 1450388127216351232
-      male_body_base_lime_42: -8545665305099332161
-      male_body_base_lime_43: -6117743021110749402
-      male_body_base_lime_44: -2917056544189700173
-      male_body_base_lime_45: 4958838556402701963
-      male_body_base_lime_46: 325779753008995995
-      male_body_base_lime_47: 8430536005515794253
-      male_body_base_lime_48: -2361167600330314946
-      male_body_base_lime_49: 6032985577551831793
-      male_body_base_lime_5: 8338703782115058892
-      male_body_base_lime_50: -4503431853866281169
-      male_body_base_lime_51: -2150368501429215876
-      male_body_base_lime_52: -2023829026732305651
-      male_body_base_lime_53: 569534284938855551
-      male_body_base_lime_54: 8150958468170784433
-      male_body_base_lime_55: -921491485441222756
-      male_body_base_lime_56: -5534260284289240721
-      male_body_base_lime_57: 3559781463736244246
-      male_body_base_lime_58: -7525186842763495417
-      male_body_base_lime_59: -3566538784886555244
-      male_body_base_lime_6: 1631540002899590469
-      male_body_base_lime_7: 7346171968342841798
-      male_body_base_lime_8: 3281445454979528913
-      male_body_base_lime_9: 3867208956663970481
-      male_body_base_lime_96: 1353709974961868629
-      male_body_base_lime_97: -1369712194067962682
-      male_body_base_lime_98: 4173586020271064269
-      male_body_base_lime_99: 7576296893985229931
+      death_0: -5646052449128652153
+      death_1: 4855446895425872662
+      death_2: 8186730277058300780
+      death_3: 2852849534354539587
+      death_4: 1950763975515708033
+      death_5: -5742969195487387535
+      shoot_down_0: -8989899869463821535
+      shoot_down_1: 3083350800592320993
+      shoot_down_10: 617477610727052884
+      shoot_down_11: -8050754111748258903
+      shoot_down_12: -3416659977216007679
+      shoot_down_2: 5367005427466094079
+      shoot_down_3: 2070074112101717862
+      shoot_down_4: -8440301931128710391
+      shoot_down_5: -2074555946587789282
+      shoot_down_6: -558439188109859663
+      shoot_down_7: 2801426195598053033
+      shoot_down_8: 3589141409571871649
+      shoot_down_9: -3853420525700054114
+      shoot_left_0: -870039795637434105
+      shoot_left_1: 8764492181206451223
+      shoot_left_10: 2839748250390677625
+      shoot_left_11: 6222563619762116496
+      shoot_left_12: 5903534068078849721
+      shoot_left_2: -4048959844024345555
+      shoot_left_3: 3030893822205913123
+      shoot_left_4: -971865983428993096
+      shoot_left_5: -5960222511923209142
+      shoot_left_6: -2878262700798775341
+      shoot_left_7: 1767965760251687434
+      shoot_left_8: 5478766296757985450
+      shoot_left_9: -4573132859310381765
+      shoot_right_0: -6916737898917498012
+      shoot_right_1: -5198613449321664521
+      shoot_right_10: 3510760924432317954
+      shoot_right_11: 7008538338725808405
+      shoot_right_12: -87661998886338642
+      shoot_right_2: -3620569103117081171
+      shoot_right_3: 5869414920351696731
+      shoot_right_4: -6431173310520671997
+      shoot_right_5: -8407064019347375018
+      shoot_right_6: -5166977962332423714
+      shoot_right_7: 6912791974646726587
+      shoot_right_8: -4880884357729756088
+      shoot_right_9: -3238213214299086228
+      shoot_up_0: -3021229855669327908
+      shoot_up_1: 3953557836821961393
+      shoot_up_10: -164182699424516053
+      shoot_up_11: 8702306329650280672
+      shoot_up_12: 4138648487430832565
+      shoot_up_2: 3004236483346503812
+      shoot_up_3: -7596521202587000663
+      shoot_up_4: 4357053068547913351
+      shoot_up_5: -6170990044776587456
+      shoot_up_6: -7869735471870003169
+      shoot_up_7: -117162817692664034
+      shoot_up_8: -4406320369366008109
+      shoot_up_9: -8452109444442899681
+      spell_down_0: -3124770069433712693
+      spell_down_1: -7028638434857098637
+      spell_down_2: 2266359887069400281
+      spell_down_3: 1068605364689340965
+      spell_down_4: 6260800948623850829
+      spell_down_5: 6899525277521908841
+      spell_down_6: 6446411925951007993
+      spell_left_0: 7346171968342841798
+      spell_left_1: 3281445454979528913
+      spell_left_2: 3867208956663970481
+      spell_left_3: -9081881773797838092
+      spell_left_4: -7017511052459744404
+      spell_left_5: 2069321563644585882
+      spell_left_6: -7538397456299813027
+      spell_right_0: -825108140415345417
+      spell_right_1: 696699310867938514
+      spell_right_2: -5367728319516446695
+      spell_right_3: 2024635717646125771
+      spell_right_4: -4391430462555530742
+      spell_right_5: -1137227989710725667
+      spell_right_6: 440188285358323884
+      spell_up_0: -4661736686195237159
+      spell_up_1: -5733930033259414014
+      spell_up_2: 7077722039225216971
+      spell_up_3: 5303796516478266964
+      spell_up_4: 8538071285938332910
+      spell_up_5: 8338703782115058892
+      spell_up_6: 1631540002899590469
+      swing_down_0: -7601191079554652849
+      swing_down_1: -7267174694618797478
+      swing_down_2: -3849126542823299954
+      swing_down_3: 257623952027947018
+      swing_down_4: -3311593250764228087
+      swing_down_5: 8781730565302175657
+      swing_left_0: -2340813965917821680
+      swing_left_1: -6910976148924219577
+      swing_left_2: -8310248977934415494
+      swing_left_3: -180487924940185934
+      swing_left_4: 8739625315532524457
+      swing_left_5: -7640555778698600368
+      swing_righ_0: -8814863047879440414
+      swing_right_1: -6446729380811923451
+      swing_right_2: 7617308458467413859
+      swing_right_3: 4949353280216056328
+      swing_right_4: 5076456410800380965
+      swing_right_5: -3056984321758557412
+      swing_up_0: 1353709974961868629
+      swing_up_1: -1369712194067962682
+      swing_up_2: 4173586020271064269
+      swing_up_3: 7576296893985229931
+      swing_up_4: -1759042932582486538
+      swing_up_5: -6026770852094932679
+      thrust_down_0: -2917056544189700173
+      thrust_down_1: 4958838556402701963
+      thrust_down_2: 325779753008995995
+      thrust_down_3: 8430536005515794253
+      thrust_down_4: -2361167600330314946
+      thrust_down_5: 6032985577551831793
+      thrust_down_6: -4503431853866281169
+      thrust_down_7: -2150368501429215876
+      thrust_left_0: -2411532802745298826
+      thrust_left_1: -7736904227742009282
+      thrust_left_2: 4551054981934004416
+      thrust_left_3: -1518124223416698137
+      thrust_left_4: 6255551334394032901
+      thrust_left_5: 1450388127216351232
+      thrust_left_6: -8545665305099332161
+      thrust_left_7: -6117743021110749402
+      thrust_right_0: -2023829026732305651
+      thrust_right_1: 569534284938855551
+      thrust_right_2: 8150958468170784433
+      thrust_right_3: -921491485441222756
+      thrust_right_4: -5534260284289240721
+      thrust_right_5: 3559781463736244246
+      thrust_right_6: -7525186842763495417
+      thrust_right_7: -3566538784886555244
+      thrust_up_0: 5365203913829685204
+      thrust_up_1: 6554203067938506372
+      thrust_up_2: -5621621569231836484
+      thrust_up_3: 6436683445512266104
+      thrust_up_4: -3939517762837105830
+      thrust_up_5: -457863244365657450
+      thrust_up_6: -4599754867608819855
+      thrust_up_7: -8471441135915497585
       walk_down_0: -731202991590237662
       walk_down_1: 5802171361925954510
       walk_down_2: 2667310681501995346

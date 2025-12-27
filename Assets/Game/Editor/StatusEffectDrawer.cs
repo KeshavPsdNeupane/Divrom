@@ -30,7 +30,7 @@ public class StatusEffectDrawer : PropertyDrawer
         var totalDurationProp = property.FindPropertyRelative("totalDuration");
         if (Mathf.Approximately(totalDurationProp.floatValue, StatusEffect.PERMANENT_BUFF_DURATION))
         {
-            Rect permanentRect = new Rect(position.x + 15, y, position.width, lineHeight);
+            Rect permanentRect = new(position.x + 15, y, position.width, lineHeight);
             EditorGUI.LabelField(permanentRect, "Permanent");
             y += lineHeight;
         }
