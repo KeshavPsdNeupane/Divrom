@@ -631,7 +631,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: base_male_head_light_0
+      name: spell_up_0
       rect:
         serializedVersion: 2
         x: 0
@@ -653,7 +653,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_1
+      name: spell_up_1
       rect:
         serializedVersion: 2
         x: 64
@@ -675,7 +675,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_2
+      name: spell_up_2
       rect:
         serializedVersion: 2
         x: 128
@@ -697,7 +697,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_3
+      name: spell_up_3
       rect:
         serializedVersion: 2
         x: 192
@@ -719,7 +719,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_4
+      name: spell_up_4
       rect:
         serializedVersion: 2
         x: 256
@@ -741,7 +741,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_5
+      name: spell_up_5
       rect:
         serializedVersion: 2
         x: 320
@@ -763,7 +763,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_6
+      name: spell_up_6
       rect:
         serializedVersion: 2
         x: 384
@@ -785,11 +785,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_7
+      name: spell_left_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 1216
+        y: 1217
         width: 64
         height: 64
       alignment: 0
@@ -807,7 +807,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_8
+      name: spell_left_1
       rect:
         serializedVersion: 2
         x: 64
@@ -829,7 +829,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_9
+      name: spell_left_2
       rect:
         serializedVersion: 2
         x: 128
@@ -851,10 +851,10 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_10
+      name: spell_left_3
       rect:
         serializedVersion: 2
-        x: 192
+        x: 193
         y: 1216
         width: 64
         height: 64
@@ -873,7 +873,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_11
+      name: spell_left_4
       rect:
         serializedVersion: 2
         x: 256
@@ -895,7 +895,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_12
+      name: spell_left_5
       rect:
         serializedVersion: 2
         x: 320
@@ -917,7 +917,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_13
+      name: spell_left_6
       rect:
         serializedVersion: 2
         x: 384
@@ -939,7 +939,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_14
+      name: spell_down_0
       rect:
         serializedVersion: 2
         x: 0
@@ -961,7 +961,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_15
+      name: spell_down_1
       rect:
         serializedVersion: 2
         x: 64
@@ -983,7 +983,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_16
+      name: spell_down_2
       rect:
         serializedVersion: 2
         x: 128
@@ -1005,7 +1005,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_17
+      name: spell_down_3
       rect:
         serializedVersion: 2
         x: 192
@@ -1027,7 +1027,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_18
+      name: spell_down_4
       rect:
         serializedVersion: 2
         x: 256
@@ -1049,7 +1049,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_19
+      name: spell_down_5
       rect:
         serializedVersion: 2
         x: 320
@@ -1071,7 +1071,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_20
+      name: spell_down_6
       rect:
         serializedVersion: 2
         x: 384
@@ -1093,7 +1093,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_21
+      name: spell_right_0
       rect:
         serializedVersion: 2
         x: 0
@@ -1115,7 +1115,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_22
+      name: spell_right_1
       rect:
         serializedVersion: 2
         x: 64
@@ -1137,7 +1137,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_23
+      name: spell_right_2
       rect:
         serializedVersion: 2
         x: 128
@@ -1159,7 +1159,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_24
+      name: spell_right_3
       rect:
         serializedVersion: 2
         x: 192
@@ -1181,7 +1181,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_25
+      name: spell_right_4
       rect:
         serializedVersion: 2
         x: 256
@@ -1203,7 +1203,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_26
+      name: spell_right_5
       rect:
         serializedVersion: 2
         x: 320
@@ -1225,7 +1225,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_27
+      name: spell_right_6
       rect:
         serializedVersion: 2
         x: 384
@@ -1247,7 +1247,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_28
+      name: thrust_up_0
       rect:
         serializedVersion: 2
         x: 0
@@ -1269,7 +1269,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_29
+      name: thrust_up_1
       rect:
         serializedVersion: 2
         x: 64
@@ -1291,7 +1291,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_30
+      name: thrust_up_2
       rect:
         serializedVersion: 2
         x: 128
@@ -1313,7 +1313,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_31
+      name: thrust_up_3
       rect:
         serializedVersion: 2
         x: 192
@@ -1335,7 +1335,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_32
+      name: thrust_up_4
       rect:
         serializedVersion: 2
         x: 256
@@ -1357,7 +1357,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_33
+      name: thrust_up_5
       rect:
         serializedVersion: 2
         x: 320
@@ -1379,7 +1379,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_34
+      name: thrust_up_6
       rect:
         serializedVersion: 2
         x: 384
@@ -1401,7 +1401,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_35
+      name: thrust_up_7
       rect:
         serializedVersion: 2
         x: 448
@@ -1423,7 +1423,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_36
+      name: thrust_left_0
       rect:
         serializedVersion: 2
         x: 0
@@ -1445,7 +1445,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_37
+      name: thrust_left_
       rect:
         serializedVersion: 2
         x: 64
@@ -1467,7 +1467,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_38
+      name: thrust_left_2
       rect:
         serializedVersion: 2
         x: 128
@@ -1489,7 +1489,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_39
+      name: thrust_left_3
       rect:
         serializedVersion: 2
         x: 192
@@ -1511,7 +1511,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_40
+      name: thrust_left_4
       rect:
         serializedVersion: 2
         x: 256
@@ -1533,7 +1533,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_41
+      name: thrust_left_5
       rect:
         serializedVersion: 2
         x: 320
@@ -1555,7 +1555,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_42
+      name: thrust_left_6
       rect:
         serializedVersion: 2
         x: 384
@@ -1577,7 +1577,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_43
+      name: thrust_left_7
       rect:
         serializedVersion: 2
         x: 448
@@ -1599,7 +1599,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_44
+      name: thrust_down_0
       rect:
         serializedVersion: 2
         x: 0
@@ -1621,7 +1621,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_45
+      name: thrust_down_1
       rect:
         serializedVersion: 2
         x: 64
@@ -1643,10 +1643,10 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_46
+      name: thrust_down_2
       rect:
         serializedVersion: 2
-        x: 128
+        x: 129
         y: 896
         width: 64
         height: 64
@@ -1665,7 +1665,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_47
+      name: thrust_down_3
       rect:
         serializedVersion: 2
         x: 192
@@ -1687,7 +1687,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_48
+      name: thrust_down_4
       rect:
         serializedVersion: 2
         x: 256
@@ -1709,7 +1709,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_49
+      name: thrust_down_5
       rect:
         serializedVersion: 2
         x: 320
@@ -1731,7 +1731,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_50
+      name: thrust_down_6
       rect:
         serializedVersion: 2
         x: 384
@@ -1753,7 +1753,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_51
+      name: thrust_down_7
       rect:
         serializedVersion: 2
         x: 448
@@ -1775,7 +1775,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_52
+      name: thrust_right_0
       rect:
         serializedVersion: 2
         x: 0
@@ -1797,7 +1797,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_53
+      name: thrust_right_1
       rect:
         serializedVersion: 2
         x: 64
@@ -1819,7 +1819,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_54
+      name: thrust_right_2
       rect:
         serializedVersion: 2
         x: 128
@@ -1841,7 +1841,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_55
+      name: thrust_right_3
       rect:
         serializedVersion: 2
         x: 192
@@ -1863,10 +1863,10 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_56
+      name: thrust_right_4
       rect:
         serializedVersion: 2
-        x: 256
+        x: 254
         y: 832
         width: 64
         height: 64
@@ -1885,7 +1885,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_57
+      name: thrust_right_5
       rect:
         serializedVersion: 2
         x: 320
@@ -1907,7 +1907,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_58
+      name: thrust_right_6
       rect:
         serializedVersion: 2
         x: 384
@@ -1929,7 +1929,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_59
+      name: thrust_right_7
       rect:
         serializedVersion: 2
         x: 448
@@ -1951,7 +1951,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_60
+      name: walk_up_0
       rect:
         serializedVersion: 2
         x: 0
@@ -1973,7 +1973,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_61
+      name: walk_up_1
       rect:
         serializedVersion: 2
         x: 64
@@ -1995,7 +1995,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_62
+      name: walk_up_2
       rect:
         serializedVersion: 2
         x: 128
@@ -2017,7 +2017,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_63
+      name: walk_up_3
       rect:
         serializedVersion: 2
         x: 192
@@ -2039,7 +2039,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_64
+      name: walk_up_4
       rect:
         serializedVersion: 2
         x: 256
@@ -2061,7 +2061,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_65
+      name: walk_up_5
       rect:
         serializedVersion: 2
         x: 320
@@ -2083,7 +2083,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_66
+      name: walk_up_6
       rect:
         serializedVersion: 2
         x: 384
@@ -2105,7 +2105,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_67
+      name: walk_up_7
       rect:
         serializedVersion: 2
         x: 448
@@ -2127,7 +2127,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_68
+      name: walk_up_8
       rect:
         serializedVersion: 2
         x: 512
@@ -2149,7 +2149,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_69
+      name: walk_left_0
       rect:
         serializedVersion: 2
         x: 0
@@ -2171,10 +2171,10 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_70
+      name: walk_left_1
       rect:
         serializedVersion: 2
-        x: 64
+        x: 65
         y: 704
         width: 64
         height: 64
@@ -2193,7 +2193,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_71
+      name: walk_left_2
       rect:
         serializedVersion: 2
         x: 128
@@ -2215,7 +2215,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_72
+      name: walk_left_3
       rect:
         serializedVersion: 2
         x: 192
@@ -2237,7 +2237,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_73
+      name: walk_left_4
       rect:
         serializedVersion: 2
         x: 256
@@ -2259,7 +2259,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_74
+      name: walk_left_5
       rect:
         serializedVersion: 2
         x: 320
@@ -2281,7 +2281,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_75
+      name: walk_left_6
       rect:
         serializedVersion: 2
         x: 384
@@ -2303,7 +2303,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_76
+      name: walk_left_7
       rect:
         serializedVersion: 2
         x: 448
@@ -2325,7 +2325,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_77
+      name: walk_left_8
       rect:
         serializedVersion: 2
         x: 512
@@ -2347,7 +2347,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_78
+      name: walk_down_0
       rect:
         serializedVersion: 2
         x: 0
@@ -2369,7 +2369,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_79
+      name: walk_down_1
       rect:
         serializedVersion: 2
         x: 64
@@ -2391,7 +2391,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_80
+      name: walk_down_2
       rect:
         serializedVersion: 2
         x: 128
@@ -2413,7 +2413,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_81
+      name: walk_down_3
       rect:
         serializedVersion: 2
         x: 192
@@ -2435,7 +2435,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_82
+      name: walk_down_4
       rect:
         serializedVersion: 2
         x: 256
@@ -2457,7 +2457,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_83
+      name: walk_down_5
       rect:
         serializedVersion: 2
         x: 320
@@ -2479,7 +2479,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_84
+      name: walk_down_6
       rect:
         serializedVersion: 2
         x: 384
@@ -2501,7 +2501,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_85
+      name: walk_down_7
       rect:
         serializedVersion: 2
         x: 448
@@ -2523,7 +2523,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_86
+      name: walk_down_8
       rect:
         serializedVersion: 2
         x: 512
@@ -2545,7 +2545,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_87
+      name: walk_right_0
       rect:
         serializedVersion: 2
         x: 0
@@ -2567,7 +2567,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_88
+      name: walk_right_1
       rect:
         serializedVersion: 2
         x: 64
@@ -2589,7 +2589,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_89
+      name: walk_right_2
       rect:
         serializedVersion: 2
         x: 128
@@ -2611,7 +2611,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_90
+      name: walk_right_3
       rect:
         serializedVersion: 2
         x: 192
@@ -2633,7 +2633,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_91
+      name: walk_right_4
       rect:
         serializedVersion: 2
         x: 256
@@ -2655,7 +2655,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_92
+      name: walk_right_5
       rect:
         serializedVersion: 2
         x: 320
@@ -2677,7 +2677,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_93
+      name: walk_right_6
       rect:
         serializedVersion: 2
         x: 384
@@ -2699,7 +2699,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_94
+      name: walk_right_7
       rect:
         serializedVersion: 2
         x: 448
@@ -2721,7 +2721,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_95
+      name: walk_right_8
       rect:
         serializedVersion: 2
         x: 512
@@ -2743,7 +2743,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_96
+      name: swing_up_0
       rect:
         serializedVersion: 2
         x: 0
@@ -2765,7 +2765,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_97
+      name: swing_up_1
       rect:
         serializedVersion: 2
         x: 64
@@ -2787,7 +2787,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_98
+      name: swing_up_2
       rect:
         serializedVersion: 2
         x: 128
@@ -2809,7 +2809,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_99
+      name: swing_up_3
       rect:
         serializedVersion: 2
         x: 192
@@ -2831,7 +2831,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_100
+      name: swing_up_4
       rect:
         serializedVersion: 2
         x: 256
@@ -2853,7 +2853,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_101
+      name: swing_up_5
       rect:
         serializedVersion: 2
         x: 320
@@ -2875,7 +2875,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_102
+      name: swing_left_0
       rect:
         serializedVersion: 2
         x: 0
@@ -2897,7 +2897,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_103
+      name: swing_left_1
       rect:
         serializedVersion: 2
         x: 64
@@ -2919,7 +2919,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_104
+      name: swing_left_2
       rect:
         serializedVersion: 2
         x: 128
@@ -2941,7 +2941,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_105
+      name: swing_left_3
       rect:
         serializedVersion: 2
         x: 192
@@ -2963,7 +2963,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_106
+      name: swing_left_4
       rect:
         serializedVersion: 2
         x: 256
@@ -2985,7 +2985,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_107
+      name: swing_left_5
       rect:
         serializedVersion: 2
         x: 320
@@ -3007,7 +3007,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_108
+      name: swing_down_0
       rect:
         serializedVersion: 2
         x: 0
@@ -3029,7 +3029,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_109
+      name: swing_down_1
       rect:
         serializedVersion: 2
         x: 64
@@ -3051,7 +3051,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_110
+      name: swing_down_2
       rect:
         serializedVersion: 2
         x: 128
@@ -3073,7 +3073,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_111
+      name: swing_down_3
       rect:
         serializedVersion: 2
         x: 192
@@ -3095,7 +3095,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_112
+      name: swing_down_4
       rect:
         serializedVersion: 2
         x: 256
@@ -3117,7 +3117,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_113
+      name: swing_down_5
       rect:
         serializedVersion: 2
         x: 320
@@ -3139,7 +3139,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_114
+      name: swing_right_0
       rect:
         serializedVersion: 2
         x: 0
@@ -3161,7 +3161,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_115
+      name: swing_right_1
       rect:
         serializedVersion: 2
         x: 64
@@ -3183,7 +3183,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_116
+      name: swing_right_2
       rect:
         serializedVersion: 2
         x: 128
@@ -3205,7 +3205,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_117
+      name: swing_right_3
       rect:
         serializedVersion: 2
         x: 192
@@ -3227,7 +3227,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_118
+      name: swing_right_4
       rect:
         serializedVersion: 2
         x: 256
@@ -3249,7 +3249,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_119
+      name: swing_right_5
       rect:
         serializedVersion: 2
         x: 320
@@ -3271,7 +3271,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_120
+      name: shoot_up_0
       rect:
         serializedVersion: 2
         x: 0
@@ -3293,7 +3293,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_121
+      name: shoot_up_1
       rect:
         serializedVersion: 2
         x: 64
@@ -3315,7 +3315,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_122
+      name: shoot_up_2
       rect:
         serializedVersion: 2
         x: 128
@@ -3337,7 +3337,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_123
+      name: shoot_up_3
       rect:
         serializedVersion: 2
         x: 192
@@ -3359,7 +3359,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_124
+      name: shoot_up_4
       rect:
         serializedVersion: 2
         x: 256
@@ -3381,7 +3381,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_125
+      name: shoot_up_5
       rect:
         serializedVersion: 2
         x: 320
@@ -3403,7 +3403,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_126
+      name: shoot_up_6
       rect:
         serializedVersion: 2
         x: 384
@@ -3425,7 +3425,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_127
+      name: shoot_up_7
       rect:
         serializedVersion: 2
         x: 448
@@ -3447,7 +3447,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_128
+      name: shoot_up_8
       rect:
         serializedVersion: 2
         x: 512
@@ -3469,7 +3469,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_129
+      name: shoot_up_9
       rect:
         serializedVersion: 2
         x: 576
@@ -3491,7 +3491,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_130
+      name: shoot_up_10
       rect:
         serializedVersion: 2
         x: 640
@@ -3513,7 +3513,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_131
+      name: shoot_up_11
       rect:
         serializedVersion: 2
         x: 704
@@ -3535,7 +3535,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_132
+      name: shoot_up_12
       rect:
         serializedVersion: 2
         x: 768
@@ -3557,7 +3557,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_133
+      name: shoot_left_0
       rect:
         serializedVersion: 2
         x: 0
@@ -3579,7 +3579,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_134
+      name: shoot_left_1
       rect:
         serializedVersion: 2
         x: 64
@@ -3601,7 +3601,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_135
+      name: shoot_left_2
       rect:
         serializedVersion: 2
         x: 128
@@ -3623,7 +3623,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_136
+      name: shoot_left_3
       rect:
         serializedVersion: 2
         x: 192
@@ -3645,7 +3645,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_137
+      name: shoot_left_4
       rect:
         serializedVersion: 2
         x: 256
@@ -3667,7 +3667,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_138
+      name: shoot_left_5
       rect:
         serializedVersion: 2
         x: 320
@@ -3689,7 +3689,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_139
+      name: shoot_left_6
       rect:
         serializedVersion: 2
         x: 384
@@ -3711,7 +3711,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_140
+      name: shoot_left_7
       rect:
         serializedVersion: 2
         x: 448
@@ -3733,7 +3733,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_141
+      name: shoot_left_8
       rect:
         serializedVersion: 2
         x: 512
@@ -3755,7 +3755,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_142
+      name: shoot_left_9
       rect:
         serializedVersion: 2
         x: 576
@@ -3777,7 +3777,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_143
+      name: shoot_left_10
       rect:
         serializedVersion: 2
         x: 640
@@ -3799,7 +3799,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_144
+      name: shoot_left_11
       rect:
         serializedVersion: 2
         x: 704
@@ -3821,7 +3821,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_145
+      name: shoot_left_12
       rect:
         serializedVersion: 2
         x: 768
@@ -3843,7 +3843,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_146
+      name: shoot_down_0
       rect:
         serializedVersion: 2
         x: 0
@@ -3865,7 +3865,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_147
+      name: shoot_down_1
       rect:
         serializedVersion: 2
         x: 64
@@ -3887,7 +3887,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_148
+      name: shoot_down_2
       rect:
         serializedVersion: 2
         x: 128
@@ -3909,7 +3909,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_149
+      name: shoot_down_3
       rect:
         serializedVersion: 2
         x: 192
@@ -3931,7 +3931,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_150
+      name: shoot_down_4
       rect:
         serializedVersion: 2
         x: 256
@@ -3953,7 +3953,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_151
+      name: shoot_down_5
       rect:
         serializedVersion: 2
         x: 320
@@ -3975,7 +3975,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_152
+      name: shoot_down_6
       rect:
         serializedVersion: 2
         x: 384
@@ -3997,7 +3997,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_153
+      name: shoot_down_7
       rect:
         serializedVersion: 2
         x: 448
@@ -4019,7 +4019,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_154
+      name: shoot_down_8
       rect:
         serializedVersion: 2
         x: 512
@@ -4041,7 +4041,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_155
+      name: shoot_down_9
       rect:
         serializedVersion: 2
         x: 576
@@ -4063,7 +4063,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_156
+      name: shoot_down_10
       rect:
         serializedVersion: 2
         x: 640
@@ -4085,7 +4085,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_157
+      name: shoot_down_11
       rect:
         serializedVersion: 2
         x: 704
@@ -4107,7 +4107,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_158
+      name: shoot_down_12
       rect:
         serializedVersion: 2
         x: 768
@@ -4129,7 +4129,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_159
+      name: shoot_right_0
       rect:
         serializedVersion: 2
         x: 0
@@ -4151,7 +4151,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_160
+      name: shoot_right_1
       rect:
         serializedVersion: 2
         x: 64
@@ -4173,7 +4173,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_161
+      name: shoot_right_2
       rect:
         serializedVersion: 2
         x: 128
@@ -4195,7 +4195,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_162
+      name: shoot_right_3
       rect:
         serializedVersion: 2
         x: 192
@@ -4217,7 +4217,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_163
+      name: shoot_right_4
       rect:
         serializedVersion: 2
         x: 256
@@ -4239,7 +4239,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_164
+      name: shoot_right_5
       rect:
         serializedVersion: 2
         x: 320
@@ -4261,7 +4261,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_165
+      name: shoot_right_6
       rect:
         serializedVersion: 2
         x: 384
@@ -4283,7 +4283,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_166
+      name: shoot_right_7
       rect:
         serializedVersion: 2
         x: 448
@@ -4305,7 +4305,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_167
+      name: shoot_right_8
       rect:
         serializedVersion: 2
         x: 512
@@ -4327,7 +4327,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_168
+      name: shoot_right_9
       rect:
         serializedVersion: 2
         x: 576
@@ -4349,7 +4349,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_169
+      name: shoot_right_10
       rect:
         serializedVersion: 2
         x: 640
@@ -4371,7 +4371,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_170
+      name: shoot_right_11
       rect:
         serializedVersion: 2
         x: 704
@@ -4393,7 +4393,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_171
+      name: shoot_right_12
       rect:
         serializedVersion: 2
         x: 768
@@ -4415,7 +4415,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_172
+      name: death_0
       rect:
         serializedVersion: 2
         x: 0
@@ -4437,7 +4437,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_173
+      name: death_1
       rect:
         serializedVersion: 2
         x: 64
@@ -4459,7 +4459,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_174
+      name: death_2
       rect:
         serializedVersion: 2
         x: 128
@@ -4481,7 +4481,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_175
+      name: death_3
       rect:
         serializedVersion: 2
         x: 192
@@ -4503,7 +4503,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_176
+      name: death_4
       rect:
         serializedVersion: 2
         x: 256
@@ -4525,7 +4525,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: base_male_head_light_177
+      name: death_5
       rect:
         serializedVersion: 2
         x: 320
@@ -4564,184 +4564,184 @@ TextureImporter:
       - key: SpriteEditor.SliceSettings
         value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      base_male_head_light_0: -498836274539268975
-      base_male_head_light_1: -5470614359047163282
-      base_male_head_light_10: 3503456772401836383
-      base_male_head_light_100: -6016603146964040580
-      base_male_head_light_101: 1828912434412617282
-      base_male_head_light_102: -1497489627798114585
-      base_male_head_light_103: 1693623548807821351
-      base_male_head_light_104: -7869263247222887784
-      base_male_head_light_105: -7129033160683946952
-      base_male_head_light_106: -7445850530397698304
-      base_male_head_light_107: 4949556230030466913
-      base_male_head_light_108: 2257665168883290404
-      base_male_head_light_109: 1189544143642466273
-      base_male_head_light_11: -5294255106798809299
-      base_male_head_light_110: 7276622591561516397
-      base_male_head_light_111: -5344759564013886650
-      base_male_head_light_112: -7561125602002638619
-      base_male_head_light_113: 5051516750014444843
-      base_male_head_light_114: 1100987612517788412
-      base_male_head_light_115: 2645766573252150048
-      base_male_head_light_116: -648643129309384258
-      base_male_head_light_117: 6369513536735582109
-      base_male_head_light_118: -7287225300825980366
-      base_male_head_light_119: 3537360211783772196
-      base_male_head_light_12: -1112368807159059473
-      base_male_head_light_120: -3514841405527629016
-      base_male_head_light_121: -8430237618558787492
-      base_male_head_light_122: -5788958654164792167
-      base_male_head_light_123: -6909768525937298019
-      base_male_head_light_124: 6152921390467788439
-      base_male_head_light_125: -3416229296203892518
-      base_male_head_light_126: 8895386103112373285
-      base_male_head_light_127: 1978128193030680341
-      base_male_head_light_128: -1479090770140386760
-      base_male_head_light_129: 6485124927334580423
-      base_male_head_light_13: 7832970269564488134
-      base_male_head_light_130: -785143250915521855
-      base_male_head_light_131: -6995189132014316950
-      base_male_head_light_132: -3806783281463642804
-      base_male_head_light_133: -7784217772029879544
-      base_male_head_light_134: 4922151646986376543
-      base_male_head_light_135: 6468763642755977890
-      base_male_head_light_136: -2360329490903471530
-      base_male_head_light_137: 5752205675562123779
-      base_male_head_light_138: -7423921351476750606
-      base_male_head_light_139: 7992353252995711984
-      base_male_head_light_14: -3139121841500962991
-      base_male_head_light_140: 4741006790163591477
-      base_male_head_light_141: 6371573549965321746
-      base_male_head_light_142: -560570234517652035
-      base_male_head_light_143: 2153057946396600239
-      base_male_head_light_144: -4784146326206382591
-      base_male_head_light_145: 5567272421932653764
-      base_male_head_light_146: 7789079287832867764
-      base_male_head_light_147: -4648181988941163868
-      base_male_head_light_148: 1062738494060272313
-      base_male_head_light_149: 768978732350420910
-      base_male_head_light_15: 4736003143715783255
-      base_male_head_light_150: -5045644660504924117
-      base_male_head_light_151: -7802175866722629820
-      base_male_head_light_152: 7854732514503456894
-      base_male_head_light_153: 4246877225224822721
-      base_male_head_light_154: -9182832205044568505
-      base_male_head_light_155: 6619869890528249524
-      base_male_head_light_156: 5704490200523035836
-      base_male_head_light_157: -4853228391717585464
-      base_male_head_light_158: 3466933274927519631
-      base_male_head_light_159: -2792915780541338255
-      base_male_head_light_16: -3848553891292381178
-      base_male_head_light_160: -5881009498210056260
-      base_male_head_light_161: 4411828745114950670
-      base_male_head_light_162: 5269303828808544263
-      base_male_head_light_163: 7251494177495575417
-      base_male_head_light_164: -696885755993335820
-      base_male_head_light_165: -4858144127463263169
-      base_male_head_light_166: -1643480104291687763
-      base_male_head_light_167: -8588897790503545450
-      base_male_head_light_168: 2354387638542567698
-      base_male_head_light_169: 1320466494000597448
-      base_male_head_light_17: -3102698887812125650
-      base_male_head_light_170: 7963837347014521855
-      base_male_head_light_171: -5178037722341280234
-      base_male_head_light_172: -5774011166722065635
-      base_male_head_light_173: -5493533044585684425
-      base_male_head_light_174: -2486319795955441940
-      base_male_head_light_175: 5302566806519403497
-      base_male_head_light_176: 2378535841396217344
-      base_male_head_light_177: -24635534327408597
-      base_male_head_light_18: -5942217125227859522
-      base_male_head_light_19: -4005972372508722971
-      base_male_head_light_2: -6264282798635568487
-      base_male_head_light_20: -1946246403772639328
-      base_male_head_light_21: -7028240069843390378
-      base_male_head_light_22: -2933347532554310245
-      base_male_head_light_23: 3893590464789485536
-      base_male_head_light_24: 2535035593205473349
-      base_male_head_light_25: 8172943917215589223
-      base_male_head_light_26: 6745036736343821825
-      base_male_head_light_27: -6032590773173394981
-      base_male_head_light_28: 3616015121640751525
-      base_male_head_light_29: -7727690591621168763
-      base_male_head_light_3: 1329929422586905896
-      base_male_head_light_30: -2738191612460937289
-      base_male_head_light_31: -8168942559647511830
-      base_male_head_light_32: -2469605971020974344
-      base_male_head_light_33: 4792210977242774980
-      base_male_head_light_34: 2957033796338854306
-      base_male_head_light_35: -9138306963182620194
-      base_male_head_light_36: 1430280677626958523
-      base_male_head_light_37: 3819259851246517191
-      base_male_head_light_38: -5141322564214048982
-      base_male_head_light_39: -8775804761375125472
-      base_male_head_light_4: -3663007120805029107
-      base_male_head_light_40: 3753589516864001463
-      base_male_head_light_41: 7247438711250450226
-      base_male_head_light_42: 6604751071322926225
-      base_male_head_light_43: -7611856261605446766
-      base_male_head_light_44: 4545251918049847996
-      base_male_head_light_45: -5989250692556627402
-      base_male_head_light_46: 4041384176479734161
-      base_male_head_light_47: 8032388321932851179
-      base_male_head_light_48: 4950903737114888019
-      base_male_head_light_49: -7764687436480927571
-      base_male_head_light_5: 6260531435546529607
-      base_male_head_light_50: -8911174008273871394
-      base_male_head_light_51: 2612751080881834558
-      base_male_head_light_52: -3324317804525091444
-      base_male_head_light_53: 8811609607152219717
-      base_male_head_light_54: 494099199665554004
-      base_male_head_light_55: -8133350800636755222
-      base_male_head_light_56: -1621029995521610086
-      base_male_head_light_57: -1387939190380401581
-      base_male_head_light_58: -1247008589460708933
-      base_male_head_light_59: -2339989542578897462
-      base_male_head_light_6: -1744509321777110551
-      base_male_head_light_60: 6916899475408010261
-      base_male_head_light_61: 2589271894359587290
-      base_male_head_light_62: -3702062532863173040
-      base_male_head_light_63: -469606853028562459
-      base_male_head_light_64: -2913844421452598160
-      base_male_head_light_65: 5291644383675597165
-      base_male_head_light_66: 4543007219999169782
-      base_male_head_light_67: -2226590868849217886
-      base_male_head_light_68: -6260989699727434788
-      base_male_head_light_69: -2400016706592372440
-      base_male_head_light_7: 5531000622837750833
-      base_male_head_light_70: 8587002514856039530
-      base_male_head_light_71: -9078121498679038016
-      base_male_head_light_72: 2255663535710815239
-      base_male_head_light_73: -96939884419876589
-      base_male_head_light_74: -3150042273559082483
-      base_male_head_light_75: -7842811382232553203
-      base_male_head_light_76: 7213878036959243416
-      base_male_head_light_77: -4597238430765143969
-      base_male_head_light_78: 8537602384352903596
-      base_male_head_light_79: -9116368733908136145
-      base_male_head_light_8: 2792708375484681095
-      base_male_head_light_80: -5229168439660033268
-      base_male_head_light_81: 6191076200165158776
-      base_male_head_light_82: 2444133178000078191
-      base_male_head_light_83: 8248598618548632942
-      base_male_head_light_84: -785370480139761904
-      base_male_head_light_85: 7125569674281705308
-      base_male_head_light_86: 4514437361283591956
-      base_male_head_light_87: -1489233572896696385
-      base_male_head_light_88: -1993525230836161643
-      base_male_head_light_89: 1282478960979558886
-      base_male_head_light_9: -7168498787755639869
-      base_male_head_light_90: -4460080824476377541
-      base_male_head_light_91: 8225375085070443699
-      base_male_head_light_92: -7072128826052270367
-      base_male_head_light_93: 2947365780820855042
-      base_male_head_light_94: -2640200515165250624
-      base_male_head_light_95: 2569317375451660295
-      base_male_head_light_96: -424743599015433211
-      base_male_head_light_97: 2148573121393498863
-      base_male_head_light_98: -4648149825268599522
-      base_male_head_light_99: -6268318016998442860
+      death_0: -5774011166722065635
+      death_1: -5493533044585684425
+      death_2: -2486319795955441940
+      death_3: 5302566806519403497
+      death_4: 2378535841396217344
+      death_5: -24635534327408597
+      shoot_down_0: 7789079287832867764
+      shoot_down_1: -4648181988941163868
+      shoot_down_10: 5704490200523035836
+      shoot_down_11: -4853228391717585464
+      shoot_down_12: 3466933274927519631
+      shoot_down_2: 1062738494060272313
+      shoot_down_3: 768978732350420910
+      shoot_down_4: -5045644660504924117
+      shoot_down_5: -7802175866722629820
+      shoot_down_6: 7854732514503456894
+      shoot_down_7: 4246877225224822721
+      shoot_down_8: -9182832205044568505
+      shoot_down_9: 6619869890528249524
+      shoot_left_0: -7784217772029879544
+      shoot_left_1: 4922151646986376543
+      shoot_left_10: 2153057946396600239
+      shoot_left_11: -4784146326206382591
+      shoot_left_12: 5567272421932653764
+      shoot_left_2: 6468763642755977890
+      shoot_left_3: -2360329490903471530
+      shoot_left_4: 5752205675562123779
+      shoot_left_5: -7423921351476750606
+      shoot_left_6: 7992353252995711984
+      shoot_left_7: 4741006790163591477
+      shoot_left_8: 6371573549965321746
+      shoot_left_9: -560570234517652035
+      shoot_right_0: -2792915780541338255
+      shoot_right_1: -5881009498210056260
+      shoot_right_10: 1320466494000597448
+      shoot_right_11: 7963837347014521855
+      shoot_right_12: -5178037722341280234
+      shoot_right_2: 4411828745114950670
+      shoot_right_3: 5269303828808544263
+      shoot_right_4: 7251494177495575417
+      shoot_right_5: -696885755993335820
+      shoot_right_6: -4858144127463263169
+      shoot_right_7: -1643480104291687763
+      shoot_right_8: -8588897790503545450
+      shoot_right_9: 2354387638542567698
+      shoot_up_0: -3514841405527629016
+      shoot_up_1: -8430237618558787492
+      shoot_up_10: -785143250915521855
+      shoot_up_11: -6995189132014316950
+      shoot_up_12: -3806783281463642804
+      shoot_up_2: -5788958654164792167
+      shoot_up_3: -6909768525937298019
+      shoot_up_4: 6152921390467788439
+      shoot_up_5: -3416229296203892518
+      shoot_up_6: 8895386103112373285
+      shoot_up_7: 1978128193030680341
+      shoot_up_8: -1479090770140386760
+      shoot_up_9: 6485124927334580423
+      spell_down_0: -3139121841500962991
+      spell_down_1: 4736003143715783255
+      spell_down_2: -3848553891292381178
+      spell_down_3: -3102698887812125650
+      spell_down_4: -5942217125227859522
+      spell_down_5: -4005972372508722971
+      spell_down_6: -1946246403772639328
+      spell_left_0: 5531000622837750833
+      spell_left_1: 2792708375484681095
+      spell_left_2: -7168498787755639869
+      spell_left_3: 3503456772401836383
+      spell_left_4: -5294255106798809299
+      spell_left_5: -1112368807159059473
+      spell_left_6: 7832970269564488134
+      spell_right_0: -7028240069843390378
+      spell_right_1: -2933347532554310245
+      spell_right_2: 3893590464789485536
+      spell_right_3: 2535035593205473349
+      spell_right_4: 8172943917215589223
+      spell_right_5: 6745036736343821825
+      spell_right_6: -6032590773173394981
+      spell_up_0: -498836274539268975
+      spell_up_1: -5470614359047163282
+      spell_up_2: -6264282798635568487
+      spell_up_3: 1329929422586905896
+      spell_up_4: -3663007120805029107
+      spell_up_5: 6260531435546529607
+      spell_up_6: -1744509321777110551
+      swing_down_0: 2257665168883290404
+      swing_down_1: 1189544143642466273
+      swing_down_2: 7276622591561516397
+      swing_down_3: -5344759564013886650
+      swing_down_4: -7561125602002638619
+      swing_down_5: 5051516750014444843
+      swing_left_0: -1497489627798114585
+      swing_left_1: 1693623548807821351
+      swing_left_2: -7869263247222887784
+      swing_left_3: -7129033160683946952
+      swing_left_4: -7445850530397698304
+      swing_left_5: 4949556230030466913
+      swing_right_0: 1100987612517788412
+      swing_right_1: 2645766573252150048
+      swing_right_2: -648643129309384258
+      swing_right_3: 6369513536735582109
+      swing_right_4: -7287225300825980366
+      swing_right_5: 3537360211783772196
+      swing_up_0: -424743599015433211
+      swing_up_1: 2148573121393498863
+      swing_up_2: -4648149825268599522
+      swing_up_3: -6268318016998442860
+      swing_up_4: -6016603146964040580
+      swing_up_5: 1828912434412617282
+      thrust_down_0: 4545251918049847996
+      thrust_down_1: -5989250692556627402
+      thrust_down_2: 4041384176479734161
+      thrust_down_3: 8032388321932851179
+      thrust_down_4: 4950903737114888019
+      thrust_down_5: -7764687436480927571
+      thrust_down_6: -8911174008273871394
+      thrust_down_7: 2612751080881834558
+      thrust_left_: 3819259851246517191
+      thrust_left_0: 1430280677626958523
+      thrust_left_2: -5141322564214048982
+      thrust_left_3: -8775804761375125472
+      thrust_left_4: 3753589516864001463
+      thrust_left_5: 7247438711250450226
+      thrust_left_6: 6604751071322926225
+      thrust_left_7: -7611856261605446766
+      thrust_right_0: -3324317804525091444
+      thrust_right_1: 8811609607152219717
+      thrust_right_2: 494099199665554004
+      thrust_right_3: -8133350800636755222
+      thrust_right_4: -1621029995521610086
+      thrust_right_5: -1387939190380401581
+      thrust_right_6: -1247008589460708933
+      thrust_right_7: -2339989542578897462
+      thrust_up_0: 3616015121640751525
+      thrust_up_1: -7727690591621168763
+      thrust_up_2: -2738191612460937289
+      thrust_up_3: -8168942559647511830
+      thrust_up_4: -2469605971020974344
+      thrust_up_5: 4792210977242774980
+      thrust_up_6: 2957033796338854306
+      thrust_up_7: -9138306963182620194
+      walk_down_0: 8537602384352903596
+      walk_down_1: -9116368733908136145
+      walk_down_2: -5229168439660033268
+      walk_down_3: 6191076200165158776
+      walk_down_4: 2444133178000078191
+      walk_down_5: 8248598618548632942
+      walk_down_6: -785370480139761904
+      walk_down_7: 7125569674281705308
+      walk_down_8: 4514437361283591956
+      walk_left_0: -2400016706592372440
+      walk_left_1: 8587002514856039530
+      walk_left_2: -9078121498679038016
+      walk_left_3: 2255663535710815239
+      walk_left_4: -96939884419876589
+      walk_left_5: -3150042273559082483
+      walk_left_6: -7842811382232553203
+      walk_left_7: 7213878036959243416
+      walk_left_8: -4597238430765143969
+      walk_right_0: -1489233572896696385
+      walk_right_1: -1993525230836161643
+      walk_right_2: 1282478960979558886
+      walk_right_3: -4460080824476377541
+      walk_right_4: 8225375085070443699
+      walk_right_5: -7072128826052270367
+      walk_right_6: 2947365780820855042
+      walk_right_7: -2640200515165250624
+      walk_right_8: 2569317375451660295
+      walk_up_0: 6916899475408010261
+      walk_up_1: 2589271894359587290
+      walk_up_2: -3702062532863173040
+      walk_up_3: -469606853028562459
+      walk_up_4: -2913844421452598160
+      walk_up_5: 5291644383675597165
+      walk_up_6: 4543007219999169782
+      walk_up_7: -2226590868849217886
+      walk_up_8: -6260989699727434788
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
