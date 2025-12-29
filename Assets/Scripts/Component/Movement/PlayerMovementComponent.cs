@@ -1,10 +1,14 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-
+/// <summary>
+/// Player-specific movement component that handles input and movement application.
+/// The ApplyMovement Must be called externally, typically from a PlayerController or similar script.
+/// For player to move, this Class just provides the movement logic based on input received.
+/// Actual Movement application should be managed by the caller.
+/// </summary>
 public class PlayerMovementComponent : MovementComponentBase
 {
     private InputManager inputManager;
-    [SerializeField] private CharacterStatsSystem characterStats;
     private Vector2 normalizedDirection;
     private bool directionChanged;
 
@@ -47,7 +51,8 @@ public class PlayerMovementComponent : MovementComponentBase
 
     public void MoveForInputSystem(InputAction.CallbackContext context)
     {
-        SetDirection(context.ReadValue<Vector2>());
+        Vector2 newdirection = context.ReadValue<Vector2>();
+        SetDirection(newdirection);
         this.directionChanged = true;
     }
 
@@ -59,6 +64,6 @@ public class PlayerMovementComponent : MovementComponentBase
             this.directionChanged = false;
         }
 
-        this.rb.linearVelocity = movementSpeed * movementSpeedMult * normalizedDirection;
+        this.rb.linearVelocity = defaultMovementSpeed * movementSpeedMult * normalizedDirection;
     }
 }

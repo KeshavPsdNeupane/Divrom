@@ -84,7 +84,7 @@ public class InputManager : MonoBehaviour
             }
             else
             {
-                Logger.LogWarning($"Failed to load action map: {type}");
+                Logger.Warn($"Failed to load action map: {type}");
             }
         }
 
@@ -174,7 +174,7 @@ public class InputManager : MonoBehaviour
         }
         else
         {
-            Logger.LogWarning($"Action map not found for type: {actionType}, cannot subscribe to action: {actionName}");
+            Logger.Warn($"Action map not found for type: {actionType}, cannot subscribe to action: {actionName}");
         }
     }
     public void UnsubscribeFromInputAction(PlayerInputActionMap actionType, string actionName, Action<InputAction.CallbackContext> callback)

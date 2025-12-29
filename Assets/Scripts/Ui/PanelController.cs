@@ -12,7 +12,7 @@ public class PanelController : UIState
     {
         if (this.currentPanel == null)
         {
-            Logger.LogError($"{this.panelName}Controller: {this.panelName} "
+            Logger.Error($"{this.panelName}Controller: {this.panelName} "
               + "Panel reference is missing!");
             return;
         }

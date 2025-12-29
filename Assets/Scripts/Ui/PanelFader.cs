@@ -20,7 +20,7 @@ public class PanelFader : MonoBehaviour
         }
         else
         {
-            Logger.LogWarning($"{gameObject.name} has no Graphic component to fade.");
+            Logger.Warn($"{gameObject.name} has no Graphic component to fade.");
         }
     }
 }

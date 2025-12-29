@@ -20,10 +20,10 @@ public class FileLogger : ILogger
     private static string TimeStamp =>
         DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
-    public void LogError(string message) =>
+    public void Error(string message) =>
         AppendLog($"[{TimeStamp}] : {message}");
 
-    public void LogWarning(string message) =>
+    public void Warn(string message) =>
         AppendLog($"[{TimeStamp}] : {message}");
 
     public void Log(string message) =>

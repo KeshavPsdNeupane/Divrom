@@ -13,7 +13,7 @@ public class AnimationComponent : InitializableBase
         if (anim == null)
         {
             this.anim = GetComponent<Animator>();
-            Logger.LogWarning("Animator not assigned in AnimationComponent, " +
+            Logger.Warn("Animator not assigned in AnimationComponent, " +
             $"auto-assigned in Init on {gameObject.name}.");
         }
         SetInitialized();

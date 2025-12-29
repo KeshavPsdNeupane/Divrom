@@ -12,20 +12,20 @@ public static class Logger
             : new UnityLogger();
     }
 
-    public static void LogError(string message,
+    public static void Error(string message,
         [CallerFilePath] string filePath = "",
         [CallerLineNumber] int lineNumber = 0)
     {
         string fileName = System.IO.Path.GetFileName(filePath);
-        _logger.LogError($"[Error] {message} : at {fileName} line {lineNumber}");
+        _logger.Error($"[Error] {message} : at {fileName} line {lineNumber}");
     }
 
-    public static void LogWarning(string message,
+    public static void Warn(string message,
         [CallerFilePath] string filePath = "",
         [CallerLineNumber] int lineNumber = 0)
     {
         string fileName = System.IO.Path.GetFileName(filePath);
-        _logger.LogWarning($"[Warning] {message} : at {fileName} line {lineNumber}");
+        _logger.Warn($"[Warning] {message} : at {fileName} line {lineNumber}");
     }
     public static void Log(string message,
         [CallerFilePath] string filePath = "",

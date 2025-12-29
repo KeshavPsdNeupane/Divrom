@@ -105,7 +105,7 @@ public class CharacterStatsSystem : InitializableBase
         if (this.currentStats.TryGetValue(type, out Stat stat))
             return stat.GetValue();
 
-        Logger.LogWarning($"Stat {type} not found!");
+        Logger.Warn($"Stat {type} not found!");
         return 0f;
     }
 
@@ -114,7 +114,7 @@ public class CharacterStatsSystem : InitializableBase
         if (this.resistanceStats.TryGetValue(type, out Stat stat))
             return stat.GetValue();
 
-        Logger.LogWarning($"Resistance {type} not found!");
+        Logger.Warn($"Resistance {type} not found!");
         return 0f;
     }
 
@@ -123,7 +123,7 @@ public class CharacterStatsSystem : InitializableBase
         if (this.currentStats.TryGetValue(effect.statType, out Stat stat))
             return stat.CurrentStat.AddModifier(effect);
 
-        Logger.LogWarning($"Stat {effect.statType} not found for adding modifier!");
+        Logger.Warn($"Stat {effect.statType} not found for adding modifier!");
         return false;
     }
 
@@ -134,7 +134,7 @@ public class CharacterStatsSystem : InitializableBase
             if (this.currentStats.TryGetValue(kvp.Key, out Stat stat))
                 stat.LevelingStat.LevelUp(kvp.Value);
             else
-                Logger.LogWarning($"Stat {kvp.Key} not found for leveling up!");
+                Logger.Warn($"Stat {kvp.Key} not found for leveling up!");
         }
     }
 
@@ -146,7 +146,7 @@ public class CharacterStatsSystem : InitializableBase
         }
         else
         {
-            Logger.LogWarning($"Stat {type} not found for adding points!");
+            Logger.Warn($"Stat {type} not found for adding points!");
         }
     }
 

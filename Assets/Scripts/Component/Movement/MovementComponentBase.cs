@@ -4,7 +4,7 @@ public abstract class MovementComponentBase : InitializableBase
 {
     [SerializeField] protected Rigidbody2D rb;
     [SerializeField] protected CharacterStatsSystem characterStatsSystem;
-    [SerializeField] protected float movementSpeed = 2f;
+    [SerializeField] protected float defaultMovementSpeed = 2f;
 
     protected Vector2 direction;
     protected Vector2 lastDirection;
@@ -16,7 +16,7 @@ public abstract class MovementComponentBase : InitializableBase
         if (this.characterStatsSystem == null)
         {
             this.characterStatsSystem = GetComponent<CharacterStatsSystem>();
-            Logger.LogWarning($"MovementComponentBase ({gameObject.name}): " +
+            Logger.Warn($"MovementComponentBase ({gameObject.name}): " +
            "CharacterStatsSystem not assigned, attempting to fetch from same GameObject.");
         }
         SetInitialized();
@@ -47,7 +47,7 @@ public abstract class MovementComponentBase : InitializableBase
     // Optional helper for setting speed
     public virtual void SetMovementSpeed(float speed)
     {
-        this.movementSpeed = speed;
+        this.defaultMovementSpeed = speed;
     }
 
     public virtual void SetDirection(Vector2 newDirection)

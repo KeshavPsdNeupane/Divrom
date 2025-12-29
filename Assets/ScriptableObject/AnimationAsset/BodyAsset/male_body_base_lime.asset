@@ -9,12 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7060264c2db7a533cb485c78aa1bfb83, type: 3}
-  m_Name: body
-  m_EditorClassIdentifier: Assembly-CSharp::SpriteAnimationLibraryAsset
-  partName: body
+  m_Script: {fileID: 11500000, guid: 2e08966eac7a0119594a7271f350fa3c, type: 3}
+  m_Name: male_body_base_lime
+  m_EditorClassIdentifier: Assembly-CSharp::BodyRegionAnimationLibraryAsset
+  variantName: base
   applicableGender: 0
-  applicableEquipingPart: 5
   applicableColorPermutation: 14
   spriteLibraryAsset: {fileID: 7108339969198208228, guid: 124aaf6123a05e88682f53ead7c39507, type: 3}
   applicableRaces: 0e000000
+  applicableBaseBody: 1

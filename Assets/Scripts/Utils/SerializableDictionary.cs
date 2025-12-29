@@ -28,7 +28,7 @@ public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IS
         this.Clear();
         if (keys.Count != values.Count)
         {
-            Logger.LogWarning($"SerializableDictionary<{typeof(TKey)}, {typeof(TValue)}> mismatch: {keys.Count} keys, {values.Count} values. Clearing...");
+            Logger.Warn($"SerializableDictionary<{typeof(TKey)}, {typeof(TValue)}> mismatch: {keys.Count} keys, {values.Count} values. Clearing...");
             keys = new List<TKey>();
             values = new List<TValue>();
             return;

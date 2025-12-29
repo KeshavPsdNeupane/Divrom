@@ -58,19 +58,19 @@ public class StatDescription : InitializableBase
     {
         if (this.characterStats == null)
         {
-            Logger.LogWarning("CharacterStatsSystem reference was missing," +
+            Logger.Warn("CharacterStatsSystem reference was missing," +
           " attempting to get from the same GameObject.");
         }
         if (this.statDescriptionUIPanel == null)
         {
-            Logger.LogError("StatDescriptionUIPanel is not assigned.");
+            Logger.Error("StatDescriptionUIPanel is not assigned.");
             return;
         }
         if (this.panelRect == null && this.statDescriptionUIPanel != null)
         {
             this.panelRect = this.statDescriptionUIPanel.GetComponent<RectTransform>();
             if (this.panelRect == null)
-                Logger.LogError("Stat Panel requires RectTransform.");
+                Logger.Error("Stat Panel requires RectTransform.");
         }
         SetInitialized();
     }
