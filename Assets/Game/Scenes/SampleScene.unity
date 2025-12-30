@@ -606,7 +606,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BodyRegionSpriteLibrary
   m_Library: []
   m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: a92ad91282f4a8c4e8742a48412a5cb1, type: 3}
-  bodyRegion: 0
+  bodyRegion: 1
 --- !u!114 &120325874
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6417,7 +6417,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BodyRegionSpriteLibrary
   m_Library: []
   m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: 124aaf6123a05e88682f53ead7c39507, type: 3}
-  bodyRegion: 1
+  bodyRegion: 3
 --- !u!114 &533223066
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8811,15 +8811,15 @@ MonoBehaviour:
   - typeName: InputManager
     order: -40
     gameObjectName: InputsManagerInstance
+  - typeName: PlayerInitCaller
+    order: -30
+    gameObjectName: initcaller
   - typeName: InGameUIInitCaller
     order: -30
     gameObjectName: UI
   - typeName: PlayerInitCaller
     order: -30
     gameObjectName: InitCaller
-  - typeName: PlayerInitCaller
-    order: -30
-    gameObjectName: initcaller
 --- !u!1 &901993973
 GameObject:
   m_ObjectHideFlags: 0
@@ -10934,11 +10934,11 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 703711895}
   - {fileID: 655013493}
   - {fileID: 547503002}
   - {fileID: 1822633324}
   - {fileID: 1629351199}
+  - {fileID: 703711895}
   - {fileID: 1843224160}
   - {fileID: 184075937}
   m_Father: {fileID: 1143797319}
@@ -12889,7 +12889,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BodyRegionSpriteLibrary
   m_Library: []
   m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: 1fd486b84ee5dd11390d58724e865054, type: 3}
-  bodyRegion: 3
+  bodyRegion: 0
 --- !u!114 &1971284870
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,7 +1,7 @@
 using UnityEngine;
 
 
-public enum BodyRegionEnum { head, body, ear, hair, tail, none }
+public enum BodyRegionEnum { none = -1, hair, head, ear, body, tail, }
 
 [CreateAssetMenu(fileName = "New Base Body Animation Library", menuName = "Animation/BodyRegionAsset")]
 public class BodyRegionAnimationLibraryAsset : SpriteAnimationLibraryAssetDefinition
@@ -13,7 +13,14 @@ public class BodyRegionAnimationLibraryAsset : SpriteAnimationLibraryAssetDefini
     public override string LibraryId =>
         $"{applicableGender}_{applicableBaseBody}_{variantName}_{applicableColorPermutation}";
 
-
+    override protected void OnValidate()
+    {
+        base.OnValidate();
+        if (this.applicableBaseBody == BodyRegionEnum.none)
+        {
+            Logger.Warn($"BodyRegionAnimationLibraryAsset '{this.name}' has applicableBaseBody set to 'none'");
+        }
+    }
 
     protected override bool IsApplicable<TPart>(GenderEnum gender, TPart tpart, RacesEnum race)
     {

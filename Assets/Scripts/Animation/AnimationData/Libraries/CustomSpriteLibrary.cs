@@ -11,5 +11,5 @@ public abstract class CustomSpriteLibraryDefination : SpriteLibrary
         this.spriteLibraryAsset = defaultAsset;
         RefreshSpriteResolvers();
     }
-
+    protected abstract void OnValidate();
 }

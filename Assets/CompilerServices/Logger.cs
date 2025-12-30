@@ -4,7 +4,12 @@ using UnityEngine;
 public static class Logger
 {
     private static ILogger _logger;
+
+    // Ensures _logger is always ready
+    private static ILogger Instance => _logger ??= new UnityLogger();
+
     public static bool IsFileLogger => _logger is FileLogger;
+
     public static void Configure(bool useFileLogger = false)
     {
         _logger = useFileLogger
@@ -17,7 +22,7 @@ public static class Logger
         [CallerLineNumber] int lineNumber = 0)
     {
         string fileName = System.IO.Path.GetFileName(filePath);
-        _logger.Error($"[Error] {message} : at {fileName} line {lineNumber}");
+        Instance.Error($"[Error] {message} : at {fileName} line {lineNumber}");
     }
 
     public static void Warn(string message,
@@ -25,14 +30,15 @@ public static class Logger
         [CallerLineNumber] int lineNumber = 0)
     {
         string fileName = System.IO.Path.GetFileName(filePath);
-        _logger.Warn($"[Warning] {message} : at {fileName} line {lineNumber}");
+        Instance.Warn($"[Warning] {message} : at {fileName} line {lineNumber}");
     }
+
     public static void Log(string message,
         [CallerFilePath] string filePath = "",
         [CallerLineNumber] int lineNumber = 0)
     {
         string fileName = System.IO.Path.GetFileName(filePath);
-        _logger.Log($"[Info] {message} : at {fileName} line {lineNumber}");
+        Instance.Log($"[Info] {message} : at {fileName} line {lineNumber}");
     }
 }
 

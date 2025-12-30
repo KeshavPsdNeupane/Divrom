@@ -1,7 +1,7 @@
 using UnityEngine;
 
 
-public enum EquipingPartEnum { helmet, neck, arm, torso, leg, feet, weapon, none }
+public enum EquipingPartEnum { none = -1, helmet, neck, arm, torso, leg, feet, weapon }
 
 
 [CreateAssetMenu(fileName = "New Animation Library", menuName = "Animation/EquipmentAsset")]
@@ -12,6 +12,16 @@ public class EquipmentAnimationLibraryAsset : SpriteAnimationLibraryAssetDefinit
     public EquipingPartEnum ApplicableEquipingPart => applicableEquipingPart;
 
     public override string LibraryId => $"{applicableGender}_{applicableEquipingPart}_{variantName}_{applicableColorPermutation}";
+
+    override protected void OnValidate()
+    {
+        base.OnValidate();
+        if (this.applicableEquipingPart == EquipingPartEnum.none)
+        {
+            Logger.Warn($"EquipmentAnimationLibraryAsset '{this.name}' has applicableEquipingPart set to 'none'");
+        }
+    }
+
     protected override bool IsApplicable<TPart>(GenderEnum gender, TPart tpart, RacesEnum race)
     {
         bool genderOk = applicableGender == GenderEnum.both || applicableGender == gender;

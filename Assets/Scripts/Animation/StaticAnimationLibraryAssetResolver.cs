@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.U2D.Animation;
 using UnityEditor;
+using Unity.VisualScripting;
 
 /// <summary>
 /// Resolves and applies SpriteLibraryAssets for base character body regions and equipment.
@@ -15,10 +16,10 @@ public class StaticAnimationLibraryResolver : MonoBehaviour
 
     [Header("Character Settings")]
     [Tooltip("Current race of the character for asset resolution.")]
-    [SerializeField] private RacesEnum race = RacesEnum.human;
+    [SerializeField] private RacesEnum race = RacesEnum.none;
 
     [Tooltip("Current gender of the character for asset resolution.")]
-    [SerializeField] private GenderEnum gender = GenderEnum.male;
+    [SerializeField] private GenderEnum gender = GenderEnum.none;
 
     [Tooltip("Default SpriteLibraryAsset used when clearing overrides.")]
     [SerializeField] private SpriteLibraryAsset defaultSpriteLibraryAsset;
@@ -71,8 +72,22 @@ public class StaticAnimationLibraryResolver : MonoBehaviour
                 }
             };
         }
+        if (this.defaultSpriteLibraryAsset == null)
+        {
+            Logger.Warn($"Default Sprite Library Asset is not assigned on {this.name}.");
+        }
+        if (this.gender == GenderEnum.none)
+        {
+            Logger.Warn($"Gender is set to 'none' on {this.name}. This may lead to incorrect asset resolution.");
+        }
+        if (this.race == RacesEnum.none)
+        {
+            Logger.Warn($"Race is set to 'none' on {this.name}. This may lead to incorrect asset resolution.");
+        }
     }
 #endif
+
+
 
     private void Awake()
     {
