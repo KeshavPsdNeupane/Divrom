@@ -35,7 +35,10 @@ public enum ItemColorPermutationEnum
     olive,
     silver,
     gold,
-    bronze
+    bronze,
+    leather,
+    cloth,
+
 }
 
 /// <summary>

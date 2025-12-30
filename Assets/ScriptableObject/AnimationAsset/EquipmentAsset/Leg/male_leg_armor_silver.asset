@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7060264c2db7a533cb485c78aa1bfb83, type: 3}
-  m_Name: both_leg_armor_silver
+  m_Name: male_leg_armor_silver
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentAnimationLibraryAsset
   variantName: armor
-  applicableGender: 2
+  applicableGender: 0
   applicableColorPermutation: 19
   spriteLibraryAsset: {fileID: 7108339969198208228, guid: e76895dc100116050bb3ee41ee20cd9f, type: 3}
   applicableRaces: 0e000000

@@ -318,8 +318,13 @@ MonoBehaviour:
       m_Sprite: {fileID: 0}
       m_FromMain: 0
       m_SpriteOverride: {fileID: 0}
+    - m_Name: thrust_up_7
+      m_Hash: 660054447
+      m_Sprite: {fileID: 0}
+      m_FromMain: 0
+      m_SpriteOverride: {fileID: 0}
     m_FromMain: 0
-    m_EntryOverrideCount: 31
+    m_EntryOverrideCount: 32
   - m_Name: swing
     m_Hash: 555136858
     m_CategoryList: []
@@ -961,5 +966,5 @@ MonoBehaviour:
     m_FromMain: 0
     m_EntryOverrideCount: 6
   m_PrimaryLibraryGUID: 
-  m_ModificationHash: 639026867900933910
+  m_ModificationHash: 639026999195572040
   m_Version: 1

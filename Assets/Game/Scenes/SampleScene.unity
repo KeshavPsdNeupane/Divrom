@@ -619,8 +619,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed8b1ae4e4e52b34ea557c1c11e076fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.2D.Animation.Runtime::UnityEngine.U2D.Animation.SpriteResolver
-  m_CategoryHash: 0
-  m_labelHash: 0
+  m_CategoryHash: 3.782646e-29
+  m_labelHash: 4.3645414e-11
   m_SpriteKey: 0
   m_SpriteHash: 967457523
 --- !u!212 &120325875
@@ -6430,8 +6430,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed8b1ae4e4e52b34ea557c1c11e076fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.2D.Animation.Runtime::UnityEngine.U2D.Animation.SpriteResolver
-  m_CategoryHash: 0
-  m_labelHash: 0
+  m_CategoryHash: 3.782646e-29
+  m_labelHash: 4.3645414e-11
   m_SpriteKey: 0
   m_SpriteHash: 967457523
 --- !u!212 &533223067
@@ -7577,8 +7577,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed8b1ae4e4e52b34ea557c1c11e076fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.2D.Animation.Runtime::UnityEngine.U2D.Animation.SpriteResolver
-  m_CategoryHash: 0
-  m_labelHash: 0
+  m_CategoryHash: 3.782646e-29
+  m_labelHash: 4.3645414e-11
   m_SpriteKey: 0
   m_SpriteHash: 967457523
 --- !u!212 &703711898
@@ -8811,15 +8811,15 @@ MonoBehaviour:
   - typeName: InputManager
     order: -40
     gameObjectName: InputsManagerInstance
-  - typeName: PlayerInitCaller
-    order: -30
-    gameObjectName: initcaller
-  - typeName: PlayerInitCaller
-    order: -30
-    gameObjectName: InitCaller
   - typeName: InGameUIInitCaller
     order: -30
     gameObjectName: UI
+  - typeName: PlayerInitCaller
+    order: -30
+    gameObjectName: InitCaller
+  - typeName: PlayerInitCaller
+    order: -30
+    gameObjectName: initcaller
 --- !u!1 &901993973
 GameObject:
   m_ObjectHideFlags: 0
@@ -9014,8 +9014,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed8b1ae4e4e52b34ea557c1c11e076fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.2D.Animation.Runtime::UnityEngine.U2D.Animation.SpriteResolver
-  m_CategoryHash: 0
-  m_labelHash: 0
+  m_CategoryHash: 3.782646e-29
+  m_labelHash: 4.3645414e-11
   m_SpriteKey: 0
   m_SpriteHash: 967457523
 --- !u!212 &952797830
@@ -9635,14 +9635,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::StaticAnimationLibraryResolver
   race: 0
   gender: 0
+  defaultSpriteLibraryAsset: {fileID: 7108339969198208228, guid: 1fd486b84ee5dd11390d58724e865054, type: 3}
   baseCharacterLibraries:
   - {fileID: 120325873}
   - {fileID: 533223065}
+  - {fileID: 952797828}
+  - {fileID: 1971284869}
+  - {fileID: 1837360199}
   baseCharacterAssets:
   - {fileID: 11400000, guid: 79672b5dfb795386aa1c4045a73c0c72, type: 2}
   - {fileID: 11400000, guid: b043093ff87a0a7859e6c4875171aef8, type: 2}
   equipmentLibraries:
+  - {fileID: 1843224161}
+  - {fileID: 1822633325}
+  - {fileID: 655013494}
   - {fileID: 703711896}
+  - {fileID: 547503003}
+  - {fileID: 1629351200}
+  - {fileID: 184075938}
   equipmentAssets:
   - {fileID: 11400000, guid: ebef241bf1342c2e89d9cad470ca7a9e, type: 2}
 --- !u!1 &1148759638
@@ -11195,13 +11205,13 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1489034323
   m_SortingLayer: 5
-  m_SortingOrder: 0
+  m_SortingOrder: 4
   m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1.3333334, y: 1.3333334}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 0
@@ -12199,8 +12209,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed8b1ae4e4e52b34ea557c1c11e076fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.2D.Animation.Runtime::UnityEngine.U2D.Animation.SpriteResolver
-  m_CategoryHash: 0
-  m_labelHash: 0
+  m_CategoryHash: 3.782646e-29
+  m_labelHash: 4.3645414e-11
   m_SpriteKey: 0
   m_SpriteHash: 967457523
 --- !u!212 &1837360201
@@ -12249,13 +12259,13 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1489034323
   m_SortingLayer: 5
-  m_SortingOrder: 0
+  m_SortingOrder: 5
   m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1.3333334, y: 1.3333334}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 0
