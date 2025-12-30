@@ -12,7 +12,6 @@ public class EquipmentAnimationLibraryAsset : SpriteAnimationLibraryAssetDefinit
     public EquipingPartEnum ApplicableEquipingPart => applicableEquipingPart;
 
     public override string LibraryId => $"{applicableGender}_{applicableEquipingPart}_{variantName}_{applicableColorPermutation}";
-
     protected override bool IsApplicable<TPart>(GenderEnum gender, TPart tpart, RacesEnum race)
     {
         bool genderOk = applicableGender == GenderEnum.both || applicableGender == gender;

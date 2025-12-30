@@ -384,8 +384,8 @@ MonoBehaviour:
       m_Sprite: {fileID: 0}
       m_FromMain: 0
       m_SpriteOverride: {fileID: 0}
-    - m_Name: swing_righ_0
-      m_Hash: 553585288
+    - m_Name: swing_right_0
+      m_Hash: 27653456
       m_Sprite: {fileID: 0}
       m_FromMain: 0
       m_SpriteOverride: {fileID: 0}
@@ -961,5 +961,5 @@ MonoBehaviour:
     m_FromMain: 0
     m_EntryOverrideCount: 6
   m_PrimaryLibraryGUID: 
-  m_ModificationHash: 639024635559746960
+  m_ModificationHash: 639026867900933910
   m_Version: 1

@@ -6,11 +6,14 @@ public enum BodyRegionEnum { head, body, ear, hair, tail, none }
 [CreateAssetMenu(fileName = "New Base Body Animation Library", menuName = "Animation/BodyRegionAsset")]
 public class BodyRegionAnimationLibraryAsset : SpriteAnimationLibraryAssetDefinition
 {
+
     [SerializeField] private BodyRegionEnum applicableBaseBody = BodyRegionEnum.none;
     public BodyRegionEnum ApplicableBaseBody => this.applicableBaseBody;
 
     public override string LibraryId =>
         $"{applicableGender}_{applicableBaseBody}_{variantName}_{applicableColorPermutation}";
+
+
 
     protected override bool IsApplicable<TPart>(GenderEnum gender, TPart tpart, RacesEnum race)
     {

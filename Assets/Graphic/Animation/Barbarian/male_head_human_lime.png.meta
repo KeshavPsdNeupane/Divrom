@@ -1445,7 +1445,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: thrust_left_
+      name: thrust_left_1
       rect:
         serializedVersion: 2
         x: 64
@@ -1624,7 +1624,7 @@ TextureImporter:
       name: thrust_down_1
       rect:
         serializedVersion: 2
-        x: 64
+        x: 65
         y: 896
         width: 64
         height: 64
@@ -4682,8 +4682,8 @@ TextureImporter:
       thrust_down_5: -7764687436480927571
       thrust_down_6: -8911174008273871394
       thrust_down_7: 2612751080881834558
-      thrust_left_: 3819259851246517191
       thrust_left_0: 1430280677626958523
+      thrust_left_1: 3819259851246517191
       thrust_left_2: -5141322564214048982
       thrust_left_3: -8775804761375125472
       thrust_left_4: 3753589516864001463

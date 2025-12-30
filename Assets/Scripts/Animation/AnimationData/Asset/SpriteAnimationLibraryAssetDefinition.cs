@@ -2,13 +2,63 @@ using UnityEngine.U2D.Animation;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum GenderEnum { male, female, both }
-public enum ItemColorPermutationEnum { none, red, blue, green, yellow, purple, orange, black, white, grey, brown, pink, cyan, magenta, lime, navy, teal, maroon, olive, silver, gold, bronze }
+/// <summary>
+/// "both" means this item is applicable to both genders
+/// </summary>
+public enum GenderEnum
+{
+    male,
+    female,
+    both
+}
 
-public enum AnimationCategoryEnum { spell, thrust, walk, idle, swing, shoot, death }
+public enum ItemColorPermutationEnum
+{
+    none,
+    red,
+    blue,
+    green,
+    yellow,
+    purple,
+    orange,
+    black,
+    white,
+    grey,
+    brown,
+    pink,
+    cyan,
+    magenta,
+    lime,
+    navy,
+    teal,
+    maroon,
+    olive,
+    silver,
+    gold,
+    bronze
+}
 
-// here All mean this item is applicable to all races
-public enum RacesEnum { human, elf, dwarf, orc, goblin, troll, undead, giant, dragonborn, halfling, gnome, fairy, vampire, werewolf, All }
+/// <summary>
+/// "All" means this item is applicable to all races
+/// </summary>
+public enum RacesEnum
+{
+    human,
+    elf,
+    dwarf,
+    orc,
+    goblin,
+    troll,
+    undead,
+    giant,
+    dragonborn,
+    halfling,
+    gnome,
+    fairy,
+    vampire,
+    werewolf,
+    All
+}
 
 
 public abstract class SpriteAnimationLibraryAssetDefinition : ScriptableObject
@@ -26,7 +76,8 @@ public abstract class SpriteAnimationLibraryAssetDefinition : ScriptableObject
     public List<RacesEnum> ApplicableRaces => applicableRaces;
 
     public abstract string LibraryId { get; }
-
+    // this enum int is useful for indexing into dictonaries so i can build template method for building dictonaries
+    // and overrighting assets on library resolvers
 
     protected abstract bool IsApplicable<TPart>(
         GenderEnum gender,
