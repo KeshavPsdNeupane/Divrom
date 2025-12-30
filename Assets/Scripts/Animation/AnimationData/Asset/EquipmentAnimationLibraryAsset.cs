@@ -7,7 +7,7 @@ public enum EquipingPartEnum { none = -1, helmet = 0, neck = 1, arm = 2, torso =
 [CreateAssetMenu(fileName = "New Animation Library", menuName = "Animation/EquipmentAsset")]
 public class EquipmentAnimationLibraryAsset : SpriteAnimationLibraryAssetDefinition
 {
-    [SerializeField] private EquipingPartEnum applicableEquipingPart;
+    [SerializeField] private EquipingPartEnum applicableEquipingPart = EquipingPartEnum.none;
 
     public EquipingPartEnum ApplicableEquipingPart => applicableEquipingPart;
 
