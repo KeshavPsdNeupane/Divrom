@@ -49,21 +49,20 @@ public enum ItemColorPermutationEnum
 public enum RacesEnum
 {
     none = -1,
-    human,
-    elf,
-    dwarf,
-    orc,
-    goblin,
-    troll,
-    undead,
-    giant,
-    dragonborn,
-    halfling,
-    gnome,
-    fairy,
-    vampire,
-    werewolf,
-    All
+    human = 1,
+    elf = 2,
+    vampire = 3,
+    werewolf = 4,
+    orc = 5,
+    goblin = 6,
+    dragonborn = 7,
+    troll = 8,
+    undead = 9,
+    halfwolf = 10,
+    halfcat = 11,
+    halfelf = 12,
+    lizard = 13,
+    All = 999,
 }
 
 

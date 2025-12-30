@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2e08966eac7a0119594a7271f350fa3c, type: 3}
-  m_Name: both_tail_wolftail_yellow
+  m_Name: male_head_base_lime
   m_EditorClassIdentifier: Assembly-CSharp::BodyRegionAnimationLibraryAsset
-  variantName: wolftail
-  applicableGender: 2
-  applicableColorPermutation: 3
-  spriteLibraryAsset: {fileID: 7108339969198208228, guid: ad6e9814683d7f426bfb56ed04de815b, type: 3}
-  applicableRaces: 0a00000004000000
-  applicableBaseBody: 4
+  variantName: base
+  applicableGender: 0
+  applicableColorPermutation: 13
+  spriteLibraryAsset: {fileID: 7108339969198208228, guid: a92ad91282f4a8c4e8742a48412a5cb1, type: 3}
+  applicableRaces: 0200000001000000
+  applicableBaseBody: 1

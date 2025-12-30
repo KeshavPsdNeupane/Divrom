@@ -9000,7 +9000,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BodyRegionSpriteLibrary
   m_Library: []
-  m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: 1fd486b84ee5dd11390d58724e865054, type: 3}
+  m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: 231d9a1ee6355c2baa932bdc564e96ae, type: 3}
   bodyRegion: 2
 --- !u!114 &952797829
 MonoBehaviour:
@@ -9064,16 +9064,16 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1489034323
   m_SortingLayer: 5
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 0}
+  m_SortingOrder: 2
+  m_Sprite: {fileID: 8159448824137125017, guid: 8ac22abecdd9bf85ca4f160275c35a90, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1.3333334, y: 1.3333334}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &962445440
@@ -9633,7 +9633,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e40fa1de52d381271840326a3caa50bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StaticAnimationLibraryResolver
-  race: 0
+  race: 2
   gender: 0
   defaultSpriteLibraryAsset: {fileID: 7108339969198208228, guid: 1fd486b84ee5dd11390d58724e865054, type: 3}
   baseCharacterLibraries:
@@ -9645,6 +9645,8 @@ MonoBehaviour:
   baseCharacterAssets:
   - {fileID: 11400000, guid: 79672b5dfb795386aa1c4045a73c0c72, type: 2}
   - {fileID: 11400000, guid: b043093ff87a0a7859e6c4875171aef8, type: 2}
+  - {fileID: 11400000, guid: 14adfc138246c529b9f6577f2eba6c3a, type: 2}
+  - {fileID: 11400000, guid: e93b5c1444d7620c29093a78c1883274, type: 2}
   equipmentLibraries:
   - {fileID: 1843224161}
   - {fileID: 1822633325}
@@ -9655,6 +9657,7 @@ MonoBehaviour:
   - {fileID: 184075938}
   equipmentAssets:
   - {fileID: 11400000, guid: ebef241bf1342c2e89d9cad470ca7a9e, type: 2}
+  - {fileID: 11400000, guid: 568121f552726f4749def9ca8fb05439, type: 2}
 --- !u!1 &1148759638
 GameObject:
   m_ObjectHideFlags: 0
@@ -11141,7 +11144,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentSpriteLibrary
   m_Library: []
-  m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: 1fd486b84ee5dd11390d58724e865054, type: 3}
+  m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: ac7266fd15d3d98f8a69d0713b5d0fdb, type: 3}
   equpingBodyPart: 3
 --- !u!114 &1629351201
 MonoBehaviour:
@@ -11206,7 +11209,7 @@ SpriteRenderer:
   m_SortingLayerID: 1489034323
   m_SortingLayer: 5
   m_SortingOrder: 4
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: -6555852450503694114, guid: 4104272bea898bcf99f028730b0a3048, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -11214,7 +11217,7 @@ SpriteRenderer:
   m_Size: {x: 1.3333334, y: 1.3333334}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &1650404412
@@ -12888,7 +12891,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BodyRegionSpriteLibrary
   m_Library: []
-  m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: 1fd486b84ee5dd11390d58724e865054, type: 3}
+  m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: 3e2ee97b6ed5491ffbe4432b42d98a5e, type: 3}
   bodyRegion: 0
 --- !u!114 &1971284870
 MonoBehaviour:
@@ -12905,7 +12908,7 @@ MonoBehaviour:
   m_CategoryHash: 0
   m_labelHash: 0
   m_SpriteKey: 0
-  m_SpriteHash: 0
+  m_SpriteHash: 967457523
 --- !u!212 &1971284871
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -12952,16 +12955,16 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1489034323
   m_SortingLayer: 5
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 0}
+  m_SortingOrder: 5
+  m_Sprite: {fileID: -7800414965701308026, guid: 44b1ff70a9ddc653aafee8e9b04bd4bb, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1.3333334, y: 1.3333334}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1001 &1985980190
