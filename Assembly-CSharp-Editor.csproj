@@ -48,8 +48,8 @@
     <Analyzer Include="/home/keshav/Unity/Hub/Editor/6000.2.7f2/Editor/Data/Tools/Unity.SourceGenerators/Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets/Game/Editor/StatusEffectDrawer.cs" />
-    <Compile Include="Assets/Game/Editor/ReadOnlyDrawer.cs" />
+    <Compile Include="Assets/_Project/_Game/Editor/ReadOnlyDrawer.cs" />
+    <Compile Include="Assets/_Project/_Game/Editor/StatusEffectDrawer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
