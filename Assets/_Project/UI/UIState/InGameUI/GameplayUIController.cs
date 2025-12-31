@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-
+using ServiceLocatorPattern;
 public class GameplayUIController : InitializableBase
 {
     [SerializeField] private UIState inGameplayMenu;
@@ -16,7 +16,7 @@ public class GameplayUIController : InitializableBase
     {
         this.uiStateManager = new();
         this.uiStateManager.Init();
-        this.inputManager = InputManager.GetOrCreateInstance();
+        this.inputManager = GlobalServiceLocator.Instance.GetORCreateDefault<InputManager>();
         SetInitialized();
     }
 

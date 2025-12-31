@@ -10,9 +10,9 @@ public class StatDescription : InitializableBase
     [SerializeField] private CharacterStatsSystem characterStats;
     [SerializeField] private TMP_FontAsset fontAsset;
 
-    private Dictionary<CharacterStatType, float> statsValues = new();
-    private Dictionary<CharacterStatType, UnityAction<float>> statsCallbacksDict = new();
-    private Dictionary<CharacterStatType, TextMeshProUGUI> statTextObjects = new();
+    private readonly Dictionary<CharacterStatType, float> statsValues = new();
+    private readonly Dictionary<CharacterStatType, UnityAction<float>> statsCallbacksDict = new();
+    private readonly Dictionary<CharacterStatType, TextMeshProUGUI> statTextObjects = new();
 
     private RectTransform panelRect; // cache panelRect to avoid fetching multiple times
     public override void Init()

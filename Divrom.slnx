@@ -1,4 +1,8 @@
 ﻿<Solution>
+  <Project Path="myCore.csproj" />
   <Project Path="Assembly-CSharp.csproj" />
+  <Project Path="myAnimation.csproj" />
+  <Project Path="myEntityStat.csproj" />
+  <Project Path="ThirdParty.csproj" />
   <Project Path="Assembly-CSharp-Editor.csproj" />
 </Solution>

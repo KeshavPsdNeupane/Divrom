@@ -9,29 +9,12 @@ using UnityEngine.UI;
 /// </summary>
 public class ItemDragDropManager : MonoBehaviour
 {
-    public static ItemDragDropManager Instance { get; private set; }
     public ItemSlot CopyOfDraggedSourceItemSlot { get; private set; }
     public ItemSlotUI SourceSlotUI { get; private set; }
 
     private GameObject dragIcon;
     private Image dragIconImage;
     private Canvas parentCanvas;
-
-    private void Awake()
-    {
-        if (Instance != null && Instance != this)
-        { Destroy(this.gameObject); return; }
-        Instance = this;
-    }
-    public static ItemDragDropManager GetOrCreateInstance()
-    {
-        if (Instance == null)
-        {
-            GameObject go = new("DragDropManager");
-            go.AddComponent<ItemDragDropManager>();
-        }
-        return Instance;
-    }
 
     public void BeginDrag(ItemSlot slotCopy, ItemSlotUI sourceUI, Canvas canvas, Sprite icon)
     {
@@ -62,10 +45,7 @@ public class ItemDragDropManager : MonoBehaviour
         this.SourceSlotUI = null;
     }
 
-    private void OnDestroy()
-    {
-        if (Instance == this) Instance = null;
-    }
+
 
 
     public bool IsDroppedItemIsOverUI(PointerEventData eventData)

@@ -50,8 +50,6 @@ public class StaticAnimationLibraryResolver : MonoBehaviour
 
     private bool isResolved = false;
 
-    private SpriteLibraryAsset _tempDefaultAsset;
-
     #endregion
 
     #region Unity Callbacks
@@ -59,19 +57,6 @@ public class StaticAnimationLibraryResolver : MonoBehaviour
 #if UNITY_EDITOR
     private void OnValidate()
     {
-        if (!Application.isPlaying)
-        {
-            BuildAllDictionaries();
-
-            EditorApplication.delayCall += () =>
-            {
-                if (this != null)
-                {
-                    ClearAllOverrides();
-                    ResolveAllAssets();
-                }
-            };
-        }
         if (this.defaultSpriteLibraryAsset == null)
         {
             Logger.Warn($"Default Sprite Library Asset is not assigned on {this.name}.");
@@ -84,9 +69,16 @@ public class StaticAnimationLibraryResolver : MonoBehaviour
         {
             Logger.Warn($"Race is set to 'none' on {this.name}. This may lead to incorrect asset resolution.");
         }
+
     }
 #endif
-
+    public void RefreshPreview()
+    {
+        if (this == null) return;
+        BuildAllDictionaries();
+        ClearAllOverrides();
+        ResolveAllAssets();
+    }
 
 
     private void Awake()
@@ -107,8 +99,7 @@ public class StaticAnimationLibraryResolver : MonoBehaviour
         {
             if (this.race == value) return;
             this.race = value;
-            ClearAllOverrides();
-            ResolveAllAssets();
+            RefreshPreview();
         }
     }
 
@@ -119,8 +110,7 @@ public class StaticAnimationLibraryResolver : MonoBehaviour
         {
             if (this.gender == value) return;
             this.gender = value;
-            ClearAllOverrides();
-            ResolveAllAssets();
+            RefreshPreview();
         }
     }
 
@@ -135,7 +125,7 @@ public class StaticAnimationLibraryResolver : MonoBehaviour
             baseCharacterAssets,
             baseCharacterLibrariesDict,
             baseCharacterAssetsDict,
-            library => library.BodyRegion,
+            library => library.CurrentBodyRegion,
             asset => asset.ApplicableBaseBody
         );
 
@@ -144,7 +134,7 @@ public class StaticAnimationLibraryResolver : MonoBehaviour
             equipmentAssets,
             equipmentLibrariesDict,
             equipmentAssetsDict,
-            library => library.EquipingBodyPart,
+            library => library.CurrentBodyEquipmentPart,
             asset => asset.ApplicableEquipingPart
         );
     }
@@ -182,9 +172,8 @@ public class StaticAnimationLibraryResolver : MonoBehaviour
 
     public void ResolveAllAssets()
     {
-        if (isResolved) return;
-        MapAllAssets();
-        isResolved = true;
+        if (!this.isResolved) MapAllAssets();
+        this.isResolved = true;
     }
 
     private void MapAllAssets()
@@ -236,24 +225,11 @@ public class StaticAnimationLibraryResolver : MonoBehaviour
     {
         foreach (var kvp in libraries)
         {
-            kvp.Value.ClearOverride(GetSafeDefaultAsset());
+            kvp.Value.ClearOverride(this.defaultSpriteLibraryAsset);
         }
     }
 
 
-
-    private SpriteLibraryAsset GetSafeDefaultAsset()
-    {
-        if (defaultSpriteLibraryAsset != null) return defaultSpriteLibraryAsset;
-
-#if UNITY_EDITOR
-        Logger.Warn("Default Sprite Library Asset is missing. Using temporary empty asset.");
-#endif
-        if (_tempDefaultAsset == null)
-            _tempDefaultAsset = ScriptableObject.CreateInstance<SpriteLibraryAsset>();
-
-        return _tempDefaultAsset;
-    }
 
     #endregion
 
@@ -274,11 +250,11 @@ public class StaticAnimationLibraryResolver : MonoBehaviour
         }
     }
 
-    public void UnequipItem(EquipingPartEnum part)
+    public void UnequipItem(EquipingPartEnum equipingPart)
     {
-        if (!this.equipmentAssetsDict.ContainsKey(part) || !this.equipmentLibrariesDict.ContainsKey(part)) return;
-        var lib = this.equipmentLibrariesDict[part];
-        lib.ClearOverride(GetSafeDefaultAsset());
+        if (!this.equipmentAssetsDict.ContainsKey(equipingPart) || !this.equipmentLibrariesDict.ContainsKey(equipingPart)) return;
+        var lib = this.equipmentLibrariesDict[equipingPart];
+        lib.ClearOverride(this.defaultSpriteLibraryAsset);
     }
 
     #endregion

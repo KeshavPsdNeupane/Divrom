@@ -3,14 +3,14 @@ using UnityEngine;
 public class EquipmentSpriteLibrary : CustomSpriteLibraryDefination
 {
     [Tooltip("Put the Equipment part this SpriteLibrary is associated with.")]
-    [SerializeField] private EquipingPartEnum equpingBodyPart = EquipingPartEnum.none;
-    public EquipingPartEnum EquipingBodyPart => equpingBodyPart;
+    [SerializeField] private EquipingPartEnum currentBodyEquipmentPart = EquipingPartEnum.none;
+    public EquipingPartEnum CurrentBodyEquipmentPart => currentBodyEquipmentPart;
 
     protected override void OnValidate()
     {
-        if (this.equpingBodyPart == EquipingPartEnum.none)
+        if (this.currentBodyEquipmentPart == EquipingPartEnum.none)
         {
-            Logger.Warn($"EquipmentSpriteLibrary '{this.name}' has equpingBodyPart set to 'none'");
+            Logger.Warn($"EquipmentSpriteLibrary '{this.name}' has currentBodyEquipmentPart set to 'none'");
         }
     }
 }

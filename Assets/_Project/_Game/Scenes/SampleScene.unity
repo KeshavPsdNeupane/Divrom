@@ -606,7 +606,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BodyRegionSpriteLibrary
   m_Library: []
   m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: a92ad91282f4a8c4e8742a48412a5cb1, type: 3}
-  bodyRegion: 1
+  currentBodyRegion: 1
 --- !u!114 &120325874
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -894,7 +894,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentSpriteLibrary
   m_Library: []
   m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: 1fd486b84ee5dd11390d58724e865054, type: 3}
-  equpingBodyPart: 6
+  currentBodyEquipmentPart: 6
 --- !u!114 &184075939
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6417,7 +6417,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BodyRegionSpriteLibrary
   m_Library: []
   m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: 124aaf6123a05e88682f53ead7c39507, type: 3}
-  bodyRegion: 3
+  currentBodyRegion: 3
 --- !u!114 &533223066
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6676,7 +6676,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentSpriteLibrary
   m_Library: []
   m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: 1fd486b84ee5dd11390d58724e865054, type: 3}
-  equpingBodyPart: 1
+  currentBodyEquipmentPart: 1
 --- !u!114 &547503004
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6777,11 +6777,11 @@ Transform:
   m_GameObject: {fileID: 563220433}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.5425699, y: 2.16318, z: 0}
+  m_LocalPosition: {x: 1.6973403, y: -0.4875599, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 897530702}
+  m_Father: {fileID: 743717054}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &563220435
 MonoBehaviour:
@@ -7264,7 +7264,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentSpriteLibrary
   m_Library: []
   m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: 1fd486b84ee5dd11390d58724e865054, type: 3}
-  equpingBodyPart: 0
+  currentBodyEquipmentPart: 0
 --- !u!114 &655013495
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7355,7 +7355,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!50 &674934118
 Rigidbody2D:
   serializedVersion: 5
@@ -7564,7 +7564,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentSpriteLibrary
   m_Library: []
   m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: e76895dc100116050bb3ee41ee20cd9f, type: 3}
-  equpingBodyPart: 4
+  currentBodyEquipmentPart: 4
 --- !u!114 &703711897
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7672,6 +7672,53 @@ Transform:
   - {fileID: 1881736879}
   - {fileID: 274279086}
   m_Father: {fileID: 1105980190}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &743717052
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 743717054}
+  - component: {fileID: 743717053}
+  m_Layer: 0
+  m_Name: SceneServiceLocator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &743717053
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 743717052}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1445581647164625397369fb910fca8f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: myCore::ServiceLocatorPattern.SceneServiceLocator
+  sceneServices:
+  - {fileID: 563220435}
+--- !u!4 &743717054
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 743717052}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -4.21892, y: 1.82801, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 563220434}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &745284539
 GameObject:
@@ -8731,38 +8778,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6ec4e8a30adc9e448e7171477010e0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SelectionBase
---- !u!1 &897530701
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 897530702}
-  m_Layer: 0
-  m_Name: ManagersInstances
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &897530702
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 897530701}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.06415, y: -0.82273, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 563220434}
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &898564458
 GameObject:
   m_ObjectHideFlags: 0
@@ -8808,18 +8823,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SceneExecutionOrderTracker
   trackedComponents:
-  - typeName: InputManager
-    order: -40
-    gameObjectName: InputsManagerInstance
+  - typeName: SceneServiceLocator
+    order: -50
+    gameObjectName: SceneServiceLocator
+  - typeName: InGameUIInitCaller
+    order: -30
+    gameObjectName: UI
   - typeName: PlayerInitCaller
     order: -30
     gameObjectName: InitCaller
   - typeName: PlayerInitCaller
     order: -30
     gameObjectName: initcaller
-  - typeName: InGameUIInitCaller
-    order: -30
-    gameObjectName: UI
 --- !u!1 &901993973
 GameObject:
   m_ObjectHideFlags: 0
@@ -9001,7 +9016,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BodyRegionSpriteLibrary
   m_Library: []
   m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: 231d9a1ee6355c2baa932bdc564e96ae, type: 3}
-  bodyRegion: 2
+  currentBodyRegion: 2
 --- !u!114 &952797829
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11147,7 +11162,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentSpriteLibrary
   m_Library: []
   m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: ac7266fd15d3d98f8a69d0713b5d0fdb, type: 3}
-  equpingBodyPart: 3
+  currentBodyEquipmentPart: 3
 --- !u!114 &1629351201
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11545,50 +11560,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1761344700}
   m_CullTransparentMesh: 1
---- !u!1 &1762784850
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1762784851}
-  - component: {fileID: 1762784852}
-  m_Layer: 0
-  m_Name: InputsManagerInstance
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1762784851
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1762784850}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.58722997, y: 6.47035, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1762784852
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1762784850}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb9b02890e2aeaf20940cffca23ba865, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::InputsManager
 --- !u!1 &1769262375
 GameObject:
   m_ObjectHideFlags: 0
@@ -12078,7 +12049,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentSpriteLibrary
   m_Library: []
   m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: c6aeeca7ff71a98cf8e8e25ba2900a02, type: 3}
-  equpingBodyPart: 2
+  currentBodyEquipmentPart: 2
 --- !u!114 &1822633326
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12201,7 +12172,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BodyRegionSpriteLibrary
   m_Library: []
   m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: 1fd486b84ee5dd11390d58724e865054, type: 3}
-  bodyRegion: 4
+  currentBodyRegion: 4
 --- !u!114 &1837360200
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12324,7 +12295,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentSpriteLibrary
   m_Library: []
   m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: b51e30f19a71f39c78652c3efa98261c, type: 3}
-  equpingBodyPart: 5
+  currentBodyEquipmentPart: 5
 --- !u!114 &1843224162
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12894,7 +12865,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BodyRegionSpriteLibrary
   m_Library: []
   m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: 3e2ee97b6ed5491ffbe4432b42d98a5e, type: 3}
-  bodyRegion: 0
+  currentBodyRegion: 0
 --- !u!114 &1971284870
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13973,12 +13944,11 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1299538}
+  - {fileID: 1153597351}
   - {fileID: 1769262378}
   - {fileID: 1376010925}
+  - {fileID: 743717054}
   - {fileID: 898564459}
-  - {fileID: 1762784851}
-  - {fileID: 897530702}
-  - {fileID: 1153597351}
   - {fileID: 602870894}
   - {fileID: 1058275941}
   - {fileID: 1533116754}

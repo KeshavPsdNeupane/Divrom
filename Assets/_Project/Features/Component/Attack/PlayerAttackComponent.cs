@@ -1,5 +1,5 @@
 using UnityEngine.InputSystem;
-
+using ServiceLocatorPattern;
 public class PlayerAttackComponent : AttackComponentBase
 {
     private InputManager inputManager;
@@ -7,7 +7,7 @@ public class PlayerAttackComponent : AttackComponentBase
     public override void Init()
     {
         base.Init();
-        this.inputManager = InputManager.GetOrCreateInstance();
+        this.inputManager = GlobalServiceLocator.Instance.GetORCreateDefault<InputManager>();
 
     }
 

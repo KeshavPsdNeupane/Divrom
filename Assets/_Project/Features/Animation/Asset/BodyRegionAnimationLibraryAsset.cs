@@ -24,13 +24,18 @@ public class BodyRegionAnimationLibraryAsset : SpriteAnimationLibraryAssetDefini
 
     protected override bool IsApplicable<TPart>(GenderEnum gender, TPart tpart, RacesEnum race)
     {
-        bool genderOk = this.applicableGender == GenderEnum.both || this.applicableGender == gender;
-        bool partOk = tpart is BodyRegionEnum part && part == applicableBaseBody;
-        bool raceOk = this.applicableRaces.Contains(RacesEnum.All) || this.applicableRaces.Contains(race);
 
-        if (!genderOk) Logger.Error($"Gender mismatch: {gender} != {this.applicableGender}");
-        if (!partOk) Logger.Error($"BodyRegion mismatch: {tpart} != {this.applicableBaseBody}");
-        if (!raceOk) Logger.Error($"Race mismatch: {race} not in {string.Join(", ", this.applicableRaces)}");
+        bool genderOk = gender != GenderEnum.none
+        && (applicableGender == GenderEnum.both || applicableGender == gender);
+
+        bool partOk = tpart is BodyRegionEnum part
+        && (part != BodyRegionEnum.none) && part == this.applicableBaseBody;
+
+        bool raceOk = race != RacesEnum.none && (applicableRaces.Contains(RacesEnum.All) ||
+         applicableRaces.Contains(race));
+        if (!genderOk) Logger.Error($"Gender mismatch: {gender} != {this.applicableGender} on library {this.LibraryId}");
+        if (!partOk) Logger.Error($"BodyRegion mismatch: {tpart} != {this.applicableBaseBody} on library {this.LibraryId}");
+        if (!raceOk) Logger.Error($"Race mismatch: {race} not in {string.Join(", ", this.applicableRaces)} on library {this.LibraryId}");
 
         return genderOk && partOk && raceOk;
     }

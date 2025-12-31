@@ -24,14 +24,18 @@ public class EquipmentAnimationLibraryAsset : SpriteAnimationLibraryAssetDefinit
 
     protected override bool IsApplicable<TPart>(GenderEnum gender, TPart tpart, RacesEnum race)
     {
-        bool genderOk = applicableGender == GenderEnum.both || applicableGender == gender;
-        bool partOk = tpart is EquipingPartEnum part && part == applicableEquipingPart;
+        bool genderOk = gender != GenderEnum.none
+        && (applicableGender == GenderEnum.both || applicableGender == gender);
 
-        bool raceOk = applicableRaces.Contains(RacesEnum.All) || applicableRaces.Contains(race);
+        bool partOk = tpart is EquipingPartEnum part
+        && (part != EquipingPartEnum.none) && part == this.applicableEquipingPart;
 
-        if (!genderOk) Logger.Error($"Gender mismatch: {gender} != {applicableGender}");
-        if (!partOk) Logger.Error($"EquipingPart mismatch: {tpart} != {applicableEquipingPart}");
-        if (!raceOk) Logger.Error($"Race mismatch: {race} not in {string.Join(", ", applicableRaces)}");
+        bool raceOk = race != RacesEnum.none && (applicableRaces.Contains(RacesEnum.All) ||
+        applicableRaces.Contains(race));
+
+        if (!genderOk) Logger.Error($"Gender mismatch: {gender} != {applicableGender} on library {this.LibraryId}");
+        if (!partOk) Logger.Error($"EquipingPart mismatch: {tpart} != {applicableEquipingPart} on library {this.LibraryId}");
+        if (!raceOk) Logger.Error($"Race mismatch: {race} not in {string.Join(", ", applicableRaces)} on library {this.LibraryId}");
 
         return genderOk && partOk && raceOk;
     }

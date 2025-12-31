@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using ServiceLocatorPattern;
+using Unity.VisualScripting;
 /// <summary>
 /// Player-specific movement component that handles input and movement application.
 /// The ApplyMovement Must be called externally, typically from a PlayerController or similar script.
@@ -15,7 +17,7 @@ public class PlayerMovementComponent : MovementComponentBase
     public override void Init()
     {
         base.Init();
-        this.inputManager = InputManager.GetOrCreateInstance();
+        this.inputManager = GlobalServiceLocator.Instance.GetORCreateDefault<InputManager>();
     }
     protected override void OnEnable()
     {

@@ -38,7 +38,6 @@ public enum PlayerInputActionKey
 [CustomExecutionOrder(-40)]
 public class InputManager : MonoBehaviour
 {
-    public static InputManager Instance;
     private PlayerInput playerInput;
     private readonly Dictionary<PlayerInputActionMap, InputActionMap> actionMaps = new();
 
@@ -46,28 +45,10 @@ public class InputManager : MonoBehaviour
 
     private void Awake()
     {
-        // If another instance exists and it's not this one, destroy this one
-        if (Instance != null && Instance != this)
-        {
-            Destroy(this.gameObject);
-            return;
-        }
 
-        // This is the instance to keep
-        Instance = this;
         InitializeActionMaps();
     }
-    public static InputManager GetOrCreateInstance()
-    {
-        if (Instance == null)
-        {
-            // Create new one if truly none exists
-            GameObject go = new("InputManager");
-            InputManager manager = go.AddComponent<InputManager>();
-            return manager;
-        }
-        return Instance;
-    }
+
 
     private void InitializeActionMaps()
     {
@@ -151,11 +132,7 @@ public class InputManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (Instance == this)
-        {
-            Instance = null;
-            this.playerInput.Dispose();
-        }
+        this.playerInput.Dispose();
     }
 
     public void SubscribeToInputAction(PlayerInputActionMap actionType, string actionName, Action<InputAction.CallbackContext> callback)

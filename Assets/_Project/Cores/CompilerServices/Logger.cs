@@ -1,5 +1,4 @@
 using System.Runtime.CompilerServices;
-using UnityEngine;
 
 public static class Logger
 {
@@ -39,15 +38,5 @@ public static class Logger
     {
         string fileName = System.IO.Path.GetFileName(filePath);
         Instance.Log($"[Info] {message} : at {fileName} line {lineNumber}");
-    }
-}
-
-
-public static class Bootstrap
-{
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-    private static void Init()
-    {
-        Logger.Configure();
     }
 }

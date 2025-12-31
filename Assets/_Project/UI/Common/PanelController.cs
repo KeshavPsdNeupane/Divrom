@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-
+using ServiceLocatorPattern;
 public class PanelController : UIState
 {
     [SerializeField] private string panelName = "Menu";
@@ -18,7 +18,7 @@ public class PanelController : UIState
         }
         this.currentPanel.SetActive(false);
         SetInitialized();
-        inputManager = InputManager.GetOrCreateInstance();
+        this.inputManager = GlobalServiceLocator.Instance.GetORCreateDefault<InputManager>();
     }
 
     public override void EnterState() => OpenMenu();

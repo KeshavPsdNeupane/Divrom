@@ -1419,6 +1419,10 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp.csproj" />
+    <ProjectReference Include="ThirdParty.csproj" />
+    <ProjectReference Include="myEntityStat.csproj" />
+    <ProjectReference Include="myCore.csproj" />
+    <ProjectReference Include="myAnimation.csproj" />
   </ItemGroup>
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
   <ItemGroup>

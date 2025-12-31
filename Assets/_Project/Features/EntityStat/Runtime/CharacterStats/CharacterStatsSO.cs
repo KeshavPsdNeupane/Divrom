@@ -1,4 +1,5 @@
 using UnityEngine;
+using ThirdParty;
 
 [CreateAssetMenu(fileName = "CharacterStateSO", menuName = "Scriptable Character/CharacterStateSO")]
 public class CharacterStatsSO : ScriptableObject

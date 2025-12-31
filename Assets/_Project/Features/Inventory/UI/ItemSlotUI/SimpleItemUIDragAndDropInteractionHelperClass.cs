@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using ServiceLocatorPattern;
 
 public class SimpleItemUIDragAndDropInteractionHelperClass
 {
@@ -8,7 +9,7 @@ public class SimpleItemUIDragAndDropInteractionHelperClass
 
     public SimpleItemUIDragAndDropInteractionHelperClass()
     {
-        this.mgr = ItemDragDropManager.GetOrCreateInstance();
+        this.mgr = SceneServiceLocator.Instance.GetORCreateDefault<ItemDragDropManager>();
     }
 
     public void BeginDrag(ItemSlotUI itemUISlot, CanvasGroup canvasGroup, Canvas parentCanvas)
