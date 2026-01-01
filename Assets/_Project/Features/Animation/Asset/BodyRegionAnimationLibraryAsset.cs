@@ -9,13 +9,26 @@ public class BodyRegionAnimationLibraryAsset : SpriteAnimationLibraryAssetDefini
 
     [SerializeField] private BodyRegionEnum applicableBaseBody = BodyRegionEnum.none;
     public BodyRegionEnum ApplicableBaseBody => this.applicableBaseBody;
+    private string _cachedId;
 
-    public override string LibraryId =>
-        $"{applicableGender}_{applicableBaseBody}_{variantName}_{applicableColorPermutation}";
+    public override string LibraryId
+    {
+        get
+        {
+            if (string.IsNullOrEmpty(_cachedId))
+            {
+                _cachedId = this.applicableGender.ToIdPart() + "_" +
+                            this.applicableBaseBody.ToIdPart() + "_" +
+                            this.variantName + "_" + this.applicableColorPermutation.ToIdPart();
+            }
+            return _cachedId;
+        }
+    }
 
     override protected void OnValidate()
     {
         base.OnValidate();
+        this._cachedId = null;
         if (this.applicableBaseBody == BodyRegionEnum.none)
         {
             Logger.Warn($"BodyRegionAnimationLibraryAsset '{this.name}' has applicableBaseBody set to 'none'");

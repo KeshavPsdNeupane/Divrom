@@ -7,6 +7,8 @@ public static class GlobalBootStrap
     private static void Init()
     {
         Logger.Configure();
-        GlobalServiceLocator.Instance.RegisterService<InputManager>();
+        var gs = GlobalServiceLocator.Instance;
+        gs.RegisterService<InputManager>();
+        gs.Lock();
     }
 }

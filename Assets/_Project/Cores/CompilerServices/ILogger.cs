@@ -1,8 +1,6 @@
 public interface ILogger
 {
-    public void Error(string message);
-    public void Warn(string message);
-    public void Log(string message);
+    void Log(string message, UnityEngine.Object context = null);
+    void Warn(string message, UnityEngine.Object context = null);
+    void Error(string message, UnityEngine.Object context = null);
 }
-
-

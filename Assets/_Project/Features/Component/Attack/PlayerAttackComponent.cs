@@ -7,8 +7,14 @@ public class PlayerAttackComponent : AttackComponentBase
     public override void Init()
     {
         base.Init();
-        this.inputManager = GlobalServiceLocator.Instance.GetORCreateDefault<InputManager>();
-
+        if (GlobalServiceLocator.Instance.TryGetService(out InputManager inputManager))
+        {
+            this.inputManager = inputManager;
+        }
+        else
+        {
+            Logger.Error($"{this.gameObject.name}Controller: InputManager service not found!");
+        }
     }
 
     protected override void OnEnable()
@@ -19,14 +25,14 @@ public class PlayerAttackComponent : AttackComponentBase
 
     private void Subscribe()
     {
-        if (inputManager != null)
-        {
-            inputManager.SubscribeToInputAction(
-                PlayerInputActionMap.Player,
-                PlayerInputActionKey.Fire.ToString(),
-                AttackForInputSystem
-            );
-        }
+        if (inputManager == null) return;
+
+        inputManager.SubscribeToInputAction(
+            PlayerInputActionMap.Player,
+            PlayerInputActionKey.Fire.ToString(),
+            AttackForInputSystem
+       );
+
     }
 
     protected override void OnDisable()
@@ -37,14 +43,14 @@ public class PlayerAttackComponent : AttackComponentBase
 
     private void Unsubscribe()
     {
-        if (inputManager != null)
-        {
-            inputManager.UnsubscribeFromInputAction(
-                PlayerInputActionMap.Player,
-                PlayerInputActionKey.Fire.ToString(),
-                AttackForInputSystem
-            );
-        }
+        if (inputManager == null) return;
+
+        inputManager.UnsubscribeFromInputAction(
+            PlayerInputActionMap.Player,
+            PlayerInputActionKey.Fire.ToString(),
+            AttackForInputSystem
+        );
+
     }
 
     private void AttackForInputSystem(InputAction.CallbackContext context)

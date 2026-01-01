@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
 using System;
-
+using ServiceLocatorPattern;
 /// <summary>
 /// Maps input action map types to their corresponding action map names.
 /// Used to dynamically enable/disable action maps without hardcoding.
@@ -35,20 +35,22 @@ public enum PlayerInputActionKey
 /// Dynamically manages action maps without hardcoding individual disable calls.
 /// </summary>
 
-[CustomExecutionOrder(-40)]
-public class InputManager : MonoBehaviour
+public class InputManager : GlobalServiceBase
 {
     private PlayerInput playerInput;
     private readonly Dictionary<PlayerInputActionMap, InputActionMap> actionMaps = new();
 
     public PlayerInput PlayerInputs => this.playerInput;
 
-    private void Awake()
+
+    public override void Initialize(string callerInfo, bool isWarn = false)
     {
-
-        InitializeActionMaps();
+        if (!this.IsInitialized)
+        {
+            base.Initialize(callerInfo, isWarn);
+            InitializeActionMaps();
+        }
     }
-
 
     private void InitializeActionMaps()
     {
@@ -132,6 +134,7 @@ public class InputManager : MonoBehaviour
 
     private void OnDestroy()
     {
+        this.playerInput.Disable();
         this.playerInput.Dispose();
     }
 
@@ -169,4 +172,6 @@ public class InputManager : MonoBehaviour
             }
         }
     }
+
+
 }

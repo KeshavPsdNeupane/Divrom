@@ -8823,9 +8823,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SceneExecutionOrderTracker
   trackedComponents:
-  - typeName: SceneServiceLocator
-    order: -50
-    gameObjectName: SceneServiceLocator
   - typeName: InGameUIInitCaller
     order: -30
     gameObjectName: UI

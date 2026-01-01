@@ -45,8 +45,8 @@ public class StaticAnimationLibraryResolver : MonoBehaviour
     private readonly Dictionary<BodyRegionEnum, BodyRegionSpriteLibrary> baseCharacterLibrariesDict = new();
     private readonly Dictionary<BodyRegionEnum, BodyRegionAnimationLibraryAsset> baseCharacterAssetsDict = new();
 
-    private readonly Dictionary<EquipingPartEnum, EquipmentSpriteLibrary> equipmentLibrariesDict = new();
-    private readonly Dictionary<EquipingPartEnum, EquipmentAnimationLibraryAsset> equipmentAssetsDict = new();
+    private readonly Dictionary<EquipmentPartEnum, EquipmentSpriteLibrary> equipmentLibrariesDict = new();
+    private readonly Dictionary<EquipmentPartEnum, EquipmentAnimationLibraryAsset> equipmentAssetsDict = new();
 
     private bool isResolved = false;
 
@@ -83,6 +83,7 @@ public class StaticAnimationLibraryResolver : MonoBehaviour
 
     private void Awake()
     {
+        if (this == null) return;
         BuildAllDictionaries();
         ClearAllOverrides();
         ResolveAllAssets();
@@ -235,7 +236,7 @@ public class StaticAnimationLibraryResolver : MonoBehaviour
 
     #region Runtime Equipment API
 
-    public void EquipItem(EquipingPartEnum part, EquipmentAnimationLibraryAsset newAsset)
+    public void EquipItem(EquipmentPartEnum part, EquipmentAnimationLibraryAsset newAsset)
     {
         if (newAsset == null) return;
 
@@ -250,7 +251,7 @@ public class StaticAnimationLibraryResolver : MonoBehaviour
         }
     }
 
-    public void UnequipItem(EquipingPartEnum equipingPart)
+    public void UnequipItem(EquipmentPartEnum equipingPart)
     {
         if (!this.equipmentAssetsDict.ContainsKey(equipingPart) || !this.equipmentLibrariesDict.ContainsKey(equipingPart)) return;
         var lib = this.equipmentLibrariesDict[equipingPart];

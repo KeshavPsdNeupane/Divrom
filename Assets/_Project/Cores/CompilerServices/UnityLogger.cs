@@ -1,12 +1,6 @@
-using UnityEngine;
-
-
 public class UnityLogger : ILogger
 {
-    public void Error(string message)
-    => Debug.LogError(message);
-    public void Warn(string message)
-    => Debug.LogWarning(message);
-    public void Log(string message)
-    => Debug.Log(message);
+    public void Log(string message, UnityEngine.Object context = null) => UnityEngine.Debug.Log(message, context);
+    public void Warn(string message, UnityEngine.Object context = null) => UnityEngine.Debug.LogWarning(message, context);
+    public void Error(string message, UnityEngine.Object context = null) => UnityEngine.Debug.LogError(message, context);
 }

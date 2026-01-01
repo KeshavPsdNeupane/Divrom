@@ -2,12 +2,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using ServiceLocatorPattern;
+using System;
 
 /// <summary>
 /// Written by chatGPT-4 deep model with some adjustments.
 /// Simple manager to hold the currently dragged ItemSlot and source UI.
 /// </summary>
-public class ItemDragDropManager : MonoBehaviour
+public class ItemDragDropManager : SceneServiceBase
 {
     public ItemSlot CopyOfDraggedSourceItemSlot { get; private set; }
     public ItemSlotUI SourceSlotUI { get; private set; }
@@ -15,6 +17,14 @@ public class ItemDragDropManager : MonoBehaviour
     private GameObject dragIcon;
     private Image dragIconImage;
     private Canvas parentCanvas;
+
+    public override void Initialize(string callerInfo, bool isWarn = false)
+    {
+        if (!this.IsInitialized)
+        {
+            base.Initialize(callerInfo, isWarn);
+        }
+    }
 
     public void BeginDrag(ItemSlot slotCopy, ItemSlotUI sourceUI, Canvas canvas, Sprite icon)
     {
@@ -44,9 +54,6 @@ public class ItemDragDropManager : MonoBehaviour
         this.CopyOfDraggedSourceItemSlot = null;
         this.SourceSlotUI = null;
     }
-
-
-
 
     public bool IsDroppedItemIsOverUI(PointerEventData eventData)
     {

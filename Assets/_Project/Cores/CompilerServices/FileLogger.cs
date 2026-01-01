@@ -3,7 +3,6 @@ using System.IO;
 
 public class FileLogger : ILogger
 {
-    // Folder for logs
     private const string LogFolder = "logs";
 
     private static string LogFilePath
@@ -20,13 +19,13 @@ public class FileLogger : ILogger
     private static string TimeStamp =>
         DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
-    public void Error(string message) =>
+    public void Error(string message, UnityEngine.Object context = null) =>
         AppendLog($"[{TimeStamp}] : {message}");
 
-    public void Warn(string message) =>
+    public void Warn(string message, UnityEngine.Object context = null) =>
         AppendLog($"[{TimeStamp}] : {message}");
 
-    public void Log(string message) =>
+    public void Log(string message, UnityEngine.Object context = null) =>
         AppendLog($"[{TimeStamp}] : {message}");
 
     private void AppendLog(string message)

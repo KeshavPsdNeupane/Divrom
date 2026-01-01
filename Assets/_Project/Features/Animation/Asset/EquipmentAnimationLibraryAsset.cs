@@ -1,22 +1,37 @@
 using UnityEngine;
 
 
-public enum EquipingPartEnum { none = -1, helmet = 0, neck = 1, arm = 2, torso = 3, leg = 4, feet = 5, weapon = 6 }
+public enum EquipmentPartEnum { none = -1, helmet = 0, neck = 1, arm = 2, torso = 3, leg = 4, feet = 5, weapon = 6 }
 
 
 [CreateAssetMenu(fileName = "New Animation Library", menuName = "Animation/EquipmentAsset")]
 public class EquipmentAnimationLibraryAsset : SpriteAnimationLibraryAssetDefinition
 {
-    [SerializeField] private EquipingPartEnum applicableEquipingPart = EquipingPartEnum.none;
+    [SerializeField] private EquipmentPartEnum applicableEquipingPart = EquipmentPartEnum.none;
 
-    public EquipingPartEnum ApplicableEquipingPart => applicableEquipingPart;
+    public EquipmentPartEnum ApplicableEquipingPart => applicableEquipingPart;
 
-    public override string LibraryId => $"{applicableGender}_{applicableEquipingPart}_{variantName}_{applicableColorPermutation}";
+    private string _cachedId;
+
+    public override string LibraryId
+    {
+        get
+        {
+            if (string.IsNullOrEmpty(_cachedId))
+            {
+                _cachedId = this.applicableGender.ToIdPart() + "_" +
+                            this.applicableEquipingPart.ToIdPart() + "_" +
+                            this.variantName + "_" + this.applicableColorPermutation.ToIdPart();
+            }
+            return _cachedId;
+        }
+    }
 
     override protected void OnValidate()
     {
         base.OnValidate();
-        if (this.applicableEquipingPart == EquipingPartEnum.none)
+        this._cachedId = null;
+        if (this.applicableEquipingPart == EquipmentPartEnum.none)
         {
             Logger.Warn($"EquipmentAnimationLibraryAsset '{this.name}' has applicableEquipingPart set to 'none'");
         }
@@ -27,8 +42,8 @@ public class EquipmentAnimationLibraryAsset : SpriteAnimationLibraryAssetDefinit
         bool genderOk = gender != GenderEnum.none
         && (applicableGender == GenderEnum.both || applicableGender == gender);
 
-        bool partOk = tpart is EquipingPartEnum part
-        && (part != EquipingPartEnum.none) && part == this.applicableEquipingPart;
+        bool partOk = tpart is EquipmentPartEnum part
+        && (part != EquipmentPartEnum.none) && part == this.applicableEquipingPart;
 
         bool raceOk = race != RacesEnum.none && (applicableRaces.Contains(RacesEnum.All) ||
         applicableRaces.Contains(race));

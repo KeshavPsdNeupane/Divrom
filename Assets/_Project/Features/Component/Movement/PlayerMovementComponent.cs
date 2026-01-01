@@ -17,7 +17,14 @@ public class PlayerMovementComponent : MovementComponentBase
     public override void Init()
     {
         base.Init();
-        this.inputManager = GlobalServiceLocator.Instance.GetORCreateDefault<InputManager>();
+        if (GlobalServiceLocator.Instance.TryGetService(out InputManager inputManager))
+        {
+            this.inputManager = inputManager;
+        }
+        else
+        {
+            Logger.Error($"{this.gameObject.name}Controller: InputManager service not found!");
+        }
     }
     protected override void OnEnable()
     {

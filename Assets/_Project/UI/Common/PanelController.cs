@@ -18,7 +18,14 @@ public class PanelController : UIState
         }
         this.currentPanel.SetActive(false);
         SetInitialized();
-        this.inputManager = GlobalServiceLocator.Instance.GetORCreateDefault<InputManager>();
+        if (GlobalServiceLocator.Instance.TryGetService(out InputManager inputManager))
+        {
+            this.inputManager = inputManager;
+        }
+        else
+        {
+            Logger.Error($"{this.gameObject.name}Controller: InputManager service not found!");
+        }
     }
 
     public override void EnterState() => OpenMenu();

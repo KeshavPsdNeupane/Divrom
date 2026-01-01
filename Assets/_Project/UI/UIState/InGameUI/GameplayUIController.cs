@@ -16,7 +16,15 @@ public class GameplayUIController : InitializableBase
     {
         this.uiStateManager = new();
         this.uiStateManager.Init();
-        this.inputManager = GlobalServiceLocator.Instance.GetORCreateDefault<InputManager>();
+        SetInitialized();
+        if (GlobalServiceLocator.Instance.TryGetService<InputManager>(out InputManager inputManager))
+        {
+            this.inputManager = inputManager;
+        }
+        else
+        {
+            Logger.Error($"{this.gameObject.name}Controller: InputManager service not found!");
+        }
         SetInitialized();
     }
 

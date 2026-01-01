@@ -19,7 +19,7 @@ public abstract class AttackComponentBase : InitializableBase
     {
         if (statsSystem == null)
         {
-            Debug.LogWarning("CharacterStatsSystem not assigned in AttackComponentBase, trying to get it from the GameObject.");
+            Logger.Warn("CharacterStatsSystem not assigned in AttackComponentBase, trying to get it from the GameObject.");
             statsSystem = GetComponent<CharacterStatsSystem>();
         }
 

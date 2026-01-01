@@ -9,7 +9,10 @@ public class SimpleItemUIDragAndDropInteractionHelperClass
 
     public SimpleItemUIDragAndDropInteractionHelperClass()
     {
-        this.mgr = SceneServiceLocator.Instance.GetORCreateDefault<ItemDragDropManager>();
+        if (SceneServiceLocator.Instance.TryGetService<ItemDragDropManager>(out var manager))
+        {
+            this.mgr = manager;
+        }
     }
 
     public void BeginDrag(ItemSlotUI itemUISlot, CanvasGroup canvasGroup, Canvas parentCanvas)
