@@ -27,7 +27,7 @@ namespace ServiceLocatorPattern
             this.isPersistent = false;
             base.Awake();
 
-            foreach (var service in sceneServices)
+            foreach (var service in this.sceneServices)
             {
                 if (service != null)
                     RegisterService(service);
@@ -48,7 +48,7 @@ namespace ServiceLocatorPattern
                 }
                 return;
             }
-            RenameAndRegister(service, " [Scene]_A_RS", "Registered Service", false);
+            RenameAndRegister(service, " [Scene]_A_RS", "via SceneService Registered Service", false);
         }
 
         public bool TryGetService<TService>(out TService service) where TService : SceneServiceBase
@@ -63,8 +63,6 @@ namespace ServiceLocatorPattern
                 return true;
             }
 
-            // 2. Secondary: Find one in scene (No destructive loop here)
-            // We only take the best candidate. ServiceBase handles the warning.
             TService[] instances = FindObjectsByType<TService>(FindObjectsSortMode.None);
 
             if (instances.Length > 0)
@@ -93,13 +91,13 @@ namespace ServiceLocatorPattern
             Register(service, postFix + " " + message, isWarn);
         }
 
-        private void Register(SceneServiceBase service, string source, bool isWarn = false)
+        private void Register(SceneServiceBase service, string message, bool isWarn = false)
         {
             var type = service.GetType();
             if (services.ContainsKey(type)) return;
 
             services[type] = service;
-            service.Initialize($"[Scene] {type.FullName} - {source}", isWarn);
+            service.Initialize($"[Scene] {type.FullName} - {message}", isWarn, service.gameObject);
         }
     }
 }

@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.U2D.Animation;
-using UnityEditor;
-using Unity.VisualScripting;
 
 /// <summary>
 /// Resolves and applies SpriteLibraryAssets for base character body regions and equipment.
@@ -12,8 +10,11 @@ using Unity.VisualScripting;
 [DisallowMultipleComponent]
 public class StaticAnimationLibraryResolver : MonoBehaviour
 {
-    #region Serialized Fields
+    [SerializeField] private string makeActiveCategory;
+    [SerializeField] private string makeActiveLabel;
 
+
+    #region Serialized Fields
     [Header("Character Settings")]
     [Tooltip("Current race of the character for asset resolution.")]
     [SerializeField] private RacesEnum race = RacesEnum.none;
@@ -256,6 +257,24 @@ public class StaticAnimationLibraryResolver : MonoBehaviour
         if (!this.equipmentAssetsDict.ContainsKey(equipingPart) || !this.equipmentLibrariesDict.ContainsKey(equipingPart)) return;
         var lib = this.equipmentLibrariesDict[equipingPart];
         lib.ClearOverride(this.defaultSpriteLibraryAsset);
+    }
+    #endregion
+
+    #region Editor Debugging API
+    public void SetActiveCategoryAndLabel()
+    {
+        SetActiveLabel(this.baseCharacterLibrariesDict);
+        SetActiveLabel(this.equipmentLibrariesDict);
+    }
+
+    private void SetActiveLabel<TLibrary, TEnum>(Dictionary<TEnum, TLibrary> libraries)
+        where TLibrary : CustomSpriteLibraryDefination
+        where TEnum : System.Enum
+    {
+        foreach (var kvp in libraries)
+        {
+            kvp.Value.SetActiveLabel(this.makeActiveCategory, this.makeActiveLabel);
+        }
     }
 
     #endregion

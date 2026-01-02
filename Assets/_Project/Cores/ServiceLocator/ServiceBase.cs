@@ -7,15 +7,15 @@ namespace ServiceLocatorPattern
         private bool isInitialized = false;
         public bool IsInitialized => isInitialized;
 
-        public virtual void Initialize(string info, bool isWarn = false)
+        public virtual void Initialize(string info, bool isWarn = false, GameObject gameObject = null)
         {
             if (isWarn)
             {
-                Logger.Warn($"[Service] Initialized {GetType().Name}: {info}");
+                Logger.Warn($"[Service] Initialized {GetType().Name}: {info}", gameObject);
             }
             else
             {
-                Logger.Log($"[Service] Initialized {GetType().Name}: {info}");
+                Logger.Log($"[Service] Initialized {GetType().Name}: {info}", gameObject);
             }
             this.isInitialized = true;
         }
@@ -38,8 +38,7 @@ namespace ServiceLocatorPattern
 
             if (instances.Length > 1)
             {
-                Logger.Warn($"<color=yellow>[ServiceLocator]</color> Multiple instances of <b>{type.Name}" +
-                "</br> found on scene! For now Game will use first one...", this.gameObject);
+                Logger.Warn($"[ServiceLocator] Multiple instances of <b>{type.Name}</b> found on scene! For now Game will use first one...", this.gameObject);
             }
         }
 

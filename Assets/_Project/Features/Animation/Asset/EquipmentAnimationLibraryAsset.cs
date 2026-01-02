@@ -1,7 +1,7 @@
 using UnityEngine;
 
 
-public enum EquipmentPartEnum { none = -1, helmet = 0, neck = 1, arm = 2, torso = 3, leg = 4, feet = 5, weapon = 6 }
+public enum EquipmentPartEnum { none = -1, helmet = 0, necklace = 1, arm = 2, torso = 3, leg = 4, feet = 5, weapon = 6 }
 
 
 [CreateAssetMenu(fileName = "New Animation Library", menuName = "Animation/EquipmentAsset")]

@@ -43,11 +43,11 @@ public class InputManager : GlobalServiceBase
     public PlayerInput PlayerInputs => this.playerInput;
 
 
-    public override void Initialize(string callerInfo, bool isWarn = false)
+    public override void Initialize(string callerInfo, bool isWarn = false, GameObject gameObject = null)
     {
         if (!this.IsInitialized)
         {
-            base.Initialize(callerInfo, isWarn);
+            base.Initialize(callerInfo, isWarn, gameObject);
             InitializeActionMaps();
         }
     }
@@ -134,8 +134,11 @@ public class InputManager : GlobalServiceBase
 
     private void OnDestroy()
     {
-        this.playerInput.Disable();
-        this.playerInput.Dispose();
+        if (this.gameObject != null && this.playerInput != null)
+        {
+            this.playerInput.Disable();
+            this.playerInput.Dispose();
+        }
     }
 
     public void SubscribeToInputAction(PlayerInputActionMap actionType, string actionName, Action<InputAction.CallbackContext> callback)

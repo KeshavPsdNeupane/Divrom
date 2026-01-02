@@ -42,6 +42,7 @@ public enum ItemColorPermutationEnum
     cloth,
     steel,
     iron,
+    ceramic,
 
 }
 

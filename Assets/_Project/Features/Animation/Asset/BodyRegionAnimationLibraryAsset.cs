@@ -1,7 +1,17 @@
 using UnityEngine;
 
 
-public enum BodyRegionEnum { none = -1, hair = 0, head = 1, ear = 2, body = 3, tail = 4, }
+public enum BodyRegionEnum
+{
+    none = -1,
+    hair = 0,
+    head = 1,
+    ear = 2,
+    body = 3,
+    tail = 4,
+    shadow = 5,
+    wings = 6
+}
 
 [CreateAssetMenu(fileName = "New Base Body Animation Library", menuName = "Animation/BodyRegionAsset")]
 public class BodyRegionAnimationLibraryAsset : SpriteAnimationLibraryAssetDefinition

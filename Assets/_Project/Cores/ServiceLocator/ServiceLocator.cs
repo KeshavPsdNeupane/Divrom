@@ -117,12 +117,15 @@ namespace ServiceLocatorPattern
                     // If the found object is NOT our protected global instance, it's a duplicate.
                     if (!ReferenceEquals(foundInstance, registeredInstance))
                     {
-                        Logger.Warn($"[Global] Destroyed redundant {serviceType.Name} found in newly loaded scene.");
-
                         // Cast to Component/MonoBehaviour to get the GameObject for destruction
                         if (foundInstance is Component comp)
                         {
-                            Destroy(comp.gameObject);
+                            if (comp.gameObject != null)
+                            {
+                                Logger.Warn($"[Global] Destroyed redundant {serviceType.Name} found in newly loaded scene.");
+                                Destroy(comp.gameObject);
+                            }
+
                         }
                     }
                 }

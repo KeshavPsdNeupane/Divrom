@@ -18,11 +18,11 @@ public class ItemDragDropManager : SceneServiceBase
     private Image dragIconImage;
     private Canvas parentCanvas;
 
-    public override void Initialize(string callerInfo, bool isWarn = false)
+    public override void Initialize(string callerInfo, bool isWarn = false, GameObject gameObject = null)
     {
         if (!this.IsInitialized)
         {
-            base.Initialize(callerInfo, isWarn);
+            base.Initialize(callerInfo, isWarn, gameObject);
         }
     }
 

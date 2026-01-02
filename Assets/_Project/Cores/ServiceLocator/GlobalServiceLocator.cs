@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace ServiceLocatorPattern
@@ -6,7 +7,7 @@ namespace ServiceLocatorPattern
     /// A global service locator that persists across scenes and manages global services.
     /// Must be explicitly registered via GloblalBootStrap using RegisterService.
     /// No automatic scene searching or creation is performed.
-    /// Here A_RS means "Added via RegisterService".
+    /// Here BS_RS means "Added via Bootstrapper RegisterService".
     /// </summary>
     public class GlobalServiceLocator : ServiceLocator<GlobalServiceLocator, GlobalServiceBase>
     {
@@ -33,37 +34,47 @@ namespace ServiceLocatorPattern
             Logger.Error($"[GlobalLocator] Critical Error: {type.Name} is not registered. Check your GlobalBootStrap!");
             return false;
         }
-        public void RegisterService<TService>(TService existingInstance = null) where TService : GlobalServiceBase
+        public void RegisterService<TService>(Func<TService> factory) where TService : GlobalServiceBase
         {
+            if (factory == null)
+            {
+                Logger.Error($"[GlobalLocator] RegisterService failed: The factory delegate for {typeof(TService).Name} is null.");
+                return;
+            }
             if (!this._canRegister)
             {
-                Logger.Error("[GlobalLocator] Registration is locked. No further services can be registered at this time.");
+                Logger.Error($"[GlobalLocator] Locked. Factory for {typeof(TService).Name} will not be invoked.");
                 return;
             }
             var type = typeof(TService);
-            if (services.ContainsKey(type)) return;
+            if (this.services.ContainsKey(type))
+            {
+                Logger.Warn($"[GlobalLocator] {type.Name} is already registered. Skipping factory invocation.");
+                return;
+            }
 
-            string creationTag = "A_RS";
-            // Use the provided instance, or find it, or create it
-            TService instance = existingInstance
-                                ?? FindInScene<TService>()
-                                ?? new GameObject($"[Global] {typeof(TService).Name}_{creationTag} ").AddComponent<TService>();
-
-            Register(instance, creationTag, "RegisterService");
+            TService service = factory.Invoke();
+            if (service == null)
+            {
+                Logger.Error($"[GlobalLocator] Factory for {type.Name} returned null. Registration aborted.");
+                return;
+            }
+            Register(service, "BS_RS", "Bootstrapper Registration Service");
         }
-
         private void Register(GlobalServiceBase service, string tag, string source)
         {
             var type = service.GetType();
             if (services.ContainsKey(type)) return;
 
-            // Standardize naming and persistence
-            service.name = $"[Global] {type.Name}_{tag}";
-            service.transform.SetParent(transform); // Keeps Hierarchy clean
 
-            service.Initialize(service.name + " via " + source);
+            service.name = $"[Global] {type.Name}_{tag}";
+            service.transform.SetParent(transform);
+
+            service.Initialize(service.name + " via " + source, false, service.gameObject);
             services[type] = service;
         }
+
+
 
     }
 }

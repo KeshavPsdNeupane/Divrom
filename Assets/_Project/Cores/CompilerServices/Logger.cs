@@ -15,20 +15,20 @@ public static class Logger
         [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
     {
         string fileName = System.IO.Path.GetFileName(filePath);
-        Instance.Log($"<b>[Info]</b> {message} <color=#888888>(at {fileName}:{lineNumber})</color>", context);
+        Instance.Log($"<color=yellow><b>[Info]</b> </color> {message} <color=#888888>(at {fileName}:{lineNumber})</color>", context);
     }
 
     public static void Warn(string message, Object context = null,
         [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
     {
         string fileName = System.IO.Path.GetFileName(filePath);
-        Instance.Warn($"<b>[Warning]</b> {message} <color=#888888>(at {fileName}:{lineNumber})</color>", context);
+        Instance.Warn($"<color=orange><b>[Warning]</b> </color> {message} <color=#888888>(at {fileName}:{lineNumber})</color>", context);
     }
 
     public static void Error(string message, Object context = null,
         [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
     {
         string fileName = System.IO.Path.GetFileName(filePath);
-        Instance.Error($"<b>[Error]</b> {message} <color=#888888>(at {fileName}:{lineNumber})</color>", context);
+        Instance.Error($"<color=red><b>[Error]</b> </color> {message} <color=#888888>(at {fileName}:{lineNumber})</color>", context);
     }
 }
