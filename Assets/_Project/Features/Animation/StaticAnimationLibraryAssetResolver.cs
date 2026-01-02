@@ -10,10 +10,6 @@ using UnityEngine.U2D.Animation;
 [DisallowMultipleComponent]
 public class StaticAnimationLibraryResolver : MonoBehaviour
 {
-    [SerializeField] private string makeActiveCategory;
-    [SerializeField] private string makeActiveLabel;
-
-
     #region Serialized Fields
     [Header("Character Settings")]
     [Tooltip("Current race of the character for asset resolution.")]
@@ -261,21 +257,29 @@ public class StaticAnimationLibraryResolver : MonoBehaviour
     #endregion
 
     #region Editor Debugging API
-    public void SetActiveCategoryAndLabel()
+#if UNITY_EDITOR
+
+    public void SetActiveCategoryAndLabel(string makeActiveCategory, string makeActiveLabel)
     {
-        SetActiveLabel(this.baseCharacterLibrariesDict);
-        SetActiveLabel(this.equipmentLibrariesDict);
+        if (this.baseCharacterLibrariesDict.Count == 0 || this.equipmentLibrariesDict.Count == 0)
+        {
+            BuildAllDictionaries();
+        }
+        SetActiveLabel(this.baseCharacterLibrariesDict, makeActiveCategory, makeActiveLabel);
+        SetActiveLabel(this.equipmentLibrariesDict, makeActiveCategory, makeActiveLabel);
     }
 
-    private void SetActiveLabel<TLibrary, TEnum>(Dictionary<TEnum, TLibrary> libraries)
+    private void SetActiveLabel<TLibrary, TEnum>(Dictionary<TEnum, TLibrary> libraries
+    , string makeActiveCategory, string makeActiveLabel)
         where TLibrary : CustomSpriteLibraryDefination
         where TEnum : System.Enum
     {
         foreach (var kvp in libraries)
         {
-            kvp.Value.SetActiveLabel(this.makeActiveCategory, this.makeActiveLabel);
+            kvp.Value.SetActiveLabel(makeActiveCategory, makeActiveLabel);
         }
     }
+#endif
 
     #endregion
 }
