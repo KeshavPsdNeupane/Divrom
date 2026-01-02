@@ -7,8 +7,8 @@ using UnityEngine.U2D.Animation;
 public class StaticAnimationLibraryResolverEditor : Editor
 {
     // Static strings stay in memory even if you click other objects
-    private static string tempCategory = "Idle";
-    private static string tempLabel = "idle_up";
+    private static string tempCategory;
+    private static string tempLabel;
 
     public override void OnInspectorGUI()
     {
@@ -25,8 +25,10 @@ public class StaticAnimationLibraryResolverEditor : Editor
         EditorGUILayout.Space(15);
 
         // 2. Custom Tool Section
-        var boxStyle = new GUIStyle(GUI.skin.box);
-        boxStyle.padding = new RectOffset(10, 10, 10, 10);
+        GUIStyle boxStyle = new(GUI.skin.box)
+        {
+            padding = new RectOffset(10, 10, 10, 10)
+        };
         GUILayout.BeginVertical(boxStyle);
 
         EditorGUILayout.LabelField("⚡ Quick Animation Snap", EditorStyles.boldLabel);
