@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets/_Project/Features/Component/Animation/AnimationVariableHashes.cs" />
+    <Compile Include="Assets/_Project/Features/Actors/WeaponAnimationMapping.cs" />
     <Compile Include="Assets/_Project/Features/Inventory/UI/InventoryDisplays/InventoryDisplay.cs" />
     <Compile Include="Assets/_Project/UI/Common/SetSpriteToPivot.cs" />
     <Compile Include="Assets/_Project/_BootStrap/GlobalBootStrap.cs" />
@@ -70,11 +71,11 @@
     <Compile Include="Assets/_Project/Features/Inventory/Runtime/InventorySystem.cs" />
     <Compile Include="Assets/_Project/Features/Component/Attack/PlayerAttackComponent.cs" />
     <Compile Include="Assets/_Project/Systems/ItemDatabase/ItemDatabaseSO.cs" />
+    <Compile Include="Assets/_Project/Features/Actors/AnimationStates.cs" />
     <Compile Include="Assets/_Project/Features/Actors/Enemy/ChasePlayer.cs" />
     <Compile Include="Assets/_Project/Features/Inventory/UI/ItemSlotUI/SimpleItemUIDragAndDropInteractionHelperClass.cs" />
     <Compile Include="Assets/_Project/Features/Actors/Player/States/PlayerAttack.cs" />
     <Compile Include="Assets/_Project/Features/Inventory/Runtime/Slot/ItemSlot.cs" />
-    <Compile Include="Assets/_Project/Features/Actors/Player/PlayerAnimationThreshold.cs" />
     <Compile Include="Assets/_Project/UI/UIState/InGameUI/InGameUIInitCaller.cs" />
     <Compile Include="Assets/_Project/UI/Common/PanelController.cs" />
     <Compile Include="Assets/_Project/Features/Actors/Player/PlayerStateManager.cs" />

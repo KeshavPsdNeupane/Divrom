@@ -4,18 +4,16 @@ public class PlayerBaseState
 {
     protected PlayerStateController playerStateController;
     protected PlayerStateManager stateManager;
-    protected int animationStateHash;
 
-    public string stateName;
+    public virtual AnimationState AnimationState { get; protected set; }
+    public virtual int AnimationStateHash { get; protected set; }
 
     public PlayerBaseState(PlayerStateManager StateManager,
-        PlayerStateController playerStateController, string animationBoolName,
-        string name)
+        PlayerStateController playerStateController)
     {
         this.stateManager = StateManager;
-        this.stateName = name;
         this.playerStateController = playerStateController;
-        this.animationStateHash = Animator.StringToHash(animationBoolName);
+
     }
 
     public virtual void Enter() { }

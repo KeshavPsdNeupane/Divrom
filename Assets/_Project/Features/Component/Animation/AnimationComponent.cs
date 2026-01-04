@@ -18,9 +18,6 @@ public class AnimationComponent : InitializableBase
         }
         SetInitialized();
     }
-
-
-
     public void AnimationTrigger()
     {
         OnAnimationTrigger?.Invoke();
@@ -30,5 +27,21 @@ public class AnimationComponent : InitializableBase
     {
         this.anim.SetFloat(AnimationVariableHashes.DirectionX, direction.x);
         this.anim.SetFloat(AnimationVariableHashes.DirectionY, direction.y);
+    }
+
+    public bool CheckIfAnimationExists(int animationHash)
+    {
+        return this.anim.HasState(0, animationHash);
+    }
+    public bool CheckIfAnimationExists(string animationName)
+    {
+        return CheckIfAnimationExists(Animator.StringToHash(animationName));
+    }
+
+    public bool IsAnimationFinished(int animationHash, float THRESHOLD = 1f)
+    {
+        AnimatorStateInfo stateInfo = this.anim.GetCurrentAnimatorStateInfo(0);
+        if (stateInfo.shortNameHash != animationHash) return false;
+        return stateInfo.normalizedTime >= THRESHOLD;
     }
 }

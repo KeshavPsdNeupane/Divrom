@@ -6,6 +6,8 @@ public abstract class MovementComponentBase : InitializableBase
     [SerializeField] protected CharacterStatsSystem characterStatsSystem;
     [SerializeField] protected float defaultMovementSpeed = 2f;
 
+    public const float DIRECTION_THRESHOLD = 0.1f;
+
     protected Vector2 direction;
     protected Vector2 lastDirection;
 
@@ -54,7 +56,7 @@ public abstract class MovementComponentBase : InitializableBase
     {
         this.direction = newDirection;
 
-        if (direction.sqrMagnitude > AnimationThreshold.WALKING_THRESHOLD) lastDirection = direction;
+        if (direction.sqrMagnitude > DIRECTION_THRESHOLD) lastDirection = direction;
     }
 
     // This replaces interface method

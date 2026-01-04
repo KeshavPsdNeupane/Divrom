@@ -1,3 +1,4 @@
+
 public class PlayerStates
 {
     private readonly PlayerIdle playerIdle;
@@ -7,13 +8,12 @@ public class PlayerStates
     public PlayerIdle PlayerIdle => this.playerIdle;
     public PlayerMove PlayerMove => this.playerMove;
     public PlayerAttack PlayerAttack => this.playerAttack;
-
     public PlayerStates(PlayerStateManager baseStateMachine, PlayerStateController playerStateController)
     {
-        // write the string as the exact name of the animation state blendspace in the Animator
-        // to avoid typos use consts or enums in future refactorings
-        this.playerIdle = new PlayerIdle(baseStateMachine, playerStateController, "Idle");
-        this.playerMove = new PlayerMove(baseStateMachine, playerStateController, "Walk");
-        this.playerAttack = new PlayerAttack(baseStateMachine, playerStateController, "BasicAttack");
+        // the enumeration names must match the animation state names in the Animator Controller
+        // to ensure correct state transitions and animations
+        this.playerIdle = new PlayerIdle(baseStateMachine, playerStateController, AnimationState.Idle);
+        this.playerMove = new PlayerMove(baseStateMachine, playerStateController, AnimationState.Walk);
+        this.playerAttack = new PlayerAttack(baseStateMachine, playerStateController);
     }
 }

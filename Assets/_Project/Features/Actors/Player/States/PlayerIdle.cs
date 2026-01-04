@@ -1,13 +1,21 @@
+using UnityEngine;
+
 public class PlayerIdle : PlayerBaseState
 {
     private readonly PlayerMovementComponent movementComponent;
     private readonly AnimationComponent animationComponent;
+    private readonly AnimationState animationState;
+    private readonly int animationStateHash;
+
+    public override AnimationState AnimationState => this.animationState;
+    public override int AnimationStateHash => this.animationStateHash;
 
     public PlayerIdle(PlayerStateManager baseStateManager,
-        PlayerStateController playerStateController, string animationBoolName,
-        string name = "Idle")
-        : base(baseStateManager, playerStateController, animationBoolName, name)
+        PlayerStateController playerStateController, AnimationState animationState)
+        : base(baseStateManager, playerStateController)
     {
+        this.animationState = animationState;
+        this.animationStateHash = Animator.StringToHash(animationState.ToString());
         this.movementComponent = this.playerStateController.MovementComponent;
         this.animationComponent = this.playerStateController.AnimationComponent;
     }
@@ -20,7 +28,7 @@ public class PlayerIdle : PlayerBaseState
     public override void Update()
     {
         if (this.movementComponent.Direction.sqrMagnitude
-        >= AnimationThreshold.WALKING_THRESHOLD)
+        >= MovementComponentBase.DIRECTION_THRESHOLD)
             this.stateManager.ChangeState(
                 this.playerStateController.PlayerStates.PlayerMove
                 );
