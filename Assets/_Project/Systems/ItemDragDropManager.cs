@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using ServiceLocatorPattern;
-using System;
 
 /// <summary>
 /// Written by chatGPT-4 deep model with some adjustments.

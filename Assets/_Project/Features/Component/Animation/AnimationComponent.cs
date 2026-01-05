@@ -8,6 +8,10 @@ public class AnimationComponent : InitializableBase
     public Animator anim;
     public event Action OnAnimationTrigger;
 
+    public const float DEAFULT_ANIMATION_SPEED = 1.0f;
+
+    public void SetDefaultAnimationSpeed() => this.anim.speed = DEAFULT_ANIMATION_SPEED;
+
     public override void Init()
     {
         if (anim == null)
@@ -29,13 +33,13 @@ public class AnimationComponent : InitializableBase
         this.anim.SetFloat(AnimationVariableHashes.DirectionY, direction.y);
     }
 
-    public bool CheckIfAnimationExists(int animationHash)
+    public bool DoesAnimationExist(int animationHash)
     {
         return this.anim.HasState(0, animationHash);
     }
-    public bool CheckIfAnimationExists(string animationName)
+    public bool DoesAnimationExist(string animationName)
     {
-        return CheckIfAnimationExists(Animator.StringToHash(animationName));
+        return DoesAnimationExist(Animator.StringToHash(animationName));
     }
 
     public bool IsAnimationFinished(int animationHash, float THRESHOLD = 1f)

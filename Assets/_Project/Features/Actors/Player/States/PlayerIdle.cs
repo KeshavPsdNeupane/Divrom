@@ -11,7 +11,7 @@ public class PlayerIdle : PlayerBaseState
     public override int AnimationStateHash => this.animationStateHash;
 
     public PlayerIdle(PlayerStateManager baseStateManager,
-        PlayerStateController playerStateController, AnimationState animationState)
+        PlayerStateController playerStateController, AnimationState animationState = AnimationState.Idle)
         : base(baseStateManager, playerStateController)
     {
         this.animationState = animationState;

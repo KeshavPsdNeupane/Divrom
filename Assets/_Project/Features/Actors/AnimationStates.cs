@@ -1,5 +1,5 @@
 
-public enum AnimationState
+public enum AnimationState : short
 {
     None = -1,
     Idle = 0,

@@ -1,9 +1,11 @@
 using UnityEngine.InputSystem;
 using ServiceLocatorPattern;
+using UnityEngine;
 public class PlayerAttackComponent : AttackComponentBase
 {
     private InputManager inputManager;
-
+    [SerializeField] WeaponData equippedWeaponData;
+    public WeaponData EquippedWeaponData => this.equippedWeaponData;
     public override void Init()
     {
         base.Init();

@@ -8180,12 +8180,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SceneExecutionOrderTracker
   trackedComponents:
-  - typeName: PlayerInitCaller
-    order: -30
-    gameObjectName: InitCaller
   - typeName: InGameUIInitCaller
     order: -30
     gameObjectName: UI
+  - typeName: PlayerInitCaller
+    order: -30
+    gameObjectName: InitCaller
   - typeName: PlayerInitCaller
     order: -30
     gameObjectName: InitCaller
@@ -10272,7 +10272,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7554677529560786835, guid: 99150169951534f41ab614ace9d49c8d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -6.06
+      value: -3.79
       objectReference: {fileID: 0}
     - target: {fileID: 7554677529560786835, guid: 99150169951534f41ab614ace9d49c8d, type: 3}
       propertyPath: m_LocalPosition.y

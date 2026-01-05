@@ -1,43 +1,42 @@
-﻿using UnityEngine;
-
+﻿
 public class PlayerAttack : PlayerBaseState
 {
     private readonly PlayerMovementComponent movementComponent;
     private readonly AnimationComponent animationComponent;
+
     private AnimationState animationState;
-    private WeaponType equippedWeapon;
     private int animationStateHash;
-    public override int AnimationStateHash => this.animationStateHash;
+
     public override AnimationState AnimationState => this.animationState;
+    public override int AnimationStateHash => this.animationStateHash;
+
     private bool doAnimationExists = false;
 
-    public PlayerAttack(PlayerStateManager baseStateManager,
-        PlayerStateController playerStateController)
+    public PlayerAttack(PlayerStateManager baseStateManager, PlayerStateController playerStateController)
         : base(baseStateManager, playerStateController)
     {
-
         this.movementComponent = this.playerStateController.MovementComponent;
         this.animationComponent = this.playerStateController.AnimationComponent;
-
-        UpdateAnimationForWeapon(this.playerStateController.EquippedWeapon);
+        SetWeaponData(this.playerStateController.PlayerAttackComponent.EquippedWeaponData);
     }
 
     public override void Enter()
     {
-        if (this.equippedWeapon != this.playerStateController.EquippedWeapon)
-        {
-            UpdateAnimationForWeapon(this.playerStateController.EquippedWeapon);
-        }
+        var weapon = this.playerStateController.PlayerAttackComponent.EquippedWeaponData;
 
+        this.animationComponent.anim.speed = weapon.AttackSpeed;
+
+        if (weapon.HasChanged())
+        {
+            UpdateAnimationData(weapon);
+        }
         if (this.doAnimationExists)
         {
             this.animationComponent.anim.Play(this.animationStateHash, 0, 0f);
         }
         else
         {
-            Logger.Error($"Animation {this.animationState} not found in Animator for PlayerAttack state.");
-            this.stateManager.ChangeState(this.playerStateController.PlayerStates.PlayerIdle);
-            return;
+            ChangeToDefaultState();
         }
     }
 
@@ -54,7 +53,7 @@ public class PlayerAttack : PlayerBaseState
 
 
     public override void OnAnimationTrigger()
-    => this.stateManager.ChangeState(this.playerStateController.PlayerStates.PlayerIdle);
+    => ChangeToDefaultState();
 
 
     public override void Exit() { }
@@ -65,17 +64,26 @@ public class PlayerAttack : PlayerBaseState
         // using this just to get out of unity fking animation flickering,
         // fk unity animation system and its blending bs 
         const float ATTACK_ANIMATION_THRESHOLD = 0.9f;
-        if (!this.animationComponent.IsAnimationFinished(this.animationStateHash,
+        if (!this.animationComponent.IsAnimationFinished(this.AnimationStateHash,
         ATTACK_ANIMATION_THRESHOLD)) return;
 
-        this.stateManager.ChangeState(this.playerStateController.PlayerStates.PlayerIdle);
+        ChangeToDefaultState();
     }
 
-    private void UpdateAnimationForWeapon(WeaponType weapon)
+    private void SetWeaponData(WeaponData weaponData)
     {
-        this.equippedWeapon = weapon;
-        this.animationState = WeaponAnimationMapper.GetAnimationType(weapon);
-        this.animationStateHash = Animator.StringToHash(this.animationState.ToString());
-        this.doAnimationExists = this.animationComponent.CheckIfAnimationExists(this.animationStateHash);
+        UpdateAnimationData(weaponData);
+    }
+    private void UpdateAnimationData(WeaponData weaponData)
+    {
+        this.animationState = weaponData.PrimaryAttackAnimation;
+        this.animationStateHash = weaponData.PrimaryAttackAnimationHash;
+        this.doAnimationExists = this.animationComponent.DoesAnimationExist(this.AnimationStateHash);
+    }
+
+    private void ChangeToDefaultState()
+    {
+        this.animationComponent.SetDefaultAnimationSpeed();
+        this.stateManager.ChangeState(this.playerStateController.PlayerStates.PlayerIdle);
     }
 }

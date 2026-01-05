@@ -10,7 +10,7 @@ public class PlayerMove : PlayerBaseState
     public override AnimationState AnimationState => this.animationState;
     public override int AnimationStateHash => this.animationStateHash;
     public PlayerMove(PlayerStateManager baseStateManager,
-        PlayerStateController playerStateController, AnimationState animationState)
+        PlayerStateController playerStateController, AnimationState animationState = AnimationState.Walk)
         : base(baseStateManager, playerStateController)
     {
         this.animationState = animationState;

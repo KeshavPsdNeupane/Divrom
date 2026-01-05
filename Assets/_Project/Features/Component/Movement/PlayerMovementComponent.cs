@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using ServiceLocatorPattern;
-using Unity.VisualScripting;
 /// <summary>
 /// Player-specific movement component that handles input and movement application.
 /// The ApplyMovement Must be called externally, typically from a PlayerController or similar script.

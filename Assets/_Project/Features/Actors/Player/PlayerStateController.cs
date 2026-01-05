@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 /// <summary>
 /// Controls the player's state and interactions.
@@ -12,7 +11,6 @@ public class PlayerStateController : InitializableBase
     [SerializeField] private PlayerMovementComponent movementComponent;
     [SerializeField] private AnimationComponent animationComponent;
     [SerializeField] private PlayerAttackComponent attackComponent;
-    [SerializeField] private WeaponType equippedWeapon = WeaponType.LongSword;
     private PlayerStateManager stateMachine;
     private PlayerStates playerStates;
 
@@ -20,7 +18,6 @@ public class PlayerStateController : InitializableBase
     public PlayerMovementComponent MovementComponent => movementComponent;
     public AnimationComponent AnimationComponent => animationComponent;
     public PlayerAttackComponent PlayerAttackComponent => attackComponent;
-    public WeaponType EquippedWeapon => equippedWeapon;
 
     public PlayerStateManager StateMachine => stateMachine;
     public PlayerStates PlayerStates => playerStates;
@@ -45,8 +42,8 @@ public class PlayerStateController : InitializableBase
         this.attackComponent.OnAttackPerformed -= Attack;
     }
 
-    private void Update() => this.stateMachine.CurrentState.Update();
-    private void FixedUpdate() => this.stateMachine.CurrentState.PhysicUpdate();
+    private void Update() => this.stateMachine?.CurrentState?.Update();
+    private void FixedUpdate() => this.stateMachine?.CurrentState?.PhysicUpdate();
 
 
     // this delegate func called when AttackComponent invokes OnAttackPerformed event
