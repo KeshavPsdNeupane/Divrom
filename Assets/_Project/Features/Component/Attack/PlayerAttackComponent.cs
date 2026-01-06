@@ -4,8 +4,8 @@ using UnityEngine;
 public class PlayerAttackComponent : AttackComponentBase
 {
     private InputManager inputManager;
-    [SerializeField] WeaponData equippedWeaponData;
-    public WeaponData EquippedWeaponData => this.equippedWeaponData;
+    [SerializeField] WeaponSO equippedWeaponDataSO;
+    public WeaponData EquippedWeaponData => this.equippedWeaponDataSO.CurrentWeaponData;
     public override void Init()
     {
         base.Init();

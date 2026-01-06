@@ -1,87 +1,70 @@
-﻿
-public class PlayerAttack : PlayerBaseState
+﻿public class PlayerAttack : PlayerBaseState
 {
     private readonly PlayerMovementComponent movementComponent;
     private readonly AnimationComponent animationComponent;
 
-    private AnimationState animationState;
-    private int animationStateHash;
+    private WeaponType currentWeaponType;
+    private AnimationState currentAnimationState;
+    private int currentAnimationHash;
+    private bool animationExists;
 
-    public override AnimationState AnimationState => this.animationState;
-    public override int AnimationStateHash => this.animationStateHash;
+    public override AnimationState AnimationState => this.currentAnimationState;
+    public override int AnimationStateHash => this.currentAnimationHash;
 
-    private bool doAnimationExists = false;
+    private const float ATTACK_ANIMATION_THRESHOLD = 0.9f;
 
     public PlayerAttack(PlayerStateManager baseStateManager, PlayerStateController playerStateController)
         : base(baseStateManager, playerStateController)
     {
-        this.movementComponent = this.playerStateController.MovementComponent;
-        this.animationComponent = this.playerStateController.AnimationComponent;
-        SetWeaponData(this.playerStateController.PlayerAttackComponent.EquippedWeaponData);
+        movementComponent = playerStateController.MovementComponent;
+        animationComponent = playerStateController.AnimationComponent;
+
+        UpdateWeaponData(playerStateController.PlayerAttackComponent.EquippedWeaponData);
     }
 
     public override void Enter()
     {
-        var weapon = this.playerStateController.PlayerAttackComponent.EquippedWeaponData;
+        // Always grab latest data when we start an attack
+        var weapon = playerStateController.PlayerAttackComponent.EquippedWeaponData;
+        UpdateWeaponData(weapon);
 
-        this.animationComponent.anim.speed = weapon.AttackSpeed;
-
-        if (weapon.HasChanged())
+        if (this.animationExists)
         {
-            UpdateAnimationData(weapon);
-        }
-        if (this.doAnimationExists)
-        {
-            this.animationComponent.anim.Play(this.animationStateHash, 0, 0f);
+            this.animationComponent.anim.speed = weapon.AttackSpeed;
+            this.animationComponent.anim.Play(this.currentAnimationHash, 0, 0f);
         }
         else
         {
-            ChangeToDefaultState();
+            SwitchToIdle();
         }
     }
 
     public override void Update()
     {
-        if (!this.doAnimationExists) return;
-        CheckIfAnimationFinished();
+        if (!this.animationExists) return;
+        CheckAnimationFinished();
     }
 
 
-    public override void PhysicUpdate()
-    => this.movementComponent.ApplyMovement(0.5f);
-
-
-
-    public override void OnAnimationTrigger()
-    => ChangeToDefaultState();
-
-
+    public override void PhysicUpdate() => this.movementComponent.ApplyMovement(0.5f);
+    public override void OnAnimationTrigger() => SwitchToIdle();
     public override void Exit() { }
 
-    private void CheckIfAnimationFinished()
+    private void UpdateWeaponData(WeaponData weaponData)
     {
-        // this threshold defines how close to the end of the animation we consider it finished
-        // using this just to get out of unity fking animation flickering,
-        // fk unity animation system and its blending bs 
-        const float ATTACK_ANIMATION_THRESHOLD = 0.9f;
-        if (!this.animationComponent.IsAnimationFinished(this.AnimationStateHash,
-        ATTACK_ANIMATION_THRESHOLD)) return;
-
-        ChangeToDefaultState();
+        this.currentWeaponType = weaponData.WeaponType;
+        this.currentAnimationState = weaponData.PrimaryAttackAnimation;
+        this.currentAnimationHash = weaponData.PrimaryAttackAnimationHash;
+        this.animationExists = this.animationComponent.DoesAnimationExist(this.currentAnimationHash);
     }
 
-    private void SetWeaponData(WeaponData weaponData)
+    private void CheckAnimationFinished()
     {
-        UpdateAnimationData(weaponData);
-    }
-    private void UpdateAnimationData(WeaponData weaponData)
-    {
-        this.animationState = weaponData.PrimaryAttackAnimation;
-        this.animationStateHash = weaponData.PrimaryAttackAnimationHash;
-        this.doAnimationExists = this.animationComponent.DoesAnimationExist(this.AnimationStateHash);
+        if (!this.animationComponent.IsAnimationFinished(this.currentAnimationHash, ATTACK_ANIMATION_THRESHOLD)) return;
+        SwitchToIdle();
     }
 
-    private void ChangeToDefaultState()
+    private void SwitchToIdle()
     {
         this.animationComponent.SetDefaultAnimationSpeed();
         this.stateManager.ChangeState(this.playerStateController.PlayerStates.PlayerIdle);

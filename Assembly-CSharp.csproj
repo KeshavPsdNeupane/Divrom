@@ -49,12 +49,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets/_Project/Features/Component/Animation/AnimationVariableHashes.cs" />
-    <Compile Include="Assets/_Project/Features/Actors/WeaponAnimationMapping.cs" />
     <Compile Include="Assets/_Project/Features/Inventory/UI/InventoryDisplays/InventoryDisplay.cs" />
     <Compile Include="Assets/_Project/UI/Common/SetSpriteToPivot.cs" />
     <Compile Include="Assets/_Project/_BootStrap/GlobalBootStrap.cs" />
     <Compile Include="Assets/_Project/Features/Inventory/Runtime/Item/ItemData.cs" />
     <Compile Include="Assets/_Project/Features/Actors/Player/PlayerInitCaller.cs" />
+    <Compile Include="Assets/_Project/Features/Actors/Weapon/WeaponAnimationMapping.cs" />
     <Compile Include="Assets/_Project/Features/Actors/Player/PlayerStates.cs" />
     <Compile Include="Assets/_Project/Features/Actors/Player/States/PlayerIdle.cs" />
     <Compile Include="Assets/_Project/Systems/ItemDatabase/HashUtility.cs" />
@@ -92,6 +92,7 @@
     <Compile Include="Assets/_Project/Features/Component/Movement/TestMovementController.cs" />
     <Compile Include="Assets/_Project/Features/Inventory/UI/InventoryDisplays/PlayerInventoryDisplay.cs" />
     <Compile Include="Assets/_Project/Features/Actors/Player/States/PlayerMove.cs" />
+    <Compile Include="Assets/_Project/Features/Actors/Weapon/WeaponSO.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets/TextMesh Pro/Shaders/TMPro.cginc" />

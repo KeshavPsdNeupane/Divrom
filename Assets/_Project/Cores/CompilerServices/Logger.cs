@@ -1,6 +1,10 @@
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 public static class Logger
 {
     private static ILogger _logger;
@@ -15,20 +19,39 @@ public static class Logger
         [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
     {
         string fileName = System.IO.Path.GetFileName(filePath);
-        Instance.Log($"<color=yellow><b>[Info]</b> </color> {message} <color=#888888>(at {fileName}:{lineNumber})</color>", context);
+        string formattedMessage = $"<color=yellow><b>[Info]</b> </color> {message} <color=#888888>(at {fileName}:{lineNumber})</color>";
+
+#if UNITY_EDITOR
+        // Log even in Edit mode
+        Debug.Log(formattedMessage, context);
+#else
+        Instance.Log(formattedMessage, context);
+#endif
     }
 
     public static void Warn(string message, Object context = null,
         [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
     {
         string fileName = System.IO.Path.GetFileName(filePath);
-        Instance.Warn($"<color=orange><b>[Warning]</b> </color> {message} <color=#888888>(at {fileName}:{lineNumber})</color>", context);
+        string formattedMessage = $"<color=orange><b>[Warning]</b> </color> {message} <color=#888888>(at {fileName}:{lineNumber})</color>";
+
+#if UNITY_EDITOR
+        Debug.LogWarning(formattedMessage, context);
+#else
+        Instance.Warn(formattedMessage, context);
+#endif
     }
 
     public static void Error(string message, Object context = null,
         [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
     {
         string fileName = System.IO.Path.GetFileName(filePath);
-        Instance.Error($"<color=red><b>[Error]</b> </color> {message} <color=#888888>(at {fileName}:{lineNumber})</color>", context);
+        string formattedMessage = $"<color=red><b>[Error]</b> </color> {message} <color=#888888>(at {fileName}:{lineNumber})</color>";
+
+#if UNITY_EDITOR
+        Debug.LogError(formattedMessage, context);
+#else
+        Instance.Error(formattedMessage, context);
+#endif
     }
 }
