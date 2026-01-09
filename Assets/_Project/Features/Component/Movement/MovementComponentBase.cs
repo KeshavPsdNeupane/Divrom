@@ -1,15 +1,18 @@
 using UnityEngine;
 
-public abstract class MovementComponentBase : InitializableBase
+public class MovementComponentBase : InitializableBase
 {
     [SerializeField] protected Rigidbody2D rb;
     [SerializeField] protected CharacterStatsSystem characterStatsSystem;
     [SerializeField] protected float defaultMovementSpeed = 2f;
 
     public const float DIRECTION_THRESHOLD = 0.1f;
+    protected bool directionChanged;
+    protected Vector2 normalizedDirection;
 
-    protected Vector2 direction;
-    protected Vector2 lastDirection;
+    protected Vector2 direction = Vector2.zero;
+    protected Vector2 lastDirection = Vector2.zero;
+
 
     public Vector2 Direction => this.direction;
 
@@ -55,10 +58,19 @@ public abstract class MovementComponentBase : InitializableBase
     public virtual void SetDirection(Vector2 newDirection)
     {
         this.direction = newDirection;
+        this.directionChanged = true;
 
-        if (direction.sqrMagnitude > DIRECTION_THRESHOLD) lastDirection = direction;
+        if (direction.sqrMagnitude > DIRECTION_THRESHOLD)
+            lastDirection = direction;
     }
+    public virtual void ApplyMovement(float movementSpeedMult = 1.0f)
+    {
+        if (this.directionChanged)
+        {
+            this.normalizedDirection = this.direction.normalized;
+            this.directionChanged = false;
+        }
 
-    // This replaces interface method
-    public abstract void ApplyMovement(float multiplier = 1f);
+        this.rb.linearVelocity = defaultMovementSpeed * movementSpeedMult * normalizedDirection;
+    }
 }

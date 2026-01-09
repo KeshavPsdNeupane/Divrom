@@ -1,11 +1,9 @@
 using UnityEngine.InputSystem;
 using ServiceLocatorPattern;
-using UnityEngine;
 public class PlayerAttackComponent : AttackComponentBase
 {
     private InputManager inputManager;
-    [SerializeField] WeaponSO equippedWeaponDataSO;
-    public WeaponData EquippedWeaponData => this.equippedWeaponDataSO.CurrentWeaponData;
+
     public override void Init()
     {
         base.Init();
@@ -60,11 +58,11 @@ public class PlayerAttackComponent : AttackComponentBase
         if (context.performed) PerformAttack();
     }
 
-    public override void PerformAttack()
+    protected override void PerformAttackInternal()
     {
+
         float damage = CalculateDamage();
         // For testing so no need for logger
         Logger.Log($"Attack performed! Damage: {damage}, Base attack: {attack}");
-        RaiseOnAttackPerformedEvent();
     }
 }

@@ -8,16 +8,16 @@
 
 public class PlayerStateController : InitializableBase
 {
-    [SerializeField] private PlayerMovementComponent movementComponent;
+    [SerializeField] private MovementComponentBase movementComponent;
     [SerializeField] private AnimationComponent animationComponent;
-    [SerializeField] private PlayerAttackComponent attackComponent;
+    [SerializeField] private AttackComponentBase attackComponent;
     private PlayerStateManager stateMachine;
     private PlayerStates playerStates;
 
     // Public getters for the components
-    public PlayerMovementComponent MovementComponent => movementComponent;
+    public MovementComponentBase MovementComponent => movementComponent;
     public AnimationComponent AnimationComponent => animationComponent;
-    public PlayerAttackComponent PlayerAttackComponent => attackComponent;
+    public AttackComponentBase PlayerAttackComponent => attackComponent;
 
     public PlayerStateManager StateMachine => stateMachine;
     public PlayerStates PlayerStates => playerStates;

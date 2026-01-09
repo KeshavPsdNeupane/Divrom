@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PlayerMove : PlayerBaseState
 {
-    private readonly PlayerMovementComponent movementComponent;
+    private readonly MovementComponentBase movementComponent;
     private readonly AnimationComponent animationComponent;
     private readonly AnimationState animationState;
     private readonly int animationStateHash;

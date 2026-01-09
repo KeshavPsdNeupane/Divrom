@@ -4,19 +4,21 @@ using UnityEngine;
 [RequireComponent(typeof(CircleCollider2D))]
 public class StatusEffectConnector : InitializableBase
 {
-    [SerializeField] private CharacterStatsSystem characterStats;
-    [SerializeField] private CircleCollider2D effectArea;
     [SerializeField] private string StatusObjectTagName = "StatusEffect";
-    [SerializeField] private float radius = 2f;
+    [SerializeField] private CharacterStatsSystem characterStats;
+    [SerializeField] private CircleCollider2D detectionCollider;
+    [SerializeField] private float detectionRadius = .5f;
     [SerializeField] bool isTrigger = true;
 
 
     public override void Init()
     {
-        if (this.effectArea == null)
-            this.effectArea = this.gameObject.GetComponent<CircleCollider2D>();
-        this.effectArea.isTrigger = this.isTrigger;
-        this.effectArea.radius = this.radius;
+        if (this.detectionCollider == null)
+            this.detectionCollider = this.gameObject.GetComponent<CircleCollider2D>();
+        this.detectionCollider.isTrigger = this.isTrigger;
+        Vector3 parentScale = transform.lossyScale;
+        this.detectionCollider.radius = detectionRadius / Mathf.Max(parentScale.x, parentScale.y);
+        this.detectionCollider.radius = this.detectionRadius;
         SetInitialized();
     }
 
@@ -34,5 +36,12 @@ public class StatusEffectConnector : InitializableBase
 
             }
         }
+    }
+
+
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawWireSphere(this.transform.position, this.detectionRadius);
     }
 }

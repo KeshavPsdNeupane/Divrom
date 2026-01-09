@@ -1,9 +1,9 @@
 ﻿public class PlayerAttack : PlayerBaseState
 {
-    private readonly PlayerMovementComponent movementComponent;
+    private readonly MovementComponentBase movementComponent;
     private readonly AnimationComponent animationComponent;
 
-    private WeaponType currentWeaponType;
+
     private AnimationState currentAnimationState;
     private int currentAnimationHash;
     private bool animationExists;
@@ -52,7 +52,6 @@
 
     private void UpdateWeaponData(WeaponData weaponData)
     {
-        this.currentWeaponType = weaponData.WeaponType;
         this.currentAnimationState = weaponData.PrimaryAttackAnimation;
         this.currentAnimationHash = weaponData.PrimaryAttackAnimationHash;
         this.animationExists = this.animationComponent.DoesAnimationExist(this.currentAnimationHash);

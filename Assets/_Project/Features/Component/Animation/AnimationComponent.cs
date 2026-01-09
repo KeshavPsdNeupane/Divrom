@@ -20,6 +20,10 @@ public class AnimationComponent : InitializableBase
             Logger.Warn("Animator not assigned in AnimationComponent, " +
             $"auto-assigned in Init on {gameObject.name}.");
         }
+        /// Defaulting to faceing down on init
+        /// this is needed because otherwise the animator will at 0,0 direction 
+        /// then when moving it will interpolate from 0,0 to the movement direction
+        MoveAnimation(new Vector2(0, -1));
         SetInitialized();
     }
     public void AnimationTrigger()
@@ -27,10 +31,21 @@ public class AnimationComponent : InitializableBase
         OnAnimationTrigger?.Invoke();
     }
 
-    public void MoveAnimation(Vector2 direction)
+    public void MoveAnimation(Vector2 dir)
     {
-        this.anim.SetFloat(AnimationVariableHashes.DirectionX, direction.x);
-        this.anim.SetFloat(AnimationVariableHashes.DirectionY, direction.y);
+        /// This  is needed to snap the direction to 4 directions (up, down, left, right)
+        /// since there is no diagonal movement animation. and it again 
+        /// snaps the snapped direction to the closest axis. so unity again wont 
+        /// interpolate between two axis. for example if dir is (0.7, 0.3)
+        /// it will snap to (1,0) instead of (0.7,0.3), otherwise the animation
+        /// will blend between right and up animations. this is undesired.
+        Vector2 snapped = dir;
+        snapped.x = snapped.x == 0 ? 0 : (Mathf.Abs(snapped.x) >= Mathf.Abs(snapped.y) ? Mathf.Sign(snapped.x) : 0);
+        snapped.y = snapped.y == 0 ? 0 : (Mathf.Abs(snapped.y) > Mathf.Abs(snapped.x) ? Mathf.Sign(snapped.y) : 0);
+
+        // Set animator parameters
+        this.anim.SetFloat(AnimationVariableHashes.DirectionX, snapped.x);
+        this.anim.SetFloat(AnimationVariableHashes.DirectionY, snapped.y);
     }
 
     public bool DoesAnimationExist(int animationHash)
@@ -42,10 +57,16 @@ public class AnimationComponent : InitializableBase
         return DoesAnimationExist(Animator.StringToHash(animationName));
     }
 
-    public bool IsAnimationFinished(int animationHash, float THRESHOLD = 1f)
+    public bool IsAnimationFinished(int animationHash, float THRESHOLD = 0.9f)
     {
         AnimatorStateInfo stateInfo = this.anim.GetCurrentAnimatorStateInfo(0);
         if (stateInfo.shortNameHash != animationHash) return false;
         return stateInfo.normalizedTime >= THRESHOLD;
+    }
+
+    public bool CanTransitionToAnimation(int animationHash)
+    {
+        return this.anim.IsInTransition(0) == false &&
+               this.anim.GetCurrentAnimatorStateInfo(0).shortNameHash != animationHash;
     }
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 /// Custom SpriteLibrary that includes body part information and a method to clear overrides.
 /// Used to manage sprite overrides for different equipping parts. While creating character customization systems.
 /// </summary>
+[RequireComponent(typeof(SpriteResolver), typeof(SetSpriteToPivot))]
 public abstract class CustomSpriteLibraryDefination : SpriteLibrary
 {
     [SerializeField] private SpriteResolver resolver;

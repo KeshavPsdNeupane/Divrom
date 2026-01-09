@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8141736588870978753}
   - component: {fileID: 208904870284455814}
+  - component: {fileID: 4177942227940448289}
   - component: {fileID: 8309880159173220309}
   - component: {fileID: 1634048473162864737}
   m_Layer: 0
@@ -81,7 +82,7 @@ SpriteRenderer:
   m_SortingLayerID: 1489034323
   m_SortingLayer: 5
   m_SortingOrder: 2
-  m_Sprite: {fileID: -1928641084, guid: 8d6adc026c945f299b7efaa36b4f0da3, type: 3}
+  m_Sprite: {fileID: 1710948307, guid: 8d6adc026c945f299b7efaa36b4f0da3, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -92,6 +93,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &4177942227940448289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 94054001274359933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a66e4ca8b0eddd14682e405769225c6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: myAnimation::SetSpriteToPivot
+  sr: {fileID: 208904870284455814}
 --- !u!114 &8309880159173220309
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -134,6 +148,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4539329121264165810}
   - component: {fileID: 3947173518132629925}
+  - component: {fileID: 5665307144663281944}
   - component: {fileID: 2222223126354630835}
   - component: {fileID: 6171394428307915616}
   m_Layer: 0
@@ -205,7 +220,7 @@ SpriteRenderer:
   m_SortingLayerID: 1489034323
   m_SortingLayer: 5
   m_SortingOrder: 1
-  m_Sprite: {fileID: -2933347532554310245, guid: a15892553397e24c7919eee19651c62f, type: 3}
+  m_Sprite: {fileID: 6916899475408010261, guid: a15892553397e24c7919eee19651c62f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -216,6 +231,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &5665307144663281944
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 574156304128869336}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a66e4ca8b0eddd14682e405769225c6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: myAnimation::SetSpriteToPivot
+  sr: {fileID: 3947173518132629925}
 --- !u!114 &2222223126354630835
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -258,6 +286,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2120684392370479206}
   - component: {fileID: 1387906820853011681}
+  - component: {fileID: 8781669862477004340}
   - component: {fileID: 194466219882059743}
   - component: {fileID: 2380745314840800668}
   m_Layer: 0
@@ -329,7 +358,7 @@ SpriteRenderer:
   m_SortingLayerID: 1489034323
   m_SortingLayer: 5
   m_SortingOrder: 2
-  m_Sprite: {fileID: -7633463126996805180, guid: 557e57cd21b82f239b83664459459b1a, type: 3}
+  m_Sprite: {fileID: 9155925762220078047, guid: 557e57cd21b82f239b83664459459b1a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -340,6 +369,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &8781669862477004340
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1013968668550784474}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a66e4ca8b0eddd14682e405769225c6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: myAnimation::SetSpriteToPivot
+  sr: {fileID: 1387906820853011681}
 --- !u!114 &194466219882059743
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -420,6 +462,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6314952006332947969}
   - component: {fileID: 539281012338666537}
+  - component: {fileID: 291855558359510979}
   - component: {fileID: 8708032636978680071}
   - component: {fileID: 825663328726864719}
   m_Layer: 0
@@ -491,7 +534,7 @@ SpriteRenderer:
   m_SortingLayerID: 1489034323
   m_SortingLayer: 5
   m_SortingOrder: 1
-  m_Sprite: {fileID: -117930704, guid: 7d481d894a24279b1a919e49b717c91c, type: 3}
+  m_Sprite: {fileID: -1391978585, guid: 7d481d894a24279b1a919e49b717c91c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -502,6 +545,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &291855558359510979
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1326953863546337535}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a66e4ca8b0eddd14682e405769225c6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: myAnimation::SetSpriteToPivot
+  sr: {fileID: 539281012338666537}
 --- !u!114 &8708032636978680071
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -544,6 +600,7 @@ GameObject:
   m_Component:
   - component: {fileID: 407067548940104542}
   - component: {fileID: 2652303396176895796}
+  - component: {fileID: 4414609879951684634}
   - component: {fileID: 5851198802960128052}
   - component: {fileID: 2504819488441861470}
   m_Layer: 0
@@ -615,7 +672,7 @@ SpriteRenderer:
   m_SortingLayerID: 1489034323
   m_SortingLayer: 5
   m_SortingOrder: 6
-  m_Sprite: {fileID: 1069094499996901818, guid: 365fdac267484ab179190fed8560cfdf, type: 3}
+  m_Sprite: {fileID: -6997825208605963093, guid: 365fdac267484ab179190fed8560cfdf, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -626,6 +683,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &4414609879951684634
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1984439224459705515}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a66e4ca8b0eddd14682e405769225c6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: myAnimation::SetSpriteToPivot
+  sr: {fileID: 2652303396176895796}
 --- !u!114 &5851198802960128052
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -668,6 +738,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5400343539155530169}
   - component: {fileID: 8852435113303930320}
+  - component: {fileID: 1598257715631669965}
   - component: {fileID: 1290175588638742880}
   - component: {fileID: 1231242336225600998}
   m_Layer: 0
@@ -739,7 +810,7 @@ SpriteRenderer:
   m_SortingLayerID: 1489034323
   m_SortingLayer: 5
   m_SortingOrder: 4
-  m_Sprite: {fileID: -8985658415588458299, guid: 4104272bea898bcf99f028730b0a3048, type: 3}
+  m_Sprite: {fileID: 8933743514402195271, guid: 4104272bea898bcf99f028730b0a3048, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -750,6 +821,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1598257715631669965
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2553156435447062855}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a66e4ca8b0eddd14682e405769225c6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: myAnimation::SetSpriteToPivot
+  sr: {fileID: 8852435113303930320}
 --- !u!114 &1290175588638742880
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -793,6 +877,7 @@ GameObject:
   - component: {fileID: 6152516264922837659}
   - component: {fileID: 5961786463938701562}
   - component: {fileID: 6098057643568931919}
+  - component: {fileID: 2804134243074050692}
   m_Layer: 0
   m_Name: Animation
   m_TagString: Untagged
@@ -885,6 +970,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!210 &2804134243074050692
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3048572483934911602}
+  m_Enabled: 1
+  m_SortingLayerID: 1489034323
+  m_SortingLayer: 5
+  m_SortingOrder: 0
+  m_SortAtRoot: 0
 --- !u!1 &4893634328063666916
 GameObject:
   m_ObjectHideFlags: 0
@@ -895,6 +992,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7574677544825588249}
   - component: {fileID: 3846576936521901653}
+  - component: {fileID: 4982773246243434889}
   - component: {fileID: 7121043095632084342}
   - component: {fileID: 5401409682393372153}
   m_Layer: 0
@@ -966,7 +1064,7 @@ SpriteRenderer:
   m_SortingLayerID: 1489034323
   m_SortingLayer: 5
   m_SortingOrder: 3
-  m_Sprite: {fileID: 2758078506078758475, guid: 44b1ff70a9ddc653aafee8e9b04bd4bb, type: 3}
+  m_Sprite: {fileID: 8757502136068669124, guid: 44b1ff70a9ddc653aafee8e9b04bd4bb, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -977,6 +1075,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &4982773246243434889
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4893634328063666916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a66e4ca8b0eddd14682e405769225c6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: myAnimation::SetSpriteToPivot
+  sr: {fileID: 3846576936521901653}
 --- !u!114 &7121043095632084342
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1019,6 +1130,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3878780224497188429}
   - component: {fileID: 5695660482273937003}
+  - component: {fileID: 8387324794896784994}
   - component: {fileID: 863551125990305928}
   - component: {fileID: 7601602333803354646}
   m_Layer: 0
@@ -1090,7 +1202,7 @@ SpriteRenderer:
   m_SortingLayerID: 1489034323
   m_SortingLayer: 5
   m_SortingOrder: 0
-  m_Sprite: {fileID: 696699310867938514, guid: 63912a2fbb117299c8efec6efb007368, type: 3}
+  m_Sprite: {fileID: 7594086339702218869, guid: 63912a2fbb117299c8efec6efb007368, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1101,6 +1213,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &8387324794896784994
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5307645063569339120}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a66e4ca8b0eddd14682e405769225c6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: myAnimation::SetSpriteToPivot
+  sr: {fileID: 5695660482273937003}
 --- !u!114 &863551125990305928
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1143,6 +1268,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2653078224560077627}
   - component: {fileID: 823575782508432353}
+  - component: {fileID: 9195064239451639252}
   - component: {fileID: 2556741835694889872}
   - component: {fileID: 2746850066767546932}
   m_Layer: 0
@@ -1214,7 +1340,7 @@ SpriteRenderer:
   m_SortingLayerID: 1489034323
   m_SortingLayer: 5
   m_SortingOrder: 0
-  m_Sprite: {fileID: -9121238666006609013, guid: 9e563b88af2e71614a9cc0dda8a67022, type: 3}
+  m_Sprite: {fileID: -2030250103680887497, guid: 9e563b88af2e71614a9cc0dda8a67022, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1225,6 +1351,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &9195064239451639252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5318280978283226207}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a66e4ca8b0eddd14682e405769225c6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: myAnimation::SetSpriteToPivot
+  sr: {fileID: 823575782508432353}
 --- !u!114 &2556741835694889872
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1267,6 +1406,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5143351480688542756}
   - component: {fileID: 2163796076749830667}
+  - component: {fileID: 8381065033870924564}
   - component: {fileID: 610385372327147980}
   - component: {fileID: 4128785699923976056}
   m_Layer: 0
@@ -1338,7 +1478,7 @@ SpriteRenderer:
   m_SortingLayerID: 1489034323
   m_SortingLayer: 5
   m_SortingOrder: 2
-  m_Sprite: {fileID: 2202369201975922415, guid: 15f0c0868164618e9b8c1c7fe7447732, type: 3}
+  m_Sprite: {fileID: -5721744159979677825, guid: 15f0c0868164618e9b8c1c7fe7447732, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1349,6 +1489,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &8381065033870924564
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6161002798951276132}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a66e4ca8b0eddd14682e405769225c6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: myAnimation::SetSpriteToPivot
+  sr: {fileID: 2163796076749830667}
 --- !u!114 &610385372327147980
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1391,6 +1544,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3550065539738325114}
   - component: {fileID: 1667204338665440249}
+  - component: {fileID: 7640326998420124468}
   - component: {fileID: 6169189097393889413}
   - component: {fileID: 5872911390596661001}
   m_Layer: 0
@@ -1473,6 +1627,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &7640326998420124468
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7605433436897414672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a66e4ca8b0eddd14682e405769225c6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: myAnimation::SetSpriteToPivot
+  sr: {fileID: 1667204338665440249}
 --- !u!114 &6169189097393889413
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1515,6 +1682,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9059454913319619693}
   - component: {fileID: 7524140481601075934}
+  - component: {fileID: 6346600729087390648}
   - component: {fileID: 8489052238718460152}
   - component: {fileID: 8122480708991319272}
   m_Layer: 0
@@ -1586,7 +1754,7 @@ SpriteRenderer:
   m_SortingLayerID: 1489034323
   m_SortingLayer: 5
   m_SortingOrder: 8
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: -7710589177600081144, guid: 94aa57f43bbc4073ca98f79d12e80c42, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1594,9 +1762,22 @@ SpriteRenderer:
   m_Size: {x: 1.3333334, y: 1.3333334}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &6346600729087390648
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8471362312575267839}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a66e4ca8b0eddd14682e405769225c6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: myAnimation::SetSpriteToPivot
+  sr: {fileID: 7524140481601075934}
 --- !u!114 &8489052238718460152
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1639,6 +1820,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4201784411089267146}
   - component: {fileID: 1830256875294825079}
+  - component: {fileID: 4386791713784278508}
   - component: {fileID: 1461213939397561517}
   - component: {fileID: 3201915881795204063}
   m_Layer: 0
@@ -1710,7 +1892,7 @@ SpriteRenderer:
   m_SortingLayerID: 1489034323
   m_SortingLayer: 5
   m_SortingOrder: 3
-  m_Sprite: {fileID: 5683663371167903941, guid: 14619560ade8d0221a350f84a97a2e1c, type: 3}
+  m_Sprite: {fileID: 68512861369031835, guid: 14619560ade8d0221a350f84a97a2e1c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1721,6 +1903,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &4386791713784278508
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8638020264429928410}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a66e4ca8b0eddd14682e405769225c6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: myAnimation::SetSpriteToPivot
+  sr: {fileID: 1830256875294825079}
 --- !u!114 &1461213939397561517
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1763,6 +1958,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5537618144590221435}
   - component: {fileID: 3436017619060294996}
+  - component: {fileID: 7534767203999398325}
   - component: {fileID: 6510418596479908096}
   - component: {fileID: 1211265712039483607}
   m_Layer: 0
@@ -1834,7 +2030,7 @@ SpriteRenderer:
   m_SortingLayerID: 1489034323
   m_SortingLayer: 5
   m_SortingOrder: 3
-  m_Sprite: {fileID: -5997952542348677429, guid: f3794dee20967e9dba8153ab2537b453, type: 3}
+  m_Sprite: {fileID: -4974583665517940759, guid: f3794dee20967e9dba8153ab2537b453, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1845,6 +2041,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &7534767203999398325
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8797762550481837975}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a66e4ca8b0eddd14682e405769225c6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: myAnimation::SetSpriteToPivot
+  sr: {fileID: 3436017619060294996}
 --- !u!114 &6510418596479908096
 MonoBehaviour:
   m_ObjectHideFlags: 0

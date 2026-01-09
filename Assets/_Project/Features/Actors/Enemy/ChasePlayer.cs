@@ -5,7 +5,7 @@ public class ChasePlayer : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private CircleCollider2D chaseRadius;
-    [SerializeField] private PlayerMovementComponent movementComponent;
+    [SerializeField] private MovementComponentBase movementComponent;
     [SerializeField] private float chaseRadiusValue = 3f;
 
     [Header("Chase Settings")]
@@ -29,15 +29,15 @@ public class ChasePlayer : MonoBehaviour
 
     private void Update()
     {
-        if (playerTransform == null)
+        if (this.playerTransform == null)
         {
-            movementComponent.SetDirection(Vector2.zero);
+            this.movementComponent.SetDirection(Vector2.zero);
             return;
         }
 
-        Vector2 targetDirection = (playerTransform.position - transform.position).normalized;
-        movementComponent.SetDirection(Vector2.Lerp(
-            movementComponent.Direction,
+        Vector2 targetDirection = (this.playerTransform.position - transform.position).normalized;
+        this.movementComponent.SetDirection(Vector2.Lerp(
+            this.movementComponent.Direction,
             targetDirection,
             chaseSmoothing
         ));
@@ -45,25 +45,24 @@ public class ChasePlayer : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player") && playerTransform == null)
+        if (collision.CompareTag("Player") && this.playerTransform == null)
         {
-            playerTransform = collision.transform;
+            this.playerTransform = collision.transform;
         }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player") && playerTransform != null)
+        if (collision.CompareTag("Player") && this.playerTransform != null)
         {
-            playerTransform = null;
-            movementComponent.SetDirection(Vector2.zero);
+            this.playerTransform = null;
+            this.movementComponent.SetDirection(Vector2.zero);
         }
     }
 
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
-        float radius = chaseRadius != null ? this.chaseRadius.radius : 1f;
-        Gizmos.DrawWireSphere(this.transform.position, radius);
+        Gizmos.DrawWireSphere(this.transform.position, this.chaseRadiusValue);
     }
 }

@@ -10,8 +10,7 @@ using ServiceLocatorPattern;
 public class PlayerMovementComponent : MovementComponentBase
 {
     private InputManager inputManager;
-    private Vector2 normalizedDirection;
-    private bool directionChanged;
+
 
     public override void Init()
     {
@@ -58,20 +57,7 @@ public class PlayerMovementComponent : MovementComponentBase
 
 
     public void MoveForInputSystem(InputAction.CallbackContext context)
-    {
-        Vector2 newdirection = context.ReadValue<Vector2>();
-        SetDirection(newdirection);
-        this.directionChanged = true;
-    }
+    => SetDirection(context.ReadValue<Vector2>());
 
-    public override void ApplyMovement(float movementSpeedMult = 1.0f)
-    {
-        if (this.directionChanged)
-        {
-            this.normalizedDirection = this.direction.normalized;
-            this.directionChanged = false;
-        }
 
-        this.rb.linearVelocity = defaultMovementSpeed * movementSpeedMult * normalizedDirection;
-    }
 }
