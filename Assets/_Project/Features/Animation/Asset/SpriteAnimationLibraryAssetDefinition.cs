@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// "both" means this item is applicable to both genders
 /// </summary>
-public enum GenderEnum
+public enum GenderEnum : short
 {
     none = -1,
     male,
@@ -14,35 +14,17 @@ public enum GenderEnum
 
 }
 
-public enum ItemColorPermutationEnum
+public enum ItemColorPermutationEnum : short
 {
     none = -1,
-    red,
-    blue,
-    green,
-    yellow,
-    purple,
-    orange,
-    black,
-    white,
-    grey,
-    brown,
-    pink,
-    cyan,
-    magenta,
-    lime,
-    navy,
-    teal,
-    maroon,
-    olive,
-    silver,
-    gold,
-    bronze,
-    leather,
-    cloth,
-    steel,
-    iron,
-    ceramic,
+    // default color 0 to 999
+    black = 0, lime = 1, yellow = 2, blue = 3, red = 4,
+    orange = 5, brown = 6,
+    // metallic colors 1000 to 1999
+    ceramic = 1000, gold = 1001, silver = 1002, bronze = 1003, steel = 1004,
+    iron = 1005,
+    // natural colors 2000 to 2999
+    leather = 2000,
 
 }
 
@@ -52,19 +34,9 @@ public enum ItemColorPermutationEnum
 public enum RacesEnum
 {
     none = -1,
-    human = 1,
-    elf = 2,
-    vampire = 3,
-    werewolf = 4,
-    orc = 5,
-    goblin = 6,
-    dragonborn = 7,
-    troll = 8,
-    undead = 9,
-    halfwolf = 10,
-    halfcat = 11,
-    halfelf = 12,
-    lizard = 13,
+    human = 1, elf = 2, vampire = 3, werewolf = 4, orc = 5,
+    goblin = 6, dragonborn = 7, troll = 8, undead = 9, halfwolf = 10,
+    halfcat = 11, halfelf = 12, lizard = 13,
     All = 999,
 }
 
