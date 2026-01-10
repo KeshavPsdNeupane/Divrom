@@ -39,19 +39,20 @@ public class EquipmentAnimationLibraryAsset : SpriteAnimationLibraryAssetDefinit
 
     protected override bool IsApplicable<TPart>(GenderEnum gender, TPart tpart, RacesEnum race)
     {
-        bool genderOk = gender != GenderEnum.none
-        && (applicableGender == GenderEnum.both || applicableGender == gender);
-
-        bool partOk = tpart is EquipmentPartEnum part
-        && (part != EquipmentPartEnum.none) && part == this.applicableEquipingPart;
-
-        bool raceOk = race != RacesEnum.none && (applicableRaces.Contains(RacesEnum.All) ||
-        applicableRaces.Contains(race));
+        bool genderOk = GenderOk(gender);
+        bool partOk = PartOk(tpart);
+        bool raceOk = RaceOk(race);
 
         if (!genderOk) Logger.Error($"Gender mismatch: {gender} != {applicableGender} on library {this.LibraryId}");
         if (!partOk) Logger.Error($"EquipingPart mismatch: {tpart} != {applicableEquipingPart} on library {this.LibraryId}");
         if (!raceOk) Logger.Error($"Race mismatch: {race} not in {string.Join(", ", applicableRaces)} on library {this.LibraryId}");
 
         return genderOk && partOk && raceOk;
+    }
+
+    protected override bool PartOk<TPart>(TPart tpart)
+    {
+        return tpart is EquipmentPartEnum part
+        && (part != EquipmentPartEnum.none) && part == this.applicableEquipingPart;
     }
 }

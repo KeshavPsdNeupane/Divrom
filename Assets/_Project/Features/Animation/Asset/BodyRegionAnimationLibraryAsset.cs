@@ -48,18 +48,20 @@ public class BodyRegionAnimationLibraryAsset : SpriteAnimationLibraryAssetDefini
     protected override bool IsApplicable<TPart>(GenderEnum gender, TPart tpart, RacesEnum race)
     {
 
-        bool genderOk = gender != GenderEnum.none
-        && (applicableGender == GenderEnum.both || applicableGender == gender);
+        bool genderOk = GenderOk(gender);
+        bool partOk = PartOk(tpart);
+        bool raceOk = RaceOk(race);
 
-        bool partOk = tpart is BodyRegionEnum part
-        && (part != BodyRegionEnum.none) && part == this.applicableBaseBody;
-
-        bool raceOk = race != RacesEnum.none && (applicableRaces.Contains(RacesEnum.All) ||
-         applicableRaces.Contains(race));
         if (!genderOk) Logger.Error($"Gender mismatch: {gender} != {this.applicableGender} on library {this.LibraryId}");
         if (!partOk) Logger.Error($"BodyRegion mismatch: {tpart} != {this.applicableBaseBody} on library {this.LibraryId}");
         if (!raceOk) Logger.Error($"Race mismatch: {race} not in {string.Join(", ", this.applicableRaces)} on library {this.LibraryId}");
 
         return genderOk && partOk && raceOk;
+    }
+
+    protected override bool PartOk<TPart>(TPart tpart)
+    {
+        return tpart is BodyRegionEnum part
+        && (part != BodyRegionEnum.none) && part == this.applicableBaseBody;
     }
 }
