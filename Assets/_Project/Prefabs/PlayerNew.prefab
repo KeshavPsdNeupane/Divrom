@@ -470,10 +470,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10ca6cbcd6ccab44ba17ff59bcf73a28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StatusEffectConnector
-  characterStats: {fileID: 5294357042670943928}
-  effectArea: {fileID: 2553193555243041833}
   StatusObjectTagName: StatusEffect
-  radius: 0.75
+  characterStats: {fileID: 5294357042670943928}
+  detectionCollider: {fileID: 0}
+  detectionRadius: 0.5
   isTrigger: 1
 --- !u!1 &5774743694550367341
 GameObject:

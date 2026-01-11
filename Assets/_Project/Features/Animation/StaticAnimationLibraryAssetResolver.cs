@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.U2D.Animation;
 
@@ -66,9 +67,11 @@ public class StaticAnimationLibraryResolver : MonoBehaviour
         {
             Logger.Warn($"Race is set to 'none' on {this.name}. This may lead to incorrect asset resolution.");
         }
-
+        EditorApplication.delayCall += () => RefreshPreview();
     }
 #endif
+
+
     public void RefreshPreview()
     {
         if (this == null) return;

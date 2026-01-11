@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using System;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.U2D.Animation;
@@ -10,18 +11,28 @@ public class StaticAnimationLibraryResolverEditor : Editor
     private static string tempCategory;
     private static string tempLabel;
 
-    public override void OnInspectorGUI()
-    {
-        var resolver = (StaticAnimationLibraryResolver)target;
 
-        // 1. Draw the default inspector variables (Race, Gender, Lists)
+
+    [Obsolete("The validation and refresh is now handled directly in StaticAnimationLibraryResolver.OnValidate")]
+    private void RefreshAndDrawBase(StaticAnimationLibraryResolver resolver)
+    {
         EditorGUI.BeginChangeCheck();
         base.OnInspectorGUI();
         if (EditorGUI.EndChangeCheck())
         {
+            Logger.Log("Detected changes in StaticAnimationLibraryResolver, refreshing preview.");
             resolver.RefreshPreview();
         }
+    }
 
+
+    public override void OnInspectorGUI()
+    {
+        var resolver = (StaticAnimationLibraryResolver)target;
+        // 1. Draw the default inspector UI
+        base.OnInspectorGUI();
+
+        // Add some spacing
         EditorGUILayout.Space(15);
 
         // 2. Custom Tool Section
@@ -73,5 +84,7 @@ public class StaticAnimationLibraryResolverEditor : Editor
 
         GUILayout.EndVertical();
     }
+
+
 }
 #endif

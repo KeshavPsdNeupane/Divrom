@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7060264c2db7a533cb485c78aa1bfb83, type: 3}
-  m_Name: female_feet_slippers_brown
+  m_Name: female_torso_slashdress_blue
   m_EditorClassIdentifier: myAnimation::EquipmentAnimationLibraryAsset
-  variantName: slippers
+  variantName: slashdress
   applicableGender: 1
-  applicableColorPermutation: 6
-  spriteLibraryAsset: {fileID: 7108339969198208228, guid: 2d53ddf69f2cb5a9ebd01ce1e3fc85cc, type: 3}
+  applicableColorPermutation: 3
+  spriteLibraryAsset: {fileID: 7108339969198208228, guid: f3e7931c04df30d3bb3dfef0e54c3d93, type: 3}
   applicableRaces: e7030000
-  applicableEquipingPart: 5
+  applicableEquipingPart: 3

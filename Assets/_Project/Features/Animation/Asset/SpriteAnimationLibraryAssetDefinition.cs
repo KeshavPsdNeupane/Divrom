@@ -19,13 +19,13 @@ public enum ItemColorPermutationEnum : short
 {
     none = -1,
     // default color 0 to 999
-    black = 0, lime = 1, yellow = 2, blue = 3, red = 4,
-    orange = 5, brown = 6, bluegrey = 7,
+    black = 0, white = 8, lime = 1, yellow = 2, blue = 3,
+    red = 4, orange = 5, brown = 6, bluegrey = 7,
     // metallic colors 1000 to 1999
     ceramic = 1000, gold = 1001, silver = 1002, bronze = 1003, steel = 1004,
-    iron = 1005,
+    iron = 1005, wood = 1006, copper = 1007,
     // natural colors 2000 to 2999
-    leather = 2000, shandy = 2001
+    leather = 2000, sandy = 2001, ginger = 2002,
 
 }
 
@@ -34,9 +34,14 @@ public enum ItemColorPermutationEnum : short
 /// </summary>
 public enum RacesEnum
 {
+    /// <summary>
+    /// if here is gap in the numbering, it is intentional it mean some race was removed
+    /// but we don't want to renumber the existing ones to avoid breaking existing data
+    /// it prone to errors otherwise
+    /// </summary>
     none = -1,
     human = 1, elf = 2, vampire = 3, werewolf = 4, orc = 5,
-    goblin = 6, dragonborn = 7, troll = 8, undead = 9, halfwolf = 10,
+    goblin = 6, troll = 8, undead = 9, halfwolf = 10,
     halfcat = 11, halfelf = 12, lizard = 13,
     All = 999,
 }
