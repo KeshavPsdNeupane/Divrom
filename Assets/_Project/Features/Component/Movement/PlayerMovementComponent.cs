@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using ServiceLocatorPattern;
+using Kope.Core.CompilerServices;
 /// <summary>
 /// Player-specific movement component that handles input and movement application.
 /// The ApplyMovement Must be called externally, typically from a PlayerController or similar script.
@@ -21,7 +22,7 @@ public class PlayerMovementComponent : MovementComponentBase
         }
         else
         {
-            Logger.Error($"{this.gameObject.name}Controller: InputManager service not found!");
+            MyLogger.Error($"{this.gameObject.name}Controller: InputManager service not found!");
         }
     }
     protected override void OnEnable()

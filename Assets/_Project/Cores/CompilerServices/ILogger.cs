@@ -1,6 +1,9 @@
-public interface ILogger
+namespace Kope.Core.CompilerServices
 {
-    void Log(string message, UnityEngine.Object context = null);
-    void Warn(string message, UnityEngine.Object context = null);
-    void Error(string message, UnityEngine.Object context = null);
+    public interface ILogger
+    {
+        void Log(string message, UnityEngine.Object context = null);
+        void Warn(string message, UnityEngine.Object context = null);
+        void Error(string message, UnityEngine.Object context = null);
+    }
 }

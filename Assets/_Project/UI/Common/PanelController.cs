@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using ServiceLocatorPattern;
+using Kope.Core.CompilerServices;
 public class PanelController : UIState
 {
     [SerializeField] private string panelName = "Menu";
@@ -12,7 +13,7 @@ public class PanelController : UIState
     {
         if (this.currentPanel == null)
         {
-            Logger.Error($"{this.panelName}Controller: {this.panelName} "
+            MyLogger.Error($"{this.panelName}Controller: {this.panelName} "
               + "Panel reference is missing!");
             return;
         }
@@ -24,7 +25,7 @@ public class PanelController : UIState
         }
         else
         {
-            Logger.Error($"{this.gameObject.name}Controller: InputManager service not found!");
+            MyLogger.Error($"{this.gameObject.name}Controller: InputManager service not found!");
         }
     }
 

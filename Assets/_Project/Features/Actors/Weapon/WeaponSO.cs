@@ -1,3 +1,4 @@
+using Kope.Core.CompilerServices;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "NewWeapon", menuName = "Actors/Weapon")]
@@ -32,7 +33,7 @@ public class WeaponSO : ScriptableObject
         if (!WeaponAnimationMapper.IsValidAttackAnimation(this.overrideAttackAnimation) &&
             this.overrideAttackAnimation != AnimationState.None)
         {
-            Logger.Warn(
+            MyLogger.Warn(
              $"WeaponSO '{this.weaponName}' has an override attack animation '{this.overrideAttackAnimation}'\n" +
              "that is not a valid attack animation.\n" +
              "Consider removing the override (set to None) to use the default mapping, or choose a valid attack animation.\n" +

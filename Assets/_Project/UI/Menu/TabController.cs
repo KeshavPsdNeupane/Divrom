@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Kope.Core.Init;
 
 [System.Serializable]
 public class Tab

@@ -1,4 +1,6 @@
+using Kope.Core.CompilerServices;
 using UnityEngine;
+using Kope.Core.Init;
 
 public class TestMovementController : InitializableBase
 {
@@ -9,7 +11,7 @@ public class TestMovementController : InitializableBase
         if (this.movementComponent == null)
         {
             this.movementComponent = GetComponent<MovementComponentBase>();
-            Logger.Warn($"TestMovementController ({gameObject.name}): " +
+            MyLogger.Warn($"TestMovementController ({gameObject.name}): " +
            "MovementComponentBase not assigned, attempting to fetch from same GameObject.");
         }
         SetInitialized();
@@ -18,7 +20,7 @@ public class TestMovementController : InitializableBase
 
     private void Update()
     {
-        if (!IsInitialized && !this.movementComponent) return;
+        if (!IsInitialized || this.movementComponent == null) return;
         this.movementComponent.ApplyMovement();
     }
 

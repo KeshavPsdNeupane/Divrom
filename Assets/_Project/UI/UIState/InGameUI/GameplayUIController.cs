@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using ServiceLocatorPattern;
+using Kope.Core.CompilerServices;
+using Kope.Core.Init;
 public class GameplayUIController : InitializableBase
 {
     [SerializeField] private UIState inGameplayMenu;
@@ -23,7 +25,7 @@ public class GameplayUIController : InitializableBase
         }
         else
         {
-            Logger.Error($"{this.gameObject.name}Controller: InputManager service not found!");
+            MyLogger.Error($"{this.gameObject.name}Controller: InputManager service not found!");
         }
         SetInitialized();
     }

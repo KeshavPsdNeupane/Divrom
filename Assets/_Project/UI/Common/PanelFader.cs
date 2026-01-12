@@ -1,3 +1,4 @@
+using Kope.Core.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,7 +21,7 @@ public class PanelFader : MonoBehaviour
         }
         else
         {
-            Logger.Warn($"{gameObject.name} has no Graphic component to fade.");
+            MyLogger.Warn($"{gameObject.name} has no Graphic component to fade.");
         }
     }
 }

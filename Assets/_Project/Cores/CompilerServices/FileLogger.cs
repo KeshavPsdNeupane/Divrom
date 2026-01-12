@@ -1,35 +1,37 @@
 using System;
 using System.IO;
-
-public class FileLogger : ILogger
+namespace Kope.Core.CompilerServices
 {
-    private const string LogFolder = "logs";
-
-    private static string LogFilePath
+    public class FileLogger : ILogger
     {
-        get
+        private const string LogFolder = "logs";
+
+        private static string LogFilePath
         {
-            if (!Directory.Exists(LogFolder))
-                Directory.CreateDirectory(LogFolder);
+            get
+            {
+                if (!Directory.Exists(LogFolder))
+                    Directory.CreateDirectory(LogFolder);
 
-            return Path.Combine(LogFolder, $"ErrorLog_{DateTime.Now:yyyy-MM-dd}.txt");
+                return Path.Combine(LogFolder, $"ErrorLog_{DateTime.Now:yyyy-MM-dd}.txt");
+            }
         }
-    }
 
-    private static string TimeStamp =>
-        DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+        private static string TimeStamp =>
+            DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
-    public void Error(string message, UnityEngine.Object context = null) =>
-        AppendLog($"[{TimeStamp}] : {message}");
+        public void Error(string message, UnityEngine.Object context = null) =>
+            AppendLog($"[{TimeStamp}] : {message}");
 
-    public void Warn(string message, UnityEngine.Object context = null) =>
-        AppendLog($"[{TimeStamp}] : {message}");
+        public void Warn(string message, UnityEngine.Object context = null) =>
+            AppendLog($"[{TimeStamp}] : {message}");
 
-    public void Log(string message, UnityEngine.Object context = null) =>
-        AppendLog($"[{TimeStamp}] : {message}");
+        public void Log(string message, UnityEngine.Object context = null) =>
+            AppendLog($"[{TimeStamp}] : {message}");
 
-    private void AppendLog(string message)
-    {
-        File.AppendAllText(LogFilePath, message + "\n");
+        private void AppendLog(string message)
+        {
+            File.AppendAllText(LogFilePath, message + "\n");
+        }
     }
 }

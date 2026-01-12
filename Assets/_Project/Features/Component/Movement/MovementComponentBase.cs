@@ -1,5 +1,6 @@
+using Kope.Core.CompilerServices;
 using UnityEngine;
-
+using Kope.Core.Init;
 public class MovementComponentBase : InitializableBase
 {
     [SerializeField] protected Rigidbody2D rb;
@@ -21,7 +22,7 @@ public class MovementComponentBase : InitializableBase
         if (this.characterStatsSystem == null)
         {
             this.characterStatsSystem = GetComponent<CharacterStatsSystem>();
-            Logger.Warn($"MovementComponentBase ({gameObject.name}): " +
+            MyLogger.Warn($"MovementComponentBase ({gameObject.name}): " +
            "CharacterStatsSystem not assigned, attempting to fetch from same GameObject.");
         }
         SetInitialized();

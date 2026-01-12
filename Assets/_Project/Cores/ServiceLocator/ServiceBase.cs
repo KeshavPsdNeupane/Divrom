@@ -1,4 +1,5 @@
 using UnityEngine;
+using Kope.Core.CompilerServices;
 
 namespace ServiceLocatorPattern
 {
@@ -11,11 +12,11 @@ namespace ServiceLocatorPattern
         {
             if (isWarn)
             {
-                Logger.Warn($"[Service] Initialized {GetType().Name}: {info}", gameObject);
+                MyLogger.Warn($"[Service] Initialized {GetType().Name}: {info}", gameObject);
             }
             else
             {
-                Logger.Log($"[Service] Initialized {GetType().Name}: {info}", gameObject);
+                MyLogger.Log($"[Service] Initialized {GetType().Name}: {info}", gameObject);
             }
             this.isInitialized = true;
         }
@@ -38,7 +39,7 @@ namespace ServiceLocatorPattern
 
             if (instances.Length > 1)
             {
-                Logger.Warn($"[ServiceLocator] Multiple instances of <b>{type.Name}</b> found on scene! For now Game will use first one...", this.gameObject);
+                MyLogger.Warn($"[ServiceLocator] Multiple instances of <b>{type.Name}</b> found on scene! For now Game will use first one...", this.gameObject);
             }
         }
 

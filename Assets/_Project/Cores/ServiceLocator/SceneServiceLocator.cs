@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System;
-
+using Kope.Core.CompilerServices;
 namespace ServiceLocatorPattern
 {
     /// <summary>
@@ -43,7 +43,7 @@ namespace ServiceLocatorPattern
             {
                 if (!ReferenceEquals(services[type], service))
                 {
-                    Logger.Warn($"[Locator] Duplicate {type.Name} detected. The secondary instance will be destroyed to maintain the Singleton pattern.");
+                    MyLogger.Warn($"[Locator] Duplicate {type.Name} detected. The secondary instance will be destroyed to maintain the Singleton pattern.");
                     Destroy(service.gameObject);
                 }
                 return;
@@ -77,7 +77,7 @@ namespace ServiceLocatorPattern
                 return true;
             }
 
-            Logger.Error($"[ServiceLocator] {type.Name} requested but not found! It must be in the Scene or Inspector list.");
+            MyLogger.Error($"[ServiceLocator] {type.Name} requested but not found! It must be in the Scene or Inspector list.");
             return false;
         }
 

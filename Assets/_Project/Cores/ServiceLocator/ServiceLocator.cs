@@ -1,7 +1,7 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
-
+using Kope.Core.CompilerServices;
 namespace ServiceLocatorPattern
 {
     public abstract class ServiceLocator<T, TBase> : MonoBehaviour
@@ -122,7 +122,7 @@ namespace ServiceLocatorPattern
                         {
                             if (comp.gameObject != null)
                             {
-                                Logger.Warn($"[Global] Destroyed redundant {serviceType.Name} found in newly loaded scene.");
+                                MyLogger.Warn($"[Global] Destroyed redundant {serviceType.Name} found in newly loaded scene.");
                                 Destroy(comp.gameObject);
                             }
 

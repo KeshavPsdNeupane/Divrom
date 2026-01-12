@@ -1,4 +1,7 @@
+using Kope.Core.CompilerServices;
 using UnityEngine;
+using Kope.Core.Init;
+
 
 [RequireComponent(typeof(CircleCollider2D))]
 public class PlayerItemCollector : InitializableBase
@@ -21,11 +24,11 @@ public class PlayerItemCollector : InitializableBase
         }
         else
         {
-            Logger.Error($"No CircleCollider2D assigned to PlayerItemCollector = {this}");
+            MyLogger.Error($"No CircleCollider2D assigned to PlayerItemCollector = {this}");
         }
 
         if (inventoryHolder == null)
-            Logger.Error($"No InventoryHolder assigned to PlayerItemCollector = {gameObject.name}");
+            MyLogger.Error($"No InventoryHolder assigned to PlayerItemCollector = {gameObject.name}");
 
         SetInitialized();
     }
@@ -43,7 +46,7 @@ public class PlayerItemCollector : InitializableBase
         }
         else
         {
-            Logger.Warn("Inventory full – cannot pick up item");
+            MyLogger.Warn("Inventory full – cannot pick up item");
         }
     }
 

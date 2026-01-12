@@ -1,5 +1,6 @@
 using UnityEngine.InputSystem;
 using ServiceLocatorPattern;
+using Kope.Core.CompilerServices;
 public class PlayerAttackComponent : AttackComponentBase
 {
     private InputManager inputManager;
@@ -13,7 +14,7 @@ public class PlayerAttackComponent : AttackComponentBase
         }
         else
         {
-            Logger.Error($"{this.gameObject.name}Controller: InputManager service not found!");
+            MyLogger.Error($"{this.gameObject.name}Controller: InputManager service not found!");
         }
     }
 
@@ -63,6 +64,6 @@ public class PlayerAttackComponent : AttackComponentBase
 
         float damage = CalculateDamage();
         // For testing so no need for logger
-        Logger.Log($"Attack performed! Damage: {damage}, Base attack: {attack}");
+        MyLogger.Log($"Attack performed! Damage: {damage}, Base attack: {attack}");
     }
 }

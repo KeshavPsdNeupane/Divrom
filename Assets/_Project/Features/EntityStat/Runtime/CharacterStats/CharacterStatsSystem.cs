@@ -1,7 +1,8 @@
 using UnityEngine;
 using UnityEngine.Events;
 using System.Collections.Generic;
-
+using Kope.Core.CompilerServices;
+using Kope.Core.Init;
 public enum CharacterStatType { HP, ATK, DEF, MATK, SPD, CRATE, CDMG, }
 public enum DamageType
 {
@@ -105,7 +106,7 @@ public class CharacterStatsSystem : InitializableBase
         if (this.currentStats.TryGetValue(type, out Stat stat))
             return stat.GetValue();
 
-        Logger.Warn($"Stat {type} not found!");
+        MyLogger.Warn($"Stat {type} not found!");
         return 0f;
     }
 
@@ -114,7 +115,7 @@ public class CharacterStatsSystem : InitializableBase
         if (this.resistanceStats.TryGetValue(type, out Stat stat))
             return stat.GetValue();
 
-        Logger.Warn($"Resistance {type} not found!");
+        MyLogger.Warn($"Resistance {type} not found!");
         return 0f;
     }
 
@@ -123,7 +124,7 @@ public class CharacterStatsSystem : InitializableBase
         if (this.currentStats.TryGetValue(effect.statType, out Stat stat))
             return stat.CurrentStat.AddModifier(effect);
 
-        Logger.Warn($"Stat {effect.statType} not found for adding modifier!");
+        MyLogger.Warn($"Stat {effect.statType} not found for adding modifier!");
         return false;
     }
 
@@ -134,7 +135,7 @@ public class CharacterStatsSystem : InitializableBase
             if (this.currentStats.TryGetValue(kvp.Key, out Stat stat))
                 stat.LevelingStat.LevelUp(kvp.Value);
             else
-                Logger.Warn($"Stat {kvp.Key} not found for leveling up!");
+                MyLogger.Warn($"Stat {kvp.Key} not found for leveling up!");
         }
     }
 
@@ -146,7 +147,7 @@ public class CharacterStatsSystem : InitializableBase
         }
         else
         {
-            Logger.Warn($"Stat {type} not found for adding points!");
+            MyLogger.Warn($"Stat {type} not found for adding points!");
         }
     }
 

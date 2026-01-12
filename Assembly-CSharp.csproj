@@ -114,9 +114,11 @@
     <None Include="Assets/TextMesh Pro/Shaders/TMPro_Surface.cginc" />
     <None Include="Assets/TextMesh Pro/Resources/LineBreaking Following Characters.txt" />
     <None Include="Assets/TextMesh Pro/Shaders/TMP_SDF-Mobile Masking.shader" />
+    <None Include="Assets/Packages/ZLinq.1.5.4/lib/netstandard2.1/ZLinq.xml" />
     <None Include="Assets/TextMesh Pro/Shaders/TMP_SDF Overlay.shader" />
     <None Include="Assets/TextMesh Pro/Shaders/TMP_Bitmap-Mobile.shader" />
     <None Include="Assets/TextMesh Pro/Fonts/LiberationSans - OFL.txt" />
+    <None Include="Assets/Packages/ZLinq.1.5.4/lib/netstandard2.1/ZLinq.dll" />
     <None Include="Assets/TextMesh Pro/Shaders/TMP_SDF-Mobile.shader" />
     <None Include="Assets/TextMesh Pro/Shaders/TMP_Sprite.shader" />
   </ItemGroup>
@@ -623,6 +625,10 @@
     </Reference>
     <Reference Include="System.Runtime.CompilerServices.Unsafe">
       <HintPath>Library/PackageCache/com.unity.collections@d49facba0036/Unity.Collections.Tests/System.Runtime.CompilerServices.Unsafe/System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ZLinq">
+      <HintPath>Assets/Packages/ZLinq.1.5.4/lib/netstandard2.1/ZLinq.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="netstandard">
@@ -1415,10 +1421,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="Kope.Core.Runtime.csproj" />
     <ProjectReference Include="ThirdParty.csproj" />
+    <ProjectReference Include="Kope.ModularSpriteAnimation.Editor.csproj" />
     <ProjectReference Include="myEntityStat.csproj" />
-    <ProjectReference Include="myCore.csproj" />
-    <ProjectReference Include="myAnimation.csproj" />
+    <ProjectReference Include="Kope.ModularSpriteAnimation.Runtime.csproj" />
   </ItemGroup>
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
   <ItemGroup>

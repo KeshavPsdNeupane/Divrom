@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Kope.Core.Init;
 
 public abstract class InventoryDisplay : InitializableBase
 {

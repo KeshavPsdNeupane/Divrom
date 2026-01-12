@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.Events;
-using System.Linq;
+using ZLinq;
 
 [System.Serializable]
 public class InventorySystem
@@ -47,12 +47,12 @@ public class InventorySystem
 
     public bool ContainsItem(ItemData itemToAdd, out List<ItemSlot> invSlot)
     {
-        invSlot = this.inventorySlots.Where(shot => shot.ItemData == itemToAdd).ToList();
+        invSlot = this.inventorySlots.AsValueEnumerable().Where(shot => shot.ItemData == itemToAdd).ToList();
         return !(invSlot == null);
     }
     public bool HasFreeSlot(out ItemSlot freeSlot)
     {
-        freeSlot = this.inventorySlots.FirstOrDefault(slot => slot.ItemData == null);
+        freeSlot = this.inventorySlots.AsValueEnumerable().FirstOrDefault(slot => slot.ItemData == null);
         return !(freeSlot == null);  // Return true if a free slot is found
     }
 }

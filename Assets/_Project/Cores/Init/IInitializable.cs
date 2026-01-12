@@ -1,14 +1,18 @@
-public interface IInitializable
+
+namespace Kope.Core.Init
 {
-    bool IsInitialized { get; }
+    public interface IInitializable
+    {
+        bool IsInitialized { get; }
 
-    /// <summary>
-    /// Called once after dependencies are injected.
-    /// </summary>
-    void Init();
+        /// <summary>
+        /// Called once after dependencies are injected.
+        /// </summary>
+        void Init();
 
-    /// <summary>
-    /// Called when the object is being destroyed, for cleanup.
-    /// </summary>
-    void Shutdown();
+        /// <summary>
+        /// Called when the object is being destroyed, for cleanup.
+        /// </summary>
+        void Shutdown();
+    }
 }

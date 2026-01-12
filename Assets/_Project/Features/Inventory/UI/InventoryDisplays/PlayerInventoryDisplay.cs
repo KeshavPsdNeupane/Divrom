@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Kope.Core.CompilerServices;
 using UnityEngine;
 
 public class PlayerInventoryDisplayUI : InventoryDisplay
@@ -11,14 +12,14 @@ public class PlayerInventoryDisplayUI : InventoryDisplay
     {
         if (inventoryHolder == null)
         {
-            Logger.Error($"PlayerInventoryDisplayUI ({gameObject.name}):" +
+            MyLogger.Error($"PlayerInventoryDisplayUI ({gameObject.name}):" +
              " InventoryHolder is not assigned!");
             return;
         }
 
         if (inventoryHolder.PrimaryInventorySystem == null)
         {
-            Logger.Error($"PlayerInventoryDisplayUI ({gameObject.name}):" +
+            MyLogger.Error($"PlayerInventoryDisplayUI ({gameObject.name}):" +
              " InventoryHolder.PrimaryInventorySystem is null! Make " +
              "sure InventoryHolder is initialized before PlayerInventoryDisplayUI" +
              " in the InitLifecycleManager.");

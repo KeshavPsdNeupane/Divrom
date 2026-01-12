@@ -1,6 +1,9 @@
 using UnityEngine;
 
 using System;
+using Kope.Core.CompilerServices;
+using Kope.Core.Init;
+
 public class AnimationComponent : InitializableBase
 {
     // no Awake or Start method here to InterOp with InitCallerManager
@@ -17,7 +20,7 @@ public class AnimationComponent : InitializableBase
         if (anim == null)
         {
             this.anim = GetComponent<Animator>();
-            Logger.Warn("Animator not assigned in AnimationComponent, " +
+            MyLogger.Warn("Animator not assigned in AnimationComponent, " +
             $"auto-assigned in Init on {gameObject.name}.");
         }
         /// Defaulting to faceing down on init

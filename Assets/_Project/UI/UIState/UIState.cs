@@ -1,4 +1,4 @@
-
+using Kope.Core.Init;
 public class UIState : InitializableBase
 {
     public virtual void EnterState() { }

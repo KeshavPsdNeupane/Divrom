@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using Kope.Core.Init;
 
 [RequireComponent(typeof(CircleCollider2D))]
 public class StatusEffectConnector : InitializableBase

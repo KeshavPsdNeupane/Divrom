@@ -608,6 +608,14 @@
       <HintPath>Library/PackageCache/com.unity.collections@d49facba0036/Unity.Collections.Tests/System.Runtime.CompilerServices.Unsafe/System.Runtime.CompilerServices.Unsafe.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="NuGetForUnity.PluginAPI">
+      <HintPath>Library/PackageCache/com.github-glitchenzo.nugetforunity@ee9526e0fa37/Editor/PluginAPI/NuGetForUnity.PluginAPI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ZLinq">
+      <HintPath>Assets/Packages/ZLinq.1.5.4/lib/netstandard2.1/ZLinq.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="mscorlib">
       <HintPath>/home/keshav/Unity/Hub/Editor/6000.2.7f2/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/mscorlib.dll</HintPath>
       <Private>False</Private>
@@ -1419,10 +1427,11 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp.csproj" />
+    <ProjectReference Include="Kope.Core.Runtime.csproj" />
     <ProjectReference Include="ThirdParty.csproj" />
+    <ProjectReference Include="Kope.ModularSpriteAnimation.Editor.csproj" />
     <ProjectReference Include="myEntityStat.csproj" />
-    <ProjectReference Include="myCore.csproj" />
-    <ProjectReference Include="myAnimation.csproj" />
+    <ProjectReference Include="Kope.ModularSpriteAnimation.Runtime.csproj" />
   </ItemGroup>
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
   <ItemGroup>

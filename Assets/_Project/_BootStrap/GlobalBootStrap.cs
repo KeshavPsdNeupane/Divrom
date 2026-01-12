@@ -1,3 +1,4 @@
+using Kope.Core.CompilerServices;
 using ServiceLocatorPattern;
 using UnityEngine;
 
@@ -7,7 +8,7 @@ public static class GlobalBootStrap
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Init()
     {
-        Logger.Configure();
+        //  MyLogger.Configure();
         GS.RegisterService(() => new GameObject().AddComponent<InputManager>());
 
         GS.Lock();

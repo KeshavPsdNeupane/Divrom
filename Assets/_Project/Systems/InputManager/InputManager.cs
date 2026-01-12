@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 using System.Collections.Generic;
 using System;
 using ServiceLocatorPattern;
+using Kope.Core.CompilerServices;
 /// <summary>
 /// Maps input action map types to their corresponding action map names.
 /// Used to dynamically enable/disable action maps without hardcoding.
@@ -67,7 +68,7 @@ public class InputManager : GlobalServiceBase
             }
             else
             {
-                Logger.Warn($"Failed to load action map: {type}");
+                MyLogger.Warn($"Failed to load action map: {type}");
             }
         }
 
@@ -157,7 +158,7 @@ public class InputManager : GlobalServiceBase
         }
         else
         {
-            Logger.Warn($"Action map not found for type: {actionType}, cannot subscribe to action: {actionName}");
+            MyLogger.Warn($"Action map not found for type: {actionType}, cannot subscribe to action: {actionName}");
         }
     }
     public void UnsubscribeFromInputAction(PlayerInputActionMap actionType, string actionName, Action<InputAction.CallbackContext> callback)

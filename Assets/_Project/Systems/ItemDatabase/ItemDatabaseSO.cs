@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Kope.Core.CompilerServices;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Inventory/Item Database")]
@@ -16,7 +17,7 @@ public class ItemDatabaseSO : ScriptableObject
         {
             if (string.IsNullOrEmpty(item.itemId))
             {
-                Logger.Error($"Item '{item.name}' has no ID!");
+                MyLogger.Error($"Item '{item.name}' has no ID!");
                 continue;
             }
 
@@ -25,7 +26,7 @@ public class ItemDatabaseSO : ScriptableObject
 
             if (itemDict.ContainsKey(hash))
             {
-                Logger.Error($"[Collision] Hash collision between '{itemDict[hash].itemId}' and '{item.itemId}'. Please fix IDs manually.");
+                MyLogger.Error($"[Collision] Hash collision between '{itemDict[hash].itemId}' and '{item.itemId}'. Please fix IDs manually.");
             }
             else
             {

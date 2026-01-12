@@ -1,5 +1,7 @@
+using Kope.Core.CompilerServices;
 using UnityEngine;
 using UnityEngine.Events;
+using Kope.Core.Init;
 
 /// <summary>
 /// Base attack logic component. Can be used for both player and AI.
@@ -22,12 +24,12 @@ public abstract class AttackComponentBase : InitializableBase
     {
         if (this.statsSystem == null)
         {
-            Logger.Warn("CharacterStatsSystem not assigned in AttackComponentBase, trying to get it from the GameObject.");
+            MyLogger.Warn("CharacterStatsSystem not assigned in AttackComponentBase, trying to get it from the GameObject.");
             this.statsSystem = GetComponent<CharacterStatsSystem>();
         }
         if (this.animationComponent == null)
         {
-            Logger.Warn("AnimationComponent not assigned in AttackComponentBase, trying to get it from the GameObject.");
+            MyLogger.Warn("AnimationComponent not assigned in AttackComponentBase, trying to get it from the GameObject.");
             this.animationComponent = GetComponent<AnimationComponent>();
         }
 

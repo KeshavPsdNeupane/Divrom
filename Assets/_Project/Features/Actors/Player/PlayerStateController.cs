@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-
+using Kope.Core.Init;
 /// <summary>
 /// Controls the player's state and interactions.
 /// Must be placed Under the Root Player GameObject

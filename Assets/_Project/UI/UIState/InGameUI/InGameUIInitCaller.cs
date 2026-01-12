@@ -6,4 +6,5 @@
 /// on listed IInitializable components
 /// related to In-Game UI.
 /// </remarks>
+using Kope.Core.Init;
 public class InGameUIInitCaller : InitLifecycleManager { }
