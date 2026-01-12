@@ -1,6 +1,8 @@
 using Kope.Core.CompilerServices;
 using UnityEngine;
 using Kope.Core.Init;
+using Kope.Character.Stats;
+
 public class MovementComponentBase : InitializableBase
 {
     [SerializeField] protected Rigidbody2D rb;

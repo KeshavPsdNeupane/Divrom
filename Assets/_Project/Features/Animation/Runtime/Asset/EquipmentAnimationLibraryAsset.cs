@@ -1,7 +1,7 @@
 using Kope.Core.CompilerServices;
 using UnityEngine;
 
-namespace Kope.ModularSpriteAnimation.Runtime
+namespace Kope.ModularSpriteAnimation
 {
 
     public enum EquipmentPartEnum { none = -1, helmet = 0, necklace = 1, arm = 2, torso = 3, leg = 4, feet = 5, weapon = 6 }

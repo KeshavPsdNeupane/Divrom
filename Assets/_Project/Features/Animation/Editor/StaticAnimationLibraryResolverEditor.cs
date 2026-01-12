@@ -3,7 +3,6 @@ using System;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.U2D.Animation;
-using Kope.ModularSpriteAnimation.Runtime;
 
 namespace Kope.ModularSpriteAnimation.Editor
 {

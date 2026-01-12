@@ -6487,6 +6487,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5800124157191849082, guid: 99150169951534f41ab614ace9d49c8d, type: 3}
+      propertyPath: animationComponent
+      value: 
+      objectReference: {fileID: 1553881628}
+    - target: {fileID: 5800124157191849082, guid: 99150169951534f41ab614ace9d49c8d, type: 3}
+      propertyPath: equippedWeaponDataSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 4108109141f9b5663a6dbf1c537616eb, type: 2}
     - target: {fileID: 6049217348541250187, guid: 99150169951534f41ab614ace9d49c8d, type: 3}
       propertyPath: m_Name
       value: Player
@@ -9960,6 +9968,17 @@ Transform:
   - {fileID: 1198738158}
   m_Father: {fileID: 1105980190}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1553881628 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 883778599025567934, guid: 99150169951534f41ab614ace9d49c8d, type: 3}
+  m_PrefabInstance: {fileID: 602870894}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8207a5ac3ea0de14fbfcccff522cc2db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnimationComponent
 --- !u!114 &1585689640 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6086364781477239200, guid: 99150169951534f41ab614ace9d49c8d, type: 3}
@@ -12495,7 +12514,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 715888205133367105, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
       propertyPath: equipmentAssets.Array.size
-      value: 6
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 715888205133367105, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
       propertyPath: 'equipmentAssets.Array.data[0]'
@@ -12508,19 +12527,19 @@ PrefabInstance:
     - target: {fileID: 715888205133367105, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
       propertyPath: 'equipmentAssets.Array.data[2]'
       value: 
-      objectReference: {fileID: 11400000, guid: 77dcaaa2cef5fea7d9aed68b4dbc341a, type: 2}
+      objectReference: {fileID: 11400000, guid: 4ff7cddd8e2405da2a8ddb2dda3659a1, type: 2}
     - target: {fileID: 715888205133367105, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
       propertyPath: 'equipmentAssets.Array.data[3]'
       value: 
-      objectReference: {fileID: 11400000, guid: 4ff7cddd8e2405da2a8ddb2dda3659a1, type: 2}
+      objectReference: {fileID: 11400000, guid: 079c04d92642502a7b7ecfc03b2d6ccb, type: 2}
     - target: {fileID: 715888205133367105, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
       propertyPath: 'equipmentAssets.Array.data[4]'
       value: 
-      objectReference: {fileID: 11400000, guid: 079c04d92642502a7b7ecfc03b2d6ccb, type: 2}
+      objectReference: {fileID: 11400000, guid: 5a355874570ff477bb78d00ae1aad6b3, type: 2}
     - target: {fileID: 715888205133367105, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
       propertyPath: 'equipmentAssets.Array.data[5]'
       value: 
-      objectReference: {fileID: 11400000, guid: 5a355874570ff477bb78d00ae1aad6b3, type: 2}
+      objectReference: {fileID: 11400000, guid: 77dcaaa2cef5fea7d9aed68b4dbc341a, type: 2}
     - target: {fileID: 715888205133367105, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
       propertyPath: 'equipmentAssets.Array.data[6]'
       value: 
@@ -12636,7 +12655,7 @@ PrefabInstance:
     - target: {fileID: 2416734673087322731, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -790277199, guid: eee16013a3485ad6b82894bb1bca1310, type: 3}
+      objectReference: {fileID: -693547746, guid: 19ed4de9973452ad3881580cfcda5852, type: 3}
     - target: {fileID: 2416734673087322731, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
       propertyPath: m_WasSpriteAssigned
       value: 1
@@ -12723,7 +12742,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4143552739558052557, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
       propertyPath: m_labelHash
-      value: 2.0780329e-23
+      value: 3.0155645e-28
       objectReference: {fileID: 0}
     - target: {fileID: 4143552739558052557, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
       propertyPath: m_SpriteHash
@@ -12731,7 +12750,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4143552739558052557, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
       propertyPath: m_CategoryHash
-      value: 8.965765e-31
+      value: 5.449709e-22
       objectReference: {fileID: 0}
     - target: {fileID: 4770927576656623052, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
       propertyPath: m_Size.x
@@ -12884,10 +12903,10 @@ PrefabInstance:
     - target: {fileID: 6464337183673598013, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 1433470982, guid: 71e6c17a4099c9e80ab09029e70bf1b8, type: 3}
+      objectReference: {fileID: 0}
     - target: {fileID: 6464337183673598013, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
       propertyPath: m_WasSpriteAssigned
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6476524032105887844, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
       propertyPath: m_labelHash

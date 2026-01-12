@@ -1,7 +1,7 @@
 using Kope.Core.CompilerServices;
 using UnityEngine;
 
-namespace Kope.ModularSpriteAnimation.Runtime
+namespace Kope.ModularSpriteAnimation
 {
     public enum BodyRegionEnum
     {

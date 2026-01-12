@@ -1,4 +1,6 @@
 using UnityEngine;
+using Kope.Character.Stats;
+
 
 [System.Serializable]
 public class StatusEffect

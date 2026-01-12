@@ -1,9 +1,9 @@
 ﻿<Solution>
   <Project Path="Kope.Core.Runtime.csproj" />
   <Project Path="Assembly-CSharp.csproj" />
-  <Project Path="myEntityStat.csproj" />
   <Project Path="Kope.ModularSpriteAnimation.Runtime.csproj" />
+  <Project Path="Kope.Character.Stats.Runtime.csproj" />
   <Project Path="Kope.ModularSpriteAnimation.Editor.csproj" />
-  <Project Path="ThirdParty.csproj" />
+  <Project Path="Out.ThirdParty.Stuff.csproj" />
   <Project Path="Assembly-CSharp-Editor.csproj" />
 </Solution>

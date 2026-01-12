@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.U2D.Animation;
 
-namespace Kope.ModularSpriteAnimation.Runtime
+namespace Kope.ModularSpriteAnimation
 {
     /// <summary>
     /// Resolves and applies SpriteLibraryAssets for base character body regions and equipment.

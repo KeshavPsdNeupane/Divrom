@@ -1422,9 +1422,9 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Kope.Core.Runtime.csproj" />
-    <ProjectReference Include="ThirdParty.csproj" />
     <ProjectReference Include="Kope.ModularSpriteAnimation.Editor.csproj" />
-    <ProjectReference Include="myEntityStat.csproj" />
+    <ProjectReference Include="Out.ThirdParty.Stuff.csproj" />
+    <ProjectReference Include="Kope.Character.Stats.Runtime.csproj" />
     <ProjectReference Include="Kope.ModularSpriteAnimation.Runtime.csproj" />
   </ItemGroup>
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />

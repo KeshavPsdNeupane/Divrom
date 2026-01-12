@@ -1,7 +1,8 @@
 using UnityEngine.U2D.Animation;
 using UnityEngine;
 
-namespace Kope.ModularSpriteAnimation.Runtime
+
+namespace Kope.ModularSpriteAnimation
 {
     /// <summary>
     /// Custom SpriteLibrary that includes body part information and a method to clear overrides.

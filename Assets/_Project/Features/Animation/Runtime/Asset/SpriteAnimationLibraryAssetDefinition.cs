@@ -4,7 +4,7 @@ using UnityEngine;
 using ZLinq;
 using Kope.Core.CompilerServices;
 
-namespace Kope.ModularSpriteAnimation.Runtime
+namespace Kope.ModularSpriteAnimation
 {
     /// <summary>
     /// "both" means this item is applicable to both genders

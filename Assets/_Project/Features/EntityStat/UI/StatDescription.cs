@@ -5,6 +5,7 @@ using UnityEngine.Events;
 using TMPro;
 using Kope.Core.CompilerServices;
 using Kope.Core.Init;
+using Kope.Character.Stats;
 public class StatDescription : InitializableBase
 {
     [SerializeField] private GameObject statDescriptionUIPanel;

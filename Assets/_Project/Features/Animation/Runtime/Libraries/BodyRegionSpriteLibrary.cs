@@ -1,6 +1,7 @@
 using UnityEngine;
 using Kope.Core.CompilerServices;
-namespace Kope.ModularSpriteAnimation.Runtime
+
+namespace Kope.ModularSpriteAnimation
 {
     public class BodyRegionSpriteLibrary : CustomSpriteLibraryDefination
     {

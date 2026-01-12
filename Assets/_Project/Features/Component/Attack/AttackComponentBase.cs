@@ -2,7 +2,7 @@ using Kope.Core.CompilerServices;
 using UnityEngine;
 using UnityEngine.Events;
 using Kope.Core.Init;
-
+using Kope.Character.Stats;
 /// <summary>
 /// Base attack logic component. Can be used for both player and AI.
 /// Handles stat subscription and damage calculation.
