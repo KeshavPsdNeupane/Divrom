@@ -8,50 +8,79 @@ public class PlayerInventoryDisplayUI : InventoryDisplay
     [SerializeField] private GameObject slotPrefab;
     [SerializeField] private Transform slotParent;
 
+    private readonly Queue<ItemSlotUI> slotPool = new();
+    private bool prewarmed = false;
+
     public override void Init()
     {
-        if (inventoryHolder == null)
+        if (this.inventoryHolder == null)
         {
-            MyLogger.Error($"PlayerInventoryDisplayUI ({gameObject.name}):" +
-             " InventoryHolder is not assigned!");
+            MyLogger.Error($"PlayerInventoryDisplayUI ({gameObject.name}): InventoryHolder is not assigned!");
             return;
         }
 
-        if (inventoryHolder.PrimaryInventorySystem == null)
+        if (this.inventoryHolder.PrimaryInventorySystem == null)
         {
-            MyLogger.Error($"PlayerInventoryDisplayUI ({gameObject.name}):" +
-             " InventoryHolder.PrimaryInventorySystem is null! Make " +
-             "sure InventoryHolder is initialized before PlayerInventoryDisplayUI" +
-             " in the InitLifecycleManager.");
+            MyLogger.Error($"PlayerInventoryDisplayUI ({gameObject.name}): PrimaryInventorySystem is null! Make sure InventoryHolder is initialized first.");
             return;
         }
 
+        if (this.slotPrefab != null && this.slotParent != null && !this.prewarmed)
+            Prewarm();
+    }
+
+    private void Prewarm()
+    {
+        var size = this.inventoryHolder.PrimaryInventorySystem.InventorySize;
+        for (int i = 0; i < size; i++)
+        {
+            var go = Instantiate(this.slotPrefab, this.slotParent);
+            var slotUI = go.GetComponent<ItemSlotUI>();
+            slotUI.gameObject.SetActive(false);
+            slotPool.Enqueue(slotUI);
+        }
+        this.prewarmed = true;
     }
 
     protected override void Start()
     {
-        this.primaryInventorySystem = inventoryHolder.PrimaryInventorySystem;
+        this.primaryInventorySystem = this.inventoryHolder.PrimaryInventorySystem;
         this.primaryInventorySystem.onInventoryShotChanged += UpdateSlot;
         AssignSlot(this.primaryInventorySystem);
     }
 
-
     public override void AssignSlot(InventorySystem invToDisplay)
     {
-        if (this.slotParent != null)
+        // Return active slots to pool
+        if (this.slotDictionary != null)
         {
-            foreach (Transform child in slotParent)
-                Destroy(child.gameObject);
+            foreach (var ui in this.slotDictionary.Values)
+            {
+                ui.gameObject.SetActive(false);
+                this.slotPool.Enqueue(ui);
+            }
         }
-        slotDictionary = new Dictionary<ItemSlot, ItemSlotUI>();
-
-        for (int i = 0; i < this.primaryInventorySystem.InventorySize; i++)
+        this.slotDictionary = new Dictionary<ItemSlot, ItemSlotUI>();
+        var invSize = this.primaryInventorySystem.InventorySize;
+        for (int i = 0; i < invSize; i++)
         {
-            GameObject newSlotObj = Instantiate(slotPrefab, slotParent ?? transform);
-            ItemSlotUI slotUI = newSlotObj.GetComponent<ItemSlotUI>();
+            ItemSlotUI slotUI;
 
+            if (this.slotPool.Count > 0)
+            {
+                slotUI = this.slotPool.Dequeue();
+            }
+            else
+            {
+                var go = Instantiate(this.slotPrefab, this.slotParent);
+                slotUI = go.GetComponent<ItemSlotUI>();
+            }
+
+            slotUI.transform.SetParent(this.slotParent, false);
+            slotUI.gameObject.SetActive(true);
             slotUI.Init(this.primaryInventorySystem.InventorySlots[i]);
-            slotDictionary.Add(this.primaryInventorySystem.InventorySlots[i], slotUI);
+
+            this.slotDictionary.Add(this.primaryInventorySystem.InventorySlots[i], slotUI);
         }
     }
 }

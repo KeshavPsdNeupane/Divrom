@@ -12,8 +12,6 @@ namespace Kope.ModularSpriteAnimation.Editor
         private static string tempCategory;
         private static string tempLabel;
 
-
-
         [Obsolete("The validation and refresh is now handled directly in StaticAnimationLibraryResolver.OnValidate")]
         private void RefreshAndDrawBase(StaticAnimationLibraryResolver resolver)
         {

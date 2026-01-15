@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using Kope.Core.Init;
 [System.Serializable]
+
 public class InventoryHolder : InitializableBase
 {
     [SerializeField] private int primaryInventorySize;
@@ -9,7 +10,7 @@ public class InventoryHolder : InitializableBase
 
     public InventorySystem PrimaryInventorySystem => primaryInventorySystem;
 
-    public static UnityAction<InventorySystem> onDynamicInventoryDisplayRequested;
+    //public static UnityAction<InventorySystem> onDynamicInventoryDisplayRequested;
 
     public override void Init()
     {

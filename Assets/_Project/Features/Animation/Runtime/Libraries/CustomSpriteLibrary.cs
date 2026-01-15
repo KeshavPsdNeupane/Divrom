@@ -22,9 +22,9 @@ namespace Kope.ModularSpriteAnimation
 
         public void SetActiveLabel(string category, string label)
         {
-            if (resolver != null)
+            if (this.resolver != null)
             {
-                resolver.SetCategoryAndLabel(category, label);
+                this.resolver.SetCategoryAndLabel(category, label);
                 RefreshSpriteResolvers();
 
             }

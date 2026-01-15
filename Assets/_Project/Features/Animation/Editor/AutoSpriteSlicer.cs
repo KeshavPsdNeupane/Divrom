@@ -48,7 +48,7 @@ namespace Kope.ModularSpriteAnimation.Editor
             var importer = AssetImporter.GetAtPath(path) as TextureImporter;
             importer.isReadable = true;
             importer.spriteImportMode = SpriteImportMode.Multiple;
-            AssetDatabase.ImportAsset(path, ImportAssetOptions.ForceUpdate);
+            // AssetDatabase.ImportAsset(path, ImportAssetOptions.ForceUpdate);
 
             var factory = new SpriteDataProviderFactories();
             factory.Init();
@@ -176,6 +176,7 @@ namespace Kope.ModularSpriteAnimation.Editor
 
             provider.SetSpriteRects(rects.ToArray());
             provider.Apply();
+            importer.isReadable = false;
             importer.SaveAndReimport();
             Debug.Log("Slicing complete with mapped subcategories, reset indices, and overflow rows handled.");
         }

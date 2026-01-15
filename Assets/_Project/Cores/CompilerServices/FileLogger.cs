@@ -13,12 +13,12 @@ namespace Kope.Core.CompilerServices
                 if (!Directory.Exists(LogFolder))
                     Directory.CreateDirectory(LogFolder);
 
-                return Path.Combine(LogFolder, $"ErrorLog_{DateTime.Now:yyyy-MM-dd}.txt");
+                return Path.Combine(LogFolder, $"ErrorLog_{DateTime.UtcNow:yyyy-MM-dd}.txt");
             }
         }
 
         private static string TimeStamp =>
-            DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss");
 
         public void Error(string message, UnityEngine.Object context = null) =>
             AppendLog($"[{TimeStamp}] : {message}");

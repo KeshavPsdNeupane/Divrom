@@ -3,8 +3,23 @@ using UnityEngine;
 
 namespace Kope.ModularSpriteAnimation
 {
+    /// <summary>
+    /// Here put all different part on the group of 100s so that we can easily add new parts in between later.
+    /// For example, if we want to add "gloves" later, we can put it at 250 without breaking existing numbering.
+    /// and similar grouping will be as 1s difference like helmale = 0 so helmate1 =1 and similarly for rest.
+    /// </summary>
+    public enum EquipmentPartEnum : short
+    {
 
-    public enum EquipmentPartEnum { none = -1, helmet = 0, necklace = 1, arm = 2, torso = 3, leg = 4, feet = 5, weapon = 6 }
+        none = -1,
+        helmet = 0,
+        necklace = 100,
+        arm = 200,
+        torso = 300,
+        leg = 400,
+        feet = 500,
+        weapon = 600
+    }
 
 
     [CreateAssetMenu(fileName = "New Animation Library", menuName = "Animation/EquipmentAsset")]

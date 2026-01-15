@@ -58,16 +58,18 @@ namespace Kope.ModularSpriteAnimation.Editor
                 // 4. Loop through Labels in each Category
                 foreach (string label in dummyLibrary.GetCategoryLabelNames(category))
                 {
-                    // Match based on your "category_label" naming convention
-                    string targetName = $"{category}_{label}";
 
-                    if (sheetSprites.TryGetValue(targetName, out Sprite foundSprite))
-                    {
-                        newLibrary.AddCategoryLabel(foundSprite, category, label);
-                    }
-                    else if (sheetSprites.TryGetValue(label, out Sprite foundSpriteOnlyLabel))
+                    if (sheetSprites.TryGetValue(label, out Sprite foundSpriteOnlyLabel))
                     {
                         newLibrary.AddCategoryLabel(foundSpriteOnlyLabel, category, label);
+                    }
+                    else
+                    {
+                        newLibrary.AddCategoryLabel(
+                            dummyLibrary.GetSprite(category, label),
+                            category,
+                            label
+                        );
                     }
                 }
             }

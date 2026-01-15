@@ -33,21 +33,50 @@ namespace Kope.ModularSpriteAnimation
     }
 
     /// <summary>
-    /// "All" means this item is applicable to all races
+    /// "All" means this item is applicable to all races,
+    /// other values are grouped by race types with gaps for future additions
+    /// 
     /// </summary>
-    public enum RacesEnum
+    public enum RacesEnum : short
     {
-        /// <summary>
-        /// if here is gap in the numbering, it is intentional it mean some race was removed
-        /// but we don't want to renumber the existing ones to avoid breaking existing data
-        /// it prone to errors otherwise
-        /// </summary>
         none = -1,
-        human = 1, elf = 2, vampire = 3, werewolf = 4, orc = 5,
-        goblin = 6, troll = 8, undead = 9, halfwolf = 10,
-        halfcat = 11, halfelf = 12, lizard = 13,
-        All = 999,
+        All = 9999,
+        // the listed enum are just the common varient for each race type
+
+        // Humans (0 - 499), combineable with half-humans so total is 0 - 999
+        // seperation is 10 since all are almost same termology
+        human = 0,
+        barbarian = 10,
+        //half-humans (500 - 999)
+        halfelf = 500,
+        halfwolf = 510,
+        halfcat = 520,
+
+        // Humanoids (1000 - 1999)
+        // seperation is 20 since the enum name is board based on race type
+        // with this we can add like 50 total races in this category without conflict
+        // and can add like 19 subraces to each 50 races if needed,
+
+        elf = 1000,
+        orc = 1020,
+        goblin = 1040,
+        troll = 1060,
+        lizard = 1080,
+
+        // angels / Light (2000 - 2999)
+        // same resperation as above
+        angel = 2000,
+        spirit = 2020,
+        fairy = 2040,
+
+        // Demons / Dark races (3000 - 3999)
+        // same resperation as above
+        demon = 3000,
+        vampire = 3020,
+        werewolf = 3040,
+        undead = 3060,
     }
+
 
 
     public abstract class SpriteAnimationLibraryAssetDefinition : ScriptableObject
@@ -56,8 +85,10 @@ namespace Kope.ModularSpriteAnimation
         [SerializeField] protected GenderEnum applicableGender = GenderEnum.none;
         [SerializeField] protected ItemColorPermutationEnum applicableColorPermutation = ItemColorPermutationEnum.none;
         [SerializeField] protected SpriteLibraryAsset spriteLibraryAsset;
-        // ONLY for validation and editor purposes will be converted to HashSet for runtime use for performance 
+
+        // only for editor selection convenience, not used at runtime, hashset used for runtime checks
         [SerializeField] protected List<RacesEnum> applicableRaces = new() { RacesEnum.none };
+
         private HashSet<RacesEnum> _applicableRacesSet; // for faster lookup and caching
 
         public string VariantName => this.variantName;

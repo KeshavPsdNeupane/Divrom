@@ -140,6 +140,7 @@ namespace Kope.Core.Init
 
                 var isManager = item is InitLifecycleManager;
                 string marker = isManager ? " [Manager]" : "";
+
                 sb.AppendLine($"  [{i}] {item.GetType().Name} ({item.gameObject.name}){marker}");
 
                 // If it's a nested manager, show its children indented
