@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7060264c2db7a533cb485c78aa1bfb83, type: 3}
   m_Name: female_feet_slippers_brown
   m_EditorClassIdentifier: myAnimation::EquipmentAnimationLibraryAsset
-  variantName: slippers
-  applicableGender: 1
-  applicableColorPermutation: 6
   spriteLibraryAsset: {fileID: 7108339969198208228, guid: 2d53ddf69f2cb5a9ebd01ce1e3fc85cc, type: 3}
+  variantName: slippers
+  applicableGender: 2
+  applicablePart: 500
+  applicableColorPermutation: 8
   applicableRaces: 0f27
-  applicableEquipingPart: 500

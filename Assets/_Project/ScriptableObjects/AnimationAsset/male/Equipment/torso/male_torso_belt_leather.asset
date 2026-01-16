@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7060264c2db7a533cb485c78aa1bfb83, type: 3}
   m_Name: male_torso_belt_leather
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentAnimationLibraryAsset
-  variantName: belt
-  applicableGender: 0
-  applicableColorPermutation: 2000
   spriteLibraryAsset: {fileID: 7108339969198208228, guid: ac7266fd15d3d98f8a69d0713b5d0fdb, type: 3}
+  variantName: belt
+  applicableGender: 1
+  applicablePart: 400
+  applicableColorPermutation: 2000
   applicableRaces: 0f27
-  applicableEquipingPart: 300

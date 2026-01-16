@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e08966eac7a0119594a7271f350fa3c, type: 3}
   m_Name: both_shadow_shadow_black
   m_EditorClassIdentifier: myAnimation::BodyRegionAnimationLibraryAsset
-  variantName: shadow
-  applicableGender: 2
-  applicableColorPermutation: 0
   spriteLibraryAsset: {fileID: 7108339969198208228, guid: 794f836811584b7ddacf006029871833, type: 3}
+  variantName: shadow
+  applicableGender: 3
+  applicablePart: 500
+  applicableColorPermutation: 1
   applicableRaces: 0f27
-  applicableBaseBody: 500

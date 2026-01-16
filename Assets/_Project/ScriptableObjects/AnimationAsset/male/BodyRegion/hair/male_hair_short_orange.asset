@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e08966eac7a0119594a7271f350fa3c, type: 3}
   m_Name: male_hair_short_orange
   m_EditorClassIdentifier: Assembly-CSharp::BodyRegionAnimationLibraryAsset
-  variantName: short
-  applicableGender: 0
-  applicableColorPermutation: 5
   spriteLibraryAsset: {fileID: 7108339969198208228, guid: 3e2ee97b6ed5491ffbe4432b42d98a5e, type: 3}
-  applicableRaces: 00000a00f401fe010802e803e00b
-  applicableBaseBody: 0
+  variantName: short
+  applicableGender: 1
+  applicablePart: 1
+  applicableColorPermutation: 7
+  applicableRaces: 01000a00f401fe010802e803e00b

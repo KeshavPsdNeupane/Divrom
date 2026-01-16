@@ -82,7 +82,7 @@ SpriteRenderer:
   m_SortingLayerID: 1489034323
   m_SortingLayer: 5
   m_SortingOrder: 2
-  m_Sprite: {fileID: 1433470982, guid: 71e6c17a4099c9e80ab09029e70bf1b8, type: 3}
+  m_Sprite: {fileID: 484634051, guid: 71e6c17a4099c9e80ab09029e70bf1b8, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -118,10 +118,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed8b1ae4e4e52b34ea557c1c11e076fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.2D.Animation.Runtime::UnityEngine.U2D.Animation.SpriteResolver
-  m_CategoryHash: 8.965765e-31
-  m_labelHash: 2.5943291e-34
+  m_CategoryHash: 5.449709e-22
+  m_labelHash: 0.000009973772
   m_SpriteKey: 0
-  m_SpriteHash: 235424171
+  m_SpriteHash: 680541944
 --- !u!114 &1634048473162864737
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -136,8 +136,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentSpriteLibrary
   m_Library: []
   m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: 0271fb688dc71e1e0ada464059d110d2, type: 3}
+  partType: 200
   resolver: {fileID: 8309880159173220309}
-  currentBodyEquipmentPart: 200
 --- !u!1 &574156304128869336
 GameObject:
   m_ObjectHideFlags: 0
@@ -220,7 +220,7 @@ SpriteRenderer:
   m_SortingLayerID: 1489034323
   m_SortingLayer: 5
   m_SortingOrder: 1
-  m_Sprite: {fileID: -659143660, guid: 369a417af5b27b2d9afb5719b7c1fae0, type: 3}
+  m_Sprite: {fileID: 2004279776, guid: 369a417af5b27b2d9afb5719b7c1fae0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -257,9 +257,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.2D.Animation.Runtime::UnityEngine.U2D.Animation.SpriteResolver
   m_CategoryHash: 5.449709e-22
-  m_labelHash: 3.063107e-16
+  m_labelHash: 0.000009973772
   m_SpriteKey: 0
-  m_SpriteHash: 235424171
+  m_SpriteHash: 680541944
 --- !u!114 &6171394428307915616
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -274,8 +274,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BodyRegionSpriteLibrary
   m_Library: []
   m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: a9c7a62fa4f38f46db6d92549d656c0a, type: 3}
+  partType: 100
   resolver: {fileID: 2222223126354630835}
-  currentBodyRegion: 100
 --- !u!1 &1013968668550784474
 GameObject:
   m_ObjectHideFlags: 0
@@ -358,7 +358,7 @@ SpriteRenderer:
   m_SortingLayerID: 1489034323
   m_SortingLayer: 5
   m_SortingOrder: 2
-  m_Sprite: {fileID: -855901985, guid: 780c04f42cd663241a0a2a61f37b0e0e, type: 3}
+  m_Sprite: {fileID: 1351113625, guid: 780c04f42cd663241a0a2a61f37b0e0e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -395,9 +395,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.2D.Animation.Runtime::UnityEngine.U2D.Animation.SpriteResolver
   m_CategoryHash: 5.449709e-22
-  m_labelHash: 3.063107e-16
+  m_labelHash: 0.000009973772
   m_SpriteKey: 0
-  m_SpriteHash: 235424171
+  m_SpriteHash: 680541944
 --- !u!114 &2380745314840800668
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -412,8 +412,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentSpriteLibrary
   m_Library: []
   m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: 6b9c9edd90477bdcb95deda3da19f61b, type: 3}
+  partType: 400
   resolver: {fileID: 194466219882059743}
-  currentBodyEquipmentPart: 400
 --- !u!1 &1017741784750801804
 GameObject:
   m_ObjectHideFlags: 0
@@ -534,7 +534,7 @@ SpriteRenderer:
   m_SortingLayerID: 1489034323
   m_SortingLayer: 5
   m_SortingOrder: 1
-  m_Sprite: {fileID: -1111047886, guid: 3b3c7bb5434dfa91ea3f0fc3173faf2d, type: 3}
+  m_Sprite: {fileID: 1844252779, guid: 3b3c7bb5434dfa91ea3f0fc3173faf2d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -571,9 +571,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.2D.Animation.Runtime::UnityEngine.U2D.Animation.SpriteResolver
   m_CategoryHash: 5.449709e-22
-  m_labelHash: 3.063107e-16
+  m_labelHash: 0.000009973772
   m_SpriteKey: 0
-  m_SpriteHash: 235424171
+  m_SpriteHash: 680541944
 --- !u!114 &825663328726864719
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -588,8 +588,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentSpriteLibrary
   m_Library: []
   m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: 2d53ddf69f2cb5a9ebd01ce1e3fc85cc, type: 3}
+  partType: 500
   resolver: {fileID: 8708032636978680071}
-  currentBodyEquipmentPart: 500
 --- !u!1 &1984439224459705515
 GameObject:
   m_ObjectHideFlags: 0
@@ -709,9 +709,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.2D.Animation.Runtime::UnityEngine.U2D.Animation.SpriteResolver
   m_CategoryHash: 5.449709e-22
-  m_labelHash: 3.063107e-16
+  m_labelHash: 0.000009973772
   m_SpriteKey: 0
-  m_SpriteHash: 235424171
+  m_SpriteHash: 680541944
 --- !u!114 &2504819488441861470
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -726,8 +726,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentSpriteLibrary
   m_Library: []
   m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: 1fd486b84ee5dd11390d58724e865054, type: 3}
+  partType: 1
   resolver: {fileID: 5851198802960128052}
-  currentBodyEquipmentPart: 0
 --- !u!1 &2553156435447062855
 GameObject:
   m_ObjectHideFlags: 0
@@ -810,7 +810,7 @@ SpriteRenderer:
   m_SortingLayerID: 1489034323
   m_SortingLayer: 5
   m_SortingOrder: 3
-  m_Sprite: {fileID: -790277199, guid: eee16013a3485ad6b82894bb1bca1310, type: 3}
+  m_Sprite: {fileID: -456272984, guid: eee16013a3485ad6b82894bb1bca1310, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -846,10 +846,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed8b1ae4e4e52b34ea557c1c11e076fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.2D.Animation.Runtime::UnityEngine.U2D.Animation.SpriteResolver
-  m_CategoryHash: 8.965765e-31
-  m_labelHash: 2.5943291e-34
+  m_CategoryHash: 5.449709e-22
+  m_labelHash: 0.000009973772
   m_SpriteKey: 0
-  m_SpriteHash: 235424171
+  m_SpriteHash: 680541944
 --- !u!114 &1231242336225600998
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -864,8 +864,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentSpriteLibrary
   m_Library: []
   m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: d901f766c89fe0ad399e44518578b054, type: 3}
+  partType: 300
   resolver: {fileID: 1290175588638742880}
-  currentBodyEquipmentPart: 300
 --- !u!1 &3048572483934911602
 GameObject:
   m_ObjectHideFlags: 0
@@ -877,7 +877,7 @@ GameObject:
   - component: {fileID: 6152516264922837659}
   - component: {fileID: 6098057643568931919}
   - component: {fileID: 2804134243074050692}
-  - component: {fileID: 5961786463938701562}
+  - component: {fileID: 2604759032030204665}
   m_Layer: 0
   m_Name: Animation
   m_TagString: Untagged
@@ -895,7 +895,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 689364472426409765}
@@ -936,7 +936,7 @@ SortingGroup:
   m_SortingLayer: 5
   m_SortingOrder: 0
   m_SortAtRoot: 0
---- !u!114 &5961786463938701562
+--- !u!114 &2604759032030204665
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -945,11 +945,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 3048572483934911602}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e40fa1de52d381271840326a3caa50bb, type: 3}
+  m_Script: {fileID: 11500000, guid: bd58547d6afbea33dbb57a19770b9380, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::StaticAnimationLibraryResolver
+  m_EditorClassIdentifier: Kope.ModularSpriteAnimation.Runtime::StaticCharacterLibraryResolver
+  gender: 2
   race: 510
-  gender: 1
   defaultSpriteLibraryAsset: {fileID: 7108339969198208228, guid: 1fd486b84ee5dd11390d58724e865054, type: 3}
   baseCharacterLibraries:
   - {fileID: 5401409682393372153}
@@ -961,14 +961,14 @@ MonoBehaviour:
   - {fileID: 2746850066767546932}
   - {fileID: 5872911390596661001}
   baseCharacterAssets:
+  - {fileID: 11400000, guid: aac72f0a073823cd3b31c2667cae5175, type: 2}
+  - {fileID: 11400000, guid: 68dd498a20278c64e842474c831a4f31, type: 2}
+  - {fileID: 11400000, guid: 9fb8c47a059eba8eeb0e13b204da55e3, type: 2}
+  - {fileID: 11400000, guid: f1b65676532dbe99cbc56c2713e76786, type: 2}
   - {fileID: 11400000, guid: 21c2cffcb659a82bfbc806c54fd110ee, type: 2}
   - {fileID: 11400000, guid: 8e789defe70252217b231be25fb95458, type: 2}
   - {fileID: 11400000, guid: a484e2297da806b4e94620e51fd72b46, type: 2}
-  - {fileID: 11400000, guid: f1b65676532dbe99cbc56c2713e76786, type: 2}
   - {fileID: 11400000, guid: 0d20f2b5bb6081f08998fe76db41facb, type: 2}
-  - {fileID: 11400000, guid: aac72f0a073823cd3b31c2667cae5175, type: 2}
-  - {fileID: 11400000, guid: 9fb8c47a059eba8eeb0e13b204da55e3, type: 2}
-  - {fileID: 11400000, guid: 68dd498a20278c64e842474c831a4f31, type: 2}
   equipmentLibraries:
   - {fileID: 2504819488441861470}
   - {fileID: 3201915881795204063}
@@ -978,12 +978,12 @@ MonoBehaviour:
   - {fileID: 825663328726864719}
   - {fileID: 8122480708991319272}
   equipmentAssets:
-  - {fileID: 11400000, guid: 77dcaaa2cef5fea7d9aed68b4dbc341a, type: 2}
-  - {fileID: 11400000, guid: 079c04d92642502a7b7ecfc03b2d6ccb, type: 2}
-  - {fileID: 11400000, guid: 4ff7cddd8e2405da2a8ddb2dda3659a1, type: 2}
-  - {fileID: 11400000, guid: 45c8845ff170547eb8fa626438ac8d9c, type: 2}
-  - {fileID: 11400000, guid: 10363c7bdc8dffabd8e30133b1d00aa3, type: 2}
   - {fileID: 11400000, guid: 531686a3c599ef9288d42096965a7bd0, type: 2}
+  - {fileID: 11400000, guid: 10363c7bdc8dffabd8e30133b1d00aa3, type: 2}
+  - {fileID: 11400000, guid: 77dcaaa2cef5fea7d9aed68b4dbc341a, type: 2}
+  - {fileID: 11400000, guid: 4ff7cddd8e2405da2a8ddb2dda3659a1, type: 2}
+  - {fileID: 11400000, guid: 079c04d92642502a7b7ecfc03b2d6ccb, type: 2}
+  - {fileID: 11400000, guid: 45c8845ff170547eb8fa626438ac8d9c, type: 2}
 --- !u!1 &4893634328063666916
 GameObject:
   m_ObjectHideFlags: 0
@@ -1066,7 +1066,7 @@ SpriteRenderer:
   m_SortingLayerID: 1489034323
   m_SortingLayer: 5
   m_SortingOrder: 2
-  m_Sprite: {fileID: -1090274858, guid: 95a16fdd7b6603e60a9484aed56aedc9, type: 3}
+  m_Sprite: {fileID: 807381572, guid: 95a16fdd7b6603e60a9484aed56aedc9, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1105,7 +1105,7 @@ MonoBehaviour:
   m_CategoryHash: 5.449709e-22
   m_labelHash: 0.000009973772
   m_SpriteKey: 0
-  m_SpriteHash: 235424171
+  m_SpriteHash: 680541944
 --- !u!114 &5401409682393372153
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1120,8 +1120,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BodyRegionSpriteLibrary
   m_Library: []
   m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: 8f22d073cc004bb07a019c7aa393e36f, type: 3}
+  partType: 1
   resolver: {fileID: 7121043095632084342}
-  currentBodyRegion: 0
 --- !u!1 &5307645063569339120
 GameObject:
   m_ObjectHideFlags: 0
@@ -1204,7 +1204,7 @@ SpriteRenderer:
   m_SortingLayerID: 1489034323
   m_SortingLayer: 5
   m_SortingOrder: 0
-  m_Sprite: {fileID: -1976043293, guid: e57d0019a56699c93bb6ff3a7e1e7da1, type: 3}
+  m_Sprite: {fileID: -1395088838, guid: e57d0019a56699c93bb6ff3a7e1e7da1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1241,9 +1241,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.2D.Animation.Runtime::UnityEngine.U2D.Animation.SpriteResolver
   m_CategoryHash: 5.449709e-22
-  m_labelHash: 3.063107e-16
+  m_labelHash: 0.000009973772
   m_SpriteKey: 0
-  m_SpriteHash: 235424171
+  m_SpriteHash: 680541944
 --- !u!114 &7601602333803354646
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1258,8 +1258,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BodyRegionSpriteLibrary
   m_Library: []
   m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: 1b8debac05e238d3093dc41dbeefe57c, type: 3}
+  partType: 300
   resolver: {fileID: 863551125990305928}
-  currentBodyRegion: 300
 --- !u!1 &5318280978283226207
 GameObject:
   m_ObjectHideFlags: 0
@@ -1342,7 +1342,7 @@ SpriteRenderer:
   m_SortingLayerID: 1489034323
   m_SortingLayer: 5
   m_SortingOrder: -10
-  m_Sprite: {fileID: 4839505426810885240, guid: 9e563b88af2e71614a9cc0dda8a67022, type: 3}
+  m_Sprite: {fileID: -6806150267840390833, guid: 9e563b88af2e71614a9cc0dda8a67022, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1379,9 +1379,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.2D.Animation.Runtime::UnityEngine.U2D.Animation.SpriteResolver
   m_CategoryHash: 5.449709e-22
-  m_labelHash: 3.063107e-16
+  m_labelHash: 0.000009973772
   m_SpriteKey: 0
-  m_SpriteHash: 235424171
+  m_SpriteHash: 680541944
 --- !u!114 &2746850066767546932
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1396,8 +1396,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BodyRegionSpriteLibrary
   m_Library: []
   m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: 794f836811584b7ddacf006029871833, type: 3}
+  partType: 500
   resolver: {fileID: 2556741835694889872}
-  currentBodyRegion: 500
 --- !u!1 &5784834323997939338
 GameObject:
   m_ObjectHideFlags: 0
@@ -1480,7 +1480,7 @@ SpriteRenderer:
   m_SortingLayerID: 1489034323
   m_SortingLayer: 5
   m_SortingOrder: 2
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 1309771320, guid: d434791f6168f7c10b9c2d4b9fd775dd, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1488,7 +1488,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!114 &4222768172233793291
@@ -1519,7 +1519,7 @@ MonoBehaviour:
   m_CategoryHash: 5.449709e-22
   m_labelHash: 0.000009973772
   m_SpriteKey: 0
-  m_SpriteHash: 235424171
+  m_SpriteHash: 680541944
 --- !u!114 &8131469308362013463
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1534,8 +1534,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BodyRegionSpriteLibrary
   m_Library: []
   m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: 45293ecb3fcb31465a0e0074c9a68609, type: 3}
+  partType: 2
   resolver: {fileID: 1544861726327990890}
-  currentBodyRegion: 1
 --- !u!1 &6161002798951276132
 GameObject:
   m_ObjectHideFlags: 0
@@ -1618,7 +1618,7 @@ SpriteRenderer:
   m_SortingLayerID: 1489034323
   m_SortingLayer: 5
   m_SortingOrder: 3
-  m_Sprite: {fileID: 4309644004551084477, guid: 15f0c0868164618e9b8c1c7fe7447732, type: 3}
+  m_Sprite: {fileID: 909965967646816122, guid: 15f0c0868164618e9b8c1c7fe7447732, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1655,9 +1655,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.2D.Animation.Runtime::UnityEngine.U2D.Animation.SpriteResolver
   m_CategoryHash: 5.449709e-22
-  m_labelHash: 3.063107e-16
+  m_labelHash: 0.000009973772
   m_SpriteKey: 0
-  m_SpriteHash: 235424171
+  m_SpriteHash: 680541944
 --- !u!114 &4128785699923976056
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1672,8 +1672,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BodyRegionSpriteLibrary
   m_Library: []
   m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: a4f7f1f1a936fe54c800129663008da9, type: 3}
+  partType: 200
   resolver: {fileID: 610385372327147980}
-  currentBodyRegion: 200
 --- !u!1 &7605433436897414672
 GameObject:
   m_ObjectHideFlags: 0
@@ -1756,7 +1756,7 @@ SpriteRenderer:
   m_SortingLayerID: 1489034323
   m_SortingLayer: 5
   m_SortingOrder: -2
-  m_Sprite: {fileID: -1914632134, guid: dc6ebe7f372cae8419162756f1104752, type: 3}
+  m_Sprite: {fileID: 1833730570, guid: dc6ebe7f372cae8419162756f1104752, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1792,10 +1792,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed8b1ae4e4e52b34ea557c1c11e076fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.2D.Animation.Runtime::UnityEngine.U2D.Animation.SpriteResolver
-  m_CategoryHash: 3.782646e-29
-  m_labelHash: 1.6574887e-34
+  m_CategoryHash: 5.449709e-22
+  m_labelHash: 0.000009973772
   m_SpriteKey: 0
-  m_SpriteHash: 235424171
+  m_SpriteHash: 680541944
 --- !u!114 &5872911390596661001
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1810,8 +1810,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BodyRegionSpriteLibrary
   m_Library: []
   m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: 1f7883dc543a5a8728378897e75fc1b7, type: 3}
+  partType: 600
   resolver: {fileID: 6169189097393889413}
-  currentBodyRegion: 600
 --- !u!1 &8471362312575267839
 GameObject:
   m_ObjectHideFlags: 0
@@ -1894,7 +1894,7 @@ SpriteRenderer:
   m_SortingLayerID: 1489034323
   m_SortingLayer: 5
   m_SortingOrder: 8
-  m_Sprite: {fileID: -900537256, guid: 02ba8bfbe72bc2fd0a526359ae45d8fc, type: 3}
+  m_Sprite: {fileID: -2011534638, guid: 02ba8bfbe72bc2fd0a526359ae45d8fc, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1931,9 +1931,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.2D.Animation.Runtime::UnityEngine.U2D.Animation.SpriteResolver
   m_CategoryHash: 5.449709e-22
-  m_labelHash: 3.063107e-16
+  m_labelHash: 0.000009973772
   m_SpriteKey: 0
-  m_SpriteHash: 235424171
+  m_SpriteHash: 680541944
 --- !u!114 &8122480708991319272
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1948,8 +1948,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentSpriteLibrary
   m_Library: []
   m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: 8200f0bcab2236c33bf77c1e41c126a1, type: 3}
+  partType: 600
   resolver: {fileID: 8489052238718460152}
-  currentBodyEquipmentPart: 600
 --- !u!1 &8638020264429928410
 GameObject:
   m_ObjectHideFlags: 0
@@ -2032,7 +2032,7 @@ SpriteRenderer:
   m_SortingLayerID: 1489034323
   m_SortingLayer: 5
   m_SortingOrder: 4
-  m_Sprite: {fileID: -8498407833611962168, guid: 14619560ade8d0221a350f84a97a2e1c, type: 3}
+  m_Sprite: {fileID: 3247719083202608799, guid: 14619560ade8d0221a350f84a97a2e1c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -2069,9 +2069,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.2D.Animation.Runtime::UnityEngine.U2D.Animation.SpriteResolver
   m_CategoryHash: 5.449709e-22
-  m_labelHash: 3.063107e-16
+  m_labelHash: 0.000009973772
   m_SpriteKey: 0
-  m_SpriteHash: 235424171
+  m_SpriteHash: 680541944
 --- !u!114 &3201915881795204063
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2086,8 +2086,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentSpriteLibrary
   m_Library: []
   m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: a98ef0810c5fb6b94a50269a3d1af89f, type: 3}
+  partType: 100
   resolver: {fileID: 1461213939397561517}
-  currentBodyEquipmentPart: 100
 --- !u!1 &8797762550481837975
 GameObject:
   m_ObjectHideFlags: 0
@@ -2170,7 +2170,7 @@ SpriteRenderer:
   m_SortingLayerID: 1489034323
   m_SortingLayer: 5
   m_SortingOrder: -1
-  m_Sprite: {fileID: -4369906226497229518, guid: f3794dee20967e9dba8153ab2537b453, type: 3}
+  m_Sprite: {fileID: -8175500206851309718, guid: f3794dee20967e9dba8153ab2537b453, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -2207,9 +2207,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.2D.Animation.Runtime::UnityEngine.U2D.Animation.SpriteResolver
   m_CategoryHash: 5.449709e-22
-  m_labelHash: 3.063107e-16
+  m_labelHash: 0.000009973772
   m_SpriteKey: 0
-  m_SpriteHash: 235424171
+  m_SpriteHash: 680541944
 --- !u!114 &1211265712039483607
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2224,8 +2224,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BodyRegionSpriteLibrary
   m_Library: []
   m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: ad6e9814683d7f426bfb56ed04de815b, type: 3}
+  partType: 400
   resolver: {fileID: 6510418596479908096}
-  currentBodyRegion: 400
 --- !u!1 &9038067499290235549
 GameObject:
   m_ObjectHideFlags: 0

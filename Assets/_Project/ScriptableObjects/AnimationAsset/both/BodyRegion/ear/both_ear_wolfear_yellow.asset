@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e08966eac7a0119594a7271f350fa3c, type: 3}
   m_Name: both_ear_wolfear_yellow
   m_EditorClassIdentifier: myAnimation::BodyRegionAnimationLibraryAsset
-  variantName: wolfear
-  applicableGender: 2
-  applicableColorPermutation: 2
   spriteLibraryAsset: {fileID: 7108339969198208228, guid: a4f7f1f1a936fe54c800129663008da9, type: 3}
+  variantName: wolfear
+  applicableGender: 3
+  applicablePart: 200
+  applicableColorPermutation: 4
   applicableRaces: fe01
-  applicableBaseBody: 200

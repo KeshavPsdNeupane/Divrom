@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7060264c2db7a533cb485c78aa1bfb83, type: 3}
   m_Name: male_hemlate_barbarian_steel
   m_EditorClassIdentifier: myAnimation::EquipmentAnimationLibraryAsset
-  variantName: barbarian
-  applicableGender: 0
-  applicableColorPermutation: 1004
   spriteLibraryAsset: {fileID: 7108339969198208228, guid: ba721fa84884d6080ae0563084146b28, type: 3}
-  applicableRaces: 00000a00
-  applicableEquipingPart: 0
+  variantName: barbarian
+  applicableGender: 1
+  applicablePart: 1
+  applicableColorPermutation: 1004
+  applicableRaces: 01000a00

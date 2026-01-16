@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e08966eac7a0119594a7271f350fa3c, type: 3}
   m_Name: female_hairp1_princess_sandy
   m_EditorClassIdentifier: myAnimation::BodyRegionAnimationLibraryAsset
-  variantName: princess
-  applicableGender: 1
-  applicableColorPermutation: 2001
   spriteLibraryAsset: {fileID: 7108339969198208228, guid: 911c270a3408708d28bea5180aeeea02, type: 3}
-  applicableRaces: 00000a00f401fe010802e803cc0b
-  applicableBaseBody: 0
+  variantName: princess
+  applicableGender: 2
+  applicablePart: 1
+  applicableColorPermutation: 2001
+  applicableRaces: 01000a00f401fe010802e803cc0b
