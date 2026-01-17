@@ -1,0 +1,20 @@
+{
+    "name": "Kope.ModularSpriteAnimation.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:5c70594970a67a987bc3428040d63b18",
+        "GUID:2c573e6b271651846a79655161004c5b",
+        "GUID:41524c21c95e5fe4dbc5b48bd21995a4"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

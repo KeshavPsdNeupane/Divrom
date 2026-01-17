@@ -1,0 +1,135 @@
+using UnityEngine;
+using System;
+using System.Collections.Generic;
+using Kope.Core.CompilerServices;
+namespace ServiceLocatorPattern
+{
+    public abstract class ServiceLocator<T, TBase> : MonoBehaviour
+        where T : MonoBehaviour
+        where TBase : ServiceBase
+    {
+        private static T instance;
+        protected readonly Dictionary<Type, TBase> services = new();
+        private static readonly object lockObj = new();
+        protected bool isPersistent = false;
+
+        public static T Instance
+
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    lock (lockObj)
+                    {
+                        if (instance == null)
+                        {
+                            instance = FindFirstObjectByType<T>();
+                            if (instance == null)
+                            {
+                                GameObject singletonObject = new(typeof(T).Name + "_AG");
+                                instance = singletonObject.AddComponent<T>();
+                            }
+                        }
+                    }
+                }
+                return instance;
+            }
+        }
+
+        protected virtual void Awake()
+        {
+            if (instance == null)
+            {
+                instance = this as T;
+                if (isPersistent) DontDestroyOnLoad(gameObject);
+            }
+            else if (instance != this)
+            {
+                Destroy(gameObject);
+            }
+        }
+
+        public bool HasService<TService>() where TService : TBase => services.ContainsKey(typeof(TService));
+        protected virtual void OnDestroy()
+        {
+            if (instance == this)
+            {
+                instance = null;
+                services.Clear();
+            }
+        }
+
+        public static TService FindInScene<TService>() where TService : ServiceBase
+        {
+            TService[] candidates = FindObjectsByType<TService>(FindObjectsSortMode.None);
+            Array.Sort(candidates, (a, b) =>
+                      GetHierarchyDepth(a.transform).CompareTo(GetHierarchyDepth(b.transform)));
+            foreach (var candidate in candidates)
+            {
+                if (candidate != null)
+                {
+                    return candidate; // first root-most candidate
+                }
+            }
+            return null;
+        }
+        protected static int GetHierarchyDepth(Transform t)
+        {
+            int depth = 0;
+            Transform current = t;
+
+            while (current.parent != null)
+            {
+                depth++;
+                current = current.parent;
+            }
+
+            return depth;
+        }
+        private void OnEnable()
+        {
+            UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnSceneLoaded;
+        }
+
+        private void OnDisable()
+        {
+            UnityEngine.SceneManagement.SceneManager.sceneLoaded -= OnSceneLoaded;
+        }
+
+        private void OnSceneLoaded(UnityEngine.SceneManagement.Scene unused, UnityEngine.SceneManagement.LoadSceneMode mode)
+        {
+            if (!this.isPersistent || this == null) return;
+            // After a new scene is loaded, we want to ensure that no duplicate services exist.
+            // 1. Iterate through our registered services
+            foreach (var pair in services)
+            {
+                Type serviceType = pair.Key;      // The Type we registered (e.g., InputManager)
+                TBase registeredInstance = pair.Value; // The actual Object we are keeping
+
+                // 2. Find every instance of this type currently in the scene
+                // We use the base Object.FindObjectsByType because serviceType is a variable
+                var allInstances = FindObjectsByType(serviceType, FindObjectsSortMode.None);
+
+                foreach (var foundInstance in allInstances)
+                {
+                    // 3. IMPORTANT: Compare the INSTANCE, not the Type.
+                    // If the found object is NOT our protected global instance, it's a duplicate.
+                    if (!ReferenceEquals(foundInstance, registeredInstance))
+                    {
+                        // Cast to Component/MonoBehaviour to get the GameObject for destruction
+                        if (foundInstance is Component comp)
+                        {
+                            if (comp.gameObject != null)
+                            {
+                                MyLogger.Warn($"[Global] Destroyed redundant {serviceType.Name} found in newly loaded scene.");
+                                Destroy(comp.gameObject);
+                            }
+
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

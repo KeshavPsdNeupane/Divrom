@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7060264c2db7a533cb485c78aa1bfb83, type: 3}
+  m_Name: both_neck_chainnecklace_caremic
+  m_EditorClassIdentifier: myAnimation::EquipmentAnimationLibraryAsset
+  spriteLibraryAsset: {fileID: 7108339969198208228, guid: a98ef0810c5fb6b94a50269a3d1af89f, type: 3}
+  variantName: chainnecklace
+  applicableGender: 3
+  applicablePart: 100
+  applicableColorPermutation: 1000
+  applicableRaces: 0f27

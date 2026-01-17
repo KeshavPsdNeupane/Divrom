@@ -1,0 +1,5059 @@
+fileFormatVersion: 2
+guid: eee16013a3485ad6b82894bb1bca1310
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 4676345457984015041
+    second: female_torso_kimono_bluegrey_0
+  - first:
+      213: -3843825874158348592
+    second: female_torso_kimono_bluegrey_1
+  - first:
+      213: -5241874416212988863
+    second: female_torso_kimono_bluegrey_2
+  - first:
+      213: 212438042368824470
+    second: female_torso_kimono_bluegrey_3
+  - first:
+      213: 2690966448071823688
+    second: female_torso_kimono_bluegrey_4
+  - first:
+      213: 6709362934454386622
+    second: female_torso_kimono_bluegrey_5
+  - first:
+      213: 6208396931115389791
+    second: female_torso_kimono_bluegrey_6
+  - first:
+      213: -2351502086193160546
+    second: female_torso_kimono_bluegrey_7
+  - first:
+      213: 3401861907428839003
+    second: female_torso_kimono_bluegrey_8
+  - first:
+      213: 6599180837736215856
+    second: female_torso_kimono_bluegrey_9
+  - first:
+      213: 2298993082305140520
+    second: female_torso_kimono_bluegrey_10
+  - first:
+      213: 2676706776572199000
+    second: female_torso_kimono_bluegrey_11
+  - first:
+      213: -7363244089548527728
+    second: female_torso_kimono_bluegrey_12
+  - first:
+      213: 7014758153933321306
+    second: female_torso_kimono_bluegrey_13
+  - first:
+      213: -3689364565952012047
+    second: female_torso_kimono_bluegrey_14
+  - first:
+      213: 8811117714670034736
+    second: female_torso_kimono_bluegrey_15
+  - first:
+      213: -1150468043901121730
+    second: female_torso_kimono_bluegrey_16
+  - first:
+      213: 102086745530958272
+    second: female_torso_kimono_bluegrey_17
+  - first:
+      213: -5584533377593934540
+    second: female_torso_kimono_bluegrey_18
+  - first:
+      213: 6017479888784272118
+    second: female_torso_kimono_bluegrey_19
+  - first:
+      213: -1142176311498594447
+    second: female_torso_kimono_bluegrey_20
+  - first:
+      213: 6653315614749514170
+    second: female_torso_kimono_bluegrey_21
+  - first:
+      213: -3965355821667476817
+    second: female_torso_kimono_bluegrey_22
+  - first:
+      213: -83338211926197793
+    second: female_torso_kimono_bluegrey_23
+  - first:
+      213: 6684845597745519366
+    second: female_torso_kimono_bluegrey_24
+  - first:
+      213: -8540696131712276348
+    second: female_torso_kimono_bluegrey_25
+  - first:
+      213: -4034553629813438834
+    second: female_torso_kimono_bluegrey_26
+  - first:
+      213: -2086678534454791690
+    second: female_torso_kimono_bluegrey_27
+  - first:
+      213: -436801534686831879
+    second: female_torso_kimono_bluegrey_28
+  - first:
+      213: -383439112006824202
+    second: female_torso_kimono_bluegrey_29
+  - first:
+      213: -3660421977422844887
+    second: female_torso_kimono_bluegrey_30
+  - first:
+      213: 741163803754387598
+    second: female_torso_kimono_bluegrey_31
+  - first:
+      213: -489191917672257398
+    second: female_torso_kimono_bluegrey_32
+  - first:
+      213: -159733408478207436
+    second: female_torso_kimono_bluegrey_33
+  - first:
+      213: -1009116997923741814
+    second: female_torso_kimono_bluegrey_34
+  - first:
+      213: 6854126311530977753
+    second: female_torso_kimono_bluegrey_35
+  - first:
+      213: -4409918614225489747
+    second: female_torso_kimono_bluegrey_36
+  - first:
+      213: 4446518428642500137
+    second: female_torso_kimono_bluegrey_37
+  - first:
+      213: -4881611634225044785
+    second: female_torso_kimono_bluegrey_38
+  - first:
+      213: -4541252746992209879
+    second: female_torso_kimono_bluegrey_39
+  - first:
+      213: 1302139045565683650
+    second: female_torso_kimono_bluegrey_40
+  - first:
+      213: 1521847014151809227
+    second: female_torso_kimono_bluegrey_41
+  - first:
+      213: 7644073144482610687
+    second: female_torso_kimono_bluegrey_42
+  - first:
+      213: 7431452760418097500
+    second: female_torso_kimono_bluegrey_43
+  - first:
+      213: 3298103868707206016
+    second: female_torso_kimono_bluegrey_44
+  - first:
+      213: -355178769760845292
+    second: female_torso_kimono_bluegrey_45
+  - first:
+      213: 3338109932024439174
+    second: female_torso_kimono_bluegrey_46
+  - first:
+      213: -196060148699765515
+    second: female_torso_kimono_bluegrey_47
+  - first:
+      213: -446544191471105930
+    second: female_torso_kimono_bluegrey_48
+  - first:
+      213: -1151585385161958890
+    second: female_torso_kimono_bluegrey_49
+  - first:
+      213: -206638210765314387
+    second: female_torso_kimono_bluegrey_50
+  - first:
+      213: 7593883237966663916
+    second: female_torso_kimono_bluegrey_51
+  - first:
+      213: 2351923169184509062
+    second: female_torso_kimono_bluegrey_52
+  - first:
+      213: 6150961456039262513
+    second: female_torso_kimono_bluegrey_53
+  - first:
+      213: 5012973987750184241
+    second: female_torso_kimono_bluegrey_54
+  - first:
+      213: 6766556286543427709
+    second: female_torso_kimono_bluegrey_55
+  - first:
+      213: 7486221965574321483
+    second: female_torso_kimono_bluegrey_56
+  - first:
+      213: -8906675968508318277
+    second: female_torso_kimono_bluegrey_57
+  - first:
+      213: -5178635652520183087
+    second: female_torso_kimono_bluegrey_58
+  - first:
+      213: -5169700686516962364
+    second: female_torso_kimono_bluegrey_59
+  - first:
+      213: -7646333578958137816
+    second: female_torso_kimono_bluegrey_60
+  - first:
+      213: -6532944430153258882
+    second: female_torso_kimono_bluegrey_61
+  - first:
+      213: -5642934365875603169
+    second: female_torso_kimono_bluegrey_62
+  - first:
+      213: 7457283101999453794
+    second: female_torso_kimono_bluegrey_63
+  - first:
+      213: -4586294965984849459
+    second: female_torso_kimono_bluegrey_64
+  - first:
+      213: -4047515948738425116
+    second: female_torso_kimono_bluegrey_65
+  - first:
+      213: 2038074844697119362
+    second: female_torso_kimono_bluegrey_66
+  - first:
+      213: 2847787005824976593
+    second: female_torso_kimono_bluegrey_67
+  - first:
+      213: 3705452318710765739
+    second: female_torso_kimono_bluegrey_68
+  - first:
+      213: -5120931982757362325
+    second: female_torso_kimono_bluegrey_69
+  - first:
+      213: -2435495281903986947
+    second: female_torso_kimono_bluegrey_70
+  - first:
+      213: -6786132421294552548
+    second: female_torso_kimono_bluegrey_71
+  - first:
+      213: 3334473559367789320
+    second: female_torso_kimono_bluegrey_72
+  - first:
+      213: -8052660739713266148
+    second: female_torso_kimono_bluegrey_73
+  - first:
+      213: -5791747649399591684
+    second: female_torso_kimono_bluegrey_74
+  - first:
+      213: -3593478875826403495
+    second: female_torso_kimono_bluegrey_75
+  - first:
+      213: 8577255960188807778
+    second: female_torso_kimono_bluegrey_76
+  - first:
+      213: 3274489642666479557
+    second: female_torso_kimono_bluegrey_77
+  - first:
+      213: 6156172853061676552
+    second: female_torso_kimono_bluegrey_78
+  - first:
+      213: 5203260118522229135
+    second: female_torso_kimono_bluegrey_79
+  - first:
+      213: -1550626422755916956
+    second: female_torso_kimono_bluegrey_80
+  - first:
+      213: 7836800382183070727
+    second: female_torso_kimono_bluegrey_81
+  - first:
+      213: -2417186017831703540
+    second: female_torso_kimono_bluegrey_82
+  - first:
+      213: 6383257718838133392
+    second: female_torso_kimono_bluegrey_83
+  - first:
+      213: 7660422139067853611
+    second: female_torso_kimono_bluegrey_84
+  - first:
+      213: -4049117918087859177
+    second: female_torso_kimono_bluegrey_85
+  - first:
+      213: -6026735093211580772
+    second: female_torso_kimono_bluegrey_86
+  - first:
+      213: -7635024535789050305
+    second: female_torso_kimono_bluegrey_87
+  - first:
+      213: 5912510074350802337
+    second: female_torso_kimono_bluegrey_88
+  - first:
+      213: -5220237450624557750
+    second: female_torso_kimono_bluegrey_89
+  - first:
+      213: -7709317285459440494
+    second: female_torso_kimono_bluegrey_90
+  - first:
+      213: 4175197559642934450
+    second: female_torso_kimono_bluegrey_91
+  - first:
+      213: -783419211862649668
+    second: female_torso_kimono_bluegrey_92
+  - first:
+      213: 7012893174460547932
+    second: female_torso_kimono_bluegrey_93
+  - first:
+      213: 7685965159666025367
+    second: female_torso_kimono_bluegrey_94
+  - first:
+      213: -322126332544926767
+    second: female_torso_kimono_bluegrey_95
+  - first:
+      213: -1445178708311866140
+    second: female_torso_kimono_bluegrey_96
+  - first:
+      213: -4049587256714815150
+    second: female_torso_kimono_bluegrey_97
+  - first:
+      213: -5392987510479581308
+    second: female_torso_kimono_bluegrey_98
+  - first:
+      213: -5741084879511337965
+    second: female_torso_kimono_bluegrey_99
+  - first:
+      213: 6474260674040264842
+    second: female_torso_kimono_bluegrey_100
+  - first:
+      213: 6630395022428316673
+    second: female_torso_kimono_bluegrey_101
+  - first:
+      213: 4387188732499971800
+    second: female_torso_kimono_bluegrey_102
+  - first:
+      213: -1936267322905509800
+    second: female_torso_kimono_bluegrey_103
+  - first:
+      213: -832104611381382919
+    second: female_torso_kimono_bluegrey_104
+  - first:
+      213: -3045119876459186753
+    second: female_torso_kimono_bluegrey_105
+  - first:
+      213: -7671310378569519382
+    second: female_torso_kimono_bluegrey_106
+  - first:
+      213: -5882278202259460659
+    second: female_torso_kimono_bluegrey_107
+  - first:
+      213: -4912216531386090034
+    second: female_torso_kimono_bluegrey_108
+  - first:
+      213: -3956757478025757393
+    second: female_torso_kimono_bluegrey_109
+  - first:
+      213: 2187597180148726295
+    second: female_torso_kimono_bluegrey_110
+  - first:
+      213: -9090729921728761556
+    second: female_torso_kimono_bluegrey_111
+  - first:
+      213: -3169066566182389158
+    second: female_torso_kimono_bluegrey_112
+  - first:
+      213: -7304758268515077947
+    second: female_torso_kimono_bluegrey_113
+  - first:
+      213: -7559276711293367638
+    second: female_torso_kimono_bluegrey_114
+  - first:
+      213: 3168126342316937820
+    second: female_torso_kimono_bluegrey_115
+  - first:
+      213: -6590829809023454020
+    second: female_torso_kimono_bluegrey_116
+  - first:
+      213: -5080765710752888496
+    second: female_torso_kimono_bluegrey_117
+  - first:
+      213: 3242288824747191290
+    second: female_torso_kimono_bluegrey_118
+  - first:
+      213: -8035385665114307156
+    second: female_torso_kimono_bluegrey_119
+  - first:
+      213: 5855896609945060763
+    second: female_torso_kimono_bluegrey_120
+  - first:
+      213: -8942814340831773798
+    second: female_torso_kimono_bluegrey_121
+  - first:
+      213: 7232732653438060178
+    second: female_torso_kimono_bluegrey_122
+  - first:
+      213: -4661823898382891090
+    second: female_torso_kimono_bluegrey_123
+  - first:
+      213: -2588301493448992036
+    second: female_torso_kimono_bluegrey_124
+  - first:
+      213: 7564927522529948478
+    second: female_torso_kimono_bluegrey_125
+  - first:
+      213: 9021732765614651252
+    second: female_torso_kimono_bluegrey_126
+  - first:
+      213: 6853641411309876247
+    second: female_torso_kimono_bluegrey_127
+  - first:
+      213: -9153860864101986763
+    second: female_torso_kimono_bluegrey_128
+  - first:
+      213: 5975036851477591393
+    second: female_torso_kimono_bluegrey_129
+  - first:
+      213: 8256793233407637569
+    second: female_torso_kimono_bluegrey_130
+  - first:
+      213: -8794617748764027586
+    second: female_torso_kimono_bluegrey_131
+  - first:
+      213: 3465473475744176094
+    second: female_torso_kimono_bluegrey_132
+  - first:
+      213: -8056795608906151881
+    second: female_torso_kimono_bluegrey_133
+  - first:
+      213: 3285272143682118694
+    second: female_torso_kimono_bluegrey_134
+  - first:
+      213: 1768446812837514552
+    second: female_torso_kimono_bluegrey_135
+  - first:
+      213: -7783917069332039862
+    second: female_torso_kimono_bluegrey_136
+  - first:
+      213: 363906864097729617
+    second: female_torso_kimono_bluegrey_137
+  - first:
+      213: 3322160662158422404
+    second: female_torso_kimono_bluegrey_138
+  - first:
+      213: -8676888500272815021
+    second: female_torso_kimono_bluegrey_139
+  - first:
+      213: 1087269878119994695
+    second: female_torso_kimono_bluegrey_140
+  - first:
+      213: -5573307031261851797
+    second: female_torso_kimono_bluegrey_141
+  - first:
+      213: -5702317727363414307
+    second: female_torso_kimono_bluegrey_142
+  - first:
+      213: 8504531293361450697
+    second: female_torso_kimono_bluegrey_143
+  - first:
+      213: 6132976904854817224
+    second: female_torso_kimono_bluegrey_144
+  - first:
+      213: 3652030648283582044
+    second: female_torso_kimono_bluegrey_145
+  - first:
+      213: -8297305778257957753
+    second: female_torso_kimono_bluegrey_146
+  - first:
+      213: 2188418741194528583
+    second: female_torso_kimono_bluegrey_147
+  - first:
+      213: 8310004914245301448
+    second: female_torso_kimono_bluegrey_148
+  - first:
+      213: -7095746579743321614
+    second: female_torso_kimono_bluegrey_149
+  - first:
+      213: -6557953917418095369
+    second: female_torso_kimono_bluegrey_150
+  - first:
+      213: 5508019495047114820
+    second: female_torso_kimono_bluegrey_151
+  - first:
+      213: -4598325877063059067
+    second: female_torso_kimono_bluegrey_152
+  - first:
+      213: 5826090264820648393
+    second: female_torso_kimono_bluegrey_153
+  - first:
+      213: -2072124274320883875
+    second: female_torso_kimono_bluegrey_154
+  - first:
+      213: 3742959993755083072
+    second: female_torso_kimono_bluegrey_155
+  - first:
+      213: 5727687716158465040
+    second: female_torso_kimono_bluegrey_156
+  - first:
+      213: -8345488933311819885
+    second: female_torso_kimono_bluegrey_157
+  - first:
+      213: 748861639083264221
+    second: female_torso_kimono_bluegrey_158
+  - first:
+      213: 9223341880252849673
+    second: female_torso_kimono_bluegrey_159
+  - first:
+      213: -7759428457058110481
+    second: female_torso_kimono_bluegrey_160
+  - first:
+      213: -715482321147908142
+    second: female_torso_kimono_bluegrey_161
+  - first:
+      213: -4894459166659640523
+    second: female_torso_kimono_bluegrey_162
+  - first:
+      213: 7317965847843603805
+    second: female_torso_kimono_bluegrey_163
+  - first:
+      213: -8084190204723151905
+    second: female_torso_kimono_bluegrey_164
+  - first:
+      213: -2443011143009231352
+    second: female_torso_kimono_bluegrey_165
+  - first:
+      213: 7393040593416067408
+    second: female_torso_kimono_bluegrey_166
+  - first:
+      213: -2075824526535483248
+    second: female_torso_kimono_bluegrey_167
+  - first:
+      213: 3310704342999315080
+    second: female_torso_kimono_bluegrey_168
+  - first:
+      213: -4493600681811514191
+    second: female_torso_kimono_bluegrey_169
+  - first:
+      213: 1334957399188638860
+    second: female_torso_kimono_bluegrey_170
+  - first:
+      213: -4721344397290866750
+    second: female_torso_kimono_bluegrey_171
+  - first:
+      213: -4437216643411263566
+    second: female_torso_kimono_bluegrey_172
+  - first:
+      213: -2835438405129131129
+    second: female_torso_kimono_bluegrey_173
+  - first:
+      213: -2853229452774218142
+    second: female_torso_kimono_bluegrey_174
+  - first:
+      213: -1570336721717284919
+    second: female_torso_kimono_bluegrey_175
+  - first:
+      213: 6187153621671079765
+    second: female_torso_kimono_bluegrey_176
+  - first:
+      213: -6756588040083473528
+    second: female_torso_kimono_bluegrey_177
+  - first:
+      213: 6721805258498697406
+    second: female_torso_kimono_bluegrey_178
+  - first:
+      213: -5019443522750418172
+    second: female_torso_kimono_bluegrey_179
+  - first:
+      213: 5607557406770699357
+    second: female_torso_kimono_bluegrey_180
+  - first:
+      213: 5426197435238659689
+    second: female_torso_kimono_bluegrey_181
+  - first:
+      213: 810892943562537604
+    second: female_torso_kimono_bluegrey_182
+  - first:
+      213: 3855923659127642956
+    second: female_torso_kimono_bluegrey_183
+  - first:
+      213: 1476910552207324041
+    second: female_torso_kimono_bluegrey_184
+  - first:
+      213: 5401203740954788906
+    second: female_torso_kimono_bluegrey_185
+  - first:
+      213: 2137352572760740322
+    second: female_torso_kimono_bluegrey_186
+  - first:
+      213: 593996081878989572
+    second: female_torso_kimono_bluegrey_187
+  - first:
+      213: 1012726197343638682
+    second: female_torso_kimono_bluegrey_188
+  - first:
+      213: -4794077204815956088
+    second: female_torso_kimono_bluegrey_189
+  - first:
+      213: -1604863184601287615
+    second: female_torso_kimono_bluegrey_190
+  - first:
+      213: -2621738652264878856
+    second: female_torso_kimono_bluegrey_191
+  - first:
+      213: -9047346168507663066
+    second: female_torso_kimono_bluegrey_192
+  - first:
+      213: -3538221796190943822
+    second: female_torso_kimono_bluegrey_193
+  - first:
+      213: -913916339347999122
+    second: female_torso_kimono_bluegrey_194
+  - first:
+      213: -2409744375506176716
+    second: female_torso_kimono_bluegrey_195
+  - first:
+      213: 1660623254968255845
+    second: female_torso_kimono_bluegrey_196
+  - first:
+      213: -4404462805703567616
+    second: female_torso_kimono_bluegrey_197
+  - first:
+      213: -8428525405392322410
+    second: female_torso_kimono_bluegrey_198
+  - first:
+      213: 3613894229838407012
+    second: female_torso_kimono_bluegrey_199
+  - first:
+      213: -2159898398653079376
+    second: female_torso_kimono_bluegrey_200
+  - first:
+      213: -7326476466087898852
+    second: female_torso_kimono_bluegrey_201
+  - first:
+      213: -4780795401932204391
+    second: female_torso_kimono_bluegrey_202
+  - first:
+      213: 1266507833661909183
+    second: female_torso_kimono_bluegrey_203
+  - first:
+      213: -6214566484982117537
+    second: female_torso_kimono_bluegrey_204
+  - first:
+      213: 1177944807986331078
+    second: female_torso_kimono_bluegrey_205
+  - first:
+      213: -4513636174948035805
+    second: female_torso_kimono_bluegrey_206
+  - first:
+      213: -6964080789548045148
+    second: female_torso_kimono_bluegrey_207
+  - first:
+      213: 1009384882809648150
+    second: female_torso_kimono_bluegrey_208
+  - first:
+      213: 1083361357870690182
+    second: female_torso_kimono_bluegrey_209
+  - first:
+      213: 6572926302061645103
+    second: female_torso_kimono_bluegrey_210
+  - first:
+      213: -6053854256711799677
+    second: female_torso_kimono_bluegrey_211
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 64
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: spell_up_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1280
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 27f2f29d092971861b81fe47b3c230eb
+      internalID: 2106923644
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spell_up_1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 1280
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 630d7fe1a6240aacf97e086c0c965416
+      internalID: -410640673
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spell_up_2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 1280
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: eb37391c4fac8e9098a6798c2b116d28
+      internalID: -355889803
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spell_up_3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 1280
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5dc8288db5242779e95b6c4e5337fa6d
+      internalID: 1489238617
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spell_up_4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 1280
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 119a78a108052ef17ac795ec28882c36
+      internalID: -1464543484
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spell_up_5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 1280
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aca6a244f9451494495a8fc41d2b90b3
+      internalID: -1119444200
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spell_up_6
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 1280
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 043f26c2fffb4cf66956f96ee6cd6709
+      internalID: -543012977
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spell_left_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1216
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3d5c5bbad1ca4c1e6a0dc6cf9e6ffdad
+      internalID: 1323236189
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spell_left_1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 1216
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c3b214fdd80d12b1faad25182dc1f14a
+      internalID: 894914024
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spell_left_2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 1216
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6abd1d279c8c16768a1e1f0786a945c2
+      internalID: 90453471
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spell_left_3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 1216
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fa874a0d2f5cae9b68b8de6492ed2eec
+      internalID: 1890546742
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spell_left_4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 1216
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a56a07d33513a52d5a727c8f24dbc002
+      internalID: 1160705674
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spell_left_5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 1216
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f6d86f89b87e52b95830c1a59a34fbf1
+      internalID: -833454464
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spell_left_6
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 1216
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4c82e03319883a78b87bd1d3a491a58d
+      internalID: 21184616
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spell_down_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1152
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d82405a9656bc21079efb51dffd33c9d
+      internalID: -1190052501
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spell_down_1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 1152
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0684f91c308c565aeb736cbac7bca2b6
+      internalID: 1136017049
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spell_down_2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 1152
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1325dc05bfda36bdeae0681490c5acc7
+      internalID: 903529065
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spell_down_3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 1152
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b75dca64024a6608cbf32e1fd1f16efd
+      internalID: -1059092994
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spell_down_4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 1152
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 79e01cffbe2f33a4e8f38caadf3c9354
+      internalID: 774256395
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spell_down_5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 1152
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b78cb72b570da076591a3dc89ddbe770
+      internalID: -1342957902
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spell_down_6
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 1152
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d559a2b6539629a5bb4bc5b4c385e39b
+      internalID: -558945721
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spell_right_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1088
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b32b1868f18b39f4ab626c1e6cd727aa
+      internalID: 1439893332
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spell_right_1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 1088
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9d219e12bb50863fa981d4328bdc8ea1
+      internalID: 2128609076
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spell_right_2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 1088
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6eb6ef37ffdf800cca2accb80ab3517d
+      internalID: -2138557603
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spell_right_3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 1088
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ffbd43753e33450d784356e3010c3d04
+      internalID: -1616749189
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spell_right_4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 1088
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6d009c1b726f370c2a523a7d6ccaea90
+      internalID: 1576393629
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spell_right_5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 1088
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 592d890ff60c50fa89863416aa037fd1
+      internalID: 2131018060
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spell_right_6
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 1088
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bf54dcb255efa4aaca64530d0ae43e47
+      internalID: -1778401322
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: thrust_up_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1024
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a5f304531f7d508cbbee972ba10218cd
+      internalID: -1703379690
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: thrust_up_1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 1024
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f3e6f08e096935e079da2237952d676a
+      internalID: -538301751
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: thrust_up_2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 1024
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e3e2b953b09dee7a4b494c1cf427031d
+      internalID: -2098724970
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: thrust_up_3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 1024
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 98c563d35acf1ccedb0b149005911bb5
+      internalID: 1325232793
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: thrust_up_4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 1024
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bb4dce4d75e3b273790afe333644740e
+      internalID: -477981840
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: thrust_up_5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 1024
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cdd1cb25a584b0c349ebca27e788218a
+      internalID: 1958911516
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: thrust_up_6
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 1024
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d5232fa11c0eddc709da69b64298bf75
+      internalID: 1077745228
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: thrust_up_7
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 1024
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c59301cd7f1185f41a9ca7193c0c34a1
+      internalID: -856531867
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: thrust_left_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 960
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e00c4c748a6bc98cb9f5aef8df3dbab8
+      internalID: -974332668
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: thrust_left_1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 960
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 636be0ae9247a07c499f5ca1ac5f42fc
+      internalID: 1277921273
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: thrust_left_2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 960
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e1554005b08cb34c1868101fec7b3691
+      internalID: 1681371846
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: thrust_left_3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 960
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 95dbdbb65bb5cd1718ee41c8a05edc88
+      internalID: 1860032567
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: thrust_left_4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 960
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f36dc1e0ab52e8d9ca0b5c6bb06f7c15
+      internalID: 914217742
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: thrust_left_5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 960
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 22f7289bd5e3dc55892a01ecf326900a
+      internalID: -60419080
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: thrust_left_6
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 960
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 37268da03aa8bd6328ce29d755161669
+      internalID: 1207073275
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: thrust_left_7
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 960
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 012436f5dc55705b39f4d1f5ca6ebe2c
+      internalID: 736398030
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: thrust_down_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 896
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 32f4dd7882bcbf803be7d2dbcb13e602
+      internalID: 723482348
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: thrust_down_1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 896
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5c6c7ad42d6e3db9dbfc9dd4ba4fb6c1
+      internalID: -1673091799
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: thrust_down_2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 896
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d08898f6856186b6fae9948e161e4cba
+      internalID: -1271413749
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: thrust_down_3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 896
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4fdde288f70cfd3ad8881c70dfea28b8
+      internalID: 1390201303
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: thrust_down_4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 896
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4030db574f9ec382e9982b3235e39ddb
+      internalID: 1448717205
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: thrust_down_5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 896
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fcfa1e02e619d5fe2ab0418559d8b4c2
+      internalID: 1027124154
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: thrust_down_6
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 896
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 400c9f104b7fc220883ab9afb6ebcca8
+      internalID: -444509693
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: thrust_down_7
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 896
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6d6baf54a887e0020a81ea70891ce78e
+      internalID: -1242948340
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: thrust_right_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 832
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 74692a871fb7b3b2eaf052c537779424
+      internalID: -1140764497
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: thrust_right_1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 832
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3d1c53e2713d12ed289eb0aaf11e0f3a
+      internalID: -1550977883
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: thrust_right_2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 832
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: be79b432ef14223f1a3e29605720e422
+      internalID: -1478427847
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: thrust_right_3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 832
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 81d35cd5feaa90cb4a9d71d295b281f7
+      internalID: -516881830
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: thrust_right_4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 832
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f54f14b0a097eeafa8143a9640def57d
+      internalID: 1219299271
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: thrust_right_5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 832
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cb818b3d8ed071a51b8bbc921c744d10
+      internalID: -1869182176
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: thrust_right_6
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 832
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fb2cab21d45f020f881de548d4467172
+      internalID: -1261838245
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: thrust_right_7
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 832
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a25fc73e59ef1041c89b7a6695c8e0af
+      internalID: 1696491586
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: idle_up
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 768
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 793efdeff8f5135ecb3f30eb1ecc1e03
+      internalID: -1072878039
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: walk_up_0
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 768
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 13253213dbeb18e528c3abff0916201c
+      internalID: 135299914
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: walk_up_1
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 768
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b511b9ae3ee2cb9babd4ac79230b6154
+      internalID: -1116163636
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: walk_up_2
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 768
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2006537713396af22aca4cae8a603aa1
+      internalID: 811785345
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: walk_up_3
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 768
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e804a46cd6c7e6dde987202103aa6901
+      internalID: 121828157
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: walk_up_4
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 768
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c96dc448c6f5f6a27b418ab285cface8
+      internalID: -1636789485
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: walk_up_5
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 768
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b2320dc62e5841c3bb726775179378e8
+      internalID: -1381510949
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: walk_up_6
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 768
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1fa93a362f8300bf6919fad13ef645aa
+      internalID: -412253326
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: walk_up_7
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 768
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a4c1f55dbb9626f20ae602e40bb32074
+      internalID: -236063631
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: idle_left
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 704
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 652c29a6e01518650926b9b1825021d4
+      internalID: -456272984
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: walk_left_0
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 704
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: eaefe61bca0cb3de9b6b27d2a7dc490f
+      internalID: 1456479477
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: walk_left_1
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 704
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 846c9c63d9e54c502a7ebbdb232121be
+      internalID: 1298881477
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: walk_left_2
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 704
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e92719397c6e684b2838066de38989da
+      internalID: 110444605
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: walk_left_3
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 704
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 19a0585b83276b63fbd9e14eae0be2d8
+      internalID: -445416468
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: walk_left_4
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 704
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c52f2601ad560c598b5e725869cb67d7
+      internalID: 502542872
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: walk_left_5
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 704
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 671518a794509fceb833d465897a71e9
+      internalID: -327449896
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: walk_left_6
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 704
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dcf5d6ee40cda9ac7bd7675f6af2e76d
+      internalID: 2069246336
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: walk_left_7
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 704
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3919962562d1f0e459840d8067554ff2
+      internalID: -572402018
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: idle_down
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 640
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 21cbf0138317fd706b703cd8ddca1100
+      internalID: -790277199
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: walk_down_0
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 640
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1ef62bc4ef18810bcbcd1752b8beb88a
+      internalID: -858986940
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: walk_down_1
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 640
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c145997706c3af30f9495c8afb5e5ef5
+      internalID: -866527208
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: walk_down_2
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 640
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: be36162ebfa5aa03d915f44b63297f4c
+      internalID: -201406477
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: walk_down_3
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 640
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 87fc06d2da53f7f46a246718cd61869f
+      internalID: -1945474185
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: walk_down_4
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 640
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 68d1852dd388c346ea79e6759e5b90ee
+      internalID: 1324165964
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: walk_down_5
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 640
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3813facfb43325c788c06af58ec53acf
+      internalID: -1507393396
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: walk_down_6
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 640
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6d9450976d5e024969d798bf39a3b2d1
+      internalID: 356328309
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: walk_down_7
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 640
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 91b833e4c59deadd2be6f7d6cae34c92
+      internalID: -1041013593
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: idle_right
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 576
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ec31d7bf4c152b05e9baa26c92cd31ec
+      internalID: 397387181
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: walk_right_0
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 576
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 64543eddf431d1f19a93cfc8bce4e5cd
+      internalID: -189094049
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: walk_right_1
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 576
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 379e05b1d36002ce1a95e7183d7787fa
+      internalID: -1292107340
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: walk_right_2
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 576
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e380ff33291f20fd28c06cca6a03c60c
+      internalID: 108954056
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: walk_right_3
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 576
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d6e691b0df08f53c882256f52c0cd2ef
+      internalID: 1234825278
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: walk_right_4
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 576
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c63b78e392480e10fb797e771126c57e
+      internalID: -2101950841
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: walk_right_5
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 576
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 541b344e820a781e88b849aa1283cdea
+      internalID: 766021848
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: walk_right_6
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 576
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 62d7ce7531116bb86a30075899e322ac
+      internalID: -1991964950
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: walk_right_7
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 576
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6bf631efee7c615c9958a70c93db77b1
+      internalID: 2078603212
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: swing_up_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 512
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e3f0c7e78ae962d08928269187a6a5fb
+      internalID: 348156590
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: swing_up_1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 512
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 25781c12c1e8b28138db4551b3c11397
+      internalID: -1857184606
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: swing_up_2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 512
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 85ff7e456b0c8f01f89d6f0aea9d7d15
+      internalID: 1985143947
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: swing_up_3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 512
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3f1f1aa316b7a8cee9bf0aafd4755551
+      internalID: -137875347
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: swing_up_4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 512
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d721e40266430af9784552261b8857dd
+      internalID: -1691209067
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: swing_up_5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 512
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 894b8fd8542a563128d4cab56067dea2
+      internalID: -841987687
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: swing_left_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 448
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7bb59f2672aa0bc5eae3b4567c927542
+      internalID: -646934547
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: swing_left_1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 448
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 91aebdc873883e55ba67569611371e4f
+      internalID: 1401887484
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: swing_left_2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 448
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6b4c937a65242dee983a24cab2434c35
+      internalID: -1020967578
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: swing_left_3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 448
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 19651ba33636d064088dceffabecbfd8
+      internalID: -1443144876
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: swing_left_4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 448
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a440e4d3bfe65701da890c981b91d1ad
+      internalID: -821528679
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: swing_left_5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 448
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cea3c37964c958c2b886901aa0d3be39
+      internalID: 1887377455
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: swing_down_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 384
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1ce9675e5894115ec9c22bf0d834b75c
+      internalID: 1196708521
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: swing_down_1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 384
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 57d4aa49403689bf7a264d56bb22caa7
+      internalID: 1056662885
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: swing_down_2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 384
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e790bacbcadd3148396541240dd16b95
+      internalID: 1285782989
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: swing_down_3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 384
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 16f02bdb6cb5657a1b324174e9ee5aea
+      internalID: -1624138856
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: swing_down_4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 384
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c25314389e6ccd698a277307e23b761f
+      internalID: -1044329973
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: swing_down_5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 384
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b70150b7c7a7e9b059be7f0c66ec5cc0
+      internalID: 271634988
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: swing_right_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 320
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d41801f594d55a7aba1a178ddf2f5eaf
+      internalID: -1824633102
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: swing_right_1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 320
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 50e14212d7046eca3b6d9c9fda1ae6c2
+      internalID: 332059166
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: swing_right_2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 320
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3164bbd217e00c3b4bc2d0401d6873d5
+      internalID: 1481381731
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: swing_right_3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 320
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ab8db4aa408fb49159b1a4473ca1aa59
+      internalID: 501011500
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: swing_right_4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 320
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4ce80d16221dd1727a0ffa3035e8616c
+      internalID: 1956954358
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: swing_right_5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 320
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bfe9553227fc80aec923c5692925a44e
+      internalID: 126374499
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_up_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 256
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6aaa76b67eb88b7ce9d8300be878b660
+      internalID: 1846447841
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_up_1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 256
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f7f2f005a217be354bb6a2ff864d725a
+      internalID: -1040017259
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_up_2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 256
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4636a7c80e130148d9f99c828ba86d3b
+      internalID: -1979346275
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_up_3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 256
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5eeb8ece9ad0279eda4552d8bfc81aa8
+      internalID: -896394758
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_up_4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 256
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cd41713225a417a5d8df65df880761b7
+      internalID: 1179809767
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_up_5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 256
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2ca3c30ed4fdfc03c86ff3a73bb5562b
+      internalID: 786306120
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_up_6
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 256
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 71d8e83bc9915fdf8bd1df877996dd0e
+      internalID: 1981554240
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_up_7
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 256
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ea6acf7243260927383a212e74ff889e
+      internalID: -1491272350
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_up_8
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 256
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e0df38b288bb3fadea31c8daf13b0530
+      internalID: -1736523785
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_up_9
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 256
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6f55f073467876075afffbdb6cb61fb3
+      internalID: 1868976845
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_up_10
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 256
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ba92c167bacdc0a389a48087481b718c
+      internalID: 1098740152
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_up_11
+      rect:
+        serializedVersion: 2
+        x: 704
+        y: 256
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c5881df598ee46307bc3609324138ec4
+      internalID: 402392476
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_up_12
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 256
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: be3c8af91366c9bb1b01173bcb54e1eb
+      internalID: 981116727
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_left_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f0e70776e31358f37aa5a44077cc5384
+      internalID: -1292987887
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_left_1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 873415cad0b9b4ab183708ce25c403a0
+      internalID: -568931966
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_left_2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fe48c5c2a91e92ac5ad98d52057120da
+      internalID: 1405134992
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_left_3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3e581b56efd9110eca703c103d826ccb
+      internalID: 1759469990
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_left_4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 53c31b55015a3293fbf30c0240b0dcda
+      internalID: -132693906
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_left_5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c1ad141710afe65549c047475bcb421b
+      internalID: 714745804
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_left_6
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7b10acecd94565cefa1f6983c1323cca
+      internalID: -537413983
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_left_7
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a884a9238f0063c689f92a3e3fb9cc65
+      internalID: 687187153
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_left_8
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8b752f6be50bf1a6a9ab0bd9c59b19fa
+      internalID: 1896046232
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_left_9
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1847afb80e8b0fc1e81b8840a93b1f62
+      internalID: 287004481
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_left_10
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9b597fe7f351957eb98c816a122dedd0
+      internalID: -1289477548
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_left_11
+      rect:
+        serializedVersion: 2
+        x: 704
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e74d64fc440d990ec9481a083b1051b7
+      internalID: -267806627
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_left_12
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b8fc9028e743c3ca186c3302de348f3f
+      internalID: 32146913
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_down_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e8fb14f3cd3e3927186282cc2c3fefdf
+      internalID: 1321544261
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_down_1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c3e917fcd09011220af308fa139aae5a
+      internalID: -1751688968
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_down_2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ec34926e7676adc43ae2b02e270b8521
+      internalID: 956862100
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_down_3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4c6b3ceb42f1db126875c7a9b1fb07d4
+      internalID: -1641873915
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_down_4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7e556aee8233b272ca4979f522077d79
+      internalID: 114336957
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_down_5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 256020b496ecec5388e0f16d902256af
+      internalID: 1454935594
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_down_6
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 18b9e01af44b0f2e79d85bcc22b831f1
+      internalID: -916044085
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_down_7
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2d9c41ac31e412da595ba9dcf5d735e4
+      internalID: -346176017
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_down_8
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e1775622794f3958da9cbbd9006e7d84
+      internalID: 559534128
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_down_9
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 385b3014876ce2b519c9d98142e9d8fe
+      internalID: -1809977346
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_down_10
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bf18e73baec8e4e96a0f1ca642f3e39e
+      internalID: -2142101457
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_down_11
+      rect:
+        serializedVersion: 2
+        x: 704
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1aa080ea65aebc449a468e12fe8b7393
+      internalID: -120549775
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_down_12
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a60e487d699360cc393cbaea926efda2
+      internalID: 1313532194
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_right_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8a4d8aad2ec8f9729966ad7d5ec31e20
+      internalID: 1171773402
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_right_1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 585a07e9532d35548aa99b14e6084ba4
+      internalID: 325456818
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_right_2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 03853f1514aeaea8ead4b07011a0259e
+      internalID: -510587738
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_right_3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3ddfba22523aecfff81e3f2a245788bd
+      internalID: 578524899
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_right_4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 58e40b6adf60dec26b56f21147025998
+      internalID: -654888570
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_right_5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5a3957da812bbe9e68e758382087333a
+      internalID: 1456970949
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_right_6
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a7f3ad2ab422516118f1cceb2f397068
+      internalID: -1759217114
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_right_7
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7ad4555fc3e2dea47b60504964f872e2
+      internalID: -1124608902
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_right_8
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 057c0417a8b9ff25c9b177eeb64e83cf
+      internalID: 208744861
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_right_9
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bf6c53b8cdf38b52c8d63437374c3684
+      internalID: -1793208068
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_right_10
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a91d44d613546e98c8473a1e7d475b7b
+      internalID: 1233053016
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_right_11
+      rect:
+        serializedVersion: 2
+        x: 704
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: abba63cf0c6b24740bfadbdbc5762b1a
+      internalID: -1686906578
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_right_12
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ba36098efcc363ab696c4aae9d4de18d
+      internalID: 204426919
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: death_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a4978f3bebbf328ba9c097470d6afea5
+      internalID: 1249746190
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: death_1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ee6bdaa2e0644fd86b695513a2f6ba61
+      internalID: 146913052
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: death_2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7d1b6f151d94d1e72828263ebb37dfea
+      internalID: -1295415669
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: death_3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ab7116a46ec86aed2a17529265fb00c6
+      internalID: 356698296
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: death_4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ba9ae9e2221d5b4c7b60916cd2bea8fa
+      internalID: 689027371
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: death_5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 68cd28475ff24de16aeb6f0169cedd8e
+      internalID: -436399853
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: ca3791b86956d452d98d18f510d52ce0
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      death_0: 1249746190
+      death_1: 146913052
+      death_2: -1295415669
+      death_3: 356698296
+      death_4: 689027371
+      death_5: -436399853
+      female_torso_kimono_bluegrey_0: 4676345457984015041
+      female_torso_kimono_bluegrey_1: -3843825874158348592
+      female_torso_kimono_bluegrey_10: 2298993082305140520
+      female_torso_kimono_bluegrey_100: 6474260674040264842
+      female_torso_kimono_bluegrey_101: 6630395022428316673
+      female_torso_kimono_bluegrey_102: 4387188732499971800
+      female_torso_kimono_bluegrey_103: -1936267322905509800
+      female_torso_kimono_bluegrey_104: -832104611381382919
+      female_torso_kimono_bluegrey_105: -3045119876459186753
+      female_torso_kimono_bluegrey_106: -7671310378569519382
+      female_torso_kimono_bluegrey_107: -5882278202259460659
+      female_torso_kimono_bluegrey_108: -4912216531386090034
+      female_torso_kimono_bluegrey_109: -3956757478025757393
+      female_torso_kimono_bluegrey_11: 2676706776572199000
+      female_torso_kimono_bluegrey_110: 2187597180148726295
+      female_torso_kimono_bluegrey_111: -9090729921728761556
+      female_torso_kimono_bluegrey_112: -3169066566182389158
+      female_torso_kimono_bluegrey_113: -7304758268515077947
+      female_torso_kimono_bluegrey_114: -7559276711293367638
+      female_torso_kimono_bluegrey_115: 3168126342316937820
+      female_torso_kimono_bluegrey_116: -6590829809023454020
+      female_torso_kimono_bluegrey_117: -5080765710752888496
+      female_torso_kimono_bluegrey_118: 3242288824747191290
+      female_torso_kimono_bluegrey_119: -8035385665114307156
+      female_torso_kimono_bluegrey_12: -7363244089548527728
+      female_torso_kimono_bluegrey_120: 5855896609945060763
+      female_torso_kimono_bluegrey_121: -8942814340831773798
+      female_torso_kimono_bluegrey_122: 7232732653438060178
+      female_torso_kimono_bluegrey_123: -4661823898382891090
+      female_torso_kimono_bluegrey_124: -2588301493448992036
+      female_torso_kimono_bluegrey_125: 7564927522529948478
+      female_torso_kimono_bluegrey_126: 9021732765614651252
+      female_torso_kimono_bluegrey_127: 6853641411309876247
+      female_torso_kimono_bluegrey_128: -9153860864101986763
+      female_torso_kimono_bluegrey_129: 5975036851477591393
+      female_torso_kimono_bluegrey_13: 7014758153933321306
+      female_torso_kimono_bluegrey_130: 8256793233407637569
+      female_torso_kimono_bluegrey_131: -8794617748764027586
+      female_torso_kimono_bluegrey_132: 3465473475744176094
+      female_torso_kimono_bluegrey_133: -8056795608906151881
+      female_torso_kimono_bluegrey_134: 3285272143682118694
+      female_torso_kimono_bluegrey_135: 1768446812837514552
+      female_torso_kimono_bluegrey_136: -7783917069332039862
+      female_torso_kimono_bluegrey_137: 363906864097729617
+      female_torso_kimono_bluegrey_138: 3322160662158422404
+      female_torso_kimono_bluegrey_139: -8676888500272815021
+      female_torso_kimono_bluegrey_14: -3689364565952012047
+      female_torso_kimono_bluegrey_140: 1087269878119994695
+      female_torso_kimono_bluegrey_141: -5573307031261851797
+      female_torso_kimono_bluegrey_142: -5702317727363414307
+      female_torso_kimono_bluegrey_143: 8504531293361450697
+      female_torso_kimono_bluegrey_144: 6132976904854817224
+      female_torso_kimono_bluegrey_145: 3652030648283582044
+      female_torso_kimono_bluegrey_146: -8297305778257957753
+      female_torso_kimono_bluegrey_147: 2188418741194528583
+      female_torso_kimono_bluegrey_148: 8310004914245301448
+      female_torso_kimono_bluegrey_149: -7095746579743321614
+      female_torso_kimono_bluegrey_15: 8811117714670034736
+      female_torso_kimono_bluegrey_150: -6557953917418095369
+      female_torso_kimono_bluegrey_151: 5508019495047114820
+      female_torso_kimono_bluegrey_152: -4598325877063059067
+      female_torso_kimono_bluegrey_153: 5826090264820648393
+      female_torso_kimono_bluegrey_154: -2072124274320883875
+      female_torso_kimono_bluegrey_155: 3742959993755083072
+      female_torso_kimono_bluegrey_156: 5727687716158465040
+      female_torso_kimono_bluegrey_157: -8345488933311819885
+      female_torso_kimono_bluegrey_158: 748861639083264221
+      female_torso_kimono_bluegrey_159: 9223341880252849673
+      female_torso_kimono_bluegrey_16: -1150468043901121730
+      female_torso_kimono_bluegrey_160: -7759428457058110481
+      female_torso_kimono_bluegrey_161: -715482321147908142
+      female_torso_kimono_bluegrey_162: -4894459166659640523
+      female_torso_kimono_bluegrey_163: 7317965847843603805
+      female_torso_kimono_bluegrey_164: -8084190204723151905
+      female_torso_kimono_bluegrey_165: -2443011143009231352
+      female_torso_kimono_bluegrey_166: 7393040593416067408
+      female_torso_kimono_bluegrey_167: -2075824526535483248
+      female_torso_kimono_bluegrey_168: 3310704342999315080
+      female_torso_kimono_bluegrey_169: -4493600681811514191
+      female_torso_kimono_bluegrey_17: 102086745530958272
+      female_torso_kimono_bluegrey_170: 1334957399188638860
+      female_torso_kimono_bluegrey_171: -4721344397290866750
+      female_torso_kimono_bluegrey_172: -4437216643411263566
+      female_torso_kimono_bluegrey_173: -2835438405129131129
+      female_torso_kimono_bluegrey_174: -2853229452774218142
+      female_torso_kimono_bluegrey_175: -1570336721717284919
+      female_torso_kimono_bluegrey_176: 6187153621671079765
+      female_torso_kimono_bluegrey_177: -6756588040083473528
+      female_torso_kimono_bluegrey_178: 6721805258498697406
+      female_torso_kimono_bluegrey_179: -5019443522750418172
+      female_torso_kimono_bluegrey_18: -5584533377593934540
+      female_torso_kimono_bluegrey_180: 5607557406770699357
+      female_torso_kimono_bluegrey_181: 5426197435238659689
+      female_torso_kimono_bluegrey_182: 810892943562537604
+      female_torso_kimono_bluegrey_183: 3855923659127642956
+      female_torso_kimono_bluegrey_184: 1476910552207324041
+      female_torso_kimono_bluegrey_185: 5401203740954788906
+      female_torso_kimono_bluegrey_186: 2137352572760740322
+      female_torso_kimono_bluegrey_187: 593996081878989572
+      female_torso_kimono_bluegrey_188: 1012726197343638682
+      female_torso_kimono_bluegrey_189: -4794077204815956088
+      female_torso_kimono_bluegrey_19: 6017479888784272118
+      female_torso_kimono_bluegrey_190: -1604863184601287615
+      female_torso_kimono_bluegrey_191: -2621738652264878856
+      female_torso_kimono_bluegrey_192: -9047346168507663066
+      female_torso_kimono_bluegrey_193: -3538221796190943822
+      female_torso_kimono_bluegrey_194: -913916339347999122
+      female_torso_kimono_bluegrey_195: -2409744375506176716
+      female_torso_kimono_bluegrey_196: 1660623254968255845
+      female_torso_kimono_bluegrey_197: -4404462805703567616
+      female_torso_kimono_bluegrey_198: -8428525405392322410
+      female_torso_kimono_bluegrey_199: 3613894229838407012
+      female_torso_kimono_bluegrey_2: -5241874416212988863
+      female_torso_kimono_bluegrey_20: -1142176311498594447
+      female_torso_kimono_bluegrey_200: -2159898398653079376
+      female_torso_kimono_bluegrey_201: -7326476466087898852
+      female_torso_kimono_bluegrey_202: -4780795401932204391
+      female_torso_kimono_bluegrey_203: 1266507833661909183
+      female_torso_kimono_bluegrey_204: -6214566484982117537
+      female_torso_kimono_bluegrey_205: 1177944807986331078
+      female_torso_kimono_bluegrey_206: -4513636174948035805
+      female_torso_kimono_bluegrey_207: -6964080789548045148
+      female_torso_kimono_bluegrey_208: 1009384882809648150
+      female_torso_kimono_bluegrey_209: 1083361357870690182
+      female_torso_kimono_bluegrey_21: 6653315614749514170
+      female_torso_kimono_bluegrey_210: 6572926302061645103
+      female_torso_kimono_bluegrey_211: -6053854256711799677
+      female_torso_kimono_bluegrey_22: -3965355821667476817
+      female_torso_kimono_bluegrey_23: -83338211926197793
+      female_torso_kimono_bluegrey_24: 6684845597745519366
+      female_torso_kimono_bluegrey_25: -8540696131712276348
+      female_torso_kimono_bluegrey_26: -4034553629813438834
+      female_torso_kimono_bluegrey_27: -2086678534454791690
+      female_torso_kimono_bluegrey_28: -436801534686831879
+      female_torso_kimono_bluegrey_29: -383439112006824202
+      female_torso_kimono_bluegrey_3: 212438042368824470
+      female_torso_kimono_bluegrey_30: -3660421977422844887
+      female_torso_kimono_bluegrey_31: 741163803754387598
+      female_torso_kimono_bluegrey_32: -489191917672257398
+      female_torso_kimono_bluegrey_33: -159733408478207436
+      female_torso_kimono_bluegrey_34: -1009116997923741814
+      female_torso_kimono_bluegrey_35: 6854126311530977753
+      female_torso_kimono_bluegrey_36: -4409918614225489747
+      female_torso_kimono_bluegrey_37: 4446518428642500137
+      female_torso_kimono_bluegrey_38: -4881611634225044785
+      female_torso_kimono_bluegrey_39: -4541252746992209879
+      female_torso_kimono_bluegrey_4: 2690966448071823688
+      female_torso_kimono_bluegrey_40: 1302139045565683650
+      female_torso_kimono_bluegrey_41: 1521847014151809227
+      female_torso_kimono_bluegrey_42: 7644073144482610687
+      female_torso_kimono_bluegrey_43: 7431452760418097500
+      female_torso_kimono_bluegrey_44: 3298103868707206016
+      female_torso_kimono_bluegrey_45: -355178769760845292
+      female_torso_kimono_bluegrey_46: 3338109932024439174
+      female_torso_kimono_bluegrey_47: -196060148699765515
+      female_torso_kimono_bluegrey_48: -446544191471105930
+      female_torso_kimono_bluegrey_49: -1151585385161958890
+      female_torso_kimono_bluegrey_5: 6709362934454386622
+      female_torso_kimono_bluegrey_50: -206638210765314387
+      female_torso_kimono_bluegrey_51: 7593883237966663916
+      female_torso_kimono_bluegrey_52: 2351923169184509062
+      female_torso_kimono_bluegrey_53: 6150961456039262513
+      female_torso_kimono_bluegrey_54: 5012973987750184241
+      female_torso_kimono_bluegrey_55: 6766556286543427709
+      female_torso_kimono_bluegrey_56: 7486221965574321483
+      female_torso_kimono_bluegrey_57: -8906675968508318277
+      female_torso_kimono_bluegrey_58: -5178635652520183087
+      female_torso_kimono_bluegrey_59: -5169700686516962364
+      female_torso_kimono_bluegrey_6: 6208396931115389791
+      female_torso_kimono_bluegrey_60: -7646333578958137816
+      female_torso_kimono_bluegrey_61: -6532944430153258882
+      female_torso_kimono_bluegrey_62: -5642934365875603169
+      female_torso_kimono_bluegrey_63: 7457283101999453794
+      female_torso_kimono_bluegrey_64: -4586294965984849459
+      female_torso_kimono_bluegrey_65: -4047515948738425116
+      female_torso_kimono_bluegrey_66: 2038074844697119362
+      female_torso_kimono_bluegrey_67: 2847787005824976593
+      female_torso_kimono_bluegrey_68: 3705452318710765739
+      female_torso_kimono_bluegrey_69: -5120931982757362325
+      female_torso_kimono_bluegrey_7: -2351502086193160546
+      female_torso_kimono_bluegrey_70: -2435495281903986947
+      female_torso_kimono_bluegrey_71: -6786132421294552548
+      female_torso_kimono_bluegrey_72: 3334473559367789320
+      female_torso_kimono_bluegrey_73: -8052660739713266148
+      female_torso_kimono_bluegrey_74: -5791747649399591684
+      female_torso_kimono_bluegrey_75: -3593478875826403495
+      female_torso_kimono_bluegrey_76: 8577255960188807778
+      female_torso_kimono_bluegrey_77: 3274489642666479557
+      female_torso_kimono_bluegrey_78: 6156172853061676552
+      female_torso_kimono_bluegrey_79: 5203260118522229135
+      female_torso_kimono_bluegrey_8: 3401861907428839003
+      female_torso_kimono_bluegrey_80: -1550626422755916956
+      female_torso_kimono_bluegrey_81: 7836800382183070727
+      female_torso_kimono_bluegrey_82: -2417186017831703540
+      female_torso_kimono_bluegrey_83: 6383257718838133392
+      female_torso_kimono_bluegrey_84: 7660422139067853611
+      female_torso_kimono_bluegrey_85: -4049117918087859177
+      female_torso_kimono_bluegrey_86: -6026735093211580772
+      female_torso_kimono_bluegrey_87: -7635024535789050305
+      female_torso_kimono_bluegrey_88: 5912510074350802337
+      female_torso_kimono_bluegrey_89: -5220237450624557750
+      female_torso_kimono_bluegrey_9: 6599180837736215856
+      female_torso_kimono_bluegrey_90: -7709317285459440494
+      female_torso_kimono_bluegrey_91: 4175197559642934450
+      female_torso_kimono_bluegrey_92: -783419211862649668
+      female_torso_kimono_bluegrey_93: 7012893174460547932
+      female_torso_kimono_bluegrey_94: 7685965159666025367
+      female_torso_kimono_bluegrey_95: -322126332544926767
+      female_torso_kimono_bluegrey_96: -1445178708311866140
+      female_torso_kimono_bluegrey_97: -4049587256714815150
+      female_torso_kimono_bluegrey_98: -5392987510479581308
+      female_torso_kimono_bluegrey_99: -5741084879511337965
+      idle_down: -790277199
+      idle_left: -456272984
+      idle_right: 397387181
+      idle_up: -1072878039
+      shoot_down_0: 1321544261
+      shoot_down_1: -1751688968
+      shoot_down_10: -2142101457
+      shoot_down_11: -120549775
+      shoot_down_12: 1313532194
+      shoot_down_2: 956862100
+      shoot_down_3: -1641873915
+      shoot_down_4: 114336957
+      shoot_down_5: 1454935594
+      shoot_down_6: -916044085
+      shoot_down_7: -346176017
+      shoot_down_8: 559534128
+      shoot_down_9: -1809977346
+      shoot_left_0: -1292987887
+      shoot_left_1: -568931966
+      shoot_left_10: -1289477548
+      shoot_left_11: -267806627
+      shoot_left_12: 32146913
+      shoot_left_2: 1405134992
+      shoot_left_3: 1759469990
+      shoot_left_4: -132693906
+      shoot_left_5: 714745804
+      shoot_left_6: -537413983
+      shoot_left_7: 687187153
+      shoot_left_8: 1896046232
+      shoot_left_9: 287004481
+      shoot_right_0: 1171773402
+      shoot_right_1: 325456818
+      shoot_right_10: 1233053016
+      shoot_right_11: -1686906578
+      shoot_right_12: 204426919
+      shoot_right_2: -510587738
+      shoot_right_3: 578524899
+      shoot_right_4: -654888570
+      shoot_right_5: 1456970949
+      shoot_right_6: -1759217114
+      shoot_right_7: -1124608902
+      shoot_right_8: 208744861
+      shoot_right_9: -1793208068
+      shoot_up_0: 1846447841
+      shoot_up_1: -1040017259
+      shoot_up_10: 1098740152
+      shoot_up_11: 402392476
+      shoot_up_12: 981116727
+      shoot_up_2: -1979346275
+      shoot_up_3: -896394758
+      shoot_up_4: 1179809767
+      shoot_up_5: 786306120
+      shoot_up_6: 1981554240
+      shoot_up_7: -1491272350
+      shoot_up_8: -1736523785
+      shoot_up_9: 1868976845
+      spell_down_0: -1190052501
+      spell_down_1: 1136017049
+      spell_down_2: 903529065
+      spell_down_3: -1059092994
+      spell_down_4: 774256395
+      spell_down_5: -1342957902
+      spell_down_6: -558945721
+      spell_left_0: 1323236189
+      spell_left_1: 894914024
+      spell_left_2: 90453471
+      spell_left_3: 1890546742
+      spell_left_4: 1160705674
+      spell_left_5: -833454464
+      spell_left_6: 21184616
+      spell_right_0: 1439893332
+      spell_right_1: 2128609076
+      spell_right_2: -2138557603
+      spell_right_3: -1616749189
+      spell_right_4: 1576393629
+      spell_right_5: 2131018060
+      spell_right_6: -1778401322
+      spell_up_0: 2106923644
+      spell_up_1: -410640673
+      spell_up_2: -355889803
+      spell_up_3: 1489238617
+      spell_up_4: -1464543484
+      spell_up_5: -1119444200
+      spell_up_6: -543012977
+      swing_down_0: 1196708521
+      swing_down_1: 1056662885
+      swing_down_2: 1285782989
+      swing_down_3: -1624138856
+      swing_down_4: -1044329973
+      swing_down_5: 271634988
+      swing_left_0: -646934547
+      swing_left_1: 1401887484
+      swing_left_2: -1020967578
+      swing_left_3: -1443144876
+      swing_left_4: -821528679
+      swing_left_5: 1887377455
+      swing_right_0: -1824633102
+      swing_right_1: 332059166
+      swing_right_2: 1481381731
+      swing_right_3: 501011500
+      swing_right_4: 1956954358
+      swing_right_5: 126374499
+      swing_up_0: 348156590
+      swing_up_1: -1857184606
+      swing_up_2: 1985143947
+      swing_up_3: -137875347
+      swing_up_4: -1691209067
+      swing_up_5: -841987687
+      thrust_down_0: 723482348
+      thrust_down_1: -1673091799
+      thrust_down_2: -1271413749
+      thrust_down_3: 1390201303
+      thrust_down_4: 1448717205
+      thrust_down_5: 1027124154
+      thrust_down_6: -444509693
+      thrust_down_7: -1242948340
+      thrust_left_0: -974332668
+      thrust_left_1: 1277921273
+      thrust_left_2: 1681371846
+      thrust_left_3: 1860032567
+      thrust_left_4: 914217742
+      thrust_left_5: -60419080
+      thrust_left_6: 1207073275
+      thrust_left_7: 736398030
+      thrust_right_0: -1140764497
+      thrust_right_1: -1550977883
+      thrust_right_2: -1478427847
+      thrust_right_3: -516881830
+      thrust_right_4: 1219299271
+      thrust_right_5: -1869182176
+      thrust_right_6: -1261838245
+      thrust_right_7: 1696491586
+      thrust_up_0: -1703379690
+      thrust_up_1: -538301751
+      thrust_up_2: -2098724970
+      thrust_up_3: 1325232793
+      thrust_up_4: -477981840
+      thrust_up_5: 1958911516
+      thrust_up_6: 1077745228
+      thrust_up_7: -856531867
+      walk_down_0: -858986940
+      walk_down_1: -866527208
+      walk_down_2: -201406477
+      walk_down_3: -1945474185
+      walk_down_4: 1324165964
+      walk_down_5: -1507393396
+      walk_down_6: 356328309
+      walk_down_7: -1041013593
+      walk_left_0: 1456479477
+      walk_left_1: 1298881477
+      walk_left_2: 110444605
+      walk_left_3: -445416468
+      walk_left_4: 502542872
+      walk_left_5: -327449896
+      walk_left_6: 2069246336
+      walk_left_7: -572402018
+      walk_right_0: -189094049
+      walk_right_1: -1292107340
+      walk_right_2: 108954056
+      walk_right_3: 1234825278
+      walk_right_4: -2101950841
+      walk_right_5: 766021848
+      walk_right_6: -1991964950
+      walk_right_7: 2078603212
+      walk_up_0: 135299914
+      walk_up_1: -1116163636
+      walk_up_2: 811785345
+      walk_up_3: 121828157
+      walk_up_4: -1636789485
+      walk_up_5: -1381510949
+      walk_up_6: -412253326
+      walk_up_7: -236063631
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

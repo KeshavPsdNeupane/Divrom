@@ -42,13 +42,15 @@
     <UnityVersion>6000.2.7f2</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Analyzer Include="/home/keshav/.vscode/extensions/visualstudiotoolsforunity.vstuc-1.2.0/Analyzers/Microsoft.Unity.Analyzers.dll" />
+    <Analyzer Include="/home/keshav/.vscode/extensions/visualstudiotoolsforunity.vstuc-1.2.1/Analyzers/Microsoft.Unity.Analyzers.dll" />
     <Analyzer Include="/home/keshav/Unity/Hub/Editor/6000.2.7f2/Editor/Data/Tools/Unity.SourceGenerators/Unity.SourceGenerators.dll" />
     <Analyzer Include="/home/keshav/Unity/Hub/Editor/6000.2.7f2/Editor/Data/Tools/Unity.SourceGenerators/Unity.Properties.SourceGenerator.dll" />
     <Analyzer Include="/home/keshav/Unity/Hub/Editor/6000.2.7f2/Editor/Data/Tools/Unity.SourceGenerators/Unity.UIToolkit.SourceGenerator.dll" />
+    <Analyzer Include="/mnt/Development/GameDevelopment/Unity/projects/example/Divrom/Library/PackageCache/com.unity.project-auditor@6cc18ad506e9/RoslynAnalyzers/Domain_Reload_Analyzer.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets/Game/Editor/StatusEffectDrawer.cs" />
+    <Compile Include="Assets/_Project/_Game/Editor/ReadOnlyDrawer.cs" />
+    <Compile Include="Assets/_Project/_Game/Editor/StatusEffectDrawer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
@@ -595,6 +597,14 @@
       <HintPath>Library/PackageCache/com.unity.visualscripting@6279e2b7c485/Runtime/VisualScripting.Flow/Dependencies/NCalc/Unity.VisualScripting.Antlr3.Runtime.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="NuGetForUnity.PluginAPI">
+      <HintPath>Library/PackageCache/com.github-glitchenzo.nugetforunity@ee9526e0fa37/Editor/PluginAPI/NuGetForUnity.PluginAPI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>Library/PackageCache/com.unity.nuget.newtonsoft-json@74deb55db2a0/Runtime/Newtonsoft.Json.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Unity.VisualScripting.TextureAssets">
       <HintPath>Library/PackageCache/com.unity.visualscripting@6279e2b7c485/Editor/VisualScripting.Core/EditorAssetResources/Unity.VisualScripting.TextureAssets.dll</HintPath>
       <Private>False</Private>
@@ -605,6 +615,10 @@
     </Reference>
     <Reference Include="System.Runtime.CompilerServices.Unsafe">
       <HintPath>Library/PackageCache/com.unity.collections@d49facba0036/Unity.Collections.Tests/System.Runtime.CompilerServices.Unsafe/System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ZLinq">
+      <HintPath>Assets/Packages/ZLinq.1.5.4/lib/netstandard2.1/ZLinq.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="mscorlib">
@@ -1127,6 +1141,10 @@
       <HintPath>Library/ScriptAssemblies/Unity.2D.Common.Path.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Domain_Reload">
+      <HintPath>Library/ScriptAssemblies/Domain_Reload.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Unity.2D.Sprite.Editor">
       <HintPath>Library/ScriptAssemblies/Unity.2D.Sprite.Editor.dll</HintPath>
       <Private>False</Private>
@@ -1211,6 +1229,10 @@
       <HintPath>Library/ScriptAssemblies/Unity.PlasticSCM.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Unity.ProjectAuditor.Editor.UI">
+      <HintPath>Library/ScriptAssemblies/Unity.ProjectAuditor.Editor.UI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Unity.Burst.Editor">
       <HintPath>Library/ScriptAssemblies/Unity.Burst.Editor.dll</HintPath>
       <Private>False</Private>
@@ -1259,16 +1281,12 @@
       <HintPath>Library/ScriptAssemblies/Unity.2D.Psdimporter.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary">
-      <HintPath>Library/ScriptAssemblies/Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Unity.VisualScripting.Flow">
       <HintPath>Library/ScriptAssemblies/Unity.VisualScripting.Flow.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Unity.RenderPipelines.Core.Runtime">
-      <HintPath>Library/ScriptAssemblies/Unity.RenderPipelines.Core.Runtime.dll</HintPath>
+    <Reference Include="Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary">
+      <HintPath>Library/ScriptAssemblies/Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.Sysroot.Linux_x86_64">
@@ -1301,6 +1319,10 @@
     </Reference>
     <Reference Include="Unity.VisualStudio.Editor">
       <HintPath>Library/ScriptAssemblies/Unity.VisualStudio.Editor.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.RenderPipelines.Core.Runtime">
+      <HintPath>Library/ScriptAssemblies/Unity.RenderPipelines.Core.Runtime.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.2D.Tilemap.Editor">
@@ -1357,6 +1379,10 @@
     </Reference>
     <Reference Include="Unity.Multiplayer.Center.Editor">
       <HintPath>Library/ScriptAssemblies/Unity.Multiplayer.Center.Editor.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.ProjectAuditor.Editor">
+      <HintPath>Library/ScriptAssemblies/Unity.ProjectAuditor.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.RenderPipelines.Universal.Runtime">
@@ -1418,6 +1444,11 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp.csproj" />
+    <ProjectReference Include="Out.ThirdParty.Stuff.csproj" />
+    <ProjectReference Include="Kope.ModularSpriteAnimation.Editor.csproj" />
+    <ProjectReference Include="Kope.ModularSpriteAnimation.Runtime.csproj" />
+    <ProjectReference Include="Kope.Character.Stats.Runtime.csproj" />
+    <ProjectReference Include="Kope.Core.Runtime.csproj" />
   </ItemGroup>
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
   <ItemGroup>

@@ -1,0 +1,17 @@
+{
+    "name": "Kope.ModularSpriteAnimation.Runtime",
+    "rootNamespace": "Kope.ModularSpriteAnimation",
+    "references": [
+        "GUID:1415229ac17d9d804afb5a91176856c4",
+        "GUID:41524c21c95e5fe4dbc5b48bd21995a4"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

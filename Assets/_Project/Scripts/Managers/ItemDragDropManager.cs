@@ -1,0 +1,64 @@
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
+using ServiceLocatorPattern;
+
+/// <summary>
+/// Written by chatGPT-4 deep model with some adjustments.
+/// Simple manager to hold the currently dragged ItemSlot and source UI.
+/// </summary>
+public class ItemDragDropManager : SceneServiceBase
+{
+    public ItemSlot CopyOfDraggedSourceItemSlot { get; private set; }
+    public ItemSlotUI SourceSlotUI { get; private set; }
+
+    private GameObject dragIcon;
+    private Image dragIconImage;
+    private Canvas parentCanvas;
+
+    public override void Initialize(string callerInfo, bool isWarn = false, GameObject gameObject = null)
+    {
+        if (!this.IsInitialized)
+        {
+            base.Initialize(callerInfo, isWarn, gameObject);
+        }
+    }
+
+    public void BeginDrag(ItemSlot slotCopy, ItemSlotUI sourceUI, Canvas canvas, Sprite icon)
+    {
+        this.CopyOfDraggedSourceItemSlot = slotCopy;
+        this.SourceSlotUI = sourceUI;
+        this.parentCanvas = canvas;
+
+        if (this.dragIcon != null) Destroy(dragIcon);
+        this.dragIcon = new GameObject("DragIcon");
+        this.dragIcon.transform.SetParent(parentCanvas.transform, false);
+        this.dragIconImage = dragIcon.AddComponent<Image>();
+        this.dragIconImage.raycastTarget = false;
+        this.dragIconImage.sprite = icon;
+        this.dragIconImage.preserveAspect = true;
+    }
+    public void UpdateDragPosition(Vector2 screenPosition)
+    {
+        if (this.dragIcon != null)
+            this.dragIcon.transform.position = screenPosition;
+    }
+
+    public void EndDrag()
+    {
+        if (this.dragIcon != null) Destroy(this.dragIcon);
+        this.dragIcon = null;
+        this.dragIconImage = null;
+        this.CopyOfDraggedSourceItemSlot = null;
+        this.SourceSlotUI = null;
+    }
+
+    public bool IsDroppedItemIsOverUI(PointerEventData eventData)
+    {
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventData, results);
+        return results.Count > 0;
+    }
+
+}
