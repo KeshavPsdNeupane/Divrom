@@ -49,52 +49,51 @@
     <Analyzer Include="/mnt/Development/GameDevelopment/Unity/projects/example/Divrom/Library/PackageCache/com.unity.project-auditor@6cc18ad506e9/RoslynAnalyzers/Domain_Reload_Analyzer.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets/_Project/Features/Component/Animation/AnimationVariableHashes.cs" />
-    <Compile Include="Assets/_Project/Features/Inventory/UI/InventoryDisplays/InventoryDisplay.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/Component/Attack/AttackComponentBase.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/Inventory/UI/InventoryDisplays/InventoryDisplay.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/Actors/Player/PlayerStateManager.cs" />
+    <Compile Include="Assets/_Project/Scripts/Managers/InputManager/InputManager.cs" />
     <Compile Include="Assets/_Project/_BootStrap/GlobalBootStrap.cs" />
-    <Compile Include="Assets/_Project/Features/Inventory/Runtime/Item/ItemData.cs" />
-    <Compile Include="Assets/_Project/Features/Actors/Player/PlayerInitCaller.cs" />
-    <Compile Include="Assets/_Project/Features/Actors/Weapon/WeaponAnimationMapping.cs" />
-    <Compile Include="Assets/_Project/Features/Actors/Player/PlayerStates.cs" />
-    <Compile Include="Assets/_Project/Features/Actors/Player/States/PlayerIdle.cs" />
-    <Compile Include="Assets/_Project/Systems/ItemDatabase/HashUtility.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/Inventory/UI/ItemSlotDoubleTap.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/Inventory/UI/InventoryDisplays/PlayerInventoryDisplay.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/Inventory/UI/ItemSlotUI/SimpleItemUIDragAndDropInteractionHelperClass.cs" />
     <Compile Include="Assets/PlayerInput.cs" />
     <Compile Include="Assets/_Project/UI/Menu/TabController.cs" />
     <Compile Include="Assets/_Project/UI/UIState/UIState.cs" />
-    <Compile Include="Assets/_Project/Features/Inventory/Runtime/Item/ItemPickup.cs" />
-    <Compile Include="Assets/_Project/Features/Component/Movement/PlayerMovementComponent.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/Component/Animation/AnimationComponent.cs" />
     <Compile Include="Assets/_Project/UI/Common/PanelFader.cs" />
-    <Compile Include="Assets/_Project/Features/Component/Attack/AttackComponentBase.cs" />
-    <Compile Include="Assets/_Project/Features/Actors/Enemy/TestEnemyComponent.cs" />
-    <Compile Include="Assets/_Project/Features/Actors/Player/PlayerStateController.cs" />
-    <Compile Include="Assets/_Project/Features/Inventory/Runtime/Item/PlayerItemCollector.cs" />
-    <Compile Include="Assets/_Project/Features/Inventory/Runtime/InventorySystem.cs" />
-    <Compile Include="Assets/_Project/Features/Component/Attack/PlayerAttackComponent.cs" />
-    <Compile Include="Assets/_Project/Systems/ItemDatabase/ItemDatabaseSO.cs" />
-    <Compile Include="Assets/_Project/Features/Component/Attack/EnemyAttackComponent.cs" />
-    <Compile Include="Assets/_Project/Features/Actors/AnimationStates.cs" />
-    <Compile Include="Assets/_Project/Features/Actors/Enemy/ChasePlayer.cs" />
-    <Compile Include="Assets/_Project/Features/Inventory/UI/ItemSlotUI/SimpleItemUIDragAndDropInteractionHelperClass.cs" />
-    <Compile Include="Assets/_Project/Features/Actors/Player/States/PlayerAttack.cs" />
-    <Compile Include="Assets/_Project/Features/Inventory/Runtime/Slot/ItemSlot.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/Actors/Player/States/PlayerMove.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/Component/Animation/AnimationVariableHashes.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/Inventory/Runtime/Item/ItemData.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/Inventory/Runtime/Slot/ItemSlot.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/Actors/Enemy/ChasePlayer.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/Component/Attack/PlayerAttackComponent.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/Actors/Weapon/WeaponAnimationMapping.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/Actors/Player/PlayerStateController.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/Actors/Player/States/PlayerIdle.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/Inventory/Runtime/Item/ItemPickup.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/Component/Attack/EnemyAttackComponent.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/Component/Movement/EnemyMovementComponent.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/Component/Movement/TestMovementController.cs" />
     <Compile Include="Assets/_Project/UI/UIState/InGameUI/InGameUIInitCaller.cs" />
-    <Compile Include="Assets/_Project/Features/Component/Movement/EnemyMovementComponent.cs" />
     <Compile Include="Assets/_Project/UI/Common/PanelController.cs" />
-    <Compile Include="Assets/_Project/Features/Actors/Player/PlayerStateManager.cs" />
-    <Compile Include="Assets/_Project/Features/Component/Movement/MovementComponentBase.cs" />
-    <Compile Include="Assets/_Project/Features/Actors/Player/PlayerBaseState.cs" />
-    <Compile Include="Assets/_Project/Systems/ItemDragDropManager.cs" />
     <Compile Include="Assets/_Project/UI/UIState/UIStateManager.cs" />
-    <Compile Include="Assets/_Project/Features/Inventory/UI/ItemSlotUI/ItemSlotUI.cs" />
-    <Compile Include="Assets/_Project/Features/Component/Animation/AnimationComponent.cs" />
-    <Compile Include="Assets/_Project/Features/Inventory/UI/ItemSlotDoubleTap.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/Actors/Player/States/PlayerAttack.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/Component/Movement/PlayerMovementComponent.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/Actors/Player/PlayerStates.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/Actors/Player/PlayerBaseState.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/Inventory/Runtime/Item/PlayerItemCollector.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/Actors/Enemy/TestEnemyComponent.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/Actors/Player/PlayerInitCaller.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/Actors/Weapon/WeaponSO.cs" />
     <Compile Include="Assets/_Project/UI/UIState/InGameUI/GameplayUIController.cs" />
-    <Compile Include="Assets/_Project/Systems/InputManager/InputManager.cs" />
-    <Compile Include="Assets/_Project/Features/Inventory/Runtime/InventoryHolder.cs" />
-    <Compile Include="Assets/_Project/Features/Component/Movement/TestMovementController.cs" />
-    <Compile Include="Assets/_Project/Features/Inventory/UI/InventoryDisplays/PlayerInventoryDisplay.cs" />
-    <Compile Include="Assets/_Project/Features/Actors/Player/States/PlayerMove.cs" />
-    <Compile Include="Assets/_Project/Features/Actors/Weapon/WeaponSO.cs" />
+    <Compile Include="Assets/_Project/Scripts/Managers/ItemDragDropManager.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/Component/Movement/MovementComponentBase.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/Inventory/Runtime/InventorySystem.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/Inventory/Runtime/InventoryHolder.cs" />
+    <Compile Include="Assets/_Project/Scripts/Managers/ItemDatabase/HashUtility.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/Inventory/UI/ItemSlotUI/ItemSlotUI.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/Actors/AnimationStates.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets/TextMesh Pro/Shaders/TMPro.cginc" />
@@ -1438,11 +1437,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="Kope.Core.Runtime.csproj" />
-    <ProjectReference Include="Kope.ModularSpriteAnimation.Editor.csproj" />
     <ProjectReference Include="Out.ThirdParty.Stuff.csproj" />
-    <ProjectReference Include="Kope.Character.Stats.Runtime.csproj" />
+    <ProjectReference Include="Kope.ModularSpriteAnimation.Editor.csproj" />
     <ProjectReference Include="Kope.ModularSpriteAnimation.Runtime.csproj" />
+    <ProjectReference Include="Kope.Character.Stats.Runtime.csproj" />
+    <ProjectReference Include="Kope.Core.Runtime.csproj" />
   </ItemGroup>
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
   <ItemGroup>

@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: TestWeapon
   m_EditorClassIdentifier: Assembly-CSharp::WeaponSO
   weaponName: Bare Hands
-  weaponType: 4
+  weaponType: -1
   overrideAttackAnimation: -1
   attackSpeed: 1

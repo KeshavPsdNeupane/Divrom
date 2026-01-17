@@ -1,7 +1,7 @@
 ﻿<Solution>
-  <Project Path="Kope.Core.Runtime.csproj" />
-  <Project Path="Assembly-CSharp.csproj" />
   <Project Path="Kope.ModularSpriteAnimation.Runtime.csproj" />
+  <Project Path="Assembly-CSharp.csproj" />
+  <Project Path="Kope.Core.Runtime.csproj" />
   <Project Path="Kope.Character.Stats.Runtime.csproj" />
   <Project Path="Kope.ModularSpriteAnimation.Editor.csproj" />
   <Project Path="Out.ThirdParty.Stuff.csproj" />

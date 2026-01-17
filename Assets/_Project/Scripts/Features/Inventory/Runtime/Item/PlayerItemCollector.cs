@@ -1,6 +1,7 @@
 using Kope.Core.CompilerServices;
 using UnityEngine;
 using Kope.Core.Init;
+using TMPro;
 
 
 [RequireComponent(typeof(CircleCollider2D))]
@@ -50,11 +51,14 @@ public class PlayerItemCollector : InitializableBase
         }
     }
 
+#if UNITY_EDITOR
+    [SerializeField] private bool showGizmos = false;
     void OnDrawGizmos()
     {
-        if (!this.enabled) return;
+        if (!this.enabled || !this.showGizmos) return;
 
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireSphere(transform.position, this.detectionRadius);
     }
+#endif
 }

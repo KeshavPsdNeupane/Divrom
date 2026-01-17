@@ -40,10 +40,13 @@ public class StatusEffectConnector : InitializableBase
         }
     }
 
-
+#if UNITY_EDITOR
+    [SerializeField] private bool showGizmos = false;
     void OnDrawGizmos()
     {
+        if (!this.enabled || !this.showGizmos) return;
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireSphere(this.transform.position, this.detectionRadius);
     }
+#endif
 }
