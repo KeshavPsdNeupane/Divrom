@@ -5,6 +5,7 @@ using Kope.Core.Init;
 /// Must be placed Under the Root Player GameObject
 /// For the HandleAnimationTrigger to work
 ///</summary>
+<<<<<<< HEAD
 
 public class EntityContextManager : InitializableBase
 {
@@ -21,6 +22,24 @@ public class EntityContextManager : InitializableBase
 
     public EntityStateManager StateMachine => stateMachine;
     public EntityStates EntityStates => entityStates;
+=======
+
+public class PlayerStateController : InitializableBase
+{
+    [SerializeField] private MovementComponentBase movementComponent;
+    [SerializeField] private AnimationComponent animationComponent;
+    [SerializeField] private AttackComponentBase attackComponent;
+    private PlayerStateManager stateMachine;
+    private PlayerStates playerStates;
+
+    // Public getters for the components
+    public MovementComponentBase MovementComponent => movementComponent;
+    public AnimationComponent AnimationComponent => animationComponent;
+    public AttackComponentBase PlayerAttackComponent => attackComponent;
+
+    public PlayerStateManager StateMachine => stateMachine;
+    public PlayerStates PlayerStates => playerStates;
+>>>>>>> master
 
     public override void Init()
     {
