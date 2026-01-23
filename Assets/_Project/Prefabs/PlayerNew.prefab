@@ -43,7 +43,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5ec997d50bf99354ca4f5fa2cdd69c8b, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerStateController
+  m_EditorClassIdentifier: Assembly-CSharp::EntityContextManager
   movementComponent: {fileID: 7100714284575033797}
   animationComponent: {fileID: 2559965507949131218}
   attackComponent: {fileID: 2247624721500832756}
@@ -216,7 +216,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8207a5ac3ea0de14fbfcccff522cc2db, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AnimationComponent
+  m_EditorClassIdentifier: Assembly-CSharp::AnimationComponentBase
   anim: {fileID: 2449313907762071542}
 --- !u!1 &2738320167129086288
 GameObject:
@@ -385,7 +385,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 267923a9716b04b4088ffa3a650266e2, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MovementComponent
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerMovementComponent
   rb: {fileID: 5028322666046906755}
   characterStatsSystem: {fileID: 5294357042670943928}
   defaultMovementSpeed: 2
@@ -651,7 +651,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2dcc3c998b5f98b6891e422fd5e29ded, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AttackComponent
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAttackComponent
   animationComponent: {fileID: 2559965507949131218}
   statsSystem: {fileID: 5294357042670943928}
   equippedWeaponDataSO: {fileID: 11400000, guid: 4108109141f9b5663a6dbf1c537616eb, type: 2}
