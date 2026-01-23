@@ -25,6 +25,7 @@ namespace Kope.SpriteComposer2D
     /// <typeparam name="TRace"></typeparam>
     /// <typeparam name="TColorPermutation"></typeparam>
     /// <typeparam name="TPart"></typeparam>
+
     public abstract class SpriteAnimationLibraryAssetDefinition<TGender, TRace, TColorPermutation, TPart>
     : ScriptableObject where TGender : System.Enum
     where TRace : System.Enum

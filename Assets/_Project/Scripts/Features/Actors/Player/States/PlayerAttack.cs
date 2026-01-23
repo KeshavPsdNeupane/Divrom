@@ -1,7 +1,7 @@
-﻿public class PlayerAttack : PlayerBaseState
+﻿public class EntityAttack : EntityBaseState
 {
     private readonly MovementComponentBase movementComponent;
-    private readonly AnimationComponent animationComponent;
+    private readonly AnimationComponentBase animationComponent;
 
 
     private AnimationState currentAnimationState;
@@ -13,7 +13,7 @@
 
     private const float ATTACK_ANIMATION_THRESHOLD = 0.9f;
 
-    public PlayerAttack(PlayerStateManager baseStateManager, PlayerStateController playerStateController)
+    public EntityAttack(EntityStateManager baseStateManager, EntityContextManager playerStateController)
         : base(baseStateManager, playerStateController)
     {
         movementComponent = playerStateController.MovementComponent;
@@ -66,6 +66,6 @@
     private void SwitchToIdle()
     {
         this.animationComponent.SetDefaultAnimationSpeed();
-        this.stateManager.ChangeState(this.playerStateController.PlayerStates.PlayerIdle);
+        this.stateManager.ChangeState(this.playerStateController.EntityStates.EntityIdle);
     }
 }

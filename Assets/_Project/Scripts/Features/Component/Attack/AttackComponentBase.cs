@@ -9,7 +9,7 @@ using Kope.Character.Stats;
 /// </summary>
 public abstract class AttackComponentBase : InitializableBase
 {
-    [SerializeField] private AnimationComponent animationComponent;
+    [SerializeField] private AnimationComponentBase animationComponent;
     [SerializeField] protected CharacterStatsSystem statsSystem;
     [SerializeField] WeaponSO equippedWeaponDataSO;
     protected float attack;
@@ -30,7 +30,7 @@ public abstract class AttackComponentBase : InitializableBase
         if (this.animationComponent == null)
         {
             MyLogger.Warn("AnimationComponent not assigned in AttackComponentBase, trying to get it from the GameObject.");
-            this.animationComponent = GetComponent<AnimationComponent>();
+            this.animationComponent = GetComponent<AnimationComponentBase>();
         }
 
         SubscribeToStats();

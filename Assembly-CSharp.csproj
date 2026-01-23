@@ -74,6 +74,7 @@
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/Runtime/Item/ItemPickup.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Component/Attack/EnemyAttackComponent.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Component/Movement/EnemyMovementComponent.cs" />
+    <Compile Include="Assets/Averager.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Component/Movement/TestMovementController.cs" />
     <Compile Include="Assets/_Project/UI/UIState/InGameUI/InGameUIInitCaller.cs" />
     <Compile Include="Assets/_Project/UI/Common/PanelController.cs" />
@@ -90,8 +91,8 @@
     <Compile Include="Assets/_Project/Scripts/Managers/ItemDragDropManager.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Component/Movement/MovementComponentBase.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/Runtime/InventorySystem.cs" />
-    <Compile Include="Assets/_Project/Scripts/Features/Inventory/Runtime/InventoryHolder.cs" />
     <Compile Include="Assets/_Project/Scripts/Managers/ItemDatabase/HashUtility.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/Inventory/Runtime/InventoryHolder.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/UI/ItemSlotUI/ItemSlotUI.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Actors/AnimationStates.cs" />
   </ItemGroup>

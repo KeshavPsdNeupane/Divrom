@@ -1,13 +1,13 @@
-public class PlayerStateManager
+public class EntityStateManager
 {
-    private PlayerBaseState currentState;
-    public PlayerBaseState CurrentState => this.currentState;
-    public void Initialize(PlayerBaseState state)
+    private EntityBaseState currentState;
+    public EntityBaseState CurrentState => this.currentState;
+    public void Initialize(EntityBaseState state)
     {
         this.currentState = state;
         this.currentState?.Enter();
     }
-    public void ChangeState(PlayerBaseState state)
+    public void ChangeState(EntityBaseState state)
     {
         this.currentState?.Exit();
         this.currentState = state;

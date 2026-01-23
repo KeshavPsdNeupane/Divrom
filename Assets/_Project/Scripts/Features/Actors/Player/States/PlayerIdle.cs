@@ -1,17 +1,17 @@
 using UnityEngine;
 
-public class PlayerIdle : PlayerBaseState
+public class EntityIdle : EntityBaseState
 {
     private readonly MovementComponentBase movementComponent;
-    private readonly AnimationComponent animationComponent;
+    private readonly AnimationComponentBase animationComponent;
     private readonly AnimationState animationState;
     private readonly int animationStateHash;
 
     public override AnimationState AnimationState => this.animationState;
     public override int AnimationStateHash => this.animationStateHash;
 
-    public PlayerIdle(PlayerStateManager baseStateManager,
-        PlayerStateController playerStateController, AnimationState animationState = AnimationState.Idle)
+    public EntityIdle(EntityStateManager baseStateManager,
+        EntityContextManager playerStateController, AnimationState animationState = AnimationState.Idle)
         : base(baseStateManager, playerStateController)
     {
         this.animationState = animationState;
@@ -30,7 +30,7 @@ public class PlayerIdle : PlayerBaseState
         if (this.movementComponent.Direction.sqrMagnitude
         >= MovementComponentBase.DIRECTION_THRESHOLD)
             this.stateManager.ChangeState(
-                this.playerStateController.PlayerStates.PlayerMove
+                this.playerStateController.EntityStates.EntityMove
                 );
     }
 

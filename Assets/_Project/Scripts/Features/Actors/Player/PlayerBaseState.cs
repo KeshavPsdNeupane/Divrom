@@ -1,14 +1,14 @@
 
-public class PlayerBaseState
+public class EntityBaseState
 {
-    protected PlayerStateController playerStateController;
-    protected PlayerStateManager stateManager;
+    protected EntityContextManager playerStateController;
+    protected EntityStateManager stateManager;
 
     public virtual AnimationState AnimationState { get; protected set; }
     public virtual int AnimationStateHash { get; protected set; }
 
-    public PlayerBaseState(PlayerStateManager StateManager,
-        PlayerStateController playerStateController)
+    public EntityBaseState(EntityStateManager StateManager,
+        EntityContextManager playerStateController)
     {
         this.stateManager = StateManager;
         this.playerStateController = playerStateController;

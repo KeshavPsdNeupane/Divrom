@@ -963,12 +963,11 @@ MonoBehaviour:
   baseCharacterAssets:
   - {fileID: 11400000, guid: aac72f0a073823cd3b31c2667cae5175, type: 2}
   - {fileID: 11400000, guid: 68dd498a20278c64e842474c831a4f31, type: 2}
-  - {fileID: 11400000, guid: 9fb8c47a059eba8eeb0e13b204da55e3, type: 2}
-  - {fileID: 11400000, guid: f1b65676532dbe99cbc56c2713e76786, type: 2}
   - {fileID: 11400000, guid: 21c2cffcb659a82bfbc806c54fd110ee, type: 2}
+  - {fileID: 11400000, guid: 0d20f2b5bb6081f08998fe76db41facb, type: 2}
+  - {fileID: 11400000, guid: 9fb8c47a059eba8eeb0e13b204da55e3, type: 2}
   - {fileID: 11400000, guid: 8e789defe70252217b231be25fb95458, type: 2}
   - {fileID: 11400000, guid: a484e2297da806b4e94620e51fd72b46, type: 2}
-  - {fileID: 11400000, guid: 0d20f2b5bb6081f08998fe76db41facb, type: 2}
   equipmentLibraries:
   - {fileID: 2504819488441861470}
   - {fileID: 3201915881795204063}
@@ -978,12 +977,12 @@ MonoBehaviour:
   - {fileID: 825663328726864719}
   - {fileID: 8122480708991319272}
   equipmentAssets:
-  - {fileID: 11400000, guid: 531686a3c599ef9288d42096965a7bd0, type: 2}
   - {fileID: 11400000, guid: 10363c7bdc8dffabd8e30133b1d00aa3, type: 2}
   - {fileID: 11400000, guid: 77dcaaa2cef5fea7d9aed68b4dbc341a, type: 2}
   - {fileID: 11400000, guid: 4ff7cddd8e2405da2a8ddb2dda3659a1, type: 2}
-  - {fileID: 11400000, guid: 079c04d92642502a7b7ecfc03b2d6ccb, type: 2}
   - {fileID: 11400000, guid: 45c8845ff170547eb8fa626438ac8d9c, type: 2}
+  - {fileID: 11400000, guid: 079c04d92642502a7b7ecfc03b2d6ccb, type: 2}
+  - {fileID: 11400000, guid: 18ce1016f5028ee3b93b5aa9eef7244a, type: 2}
 --- !u!1 &4893634328063666916
 GameObject:
   m_ObjectHideFlags: 0
@@ -1756,7 +1755,7 @@ SpriteRenderer:
   m_SortingLayerID: 1489034323
   m_SortingLayer: 5
   m_SortingOrder: -2
-  m_Sprite: {fileID: 1833730570, guid: dc6ebe7f372cae8419162756f1104752, type: 3}
+  m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1764,7 +1763,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!114 &7640326998420124468
@@ -1809,7 +1808,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BodyRegionSpriteLibrary
   m_Library: []
-  m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: 1f7883dc543a5a8728378897e75fc1b7, type: 3}
+  m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: 1fd486b84ee5dd11390d58724e865054, type: 3}
   partType: 600
   resolver: {fileID: 6169189097393889413}
 --- !u!1 &8471362312575267839
@@ -1894,7 +1893,7 @@ SpriteRenderer:
   m_SortingLayerID: 1489034323
   m_SortingLayer: 5
   m_SortingOrder: 8
-  m_Sprite: {fileID: -2011534638, guid: 02ba8bfbe72bc2fd0a526359ae45d8fc, type: 3}
+  m_Sprite: {fileID: 1052535587768086066, guid: 94aa57f43bbc4073ca98f79d12e80c42, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1947,7 +1946,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentSpriteLibrary
   m_Library: []
-  m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: 8200f0bcab2236c33bf77c1e41c126a1, type: 3}
+  m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: d34f4ab4b0bf52374aa9eedae8b461ae, type: 3}
   partType: 600
   resolver: {fileID: 8489052238718460152}
 --- !u!1 &8638020264429928410

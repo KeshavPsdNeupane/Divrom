@@ -4,7 +4,7 @@ using System;
 using Kope.Core.CompilerServices;
 using Kope.Core.Init;
 
-public class AnimationComponent : InitializableBase
+public class AnimationComponentBase : InitializableBase
 {
     // no Awake or Start method here to InterOp with InitCallerManager
     // no no need to add InitializableBase here because no Init logic is needed

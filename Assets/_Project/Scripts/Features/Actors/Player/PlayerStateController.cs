@@ -6,27 +6,27 @@ using Kope.Core.Init;
 /// For the HandleAnimationTrigger to work
 ///</summary>
 
-public class PlayerStateController : InitializableBase
+public class EntityContextManager : InitializableBase
 {
     [SerializeField] private MovementComponentBase movementComponent;
-    [SerializeField] private AnimationComponent animationComponent;
+    [SerializeField] private AnimationComponentBase animationComponent;
     [SerializeField] private AttackComponentBase attackComponent;
-    private PlayerStateManager stateMachine;
-    private PlayerStates playerStates;
+    private EntityStateManager stateMachine;
+    private EntityStates entityStates;
 
     // Public getters for the components
     public MovementComponentBase MovementComponent => movementComponent;
-    public AnimationComponent AnimationComponent => animationComponent;
+    public AnimationComponentBase AnimationComponent => animationComponent;
     public AttackComponentBase PlayerAttackComponent => attackComponent;
 
-    public PlayerStateManager StateMachine => stateMachine;
-    public PlayerStates PlayerStates => playerStates;
+    public EntityStateManager StateMachine => stateMachine;
+    public EntityStates EntityStates => entityStates;
 
     public override void Init()
     {
-        this.stateMachine = new PlayerStateManager();
-        this.playerStates = new PlayerStates(this.stateMachine, this);
-        this.stateMachine.Initialize(this.playerStates.PlayerIdle);
+        this.stateMachine = new EntityStateManager();
+        this.entityStates = new EntityStates(this.stateMachine, this);
+        this.stateMachine.Initialize(this.entityStates.EntityIdle);
         SetInitialized();
     }
 
@@ -52,7 +52,7 @@ public class PlayerStateController : InitializableBase
     // and allows for more flexible attack triggering
     private void Attack()
     {
-        this.stateMachine.ChangeState(this.playerStates.PlayerAttack);
+        this.stateMachine.ChangeState(this.entityStates.EntityAttack);
     }
 
     // this delegate func called when AnimationComponent invokes OnAnimationTrigger event

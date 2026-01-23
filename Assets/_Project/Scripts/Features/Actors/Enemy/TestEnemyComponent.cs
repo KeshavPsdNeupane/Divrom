@@ -1,4 +1,4 @@
-public class TestEnemyComponent : PlayerStateController
+public class TestEnemyComponent : EntityContextManager
 {
 
 }
