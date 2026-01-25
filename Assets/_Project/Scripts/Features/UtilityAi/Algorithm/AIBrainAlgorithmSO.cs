@@ -31,49 +31,11 @@ namespace Kope.AI.Brain
         [SerializeField, Tooltip("The display name of this specific AI logic configuration.")]
         protected string brainName;
 
-        [SerializeField, Tooltip("The collection of actions available for this brain to evaluate.")]
-        private List<ActionSO> possibleActions;
-
-        private List<ActionSO> cachedPossibleActions;
-
-        // public getter for debugging purposes
-        #region  Debugging
-        public IReadOnlyList<ActionSO> PossibleActions => cachedPossibleActions;
         public string BrainName => brainName;
-        #endregion
+        // forcing child to implement its own action storage and instantiation logic
+        // so this base class remains generic for all AI types
 
 
-        private void OnEnable() => Initialize();
-        private void OnValidate() => Initialize();
-        private void OnDestroy() => ResetCachedActions();
-        private void OnDisable() => ResetCachedActions();
-
-        private void Initialize()
-        {
-            // Cache instantiated actions to avoid modifying the original ScriptableObjects
-            if (possibleActions != null)
-            {
-                cachedPossibleActions = new List<ActionSO>(possibleActions.Count);
-                foreach (var action in possibleActions)
-                {
-                    var actionInstance = Instantiate(action);
-                    cachedPossibleActions.Add(actionInstance);
-                }
-            }
-        }
-
-        private void ResetCachedActions()
-        {
-            if (cachedPossibleActions != null)
-            {
-                foreach (var action in cachedPossibleActions)
-                {
-                    Destroy(action);
-                }
-                cachedPossibleActions.Clear();
-                cachedPossibleActions = null;
-            }
-        }
         /// <summary>
         /// Generates a decision plan based on the provided entity context.
         /// The returned sequence of actions should be formatted by the child class
