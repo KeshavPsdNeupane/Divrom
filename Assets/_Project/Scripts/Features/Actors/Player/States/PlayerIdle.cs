@@ -11,7 +11,7 @@ public class EntityIdle : EntityBaseState
     public override int AnimationStateHash => this.animationStateHash;
 
     public EntityIdle(EntityStateManager baseStateManager,
-        EntityContextManager playerStateController, AnimationState animationState = AnimationState.Idle)
+        EntityStateController playerStateController, AnimationState animationState = AnimationState.Idle)
         : base(baseStateManager, playerStateController)
     {
         this.animationState = animationState;

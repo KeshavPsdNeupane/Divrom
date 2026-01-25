@@ -8,7 +8,7 @@ public class EntityStates
     public EntityIdle EntityIdle => this.entityIdle;
     public EntityMove EntityMove => this.entityMove;
     public EntityAttack EntityAttack => this.entityAttack;
-    public EntityStates(EntityStateManager baseStateMachine, EntityContextManager playerStateController)
+    public EntityStates(EntityStateManager baseStateMachine, EntityStateController playerStateController)
     {
         // the enumeration names must match the animation state names in the Animator Controller
         // to ensure correct state transitions and animations

@@ -8,6 +8,7 @@ namespace Kope.Core.Init
     /// </summary>
     public abstract class InitializableBase : MonoBehaviour, IInitializable
     {
+
         public bool IsInitialized { get; protected set; } = false;
 
         protected void SetInitialized(bool initialized = true)
@@ -16,11 +17,17 @@ namespace Kope.Core.Init
         /// <summary>
         /// Called once after dependencies are injected. Override or use method-injection.
         /// </summary>
-        public virtual void Init() { }
+        public virtual void Init()
+        {
+            SetInitialized(true);
+        }
 
         /// <summary>
         /// Called during shutdown. Override for cleanup.
         /// </summary>
-        public virtual void Shutdown() { }
+        public virtual void Shutdown()
+        {
+            SetInitialized(false);
+        }
     }
 }

@@ -1,16 +1,12 @@
 ﻿using UnityEngine;
 using Kope.Core.Init;
-/// <summary>
-/// Controls the player's state and interactions.
-/// Must be placed Under the Root Player GameObject
-/// For the HandleAnimationTrigger to work
-///</summary>
 
-public class EntityContextManager : InitializableBase
+public class EntityStateController : InitializableBase
 {
     [SerializeField] private MovementComponentBase movementComponent;
     [SerializeField] private AnimationComponentBase animationComponent;
     [SerializeField] private AttackComponentBase attackComponent;
+
     private EntityStateManager stateMachine;
     private EntityStates entityStates;
 
@@ -53,6 +49,19 @@ public class EntityContextManager : InitializableBase
     private void Attack()
     {
         this.stateMachine.ChangeState(this.entityStates.EntityAttack);
+    }
+
+    /// <summary>
+    /// Changes the animation state of the entity.
+    /// Using enum AnimationState for better readability and maintainability.
+    /// and other systems can also use this enum to request animation changes.
+    /// with out direct references to animation names or hashes.
+    /// Enhances decoupling between animation system and other game systems.
+    /// Empty for now, to be implemented later.
+    /// </summary>
+    private void ChangeState(AnimationState state)
+    {
+        //no op for now
     }
 
     // this delegate func called when AnimationComponent invokes OnAnimationTrigger event

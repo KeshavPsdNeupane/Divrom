@@ -17,7 +17,7 @@ public class AnimationComponentBase : InitializableBase
 
     public override void Init()
     {
-        if (anim == null)
+        if (this.anim == null)
         {
             this.anim = GetComponent<Animator>();
             MyLogger.Warn("Animator not assigned in AnimationComponent, " +
@@ -52,13 +52,9 @@ public class AnimationComponentBase : InitializableBase
     }
 
     public bool DoesAnimationExist(int animationHash)
-    {
-        return this.anim.HasState(0, animationHash);
-    }
+    => this.anim.HasState(0, animationHash);
     public bool DoesAnimationExist(string animationName)
-    {
-        return DoesAnimationExist(Animator.StringToHash(animationName));
-    }
+    => DoesAnimationExist(Animator.StringToHash(animationName));
 
     public bool IsAnimationFinished(int animationHash, float THRESHOLD = 0.9f)
     {

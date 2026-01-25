@@ -10,7 +10,7 @@ public class EntityMove : EntityBaseState
     public override AnimationState AnimationState => this.animationState;
     public override int AnimationStateHash => this.animationStateHash;
     public EntityMove(EntityStateManager baseStateManager,
-        EntityContextManager playerStateController, AnimationState animationState = AnimationState.Walk)
+        EntityStateController playerStateController, AnimationState animationState = AnimationState.Walk)
         : base(baseStateManager, playerStateController)
     {
         this.animationState = animationState;

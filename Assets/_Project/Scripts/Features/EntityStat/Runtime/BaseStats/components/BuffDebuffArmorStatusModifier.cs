@@ -1,6 +1,5 @@
 using UnityEngine;
 using ThirdParty;
-using System.Collections.Generic;
 namespace Kope.Character.Stats
 {
     [System.Serializable]

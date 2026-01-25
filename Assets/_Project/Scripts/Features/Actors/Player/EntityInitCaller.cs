@@ -3,4 +3,4 @@ using Kope.Core.Init;
 /// Player-specific InitCallerManager to group 
 /// Player-related Initializables separately from other Initializables
 /// </summary>
-public class PlayerInitCaller : InitLifecycleManager { }
+public class EntityInitCaller : InitLifecycleManager { }

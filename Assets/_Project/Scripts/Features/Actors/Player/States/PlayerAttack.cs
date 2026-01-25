@@ -13,7 +13,7 @@ public class EntityAttack : EntityBaseState
 
     private const float ATTACK_ANIMATION_THRESHOLD = 0.9f;
 
-    public EntityAttack(EntityStateManager baseStateManager, EntityContextManager playerStateController)
+    public EntityAttack(EntityStateManager baseStateManager, EntityStateController playerStateController)
         : base(baseStateManager, playerStateController)
     {
         movementComponent = playerStateController.MovementComponent;

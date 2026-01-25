@@ -1,7 +1,6 @@
 using Kope.Core.CompilerServices;
 using UnityEngine;
 using Kope.Core.Init;
-using TMPro;
 
 
 [RequireComponent(typeof(CircleCollider2D))]

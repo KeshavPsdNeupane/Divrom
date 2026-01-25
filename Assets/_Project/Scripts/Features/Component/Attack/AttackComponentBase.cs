@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using Kope.Core.Init;
 using Kope.Character.Stats;
+using System;
 /// <summary>
 /// Base attack logic component. Can be used for both player and AI.
 /// Handles stat subscription and damage calculation.
@@ -78,7 +79,7 @@ public abstract class AttackComponentBase : InitializableBase
         float damage = baseScalingStat;
         if (normalizedCriticalChance >= 1f) return damage * normalizedCriticalDamage;
 
-        if (Random.value < normalizedCriticalChance) return damage * normalizedCriticalDamage;
+        if (UnityEngine.Random.value < normalizedCriticalChance) return damage * normalizedCriticalDamage;
         return damage;
     }
 
