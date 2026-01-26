@@ -1,50 +1,33 @@
-public static class EnumExtensions
+using System;
+namespace Kope.Core.Extensions
 {
-    // You can even make a generic one for all your enums
-    public static string ToIdPart(this System.Enum enumValue)
+    public static class EnumExtensions
     {
-        return enumValue.ToString().ToLower();
-    }
-
-
-    /// <summary>
-    /// Removes the specified postfix from the string if it exists.
-    /// </summary>
-    /// <param name="str"></param>
-    /// <param name="postfix"></param>
-    /// <returns></returns>
-    public static string RemovePostFix(string str, string postfix)
-    {
-        if (string.IsNullOrEmpty(str)) return string.Empty;
-        if (str.EndsWith(postfix))
+        /// <summary>
+        /// Converts the enum value to a lowercase string suitable for use as an ID part.
+        /// 
+        /// </summary>
+        /// <param name="enumValue"></param>
+        /// <returns> 
+        ///     The lowercase string representation of the enum value.
+        /// </returns>
+        public static string ToIdPart(this Enum enumValue)
         {
-            return str[..^postfix.Length];
+            return enumValue.ToString().ToLower();
         }
-        return str;
-    }
-    /// <summary>
-    /// Removes the "Enum" postfix from the enum type name.
-    /// Or a custom suffix if provided.
-    /// </summary>
-    /// <param name="enumValue"></param>
-    /// <param name="suffix"></param>
-    /// <returns></returns>
-    public static string RemoveEnumTypePostFix(this System.Enum enumValue, string suffix = "Enum")
-    {
-        return RemovePostFix(enumValue.GetType().Name, suffix);
-    }
 
-    /// <summary>
-    /// Removes the "Enum" postfix from the type name.
-    /// Or a custom suffix if provided.
-    /// </summary>
-    /// <param name="type"></param>
-    /// <param name="suffix"></param>
-    /// <returns></returns>
-    public static string TypeToStringRemoveEnumPostFix(this System.Type type, string suffix = "Enum")
-    {
-
-        return RemovePostFix(type.Name, suffix);
+        /// <summary>
+        /// Removes the "Enum" postfix from the enum type name.
+        /// Or a custom suffix if provided.
+        /// </summary>
+        /// <param name="enumValue"></param>
+        /// <param name="suffix"></param>
+        /// <returns>
+        ///     The string representation of the enum type name with the specified suffix removed.
+        /// </returns>
+        public static string ToStringRemoveTypePostFix(this Enum enumValue, string suffix = "Enum")
+        {
+            return StringExtension.RemovePostFix(enumValue.GetType().Name, suffix);
+        }
     }
-
 }

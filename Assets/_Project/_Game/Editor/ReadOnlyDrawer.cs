@@ -1,7 +1,12 @@
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
+using Kope.Core.Attribute;
 
+
+/// <summary>
+/// Custom property drawer for ReadOnlyAttribute to make fields read-only in the Unity Inspector.
+/// </summary>
 [CustomPropertyDrawer(typeof(ReadOnlyAttribute))]
 public class ReadOnlyDrawer : PropertyDrawer
 {

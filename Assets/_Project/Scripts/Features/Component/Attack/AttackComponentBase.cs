@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.Events;
 using Kope.Core.Init;
 using Kope.Character.Stats;
-using System;
 /// <summary>
 /// Base attack logic component. Can be used for both player and AI.
 /// Handles stat subscription and damage calculation.
@@ -23,6 +22,8 @@ public abstract class AttackComponentBase : InitializableBase
 
     public override void Init()
     {
+        if (this.IsInitialized) return;
+        base.Init();
         if (this.statsSystem == null)
         {
             MyLogger.Warn("CharacterStatsSystem not assigned in AttackComponentBase, trying to get it from the GameObject.");
@@ -35,7 +36,6 @@ public abstract class AttackComponentBase : InitializableBase
         }
 
         SubscribeToStats();
-        SetInitialized();
     }
 
     protected virtual void OnEnable() => SubscribeToStats();

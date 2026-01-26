@@ -13,6 +13,8 @@ public class PlayerInventoryDisplayUI : InventoryDisplay
 
     public override void Init()
     {
+        if (this.IsInitialized) return;
+        base.Init();
         if (this.inventoryHolder == null)
         {
             MyLogger.Error($"PlayerInventoryDisplayUI ({gameObject.name}): InventoryHolder is not assigned!");

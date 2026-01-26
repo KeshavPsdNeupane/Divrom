@@ -13,8 +13,9 @@ public class InventoryHolder : InitializableBase
 
     public override void Init()
     {
+        if (this.IsInitialized) return;
+        base.Init();
         primaryInventorySystem = new InventorySystem(this.primaryInventorySize);
-        SetInitialized();
     }
 
 }

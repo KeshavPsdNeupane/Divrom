@@ -12,6 +12,8 @@ public class PlayerItemCollector : InitializableBase
 
     public override void Init()
     {
+        if (this.IsInitialized) return;
+        base.Init();
         if (detectionCollider == null)
             detectionCollider = GetComponent<CircleCollider2D>();
 
@@ -30,7 +32,6 @@ public class PlayerItemCollector : InitializableBase
         if (inventoryHolder == null)
             MyLogger.Error($"No InventoryHolder assigned to PlayerItemCollector = {gameObject.name}");
 
-        SetInitialized();
     }
 
     private void OnTriggerEnter2D(Collider2D other)

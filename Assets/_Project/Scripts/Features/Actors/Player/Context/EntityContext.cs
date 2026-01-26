@@ -1,12 +1,9 @@
 using System.Collections.Generic;
-
+using System;
 public sealed class EntityContext : IReadOnlyEntityContext
 {
 
-    private readonly Dictionary<string, object> components = new();
-
-    private readonly Dictionary<string, object> data = new();
-
+    private readonly Dictionary<Type, object> components = new();
     private readonly EntityStates states;
     private readonly EntityStateManager stateMachine;
 
@@ -19,28 +16,24 @@ public sealed class EntityContext : IReadOnlyEntityContext
         this.states = states;
     }
 
-    public void AddComponent<Tcomponent>(string key, Tcomponent component) => this.components[key] = component;
-
-    public bool TryGetComponent<Tcomponent>(string key, out Tcomponent component)
+    public void AddComponent<Tcomponent>(Tcomponent component)
     {
-        if (this.components.TryGetValue(key, out var comp) && comp is Tcomponent typedComp)
+        if (component == null)
+            throw new ArgumentNullException(nameof(component), "Component cannot be null.");
+        var type = typeof(Tcomponent);
+        if (this.components.ContainsKey(type))
+            throw new ArgumentException($"Component of type {type.Name} already exists in the context.");
+        this.components[type] = component;
+    }
+
+    public bool TryGetComponent<Tcomponent>(out Tcomponent component)
+    {
+        if (this.components.TryGetValue(typeof(Tcomponent), out var comp) && comp is Tcomponent typedComp)
         {
             component = typedComp;
             return true;
         }
         component = default;
-        return false;
-    }
-
-    public void AddData<Tdata>(string key, Tdata value) => this.data[key] = value;
-    public bool TryGetData<Tdata>(string key, out Tdata value)
-    {
-        if (this.data.TryGetValue(key, out var dataValue) && dataValue is Tdata typedValue)
-        {
-            value = typedValue;
-            return true;
-        }
-        value = default;
         return false;
     }
 

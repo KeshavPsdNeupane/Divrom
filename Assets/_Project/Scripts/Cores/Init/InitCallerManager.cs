@@ -48,7 +48,7 @@ namespace Kope.Core.Init
         public override void Init()
         {
             if (this.IsInitialized) return;
-            SetInitialized();
+            base.Init();
             if (this.autoPopulate)
                 PopulateInitializables();
 
@@ -95,7 +95,7 @@ namespace Kope.Core.Init
                 try { item.Shutdown(); }
                 catch (System.Exception ex) { MyLogger.Error($"InitCallerManager: Exception in Shutdown of {item.GetType().Name}: {ex}"); }
             }
-            SetInitialized(false);
+            base.Shutdown();
         }
 
         [ContextMenu("Populate Initializables")]

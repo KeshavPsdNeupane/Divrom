@@ -11,6 +11,8 @@ public class PanelController : UIState
     public string PanelName => this.panelName;
     public override void Init()
     {
+        if (this.IsInitialized) return;
+        base.Init();
         if (this.currentPanel == null)
         {
             MyLogger.Error($"{this.panelName}Controller: {this.panelName} "
@@ -18,7 +20,6 @@ public class PanelController : UIState
             return;
         }
         this.currentPanel.SetActive(false);
-        SetInitialized();
         if (GlobalServiceLocator.Instance.TryGetService(out InputManager inputManager))
         {
             this.inputManager = inputManager;

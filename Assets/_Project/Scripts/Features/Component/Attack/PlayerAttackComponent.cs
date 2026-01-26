@@ -7,6 +7,7 @@ public class PlayerAttackComponent : AttackComponentBase
 
     public override void Init()
     {
+        if (this.IsInitialized) return;
         base.Init();
         if (GlobalServiceLocator.Instance.TryGetService(out InputManager inputManager))
         {

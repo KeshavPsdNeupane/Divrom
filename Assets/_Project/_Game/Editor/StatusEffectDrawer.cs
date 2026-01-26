@@ -49,7 +49,7 @@ public class StatusEffectDrawer : PropertyDrawer
         var prop = parent.FindPropertyRelative(name);
         if (prop != null)
         {
-            Rect rect = new Rect(16, y, EditorGUIUtility.currentViewWidth - 32, lineHeight);
+            Rect rect = new(16, y, EditorGUIUtility.currentViewWidth - 32, lineHeight);
             EditorGUI.PropertyField(rect, prop);
             y += lineHeight + 2;
         }

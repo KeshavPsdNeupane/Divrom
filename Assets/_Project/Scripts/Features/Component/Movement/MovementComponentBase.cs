@@ -21,13 +21,14 @@ public class MovementComponentBase : InitializableBase
 
     public override void Init()
     {
+        if (this.IsInitialized) return;
+        base.Init();
         if (this.characterStatsSystem == null)
         {
             this.characterStatsSystem = GetComponent<CharacterStatsSystem>();
             MyLogger.Warn($"MovementComponentBase ({gameObject.name}): " +
            "CharacterStatsSystem not assigned, attempting to fetch from same GameObject.");
         }
-        SetInitialized();
     }
 
     protected virtual void OnEnable() => SubscribeToStats();

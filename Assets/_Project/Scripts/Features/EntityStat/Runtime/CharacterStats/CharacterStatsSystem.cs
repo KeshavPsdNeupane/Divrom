@@ -32,12 +32,13 @@ namespace Kope.Character.Stats
 
         public override void Init()
         {
+            if (this.IsInitialized) return;
+            base.Init();
             this.currentStats ??= new Dictionary<CharacterStatType, AdvanceStat>();
             this.resistanceStats ??= new Dictionary<DamageType, StatBase>();
             this.levelIncreasingStatWithLevelingValue ??= new Dictionary<CharacterStatType, float>();
-
+            // calling it here since, i  havent implemented any event system for world load yet
             OnFirstWorldLoad();
-            SetInitialized();
         }
 
         private void OnFirstWorldLoad()

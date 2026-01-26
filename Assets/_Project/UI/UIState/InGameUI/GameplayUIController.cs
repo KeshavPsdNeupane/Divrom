@@ -16,9 +16,10 @@ public class GameplayUIController : InitializableBase
     // to setup the UIStateManager and default states
     public override void Init()
     {
+        if (this.IsInitialized) return;
+        base.Init();
         this.uiStateManager = new();
         this.uiStateManager.Init();
-        SetInitialized();
         if (GlobalServiceLocator.Instance.TryGetService<InputManager>(out InputManager inputManager))
         {
             this.inputManager = inputManager;
@@ -27,7 +28,6 @@ public class GameplayUIController : InitializableBase
         {
             MyLogger.Error($"{this.gameObject.name}Controller: InputManager service not found!");
         }
-        SetInitialized();
     }
 
     void OnEnable()

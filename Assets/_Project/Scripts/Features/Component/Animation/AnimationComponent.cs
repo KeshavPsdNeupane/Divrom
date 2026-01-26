@@ -17,6 +17,8 @@ public class AnimationComponentBase : InitializableBase
 
     public override void Init()
     {
+        if (this.IsInitialized) return;
+        base.Init();
         if (this.anim == null)
         {
             this.anim = GetComponent<Animator>();
@@ -27,7 +29,6 @@ public class AnimationComponentBase : InitializableBase
         /// this is needed because otherwise the animator will at 0,0 direction 
         /// then when moving it will interpolate from 0,0 to the movement direction
         MoveAnimation(new Vector2(0, -1));
-        SetInitialized();
     }
     public void AnimationTrigger()
     {

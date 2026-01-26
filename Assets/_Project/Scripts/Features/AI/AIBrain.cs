@@ -1,10 +1,9 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using Kope.Core.Init;
 using Kope.Component.Interfaces;
 using UnityEngine;
-using UnityEditor.Toolbars;
+using Kope.AI.Algorithm;
 
 namespace Kope.AI.Brain
 {
@@ -18,7 +17,7 @@ namespace Kope.AI.Brain
         // the AI brain algorithm ScriptableObject used only for Initialization for the instance
         // the actual brain instance is created during Init()
         [SerializeField, Tooltip("The AI brain algorithm that defines the decision-making logic.")]
-        private AIBrainAlgorithmSO brainAlgorithmSO;
+        private AIBrainAlgorithm planner;
 
         [SerializeField, Tooltip("Components used for context. Only those implementing IInterruptOther will be subscribed for interrupts.")]
         private List<InitializableBase> components;
@@ -26,17 +25,18 @@ namespace Kope.AI.Brain
         [SerializeField, Tooltip("The entity context provider supplying the current state of the entity.")]
         private EntityStateController entityStateController;
 
-        private AIBrainAlgorithmSO brain;
+
         private EntityContext ctx;
-        private ActionSO currentAction;
+        private BaseActionSO currentAction;
         private Coroutine actionRoutine;
-        private IEnumerator<ActionSO> currentPlanEnumerator;
+        private IEnumerator<BaseActionSO> currentPlanEnumerator;
 
         private readonly List<IInterruptOther> interrupters = new();
 
         public override void Init()
         {
-            this.brain = Instantiate(this.brainAlgorithmSO);
+            if (this.IsInitialized) return;
+
             // Initialize context
             this.ctx = new EntityContext(
                   entityStateController.StateMachine,
@@ -46,7 +46,10 @@ namespace Kope.AI.Brain
             // Register all components in context
             foreach (var comp in components)
             {
-                this.ctx.AddComponent(comp.GetType().Name, comp);
+                // adding component to context based on its actual type 
+                // it wont allow duplicate types,only one component per type
+                // since a entity will only have one health component for example
+                this.ctx.AddComponent(comp);
 
                 // Only subscribe if component implements IInterruptOther
                 if (comp is IInterruptOther interrupter)
@@ -71,13 +74,16 @@ namespace Kope.AI.Brain
 
         private void Update()
         {
-            if (!this.IsInitialized || this.brain == null) return;
+            if (!this.IsInitialized || this.planner == null) return;
 
             // 1. Logic Guard: If we are busy, don't rethink unless the plan is empty
             if (this.currentAction != null && !this.currentAction.IsCompleted)
                 return;
 
-            UpdateContext();
+            // I dont think we need to have Update Context function
+            // since all the components in the context are references
+            // so any mutation to their state is reflected in the context already
+            // with out any extra update call, so commenting this out for now
 
             // 2. Planning Phase
             if (this.currentPlanEnumerator == null)
@@ -86,21 +92,18 @@ namespace Kope.AI.Brain
             // 3. Execution Phase
             FollowCurrentPlan();
         }
-        private void UpdateContext()
-        {
-            // Update dynamic runtime data here (health, positions, cooldowns)
-        }
 
-        private void FetchNewPlan()
+
+        protected virtual void FetchNewPlan()
         {
-            var plan = this.brain.GetDecisionPlan(this.ctx);
+            var plan = this.planner.GetDecisionPlan(this.ctx);
             if (plan == null) return;
 
             this.currentPlanEnumerator = plan.GetEnumerator();
             this.currentAction = null;
         }
 
-        private void FollowCurrentPlan()
+        protected virtual void FollowCurrentPlan()
         {
             if (this.currentAction != null && !this.currentAction.IsCompleted) return;
 
@@ -113,13 +116,13 @@ namespace Kope.AI.Brain
             }
         }
 
-        private void ExecuteNewAction(ActionSO action)
+        protected virtual void ExecuteNewAction(BaseActionSO action)
         {
             this.currentAction = action;
             this.actionRoutine = StartCoroutine(RunActionSequence(action));
         }
 
-        private IEnumerator RunActionSequence(ActionSO action)
+        protected virtual IEnumerator RunActionSequence(BaseActionSO action)
         {
             action.Initialize(this.ctx);
             bool actionFinished = false;
@@ -145,12 +148,13 @@ namespace Kope.AI.Brain
         /// Death: Interrupts and disables the brain entirely.<br/>
         /// </summary>
         /// <param name="priority"></param>
-        public void ForceInterrupt(InterruptPriority priority = InterruptPriority.Hard)
+        public virtual void ForceInterrupt(InterruptPriority priority = InterruptPriority.Hard)
         {
             switch (priority)
             {
+                // marking the current plan as null to force replanning after current action
+                // if the current action is interruptible we stop it immediately
                 case InterruptPriority.Soft:
-
                     if (this.currentAction != null && this.currentAction.IsInterruptible)
                         StopCurrentAction();
                     else
@@ -163,8 +167,11 @@ namespace Kope.AI.Brain
                         this.enabled = false;
                     break;
             }
-
-            Debug.Log($"<color=yellow>{gameObject.name} Brain Force Interrupted! Priority: {priority}</color>");
+            Debug.Log($"AI Brain on {this.gameObject.name} interrupted with priority: {priority}");
+        }
+        private void HandleInterruptSignal(InterruptPriority priority)
+        {
+            ForceInterrupt(priority);
         }
 
         private void StopCurrentAction()
@@ -178,10 +185,7 @@ namespace Kope.AI.Brain
             this.currentPlanEnumerator = null;
         }
 
-        private void HandleInterruptSignal(InterruptPriority priority)
-        {
-            ForceInterrupt(priority);
-        }
+
 
     }
 }

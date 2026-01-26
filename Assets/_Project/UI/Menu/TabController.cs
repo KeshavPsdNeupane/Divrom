@@ -17,12 +17,13 @@ public class TabController : InitializableBase
 
     public override void Init()
     {
+        if (this.IsInitialized) return;
+        base.Init();
         for (int i = 0; i < buttons.Length; i++)
         {
             int index = i;
             this.buttons[i].onClick.AddListener(() => ActivateTab(index));
         }
-        SetInitialized();
     }
 
     void Start()

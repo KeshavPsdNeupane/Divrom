@@ -15,13 +15,15 @@ public class StatusEffectConnector : InitializableBase
 
     public override void Init()
     {
+        if (this.IsInitialized) return;
+        base.Init();
         if (this.detectionCollider == null)
             this.detectionCollider = this.gameObject.GetComponent<CircleCollider2D>();
         this.detectionCollider.isTrigger = this.isTrigger;
         Vector3 parentScale = transform.lossyScale;
         this.detectionCollider.radius = detectionRadius / Mathf.Max(parentScale.x, parentScale.y);
         this.detectionCollider.radius = this.detectionRadius;
-        SetInitialized();
+
     }
 
     private void OnTriggerEnter2D(Collider2D effectCollidor)

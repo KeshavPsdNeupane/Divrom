@@ -20,10 +20,11 @@ public class EntityStateController : InitializableBase
 
     public override void Init()
     {
+        if (this.IsInitialized) return;
+        base.Init();
         this.stateMachine = new EntityStateManager();
         this.entityStates = new EntityStates(this.stateMachine, this);
         this.stateMachine.Initialize(this.entityStates.EntityIdle);
-        SetInitialized();
     }
 
     private void OnEnable()

@@ -19,21 +19,12 @@ public class StatDescription : InitializableBase
     private RectTransform panelRect; // cache panelRect to avoid fetching multiple times
     public override void Init()
     {
+        if (this.IsInitialized) return;
+        base.Init();
         Validate();
     }
 
-    // for now marking Start as commented out so i can test OnEnable initialization
-    // on Init lifecycle manager
 
-    // private void Start()
-    // {
-    //     // it is also here to ensure initialization in case OnEnable is missed
-    //     // and if we disable and enable the component later, we still
-    //     // want to initialize the TMP objects and subscribe to stats
-    //     CachePanelRect();
-    //     CreateTMPObjects();
-    //     SubscribeToStats();
-    // }
 
     void OnEnable()
     {
@@ -74,7 +65,7 @@ public class StatDescription : InitializableBase
             if (this.panelRect == null)
                 MyLogger.Error("Stat Panel requires RectTransform.");
         }
-        SetInitialized();
+        base.Init();
     }
 
     private void CreateTMPObjects()
