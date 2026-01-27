@@ -49,6 +49,7 @@ namespace Kope.Core.Init
         {
             if (this.IsInitialized) return;
             base.Init();
+
             if (this.autoPopulate)
                 PopulateInitializables();
 

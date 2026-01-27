@@ -1,8 +1,9 @@
 using System.Collections.Generic;
-using Kope.AI.Algorithm.Utility.Config;
+using Kope.AI.Utility.Config;
 using UnityEngine;
 
-namespace Kope.AI.Algorithm.Utility
+
+namespace Kope.AI.Utility
 {
     /// <summary>
     /// Utility AI algorithm implementation for entities.
@@ -75,7 +76,6 @@ namespace Kope.AI.Algorithm.Utility
 
         private void InitializeActionSet()
         {
-            if (this.IsInitialized) return;
             if (useConfig && config == null)
             {
                 Debug.LogWarning("UtilityAiAlgorithm: useConfig is true but config is null. Falling back to local action list.");
@@ -97,6 +97,9 @@ namespace Kope.AI.Algorithm.Utility
             if (this.IsInitialized) return;
             base.Init();
             InitializeActionSet();
+            Debug.Log("Actions initialized for Utility AI Algorithm: " + AlgorithmName +
+                " with " + actionSOSet.Count + " actions. with names" + string.Join(", ",
+                System.Linq.Enumerable.Select(actionSOSet, a => a.ActionName)));
         }
 
         public override IEnumerable<BaseActionSO> GetDecisionPlan(IReadOnlyEntityContext ctx)

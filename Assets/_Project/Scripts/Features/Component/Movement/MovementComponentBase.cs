@@ -18,7 +18,7 @@ public class MovementComponentBase : InitializableBase
 
 
     public Vector2 Direction => this.direction;
-
+    public Vector2 Position => this.rb.position;
     public override void Init()
     {
         if (this.IsInitialized) return;

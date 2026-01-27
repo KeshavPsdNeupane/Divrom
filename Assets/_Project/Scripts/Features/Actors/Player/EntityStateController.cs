@@ -39,7 +39,15 @@ public class EntityStateController : InitializableBase
         this.attackComponent.OnAttackPerformed -= Attack;
     }
 
-    private void Update() => this.stateMachine?.CurrentState?.Update();
+    protected override void Update()
+    {
+        base.Update();
+        if (!this.IsInitialized) return;
+
+        this.stateMachine?.CurrentState?.Update();
+    }
+
+
     private void FixedUpdate() => this.stateMachine?.CurrentState?.PhysicUpdate();
 
 

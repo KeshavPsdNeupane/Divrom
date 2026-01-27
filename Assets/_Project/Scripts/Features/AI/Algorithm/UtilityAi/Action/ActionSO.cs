@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Kope.Core.Extensions;
 using UnityEngine;
 
-namespace Kope.AI.Algorithm.Utility
+namespace Kope.AI.Utility
 {
 
     /// <summary>
@@ -14,25 +14,32 @@ namespace Kope.AI.Algorithm.Utility
 
         [SerializeField] private List<ConsiderationSO> considerations;
 
+        /// <summary>
+        /// Evaluates the action's utility based on its considerations and the given context.
+        /// Uses Multiplicative scoring with compensated utility.
+        /// Multiplication make panalties for low scores more severe, thus promoting actions that
+        /// perform well across all considerations. Compensated utility helps to balance the effect
+        /// of multiple considerations to avoid overly harsh penalties for actions with many considerations.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public float Evaluate(IReadOnlyEntityContext context)
         {
+            // tracks how many considerations have been multiplied together
+            // to apply compensated utility correctly
+            // this is needed to avoid penalizing actions with many considerations too harshly
+            int totalMulCount = 0;
             float totalScore = 1f;
-
-            // to track the number of considerations evaluated so we can 
-            // use it to GetCompensatedUtility  after all multiplications is done to 
-            // avoid bias towards lower number of considerations
-            // only calculate the GetCompensatedUtility at the end once
-            int considerationCount = 0;
             foreach (var consideration in considerations)
             {
-                (float score, int newCount) = consideration.Evaluate(context, considerationCount);
+                (float score, int newCount) = consideration.Evaluate(context, totalMulCount);
                 totalScore *= score;
-                considerationCount = newCount;
                 if (totalScore == 0f)
                     return 0f;
+                // ++ needed to account for this consideration multiplication being applied
+                totalMulCount = ++newCount;
             }
-            // applying compensated utility to the final score
-            return totalScore.GetCompensatedUtility(considerationCount);
+            return totalScore.GetCompensatedUtility(totalMulCount);
         }
     }
 

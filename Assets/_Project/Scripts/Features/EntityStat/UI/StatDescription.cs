@@ -65,7 +65,6 @@ public class StatDescription : InitializableBase
             if (this.panelRect == null)
                 MyLogger.Error("Stat Panel requires RectTransform.");
         }
-        base.Init();
     }
 
     private void CreateTMPObjects()

@@ -1,6 +1,6 @@
 using UnityEngine;
-using Kope.AI.Algorithm.Utility;
-
+using Kope.AI.Utility;
+[CreateAssetMenu(fileName = "ConstantConsideration", menuName = "Scriptable Objects/AI/Utility/Considerations/ConstantConsideration")]
 public class ConstantConsideration : ConsiderationSO
 {
     [SerializeField] private string considerationName;
@@ -11,15 +11,15 @@ public class ConstantConsideration : ConsiderationSO
 
     /// <summary>
     /// Evaluates the consideration and returns a constant score.
-    /// Also returns the incremented consideration count.
+    /// Also returns the incremented total multiplication count.
     /// used for compensated utility calculation.
     /// </summary>
     /// <param name="context"></param>
-    /// <param name="considerationCount"></param>
+    /// <param name="totalMultiplicationCount"></param>
     /// <returns></returns>
-    public override (float, int) Evaluate(IReadOnlyEntityContext context, int considerationCount)
+    public override (float, int) Evaluate(IReadOnlyEntityContext context, int totalMultiplicationCount)
     {
-        return (this.constantValue, ++considerationCount);
+        return (this.constantValue, ++totalMultiplicationCount);
     }
 
 

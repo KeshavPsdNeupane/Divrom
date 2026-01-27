@@ -33,7 +33,7 @@ namespace Kope.Character.Stats
         {
             foreach (var mod in this.modifiers)
             {
-                mod.durationCountDownTimer?.Tick();
+                mod.durationCountDownTimer?.Tick(UnityEngine.Time.deltaTime);
             }
             for (int i = this.modifiers.Count - 1; i >= 0; i--)
             {

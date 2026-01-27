@@ -131,6 +131,7 @@ MonoBehaviour:
   inventoryHolder: {fileID: 5647247497632034624}
   detectionCollider: {fileID: 5102559464358649917}
   detectionRadius: 2
+  showGizmos: 0
 --- !u!1 &1267751104880562012
 GameObject:
   m_ObjectHideFlags: 0
@@ -750,6 +751,7 @@ MonoBehaviour:
   detectionCollider: {fileID: 0}
   detectionRadius: 0.5
   isTrigger: 1
+  showGizmos: 0
 --- !u!1 &9153279180399708285
 GameObject:
   m_ObjectHideFlags: 0
@@ -891,7 +893,7 @@ PrefabInstance:
     - target: {fileID: 7524140481601075934, guid: a3a8a13a5b0e837f2a16f09baf3d90a6, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -2011534638, guid: 02ba8bfbe72bc2fd0a526359ae45d8fc, type: 3}
+      objectReference: {fileID: 1052535587768086066, guid: 94aa57f43bbc4073ca98f79d12e80c42, type: 3}
     - target: {fileID: 7524140481601075934, guid: a3a8a13a5b0e837f2a16f09baf3d90a6, type: 3}
       propertyPath: m_WasSpriteAssigned
       value: 1

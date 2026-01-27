@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Kope.AI.Algorithm.Utility.Config
+
+namespace Kope.AI.Utility.Config
 {
     public class UtilityAiConfig : ScriptableObject
     {

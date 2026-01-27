@@ -99,8 +99,11 @@ public class GameplayUIController : InitializableBase
 
 
 
-    private void Update()
+    protected override void Update()
     {
+        base.Update();
+        if (!this.IsInitialized) return;
+
         if (this.uiStateManager == null) return;
 
         this.uiStateManager.ProcessStateChanges();

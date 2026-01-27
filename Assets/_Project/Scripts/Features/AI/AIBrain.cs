@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using Kope.Core.Init;
 using Kope.Component.Interfaces;
 using UnityEngine;
-using Kope.AI.Algorithm;
+using ThirdParty;
 
-namespace Kope.AI.Brain
+
+namespace Kope.AI
 {
     /// <summary>
     /// The AI brain component responsible for decision-making.
@@ -14,8 +15,12 @@ namespace Kope.AI.Brain
     /// </summary>
     public class AIBrain : InitializableBase
     {
-        // the AI brain algorithm ScriptableObject used only for Initialization for the instance
-        // the actual brain instance is created during Init()
+        #region Inspector Fields
+        // This is a mono behaviour so we can attach it to game objects directly
+        // and have it work as a component in the entity system
+        [SerializeField, Tooltip("Mandatory: The transform of the entity this brain controls.")]
+        private Transform entityTransform;
+
         [SerializeField, Tooltip("The AI brain algorithm that defines the decision-making logic.")]
         private AIBrainAlgorithm planner;
 
@@ -25,32 +30,54 @@ namespace Kope.AI.Brain
         [SerializeField, Tooltip("The entity context provider supplying the current state of the entity.")]
         private EntityStateController entityStateController;
 
+        [SerializeField, Range(0f, 20f), Tooltip("In Second, This " +
+        "This interval Forces the brain to refresh its plan periodically.If the current plan is really long lived " +
+        "this will help the AI to rethink its plan more often." +
+        "Set to 0 to disable automatic refreshing.")]
+        private float refreshInterval = 1.0f;
+        #endregion
 
+
+        #region Private Fields
         private EntityContext ctx;
         private BaseActionSO currentAction;
         private Coroutine actionRoutine;
         private IEnumerator<BaseActionSO> currentPlanEnumerator;
-
+        private CountdownTimer refreshTimer;
         private readonly List<IInterruptOther> interrupters = new();
+        #endregion
+
 
         public override void Init()
         {
             if (this.IsInitialized) return;
-
+            base.Init();
+            if (this.entityTransform == null)
+            {
+                Debug.LogError("AIBrain Initialization Failed: Entity Transform is not assigned.");
+                return;
+            }
+            if (this.entityStateController == null)
+            {
+                Debug.LogError("AIBrain Initialization Failed: Entity State Controller is not assigned.");
+                return;
+            }
+            if (this.planner == null)
+            {
+                Debug.LogError("AIBrain Initialization Failed: AI Brain Algorithm (planner) is not assigned.");
+                return;
+            }
             // Initialize context
             this.ctx = new EntityContext(
-                  entityStateController.StateMachine,
-                  entityStateController.EntityStates
-              );
+                this.entityTransform,
+                this.entityStateController.StateMachine,
+                this.entityStateController.EntityStates
+            );
 
             // Register all components in context
             foreach (var comp in components)
             {
-                // adding component to context based on its actual type 
-                // it wont allow duplicate types,only one component per type
-                // since a entity will only have one health component for example
                 this.ctx.AddComponent(comp);
-
                 // Only subscribe if component implements IInterruptOther
                 if (comp is IInterruptOther interrupter)
                 {
@@ -61,7 +88,18 @@ namespace Kope.AI.Brain
                 }
             }
 
-            base.Init();
+            // Initialize planner, No need to put on InitLifecycleManager since
+            //  since brain Init manages it directly
+            this.planner.Init();
+
+            // SO the we dont init cooldown timer when refresh interval is 0
+            // since that means no auto refresh
+            if (this.refreshInterval > 0f)
+            {
+                this.refreshTimer = new CountdownTimer(this.refreshInterval);
+                this.refreshTimer.OnTimerStop += RefreshTimerCallback;
+                this.refreshTimer.Start();
+            }
         }
 
         private void OnDestroy()
@@ -71,26 +109,21 @@ namespace Kope.AI.Brain
                 interrupter.OnInterruptRequested -= HandleInterruptSignal;
         }
 
-
-        private void Update()
+        protected override void Update()
         {
-            if (!this.IsInitialized || this.planner == null) return;
+            base.Update();
+            if (!this.IsInitialized) return;
 
+            this.refreshTimer?.Tick(Time.deltaTime);
+
+            if (!this.IsInitialized || this.planner == null) return;
             // 1. Logic Guard: If we are busy, don't rethink unless the plan is empty
             if (this.currentAction != null && !this.currentAction.IsCompleted)
                 return;
-
-            // I dont think we need to have Update Context function
-            // since all the components in the context are references
-            // so any mutation to their state is reflected in the context already
-            // with out any extra update call, so commenting this out for now
-
-            // 2. Planning Phase
             if (this.currentPlanEnumerator == null)
                 FetchNewPlan();
-
             // 3. Execution Phase
-            FollowCurrentPlan();
+            ExecuteThePlan();
         }
 
 
@@ -103,7 +136,7 @@ namespace Kope.AI.Brain
             this.currentAction = null;
         }
 
-        protected virtual void FollowCurrentPlan()
+        protected virtual void ExecuteThePlan()
         {
             if (this.currentAction != null && !this.currentAction.IsCompleted) return;
 
@@ -118,6 +151,11 @@ namespace Kope.AI.Brain
 
         protected virtual void ExecuteNewAction(BaseActionSO action)
         {
+            if (action == null)
+            {
+                Debug.LogError("ExecuteNewAction called with null ActionSO!");
+                return;
+            }
             this.currentAction = action;
             this.actionRoutine = StartCoroutine(RunActionSequence(action));
         }
@@ -169,22 +207,24 @@ namespace Kope.AI.Brain
             }
             Debug.Log($"AI Brain on {this.gameObject.name} interrupted with priority: {priority}");
         }
+
         private void HandleInterruptSignal(InterruptPriority priority)
-        {
-            ForceInterrupt(priority);
-        }
+        => ForceInterrupt(priority);
 
         private void StopCurrentAction()
         {
-            if (this.actionRoutine != null)
-                StopCoroutine(this.actionRoutine);
-
-            if (this.currentAction != null)
-                this.currentAction.EndOrAbort(this.ctx);
+            if (this.actionRoutine != null) { StopCoroutine(this.actionRoutine); }
+            if (this.currentAction != null) { this.currentAction.EndOrAbort(this.ctx); }
             this.currentAction = null;
             this.currentPlanEnumerator = null;
         }
 
+
+        protected void RefreshTimerCallback()
+        {
+            this.currentPlanEnumerator = null;
+            this.refreshTimer.Reset();
+        }
 
 
     }

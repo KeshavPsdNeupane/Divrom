@@ -99,11 +99,13 @@
     <Compile Include="Assets/_Project/Scripts/Features/AI/Algorithm/UtilityAi/UtilityAiConfig.cs" />
     <Compile Include="Assets/_Project/Scripts/Managers/ItemDragDropManager.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Component/Movement/MovementComponentBase.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/AI/Algorithm/UtilityAi/Action/RandomWanderActionSO.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/Runtime/InventorySystem.cs" />
     <Compile Include="Assets/_Project/Scripts/Managers/ItemDatabase/HashUtility.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/Runtime/InventoryHolder.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/UI/ItemSlotUI/ItemSlotUI.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Actors/AnimationStates.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/AI/Algorithm/UtilityAi/Consideration/CompositeConsideration.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets/TextMesh Pro/Shaders/TMPro.cginc" />

@@ -72,8 +72,11 @@ namespace Kope.Character.Stats
                 stat?.OnDisable();
         }
 
-        private void Update()
+        protected override void Update()
         {
+            base.Update();
+            if (!this.IsInitialized) return;
+
             foreach (var stat in this.currentStats.Values)
                 stat?.Update();
 

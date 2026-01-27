@@ -48,7 +48,7 @@ public class CurrentStat
     {
         foreach (var mod in modifiers)
         {
-            mod.durationCountDownTimer?.Tick();
+            mod.durationCountDownTimer?.Tick(UnityEngine.Time.deltaTime);
         }
         for (int i = modifiers.Count - 1; i >= 0; i--)
         {

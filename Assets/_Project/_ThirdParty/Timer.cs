@@ -45,8 +45,11 @@ namespace ThirdParty
 
         public void Resume() => IsRunning = true;
         public void Pause() => IsRunning = false;
-        public void Tick() => Tick(UnityEngine.Time.deltaTime);
 
+        // Removed the UnityEngine.Time.deltaTime dependency
+        // so that Tick method now takes deltaTime as a parameter
+        // making it useful out of Unity context
+        // since System is a .NET Standard library
         public abstract void Tick(float deltaTime);
     }
 
