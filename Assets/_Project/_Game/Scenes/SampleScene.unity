@@ -7168,6 +7168,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 860332554604597980, guid: 9772af79b74a077ec8dd339b7b2c7dfc, type: 3}
+      propertyPath: initializables.Array.size
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 860332554604597980, guid: 9772af79b74a077ec8dd339b7b2c7dfc, type: 3}
+      propertyPath: 'initializables.Array.data[2]'
+      value: 
+      objectReference: {fileID: 2114319318}
+    - target: {fileID: 860332554604597980, guid: 9772af79b74a077ec8dd339b7b2c7dfc, type: 3}
+      propertyPath: 'initializables.Array.data[4]'
+      value: 
+      objectReference: {fileID: 1488124388}
+    - target: {fileID: 860332554604597980, guid: 9772af79b74a077ec8dd339b7b2c7dfc, type: 3}
+      propertyPath: 'initializables.Array.data[8]'
+      value: 
+      objectReference: {fileID: 558539657}
+    - target: {fileID: 860332554604597980, guid: 9772af79b74a077ec8dd339b7b2c7dfc, type: 3}
+      propertyPath: 'initializables.Array.data[9]'
+      value: 
+      objectReference: {fileID: 684993044}
     - target: {fileID: 4445808663480770741, guid: 9772af79b74a077ec8dd339b7b2c7dfc, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -7276,7 +7296,8 @@ MonoBehaviour:
   config: {fileID: 0}
   useConfig: 0
   algorithmName: Utility AI
-  actionSOs: []
+  actionSOs:
+  - {fileID: 11400000, guid: 55f0fced5ba3438c0ab41b97654eae60, type: 2}
 --- !u!1001 &687152635
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10949,6 +10970,17 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.5
+--- !u!114 &1488124388 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 264589805506960240, guid: 9772af79b74a077ec8dd339b7b2c7dfc, type: 3}
+  m_PrefabInstance: {fileID: 644571514}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7d971b1a74bb9a47bfb7343d07bc903, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyAttackComponent
 --- !u!1 &1515021895
 GameObject:
   m_ObjectHideFlags: 0
