@@ -15,6 +15,15 @@ namespace Kope.AI.Utility
         [SerializeField] private List<ConsiderationSO> considerations;
 
         /// <summary>
+        /// Initialize the action with the mutable context.
+        /// ALways call base.Initialize(ctx) when overriding.
+        /// So that action status is set to Running.
+        /// This is important for IsCompleted property to work correctly.
+        /// </summary>
+        /// <param name="ctx"></param>
+
+
+        /// <summary>
         /// Evaluates the action's utility based on its considerations and the given context.
         /// Uses Multiplicative scoring with compensated utility.
         /// Multiplication make panalties for low scores more severe, thus promoting actions that

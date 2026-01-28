@@ -49,6 +49,7 @@
     <Analyzer Include="/mnt/Development/GameDevelopment/Unity/projects/example/Divrom/Library/PackageCache/com.unity.project-auditor@6cc18ad506e9/RoslynAnalyzers/Domain_Reload_Analyzer.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets/_Project/Scripts/Features/AI/Editor/AIBrainEditor.cs" />
     <Compile Include="Assets/_Project/_Game/Editor/ReadOnlyDrawer.cs" />
     <Compile Include="Assets/_Project/_Game/Editor/StatusEffectDrawer.cs" />
   </ItemGroup>

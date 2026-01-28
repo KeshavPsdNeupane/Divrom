@@ -16,4 +16,6 @@ public class EntityStates
         this.entityMove = new EntityMove(baseStateMachine, playerStateController, AnimationState.Walk);
         this.entityAttack = new EntityAttack(baseStateMachine, playerStateController);
     }
+
+
 }

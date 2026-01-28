@@ -1,3 +1,4 @@
+using Kope.Component.Movement;
 public class EntityAttack : EntityBaseState
 {
     private readonly MovementComponentBase movementComponent;
@@ -10,6 +11,8 @@ public class EntityAttack : EntityBaseState
 
     public override AnimationState AnimationState => this.currentAnimationState;
     public override int AnimationStateHash => this.currentAnimationHash;
+
+    public override bool CanAcceptCommand => true;
 
     private const float ATTACK_ANIMATION_THRESHOLD = 0.9f;
 
@@ -46,7 +49,10 @@ public class EntityAttack : EntityBaseState
     }
 
 
-    public override void PhysicUpdate() => this.movementComponent.ApplyMovement(0.5f);
+    public override void PhysicUpdate()
+    {
+        // this.movementComponent.ApplyPhysics();
+    }
     public override void OnAnimationTrigger() => SwitchToIdle();
     public override void Exit() { }
 

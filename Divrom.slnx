@@ -4,6 +4,6 @@
   <Project Path="Kope.Core.Runtime.csproj" />
   <Project Path="Kope.Character.Stats.Runtime.csproj" />
   <Project Path="Kope.ModularSpriteAnimation.Editor.csproj" />
-  <Project Path="Out.ThirdParty.Stuff.csproj" />
   <Project Path="Assembly-CSharp-Editor.csproj" />
+  <Project Path="Out.ThirdParty.Stuff.csproj" />
 </Solution>

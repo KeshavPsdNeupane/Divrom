@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using Kope.Component.Movement;
 public class EntityIdle : EntityBaseState
 {
     private readonly MovementComponentBase movementComponent;
@@ -9,6 +9,7 @@ public class EntityIdle : EntityBaseState
 
     public override AnimationState AnimationState => this.animationState;
     public override int AnimationStateHash => this.animationStateHash;
+    public override bool CanAcceptCommand => true;
 
     public EntityIdle(EntityStateManager baseStateManager,
         EntityStateController playerStateController, AnimationState animationState = AnimationState.Idle)
@@ -28,7 +29,7 @@ public class EntityIdle : EntityBaseState
     public override void Update()
     {
         if (this.movementComponent.Direction.sqrMagnitude
-        >= MovementComponentBase.DIRECTION_THRESHOLD)
+        >= MovementComponentBase.MOVEMENT_EPSILON)
             this.stateManager.ChangeState(
                 this.playerStateController.EntityStates.EntityMove
                 );
@@ -36,7 +37,7 @@ public class EntityIdle : EntityBaseState
 
     public override void PhysicUpdate()
     {
-        this.movementComponent.ApplyMovement();
+        // this.movementComponent.ApplyPhysics();
     }
 
     public override void Exit() { }

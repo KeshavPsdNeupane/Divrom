@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using ServiceLocatorPattern;
 using Kope.Core.CompilerServices;
+using Kope.Component.Movement;
 /// <summary>
 /// Player-specific movement component that handles input and movement application.
 /// The ApplyMovement Must be called externally, typically from a PlayerController or similar script.
@@ -59,7 +60,6 @@ public class PlayerMovementComponent : MovementComponentBase
 
 
     public void MoveForInputSystem(InputAction.CallbackContext context)
-    => SetDirection(context.ReadValue<Vector2>());
-
+    => SetMovementIntent(new MovementIntent(context.ReadValue<Vector2>(), MovementIntentType.Move));
 
 }

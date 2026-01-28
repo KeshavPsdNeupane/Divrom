@@ -1,4 +1,5 @@
 using UnityEngine;
+using Kope.Component.Movement;
 
 [RequireComponent(typeof(CircleCollider2D))]
 public class ChasePlayer : MonoBehaviour
@@ -21,7 +22,7 @@ public class ChasePlayer : MonoBehaviour
             this.chaseRadius = GetComponent<CircleCollider2D>();
 
         if (this.movementComponent == null)
-            this.movementComponent = GetComponent<PlayerMovementComponent>();
+            this.movementComponent = GetComponent<MovementComponentBase>();
 
         this.chaseRadius.isTrigger = true;
         this.chaseRadius.radius = chaseRadiusValue;
@@ -31,16 +32,13 @@ public class ChasePlayer : MonoBehaviour
     {
         if (this.playerTransform == null)
         {
-            this.movementComponent.SetDirection(Vector2.zero);
+            this.movementComponent.StopMovement();
             return;
         }
 
         Vector2 targetDirection = (this.playerTransform.position - transform.position).normalized;
-        this.movementComponent.SetDirection(Vector2.Lerp(
-            this.movementComponent.Direction,
-            targetDirection,
-            chaseSmoothing
-        ));
+        this.movementComponent.SetMovementIntent(new MovementIntent
+        (Vector2.Lerp(this.movementComponent.Direction, targetDirection, chaseSmoothing), MovementIntentType.Move));
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -56,7 +54,7 @@ public class ChasePlayer : MonoBehaviour
         if (collision.CompareTag("Player") && this.playerTransform != null)
         {
             this.playerTransform = null;
-            this.movementComponent.SetDirection(Vector2.zero);
+            this.movementComponent.StopMovement();
         }
     }
 

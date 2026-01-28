@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using Kope.Core.Init;
+using Kope.Component.Movement;
 
 public class EntityStateController : InitializableBase
 {
@@ -17,6 +18,8 @@ public class EntityStateController : InitializableBase
 
     public EntityStateManager StateMachine => stateMachine;
     public EntityStates EntityStates => entityStates;
+
+    public bool CanStateMachineAcceptCommand => StateMachine.CurrentState is not IStateCanAcceptCommand state || state.CanAcceptCommand;
 
     public override void Init()
     {

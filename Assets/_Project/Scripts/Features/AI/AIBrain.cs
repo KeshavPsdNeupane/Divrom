@@ -42,6 +42,7 @@ namespace Kope.AI
         private EntityContext ctx;
         private BaseActionSO currentAction;
         private Coroutine actionRoutine;
+        private Coroutine executionRoutine;
         private IEnumerator<BaseActionSO> currentPlanEnumerator;
         private CountdownTimer refreshTimer;
         private readonly List<IInterruptOther> interrupters = new();
@@ -109,31 +110,54 @@ namespace Kope.AI
                 interrupter.OnInterruptRequested -= HandleInterruptSignal;
         }
 
+
+
+
         protected override void Update()
         {
             base.Update();
-            if (!this.IsInitialized) return;
+            // bail out if not initialized or no planner assigned
+            if (!IsInitialized || planner == null) return;
 
-            this.refreshTimer?.Tick(Time.deltaTime);
-
-            if (!this.IsInitialized || this.planner == null) return;
-            // 1. Logic Guard: If we are busy, don't rethink unless the plan is empty
-            if (this.currentAction != null && !this.currentAction.IsCompleted)
+            // if state machine cannot accept commands, bail out
+            if (!this.entityStateController.CanStateMachineAcceptCommand)
+            {
+                if (currentAction != null) StopCurrentAction();
                 return;
-            if (this.currentPlanEnumerator == null)
-                FetchNewPlan();
-            // 3. Execution Phase
+            }
+
+            // always tick the refresh timer if enabled
+            refreshTimer?.Tick(Time.deltaTime);
+
+            // 1. If current action is still running, do nothing
+            if (currentAction != null && !currentAction.IsCompleted) return;
+            // 2. If no current plan, fetch a new one
+            if (currentPlanEnumerator == null) FetchNewPlan();
+            // 3. Execute the current plan
             ExecuteThePlan();
         }
 
 
+
         protected virtual void FetchNewPlan()
         {
-            var plan = this.planner.GetDecisionPlan(this.ctx);
-            if (plan == null) return;
+            var newPlan = this.planner.GetDecisionPlan(this.ctx);
+            if (newPlan == null) return;
 
-            this.currentPlanEnumerator = plan.GetEnumerator();
-            this.currentAction = null;
+
+            var planEnumerator = newPlan.GetEnumerator();
+            if (planEnumerator.MoveNext())
+            {
+                BaseActionSO topAction = planEnumerator.Current;
+
+                // bail out if the top action is the same as the current action
+                if (currentAction != null &&
+                currentAction.GetType() == topAction.GetType()) return;
+
+
+                this.currentPlanEnumerator = newPlan.GetEnumerator();
+                this.currentAction = null;
+            }
         }
 
         protected virtual void ExecuteThePlan()
@@ -151,12 +175,11 @@ namespace Kope.AI
 
         protected virtual void ExecuteNewAction(BaseActionSO action)
         {
-            if (action == null)
-            {
-                Debug.LogError("ExecuteNewAction called with null ActionSO!");
-                return;
-            }
-            this.currentAction = action;
+            // null check, bail out if null
+            // since we can probably get null actions in the plan,
+            // we just skip them or treat them as no-ops
+            if (action == null) return;
+            currentAction = action;
             this.actionRoutine = StartCoroutine(RunActionSequence(action));
         }
 
@@ -165,17 +188,34 @@ namespace Kope.AI
             action.Initialize(this.ctx);
             bool actionFinished = false;
 
-            void completionHandler() => actionFinished = true;
-            action.OnActionCompleted += completionHandler;
+            // We define this as a variable so we can safely remove it later
+            void handler()
+            {
+                actionFinished = true;
+            }
 
-            // Execute action coroutine
-            yield return StartCoroutine(action.Execute(this.ctx));
-            // wait until action signals completion, either via event or IsCompleted flag
-            // just in case action.Execute doesn't yield until completion or as a safeguard
-            yield return new WaitUntil(() => actionFinished || action.IsCompleted);
+            action.OnActionCompleted += handler;
 
-            action.OnActionCompleted -= completionHandler;
-            action.EndOrAbort(this.ctx);
+            try
+            {
+                this.executionRoutine = StartCoroutine(action.Execute(this.ctx));
+                yield return this.executionRoutine;
+                yield return new WaitUntil(() => actionFinished || action.IsCompleted);
+            }
+            finally
+            {
+                // Unsubscribe using the variable reference
+                action.OnActionCompleted -= handler;
+
+                // Only call EndOrAbort if this hasn't been interrupted/nulled yet
+                if (this.currentAction == action)
+                {
+                    action.EndOrAbort(this.ctx);
+                    this.actionRoutine = null;
+                    this.executionRoutine = null;
+                    this.currentAction = null;
+                }
+            }
         }
 
         /// <summary>
@@ -188,15 +228,13 @@ namespace Kope.AI
         /// <param name="priority"></param>
         public virtual void ForceInterrupt(InterruptPriority priority = InterruptPriority.Hard)
         {
+            //  Debug.Log($"AIBrain ({gameObject.name}): ForceInterrupt called with priority {priority}.");
             switch (priority)
             {
-                // marking the current plan as null to force replanning after current action
-                // if the current action is interruptible we stop it immediately
                 case InterruptPriority.Soft:
+                    this.currentPlanEnumerator = null; // Force replan after current action
                     if (this.currentAction != null && this.currentAction.IsInterruptible)
                         StopCurrentAction();
-                    else
-                        this.currentPlanEnumerator = null;
                     break;
                 case InterruptPriority.Hard:
                 case InterruptPriority.Death:
@@ -205,7 +243,6 @@ namespace Kope.AI
                         this.enabled = false;
                     break;
             }
-            Debug.Log($"AI Brain on {this.gameObject.name} interrupted with priority: {priority}");
         }
 
         private void HandleInterruptSignal(InterruptPriority priority)
@@ -213,19 +250,28 @@ namespace Kope.AI
 
         private void StopCurrentAction()
         {
-            if (this.actionRoutine != null) { StopCoroutine(this.actionRoutine); }
-            if (this.currentAction != null) { this.currentAction.EndOrAbort(this.ctx); }
+            if (this.currentAction == null) return;
+
+            var actionToCleanup = this.currentAction; // Cache it
+
+            // Stop routines
+            if (this.executionRoutine != null) StopCoroutine(this.executionRoutine);
+            if (this.actionRoutine != null) StopCoroutine(this.actionRoutine);
+
             this.currentAction = null;
             this.currentPlanEnumerator = null;
-        }
+            this.executionRoutine = null;
+            this.actionRoutine = null;
 
+            // Cleanup
+            actionToCleanup.EndOrAbort(this.ctx);
+        }
 
         protected void RefreshTimerCallback()
         {
-            this.currentPlanEnumerator = null;
-            this.refreshTimer.Reset();
+
+            this.refreshTimer.Start(); // restart timer
+            this.currentPlanEnumerator = null; // Trigger plan refresh
         }
-
-
     }
 }

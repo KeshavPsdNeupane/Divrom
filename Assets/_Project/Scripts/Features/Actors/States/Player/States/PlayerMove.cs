@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using Kope.Component.Movement;
 public class EntityMove : EntityBaseState
 {
     private readonly MovementComponentBase movementComponent;
@@ -9,6 +9,9 @@ public class EntityMove : EntityBaseState
 
     public override AnimationState AnimationState => this.animationState;
     public override int AnimationStateHash => this.animationStateHash;
+
+    public override bool CanAcceptCommand => true;
+
     public EntityMove(EntityStateManager baseStateManager,
         EntityStateController playerStateController, AnimationState animationState = AnimationState.Walk)
         : base(baseStateManager, playerStateController)
@@ -26,7 +29,7 @@ public class EntityMove : EntityBaseState
 
     public override void Update()
     {
-        if (this.movementComponent.Direction.sqrMagnitude < MovementComponentBase.DIRECTION_THRESHOLD)
+        if (this.movementComponent.Direction.sqrMagnitude < MovementComponentBase.MOVEMENT_EPSILON)
         {
             this.stateManager.ChangeState(
                 this.playerStateController.EntityStates.EntityIdle);
@@ -37,7 +40,7 @@ public class EntityMove : EntityBaseState
 
     public override void PhysicUpdate()
     {
-        this.movementComponent.ApplyMovement();
+        // this.movementComponent.ApplyPhysics();
     }
 
     public override void Exit() { }

@@ -4,6 +4,16 @@ using UnityEngine;
 
 namespace Kope.AI
 {
+
+    public enum ExecutionActionStatus
+    {
+        NotInitialized,
+        Success,
+        Failure,
+        Running
+    }
+
+
     /// <summary>
     /// Base action type for any AI system.
     /// Defines the minimal interface for execution and completion.
@@ -12,11 +22,11 @@ namespace Kope.AI
     {
         [SerializeField] protected string actionName = "Base Action";
         [SerializeField] protected bool isInterruptible = true;
-        private bool isCompleted = false;
+        protected ExecutionActionStatus actionStatus = ExecutionActionStatus.NotInitialized;
 
         public string ActionName => actionName;
         public bool IsInterruptible => isInterruptible;
-        public bool IsCompleted => isCompleted;
+        public bool IsCompleted => actionStatus != ExecutionActionStatus.Running && actionStatus != ExecutionActionStatus.NotInitialized;
 
         public event Action OnActionCompleted;
 
@@ -28,7 +38,7 @@ namespace Kope.AI
 
         protected void ResetState()
         {
-            isCompleted = false;
+            actionStatus = ExecutionActionStatus.NotInitialized;
             OnActionCompleted = null;
         }
         #endregion
@@ -36,14 +46,20 @@ namespace Kope.AI
         /// <summary>
         /// Initialize the action with the mutable context.
         /// </summary>
-        public abstract void Initialize(EntityContext ctx);
+        public virtual void Initialize(EntityContext ctx)
+        {
+            this.actionStatus = ExecutionActionStatus.Running;
+        }
 
         /// <summary>
         /// End or abort the action.
+        /// ALways overright this method when needed.
+        /// First clean up any state related to the action,
+        /// do validations, then call base.EndOrAbort(ctx) to reset status.
         /// </summary>
         public virtual void EndOrAbort(EntityContext ctx)
         {
-            isCompleted = false;
+            actionStatus = ExecutionActionStatus.NotInitialized;
             OnActionCompleted = null;
         }
 
@@ -57,7 +73,7 @@ namespace Kope.AI
         /// </summary>
         public void MarkCompleted()
         {
-            isCompleted = true;
+            actionStatus = ExecutionActionStatus.Success;
             OnActionCompleted?.Invoke();
         }
     }

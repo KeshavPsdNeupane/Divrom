@@ -1,5 +1,5 @@
 using System;
-
+using UnityEngine;
 namespace ThirdParty
 {
 
@@ -72,6 +72,7 @@ namespace ThirdParty
             initialTime = newTime;
             Reset();
         }
+
     }
 
     public class StopwatchTimer : Timer
@@ -86,6 +87,7 @@ namespace ThirdParty
 
         public void Reset() => Time = 0;
         public float GetTime() => Time;
+
     }
 
 

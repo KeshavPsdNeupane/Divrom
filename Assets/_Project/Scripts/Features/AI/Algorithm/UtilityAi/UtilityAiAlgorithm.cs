@@ -97,9 +97,6 @@ namespace Kope.AI.Utility
             if (this.IsInitialized) return;
             base.Init();
             InitializeActionSet();
-            Debug.Log("Actions initialized for Utility AI Algorithm: " + AlgorithmName +
-                " with " + actionSOSet.Count + " actions. with names" + string.Join(", ",
-                System.Linq.Enumerable.Select(actionSOSet, a => a.ActionName)));
         }
 
         public override IEnumerable<BaseActionSO> GetDecisionPlan(IReadOnlyEntityContext ctx)
