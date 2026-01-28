@@ -50,7 +50,6 @@ public class RandomWanderActionSO : ActionSO
             Debug.LogError("RandomWanderActionSO: MovementComponentBase is null. Did you forget to Initialize?");
             yield break;
         }
-
         Vector2 target = GetRandomValidTarget();
 
         // Debug.Log("New position to wander to: " + target);

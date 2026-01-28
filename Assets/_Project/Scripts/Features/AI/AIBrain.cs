@@ -146,6 +146,7 @@ namespace Kope.AI
 
 
             var planEnumerator = newPlan.GetEnumerator();
+
             if (planEnumerator.MoveNext())
             {
                 BaseActionSO topAction = planEnumerator.Current;
@@ -154,7 +155,12 @@ namespace Kope.AI
                 if (currentAction != null &&
                 currentAction.GetType() == topAction.GetType()) return;
 
-
+                // need to call the newPlan.GetEnumerator() again since
+                // we already moved planEnumerator once to check the top action
+                // and we want to start from the beginning again.
+                // that way we dont miss any actions in the plan.
+                // even though this feels a bit wasteful, plans are usually short lived
+                // and this is simpler than trying to reset the enumerator.
                 this.currentPlanEnumerator = newPlan.GetEnumerator();
                 this.currentAction = null;
             }

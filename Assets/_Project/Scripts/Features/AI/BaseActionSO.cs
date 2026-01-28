@@ -4,15 +4,13 @@ using UnityEngine;
 
 namespace Kope.AI
 {
-
-    public enum ExecutionActionStatus
+    public enum ExecutionActionStatus : short
     {
-        NotInitialized,
-        Success,
-        Failure,
-        Running
+        NotInitialized = 0,
+        Running = 10,
+        Success = 20,
+        Failure = 99
     }
-
 
     /// <summary>
     /// Base action type for any AI system.
@@ -31,10 +29,10 @@ namespace Kope.AI
         public event Action OnActionCompleted;
 
         #region Unity Callbacks
-        void OnValidate() => ResetState();
+#if UNITY_EDITOR
+        protected void OnValidate() => ResetState();
+#endif
         void OnEnable() => ResetState();
-        void OnDisable() => ResetState();
-        void OnDestroy() => ResetState();
 
         protected void ResetState()
         {
