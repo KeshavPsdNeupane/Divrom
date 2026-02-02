@@ -32,7 +32,7 @@ namespace Kope.AI.Utility
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        public float Evaluate(IReadOnlyEntityContext context)
+        public float Evaluate(IReadOnlyContext context)
         {
             // tracks how many considerations have been multiplied together
             // to apply compensated utility correctly

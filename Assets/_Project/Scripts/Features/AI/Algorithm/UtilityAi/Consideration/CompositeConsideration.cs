@@ -10,7 +10,7 @@ public class CompositeConsideration : ConsiderationSO
     [SerializeField] private List<ConsiderationSO> considerations = new();
     public override string ConsiderationName => this.considerationName;
 
-    public override (float, int) Evaluate(IReadOnlyEntityContext context, int totalMultiplicationCount)
+    public override (float, int) Evaluate(IReadOnlyContext context, int totalMultiplicationCount)
     {
         float finalScore = 1f;
 

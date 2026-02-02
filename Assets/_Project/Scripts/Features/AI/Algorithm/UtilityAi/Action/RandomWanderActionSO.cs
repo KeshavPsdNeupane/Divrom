@@ -2,7 +2,6 @@ using System.Collections;
 using Kope.AI.Utility;
 using UnityEngine;
 using Kope.Component.Movement;
-using System;
 [CreateAssetMenu(fileName = "RandomWanderAction", menuName = "Scriptable Objects/AI/Utility/Actions/RandomWanderAction")]
 public class RandomWanderActionSO : ActionSO
 {
@@ -14,50 +13,59 @@ public class RandomWanderActionSO : ActionSO
     private MovementComponentBase mc;
     private Vector2 currentDirection;
 
-    /// <summary>
-    /// Always Initialize components here.
-    /// And cache references for later use.
-    /// </summary>
-    /// <param name="ctx"></param>
+    //<inheritdoc/>
     public override void Initialize(EntityContext ctx)
     {
         base.Initialize(ctx);
-        // no need to do base.Initialize(ctx) as it is empty. and it is scriptable object.
-        // not InitializableBase.
-        if (!ctx.TryGetComponent(out MovementComponentBase mc))
-        {
-            Debug.LogError("RandomWanderActionSO: MovementComponentBase not found.");
+        if (!CacheComponents(ctx, "RandomWanderActionSO Initialization failed: MovementComponentBase not found."))
             return;
-        }
-        this.mc = mc;
-    }
 
+    }
+    //<inheritdoc/>
     public override void EndOrAbort(EntityContext ctx)
     {
-
         if (this.mc != null)
         {
             this.mc.StopMovement();
         }
+        this.mc = null;
         base.EndOrAbort(ctx);
     }
 
-
-    public override IEnumerator Execute(EntityContext ctx)
+    private bool CacheComponents(EntityContext ctx, string message)
     {
         if (this.mc == null)
         {
-            Debug.LogError("RandomWanderActionSO: MovementComponentBase is null. Did you forget to Initialize?");
-            yield break;
+            if (!ctx.TryGetComponent(out MovementComponentBase newMc))
+            {
+                Debug.LogError(message);
+                return false;
+            }
+            this.mc = newMc;
         }
-        Vector2 target = GetRandomValidTarget();
+        return true;
+    }
 
-        // Debug.Log("New position to wander to: " + target);
+
+    //<inheritdoc/>
+    public override IEnumerator Execute(Context ctx)
+    {
+        if (this.mc == null)
+        {
+            if (!CacheComponents(
+                ctx.CurrentMutableEntityContext,
+                "Tried to Refetch MovementComponentBase in RandomWanderActionSO Execute, but failed."))
+            {
+                MarkCompleted();
+                yield break;
+            }
+        }
+
+        Vector2 target = GetRandomValidTarget();
 
         currentDirection = this.mc.Direction;
         Rigidbody2D rb = this.mc.Rigidbody;
 
-        // Move to target
         while ((this.mc.Position - target).sqrMagnitude > MovementComponentBase.MOVEMENT_EPSILON)
         {
             Vector2 targetDirection = (target - this.mc.Position).normalized;

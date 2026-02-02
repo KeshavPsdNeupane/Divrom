@@ -27,6 +27,8 @@ namespace Kope.AI
     {
         public abstract string AlgorithmName { get; }
 
+
+
         /// <summary>
         /// Generates a flattened, sequential decision plan from the given entity context.
         /// 
@@ -40,7 +42,7 @@ namespace Kope.AI
         /// </summary>
         /// <param name="ctx">Read-only snapshot of entity state for evaluation purposes.</param>
         /// <returns>Linear sequence of <see cref="BaseActionSO"/> to execute sequentially.</returns>
-        public abstract IEnumerable<BaseActionSO> GetDecisionPlan(IReadOnlyEntityContext ctx);
+        public abstract IEnumerable<BaseActionSO> GetDecisionPlan(IReadOnlyContext ctx);
 
         /// <summary>
         /// Clean up any instantiated actions or internal state.

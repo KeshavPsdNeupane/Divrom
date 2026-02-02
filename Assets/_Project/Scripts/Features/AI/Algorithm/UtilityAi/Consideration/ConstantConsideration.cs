@@ -17,7 +17,7 @@ public class ConstantConsideration : ConsiderationSO
     /// <param name="context"></param>
     /// <param name="totalMultiplicationCount"></param>
     /// <returns></returns>
-    public override (float, int) Evaluate(IReadOnlyEntityContext context, int totalMultiplicationCount)
+    public override (float, int) Evaluate(IReadOnlyContext context, int totalMultiplicationCount)
     {
         return (this.constantValue, ++totalMultiplicationCount);
     }

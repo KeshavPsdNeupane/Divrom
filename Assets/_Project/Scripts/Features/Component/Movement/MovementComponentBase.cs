@@ -134,11 +134,7 @@ namespace Kope.Component.Movement
 
         public void StopMovement()
         {
-            // Just assigning the intent to Stop type, Better than creating a new struct every time.
-            // even the struct is a value type. but creating new structs all the time is not efficient.
-            // for for this context. So we just reuse the existing struct.
-            this.currentIntent.IntentType = MovementIntentType.Stop;
-            this.currentIntent.Direction = Vector2.zero;
+            this.currentIntent = default;
         }
 
 

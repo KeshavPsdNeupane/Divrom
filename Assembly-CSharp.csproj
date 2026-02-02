@@ -53,6 +53,7 @@
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/UI/InventoryDisplays/InventoryDisplay.cs" />
     <Compile Include="Assets/_Project/Scripts/Managers/InputManager/InputManager.cs" />
     <Compile Include="Assets/_Project/_BootStrap/GlobalBootStrap.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/Actors/Context/Context.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AI/AIBrain.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/UI/ItemSlotDoubleTap.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/UI/InventoryDisplays/PlayerInventoryDisplay.cs" />
@@ -62,6 +63,7 @@
     <Compile Include="Assets/_Project/Scripts/Features/Actors/EntityStates.cs" />
     <Compile Include="Assets/_Project/UI/UIState/UIState.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Component/Animation/AnimationComponent.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/Actors/Context/IReadOnlyContext.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Actors/States/EntityBaseState.cs" />
     <Compile Include="Assets/_Project/UI/Common/PanelFader.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Component/Animation/AnimationVariableHashes.cs" />
@@ -94,6 +96,7 @@
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/Runtime/Item/PlayerItemCollector.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AI/BaseActionSO.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Component/IInterruptOther.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/AI/Algorithm/UtilityAi/Consideration/RangeConsideration.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Actors/Weapon/WeaponSO.cs" />
     <Compile Include="Assets/_Project/UI/UIState/InGameUI/GameplayUIController.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AI/Algorithm/UtilityAi/UtilityAiConfig.cs" />
@@ -106,6 +109,7 @@
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/UI/ItemSlotUI/ItemSlotUI.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Actors/AnimationStates.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AI/Algorithm/UtilityAi/Consideration/CompositeConsideration.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/Actors/Context/ContextTag.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Actors/States/Player/States/PlayerAttack.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -99,13 +99,21 @@ namespace Kope.AI.Utility
             InitializeActionSet();
         }
 
-        public override IEnumerable<BaseActionSO> GetDecisionPlan(IReadOnlyEntityContext ctx)
+        public void SetContext(Context ctx)
+        {
+            foreach (var action in actionSOSet)
+            {
+                action.Initialize(ctx.CurrentMutableEntityContext);
+            }
+        }
+
+        public override IEnumerable<BaseActionSO> GetDecisionPlan(IReadOnlyContext ctx)
         {
             // Returns only the highest-scoring action
             yield return GetHighestScoringAction(ctx);
         }
 
-        private ActionSO GetHighestScoringAction(IReadOnlyEntityContext ctx)
+        private ActionSO GetHighestScoringAction(IReadOnlyContext ctx)
         {
             ActionSO bestAction = null;
             float highestScore = float.MinValue;

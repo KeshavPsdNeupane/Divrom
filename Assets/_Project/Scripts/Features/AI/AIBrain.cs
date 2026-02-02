@@ -39,7 +39,7 @@ namespace Kope.AI
 
 
         #region Private Fields
-        private EntityContext ctx;
+        private Context ctx;
         private BaseActionSO currentAction;
         private Coroutine actionRoutine;
         private Coroutine executionRoutine;
@@ -69,16 +69,18 @@ namespace Kope.AI
                 return;
             }
             // Initialize context
-            this.ctx = new EntityContext(
-                this.entityTransform,
-                this.entityStateController.StateMachine,
-                this.entityStateController.EntityStates
+            this.ctx = new Context(
+                new EntityContext(
+                    this.entityTransform,
+                    this.entityStateController.StateMachine,
+                    this.entityStateController.EntityStates
+                )
             );
 
             // Register all components in context
             foreach (var comp in components)
             {
-                this.ctx.AddComponent(comp);
+                this.ctx.CurrentMutableEntityContext.AddComponent(comp);
                 // Only subscribe if component implements IInterruptOther
                 if (comp is IInterruptOther interrupter)
                 {
@@ -191,7 +193,7 @@ namespace Kope.AI
 
         protected virtual IEnumerator RunActionSequence(BaseActionSO action)
         {
-            action.Initialize(this.ctx);
+            action.Initialize(this.ctx.CurrentMutableEntityContext);
             bool actionFinished = false;
 
             // We define this as a variable so we can safely remove it later
@@ -204,6 +206,7 @@ namespace Kope.AI
 
             try
             {
+                // needs full context for execution since 
                 this.executionRoutine = StartCoroutine(action.Execute(this.ctx));
                 yield return this.executionRoutine;
                 yield return new WaitUntil(() => actionFinished || action.IsCompleted);
@@ -216,7 +219,7 @@ namespace Kope.AI
                 // Only call EndOrAbort if this hasn't been interrupted/nulled yet
                 if (this.currentAction == action)
                 {
-                    action.EndOrAbort(this.ctx);
+                    action.EndOrAbort(this.ctx.CurrentMutableEntityContext);
                     this.actionRoutine = null;
                     this.executionRoutine = null;
                     this.currentAction = null;
@@ -270,7 +273,7 @@ namespace Kope.AI
             this.actionRoutine = null;
 
             // Cleanup
-            actionToCleanup.EndOrAbort(this.ctx);
+            actionToCleanup.EndOrAbort(this.ctx.CurrentMutableEntityContext);
         }
 
         protected void RefreshTimerCallback()

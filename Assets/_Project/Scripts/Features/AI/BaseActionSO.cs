@@ -43,6 +43,13 @@ namespace Kope.AI
 
         /// <summary>
         /// Initialize the action with the mutable context.
+        /// Pass the current entity's context for initialization.
+        /// Always override this method when needed.
+        /// First set up any state related to the action,
+        /// do validations, then call base.Initialize(ctx) to set status to Running.<br/>
+        /// Recommended:<br/>
+        /// Call this on the planner init call so we can cache any needed components. only once.
+        /// for current entity. since all the components are reference types. so no need to do this per action execution.
         /// </summary>
         public virtual void Initialize(EntityContext ctx)
         {
@@ -51,7 +58,7 @@ namespace Kope.AI
 
         /// <summary>
         /// End or abort the action.
-        /// ALways overright this method when needed.
+        /// Always override this method when needed.
         /// First clean up any state related to the action,
         /// do validations, then call base.EndOrAbort(ctx) to reset status.
         /// </summary>
@@ -62,9 +69,23 @@ namespace Kope.AI
         }
 
         /// <summary>
-        /// Execute action logic.
+        /// Execute the action with the given context.
+        /// Must be implemented by derived classes.
+        /// Need full context for execution since actions may need to read other target contexts.
+        /// Even though the context is passed as mutable,  
+        /// any action can mutate only its own entity context.
+        /// But it is recommended to use ReadOnlyEntityContext property and use function
+        /// TryGetReadOnlyTargetContext of IReadOnlyContext to get "Read-Only(can be modified due to reference nature but anyway)" access to target contexts.
+        /// This is to enforce the read-only contract of target contexts in the execute
+        /// function of class to hint that the target contexts should be treated as read-only.
+        /// since mutating target contexts directly may lead to inconsistent states.
+        /// And may break the assumptions made by AI algorithms and actions.
+        /// SO PLEASE BE WARNED DO NOT MUTATE TARGET CONTEXTS DIRECTLY IN EXECUTE METHOD UNLESS IT IS EXTREMELY NECESSARY.
+        /// AND LAST RESORT. INSTEAD, MUTATE ONLY THE CURRENT ENTITY'S CONTEXT
         /// </summary>
-        public abstract IEnumerator Execute(EntityContext ctx);
+        /// <param name="ctx"></param>
+        /// <returns></returns>
+        public abstract IEnumerator Execute(Context ctx);
 
         /// <summary>
         /// Mark the action as completed.

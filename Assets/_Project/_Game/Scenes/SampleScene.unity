@@ -8592,12 +8592,12 @@ MonoBehaviour:
   - typeName: EntityInitCaller
     order: -30
     gameObjectName: InitCaller
-  - typeName: EntityInitCaller
-    order: -30
-    gameObjectName: InitCaller
   - typeName: InGameUIInitCaller
     order: -30
     gameObjectName: UI
+  - typeName: EntityInitCaller
+    order: -30
+    gameObjectName: InitCaller
 --- !u!1 &900482250
 GameObject:
   m_ObjectHideFlags: 0
@@ -14949,7 +14949,7 @@ PrefabInstance:
     - target: {fileID: 4628812339733595628, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -1090274858, guid: 95a16fdd7b6603e60a9484aed56aedc9, type: 3}
+      objectReference: {fileID: 77017084, guid: e4cf14472c3524a74b3f281b897a88b1, type: 3}
     - target: {fileID: 4673040149168526096, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -15160,12 +15160,24 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: 18ce1016f5028ee3b93b5aa9eef7244a, type: 2}
     - target: {fileID: 5870696730323562816, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
       propertyPath: baseCharacterAssets.Array.size
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 5870696730323562816, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: 'baseCharacterAssets.Array.data[2]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 9fb8c47a059eba8eeb0e13b204da55e3, type: 2}
+    - target: {fileID: 5870696730323562816, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: 'baseCharacterAssets.Array.data[3]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 643647884ee1ededdb60e3df159f27dc, type: 2}
+    - target: {fileID: 5870696730323562816, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: 'baseCharacterAssets.Array.data[4]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 0d20f2b5bb6081f08998fe76db41facb, type: 2}
     - target: {fileID: 5870696730323562816, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
       propertyPath: 'baseCharacterAssets.Array.data[5]'
       value: 
-      objectReference: {fileID: 11400000, guid: 8e789defe70252217b231be25fb95458, type: 2}
+      objectReference: {fileID: 11400000, guid: 21c2cffcb659a82bfbc806c54fd110ee, type: 2}
     - target: {fileID: 5870696730323562816, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
       propertyPath: 'baseCharacterAssets.Array.data[6]'
       value: 

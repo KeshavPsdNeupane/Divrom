@@ -1,37 +1,72 @@
 using System.Collections.Generic;
 using System;
 using UnityEngine;
-public sealed class EntityContext : IReadOnlyEntityContext
+
+/// <summary>
+/// Stores the context of a single entity. <br/>
+/// <inheritdoc cref="IReadOnlyEntityContext"/>
+/// </summary>
+public class EntityContext : IReadOnlyEntityContext
 {
     private readonly Transform entityTransform;
+
     private readonly Dictionary<Type, object> components = new();
     private readonly EntityStates states;
     private readonly EntityStateManager stateMachine;
 
-    private readonly List<string> excludedTypes = new()
+    private readonly List<Type> excludedTypes = new()
     {
-        "Kope.Core.Init.InitializableBase",
-        "UnityEngine.MonoBehaviour",
-        "UnityEngine.Behaviour",
-        "UnityEngine.Component",
-        "UnityEngine.ScriptableObject"
+        typeof(MonoBehaviour),
+        typeof(Behaviour),
+        typeof(Component),
+        typeof(ScriptableObject)
     };
+
     // Need to add the  NavMeshAgent2D later when i have implemented it using my quaternary Heap for A* pathfinding
     // since there is no NavMeshAgent2D in Unity by default
 
     // Need to make Sensors/Perception system later to add the runtime context of the entity like visible enemies, items etc.
-    public Transform EntityTransform => this.entityTransform;
-    public EntityStateManager StateMachine => this.stateMachine;
-    public EntityStates States => this.states;
 
+    //<inheritdoc/>
+    public Transform EntityTransform => this.entityTransform;
+
+    //<inheritdoc/>
+    public EntityStates States => this.states;
+    public EntityStateManager StateMachine => this.stateMachine;
+
+
+    /// <summary>
+    /// Initializes a new instance of the EntityContext class.
+    /// Provide string type names in excludedTypes to prevent those types from being registered.
+    /// Since reflection is used to register base types and interfaces, excluding framework types like MonoBehaviour and Component
+    /// prevents unnecessary registrations and potential conflicts.
+    /// Using string as type names avoids direct dependencies on those types in this class.
+    /// which is useful if those types are in different assemblies or packages.
+    /// </summary>
+    /// <param name="entityTransform"></param>
+    /// <param name="stateMachine"></param>
+    /// <param name="states"></param>
+    /// <param name="excludedTypes"></param>
     public EntityContext(Transform entityTransform, EntityStateManager stateMachine, EntityStates states, List<string> excludedTypes = null)
     {
         this.entityTransform = entityTransform;
         this.stateMachine = stateMachine;
         this.states = states;
+
         if (excludedTypes != null)
         {
-            this.excludedTypes.AddRange(excludedTypes);
+            foreach (var typeName in excludedTypes)
+            {
+                Type type = Type.GetType(typeName);
+                if (type != null)
+                {
+                    this.excludedTypes.Add(type);
+                }
+                else
+                {
+                    Debug.LogWarning($"Excluded type '{typeName}' could not be found and will be ignored.");
+                }
+            }
         }
     }
 
@@ -59,7 +94,7 @@ public sealed class EntityContext : IReadOnlyEntityContext
 
         bool ShouldStop(Type type)
         {
-            return this.excludedTypes.Contains(type.FullName);
+            return this.excludedTypes.Contains(type);
         }
 
         var concreteType = component.GetType();
@@ -93,5 +128,6 @@ public sealed class EntityContext : IReadOnlyEntityContext
         component = default;
         return false;
     }
+
 
 }
