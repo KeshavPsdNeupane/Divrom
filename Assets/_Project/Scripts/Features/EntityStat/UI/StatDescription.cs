@@ -6,21 +6,25 @@ using TMPro;
 using Kope.Core.CompilerServices;
 using Kope.Core.Init;
 using Kope.Character.Stats;
+using Kope.Core.EntityComponentSystem;
+
 public class StatDescription : InitializableBase
 {
     [SerializeField] private GameObject statDescriptionUIPanel;
-    [SerializeField] private CharacterStatsSystem characterStats;
+    [SerializeField] private EntityComponentStore ecs;
+
     [SerializeField] private TMP_FontAsset fontAsset;
 
+    private CharacterStatsSystem characterStats;
     private readonly Dictionary<CharacterStatType, float> statsValues = new();
     private readonly Dictionary<CharacterStatType, UnityAction<float>> statsCallbacksDict = new();
     private readonly Dictionary<CharacterStatType, TextMeshProUGUI> statTextObjects = new();
 
     private RectTransform panelRect; // cache panelRect to avoid fetching multiple times
-    public override void Init()
+
+    public override void OnInit()
     {
-        if (this.IsInitialized) return;
-        base.Init();
+        base.OnInit();
         Validate();
     }
 
@@ -51,19 +55,32 @@ public class StatDescription : InitializableBase
     {
         if (this.characterStats == null)
         {
-            MyLogger.Warn("CharacterStatsSystem reference was missing," +
-          " attempting to get from the same GameObject.");
+            if (ecs == null)
+            {
+                MyLogger.Error("EntityComponentStore reference was missing," +
+              " unable to retrieve CharacterStatsSystem." + GetParentGameObjectStackTraceMessage());
+                return;
+            }
+            if (ecs.ComponentRegistry.TryGetComponent<CharacterStatsSystem>(out var statsSystem))
+            {
+                this.characterStats = statsSystem;
+            }
+            else
+            {
+                MyLogger.Error("No CharacterStatsSystem found in EntityComponentStore for StatDescription" + GetParentGameObjectStackTraceMessage());
+                return;
+            }
         }
         if (this.statDescriptionUIPanel == null)
         {
-            MyLogger.Error("StatDescriptionUIPanel is not assigned.");
+            MyLogger.Error("StatDescriptionUIPanel is not assigned." + GetParentGameObjectStackTraceMessage());
             return;
         }
         if (this.panelRect == null && this.statDescriptionUIPanel != null)
         {
             this.panelRect = this.statDescriptionUIPanel.GetComponent<RectTransform>();
             if (this.panelRect == null)
-                MyLogger.Error("Stat Panel requires RectTransform.");
+                MyLogger.Error("Stat Panel requires RectTransform." + GetParentGameObjectStackTraceMessage());
         }
     }
 

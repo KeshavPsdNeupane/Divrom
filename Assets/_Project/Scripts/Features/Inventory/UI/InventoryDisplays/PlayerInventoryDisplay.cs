@@ -1,33 +1,55 @@
 using System.Collections.Generic;
 using Kope.Core.CompilerServices;
 using UnityEngine;
-
+using Kope.Core.EntityComponentSystem;
 public class PlayerInventoryDisplayUI : InventoryDisplay
 {
-    [SerializeField] private InventoryHolder inventoryHolder;
+    [SerializeField] private EntityComponentStore ecs;
     [SerializeField] private GameObject slotPrefab;
     [SerializeField] private Transform slotParent;
+    private InventoryHolder inventoryHolder;
 
     private readonly Queue<ItemSlotUI> slotPool = new();
     private bool prewarmed = false;
 
-    public override void Init()
+    public override void OnInit()
     {
-        if (this.IsInitialized) return;
-        base.Init();
-        if (this.inventoryHolder == null)
+        base.OnInit();
+        if (this.slotPrefab == null)
         {
-            MyLogger.Error($"PlayerInventoryDisplayUI ({gameObject.name}): InventoryHolder is not assigned!");
+            MyLogger.Error($"PlayerInventoryDisplayUI ({this.gameObject.name}): Slot Prefab is not assigned!" + GetParentGameObjectStackTraceMessage());
+            return;
+        }
+        if (this.slotParent == null)
+        {
+            MyLogger.Error($"PlayerInventoryDisplayUI ({this.gameObject.name}): Slot Parent is not assigned!" + GetParentGameObjectStackTraceMessage());
+            return;
+        }
+
+        if (this.ecs == null)
+        {
+            MyLogger.Error($"PlayerInventoryDisplayUI ({this.gameObject.name}): EntityComponentStore is not assigned!" + GetParentGameObjectStackTraceMessage());
+            return;
+        }
+        if (this.ecs.ComponentRegistry.TryGetComponent<InventoryHolder>(out var invHolder))
+        {
+            this.inventoryHolder = invHolder;
+        }
+        else
+        {
+            MyLogger.Error($"PlayerInventoryDisplayUI ({this.gameObject.name}): InventoryHolder not found in EntityComponentStore!" + GetParentGameObjectStackTraceMessage());
             return;
         }
 
         if (this.inventoryHolder.PrimaryInventorySystem == null)
         {
-            MyLogger.Error($"PlayerInventoryDisplayUI ({gameObject.name}): PrimaryInventorySystem is null! Make sure InventoryHolder is initialized first.");
+            MyLogger.Error($"PlayerInventoryDisplayUI ({this.gameObject.name}): PrimaryInventorySystem is null in InventoryHolder!" + GetParentGameObjectStackTraceMessage());
             return;
         }
 
-        if (this.slotPrefab != null && this.slotParent != null && !this.prewarmed)
+        // Prewarm the slot pool to avoid runtime instantiation hitches
+        // Dont have to check if inventory is assigned since we already did above
+        if (!this.prewarmed)
             Prewarm();
     }
 
@@ -53,7 +75,6 @@ public class PlayerInventoryDisplayUI : InventoryDisplay
 
     public override void AssignSlot(InventorySystem invToDisplay)
     {
-        // Return active slots to pool
         if (this.slotDictionary != null)
         {
             foreach (var ui in this.slotDictionary.Values)

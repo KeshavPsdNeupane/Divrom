@@ -3,6 +3,7 @@ namespace Kope.Core.Init
 {
     public interface IInitializable
     {
+
         bool IsInitialized { get; }
 
         /// <summary>

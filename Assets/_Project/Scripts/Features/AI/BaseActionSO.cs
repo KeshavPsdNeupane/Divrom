@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using Kope.Core.EntityComponentSystem;
 
 namespace Kope.AI
 {
@@ -51,7 +52,7 @@ namespace Kope.AI
         /// Call this on the planner init call so we can cache any needed components. only once.
         /// for current entity. since all the components are reference types. so no need to do this per action execution.
         /// </summary>
-        public virtual void Initialize(EntityContext ctx)
+        public virtual void Initialize(EntityComponentRegistry ctx)
         {
             this.actionStatus = ExecutionActionStatus.Running;
         }
@@ -62,7 +63,7 @@ namespace Kope.AI
         /// First clean up any state related to the action,
         /// do validations, then call base.EndOrAbort(ctx) to reset status.
         /// </summary>
-        public virtual void EndOrAbort(EntityContext ctx)
+        public virtual void EndOrAbort(EntityComponentRegistry ctx)
         {
             actionStatus = ExecutionActionStatus.NotInitialized;
             OnActionCompleted = null;

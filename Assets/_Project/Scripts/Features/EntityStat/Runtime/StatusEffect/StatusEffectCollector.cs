@@ -1,24 +1,44 @@
 using UnityEngine;
 using Kope.Core.Init;
 using Kope.Character.Stats;
-
+using Kope.Core.CompilerServices;
+using Kope.Core.EntityComponentSystem;
 
 [RequireComponent(typeof(CircleCollider2D))]
 public class StatusEffectConnector : InitializableBase
 {
     [SerializeField] private string StatusObjectTagName = "StatusEffect";
-    [SerializeField] private CharacterStatsSystem characterStats;
     [SerializeField] private CircleCollider2D detectionCollider;
+    [SerializeField] private EntityComponentStore ecs;
     [SerializeField] private float detectionRadius = .5f;
     [SerializeField] bool isTrigger = true;
+    private CharacterStatsSystem characterStats;
 
 
-    public override void Init()
+    public override void OnInit()
     {
-        if (this.IsInitialized) return;
-        base.Init();
+        base.OnInit();
         if (this.detectionCollider == null)
-            this.detectionCollider = this.gameObject.GetComponent<CircleCollider2D>();
+        {
+            MyLogger.Error("No CircleCollider2D assigned to StatusEffectConnector" + GetParentGameObjectStackTraceMessage());
+            return;
+        }
+        if (ecs == null)
+        {
+            MyLogger.Error("No EntityComponentStore assigned to StatusEffectConnector" + GetParentGameObjectStackTraceMessage());
+            return;
+        }
+        if (ecs.ComponentRegistry.TryGetComponent<CharacterStatsSystem>(out var statsSystem))
+        {
+            this.characterStats = statsSystem;
+        }
+        else
+        {
+            MyLogger.Error("No CharacterStatsSystem found in EntityComponentStoreConfig for StatusEffectConnector" + GetParentGameObjectStackTraceMessage());
+            return;
+        }
+
+
         this.detectionCollider.isTrigger = this.isTrigger;
         Vector3 parentScale = transform.lossyScale;
         this.detectionCollider.radius = detectionRadius / Mathf.Max(parentScale.x, parentScale.y);

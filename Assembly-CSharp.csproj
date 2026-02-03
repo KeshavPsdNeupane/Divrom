@@ -72,8 +72,6 @@
     <Compile Include="Assets/_Project/Scripts/Features/Component/Attack/PlayerAttackComponent.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Actors/Weapon/WeaponAnimationMapping.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Actors/States/Enemy/ChasePlayer.cs" />
-    <Compile Include="Assets/_Project/Scripts/Features/Actors/Context/IReadOnlyEntityContext.cs" />
-    <Compile Include="Assets/_Project/Scripts/Features/Actors/Context/EntityContext.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Actors/States/Player/States/PlayerIdle.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AI/Algorithm/UtilityAi/Action/ActionSO.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AI/Algorithm/UtilityAi/Consideration/ConsiderationSO.cs" />
@@ -109,7 +107,6 @@
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/UI/ItemSlotUI/ItemSlotUI.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Actors/AnimationStates.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AI/Algorithm/UtilityAi/Consideration/CompositeConsideration.cs" />
-    <Compile Include="Assets/_Project/Scripts/Features/Actors/Context/ContextTag.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Actors/States/Player/States/PlayerAttack.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -126,6 +123,7 @@
     <None Include="Assets/TextMesh Pro/Shaders/TMP_Bitmap-Custom-Atlas.shader" />
     <None Include="Assets/TextMesh Pro/Shaders/TMP_SDF.shader" />
     <None Include="Assets/TextMesh Pro/Shaders/TMP_SDF-Mobile SSD.shader" />
+    <None Include="Assets/log.txt" />
     <None Include="Assets/TextMesh Pro/Resources/LineBreaking Leading Characters.txt" />
     <None Include="Assets/TextMesh Pro/Shaders/TMPro_Properties.cginc" />
     <None Include="Assets/TextMesh Pro/Shaders/TMPro_Surface.cginc" />

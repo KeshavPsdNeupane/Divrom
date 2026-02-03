@@ -2,6 +2,9 @@ using System.Collections;
 using Kope.AI.Utility;
 using UnityEngine;
 using Kope.Component.Movement;
+using Kope.Core.EntityComponentSystem;
+
+
 [CreateAssetMenu(fileName = "RandomWanderAction", menuName = "Scriptable Objects/AI/Utility/Actions/RandomWanderAction")]
 public class RandomWanderActionSO : ActionSO
 {
@@ -11,10 +14,9 @@ public class RandomWanderActionSO : ActionSO
     [SerializeField] private int maxAttemptsToFindValidPoint = 10;
 
     private MovementComponentBase mc;
-    private Vector2 currentDirection;
 
     //<inheritdoc/>
-    public override void Initialize(EntityContext ctx)
+    public override void Initialize(EntityComponentRegistry ctx)
     {
         base.Initialize(ctx);
         if (!CacheComponents(ctx, "RandomWanderActionSO Initialization failed: MovementComponentBase not found."))
@@ -22,7 +24,7 @@ public class RandomWanderActionSO : ActionSO
 
     }
     //<inheritdoc/>
-    public override void EndOrAbort(EntityContext ctx)
+    public override void EndOrAbort(EntityComponentRegistry ctx)
     {
         if (this.mc != null)
         {
@@ -32,7 +34,7 @@ public class RandomWanderActionSO : ActionSO
         base.EndOrAbort(ctx);
     }
 
-    private bool CacheComponents(EntityContext ctx, string message)
+    private bool CacheComponents(EntityComponentRegistry ctx, string message)
     {
         if (this.mc == null)
         {
@@ -62,25 +64,24 @@ public class RandomWanderActionSO : ActionSO
         }
 
         Vector2 target = GetRandomValidTarget();
-
-        currentDirection = this.mc.Direction;
-        Rigidbody2D rb = this.mc.Rigidbody;
+        float mass = this.mc.Mass;
 
         while ((this.mc.Position - target).sqrMagnitude > MovementComponentBase.MOVEMENT_EPSILON)
         {
             Vector2 targetDirection = (target - this.mc.Position).normalized;
 
-            float turnSpeed = 5f / rb.mass;
+            // never cache any value from mc.Direction, as it is mutable.
+            var currentDirection = this.mc.Direction;
+
+            float turnSpeed = 5f / mass; // Adjust turn speed based on mass
             currentDirection = Vector2.Lerp(currentDirection, targetDirection, turnSpeed * Time.fixedDeltaTime);
             currentDirection.Normalize();
-
             this.mc.SetMovementIntent(new MovementIntent(currentDirection, MovementIntentType.Move));
             yield return new WaitForFixedUpdate();
         }
 
         this.mc.StopMovement();
         yield return new WaitForSeconds(idleTimeAfterReachingTarget);
-
         MarkCompleted();
     }
 

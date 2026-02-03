@@ -19,12 +19,11 @@ public class EntityStateController : InitializableBase
     public EntityStateManager StateMachine => stateMachine;
     public EntityStates EntityStates => entityStates;
 
-    public bool CanStateMachineAcceptCommand => StateMachine.CurrentState is not IStateCanAcceptCommand state || state.CanAcceptCommand;
+    public bool CanStateMachineAcceptCommand => this.stateMachine == null || this.stateMachine.CurrentState is not IStateCanAcceptCommand state || state.CanAcceptCommand;
 
-    public override void Init()
+    public override void OnInit()
     {
-        if (this.IsInitialized) return;
-        base.Init();
+        base.OnInit();
         this.stateMachine = new EntityStateManager();
         this.entityStates = new EntityStates(this.stateMachine, this);
         this.stateMachine.Initialize(this.entityStates.EntityIdle);
@@ -42,10 +41,9 @@ public class EntityStateController : InitializableBase
         this.attackComponent.OnAttackPerformed -= Attack;
     }
 
-    protected override void Update()
+    protected override void OnUpdate()
     {
-        base.Update();
-        if (!this.IsInitialized) return;
+        base.OnUpdate();
 
         this.stateMachine?.CurrentState?.Update();
     }

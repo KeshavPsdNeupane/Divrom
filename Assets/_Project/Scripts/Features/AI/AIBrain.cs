@@ -4,7 +4,8 @@ using Kope.Core.Init;
 using Kope.Component.Interfaces;
 using UnityEngine;
 using ThirdParty;
-
+using System;
+using Kope.Core.EntityComponentSystem;
 
 namespace Kope.AI
 {
@@ -16,10 +17,7 @@ namespace Kope.AI
     public class AIBrain : InitializableBase
     {
         #region Inspector Fields
-        // This is a mono behaviour so we can attach it to game objects directly
-        // and have it work as a component in the entity system
-        [SerializeField, Tooltip("Mandatory: The transform of the entity this brain controls.")]
-        private Transform entityTransform;
+        [SerializeField] private EntityComponentStore ecs;
 
         [SerializeField, Tooltip("The AI brain algorithm that defines the decision-making logic.")]
         private AIBrainAlgorithm planner;
@@ -27,8 +25,7 @@ namespace Kope.AI
         [SerializeField, Tooltip("Components used for context. Only those implementing IInterruptOther will be subscribed for interrupts.")]
         private List<InitializableBase> components;
 
-        [SerializeField, Tooltip("The entity context provider supplying the current state of the entity.")]
-        private EntityStateController entityStateController;
+
 
         [SerializeField, Range(0f, 20f), Tooltip("In Second, This " +
         "This interval Forces the brain to refresh its plan periodically.If the current plan is really long lived " +
@@ -40,6 +37,7 @@ namespace Kope.AI
 
         #region Private Fields
         private Context ctx;
+        private EntityStateController entityStateController;
         private BaseActionSO currentAction;
         private Coroutine actionRoutine;
         private Coroutine executionRoutine;
@@ -49,33 +47,26 @@ namespace Kope.AI
         #endregion
 
 
-        public override void Init()
+        public override void OnInit()
         {
-            if (this.IsInitialized) return;
-            base.Init();
-            if (this.entityTransform == null)
+            base.OnInit();
+            if (this.ecs == null)
             {
-                Debug.LogError("AIBrain Initialization Failed: Entity Transform is not assigned.");
-                return;
-            }
-            if (this.entityStateController == null)
-            {
-                Debug.LogError("AIBrain Initialization Failed: Entity State Controller is not assigned.");
+                Debug.LogError("AIBrain Initialization Failed: Entity Component Store is not assigned." + GetParentGameObjectStackTraceMessage());
                 return;
             }
             if (this.planner == null)
             {
-                Debug.LogError("AIBrain Initialization Failed: AI Brain Algorithm (planner) is not assigned.");
+                Debug.LogError("AIBrain Initialization Failed: AI Brain Algorithm (planner) is not assigned." + GetParentGameObjectStackTraceMessage());
                 return;
             }
-            // Initialize context
-            this.ctx = new Context(
-                new EntityContext(
-                    this.entityTransform,
-                    this.entityStateController.StateMachine,
-                    this.entityStateController.EntityStates
-                )
-            );
+            if (!this.ecs.ComponentRegistry.TryGetComponent(out this.entityStateController))
+            {
+                Debug.LogError("AIBrain Initialization Failed: EntityStateController component not found in EntityComponentStore." + GetParentGameObjectStackTraceMessage());
+                return;
+            }
+
+            this.ctx = new Context(this.ecs.ComponentRegistry);
 
             // Register all components in context
             foreach (var comp in components)
@@ -93,7 +84,7 @@ namespace Kope.AI
 
             // Initialize planner, No need to put on InitLifecycleManager since
             //  since brain Init manages it directly
-            this.planner.Init();
+            this.planner.OnInit();
 
             // SO the we dont init cooldown timer when refresh interval is 0
             // since that means no auto refresh
@@ -115,11 +106,12 @@ namespace Kope.AI
 
 
 
-        protected override void Update()
+        protected override void OnUpdate()
         {
-            base.Update();
-            // bail out if not initialized or no planner assigned
-            if (!IsInitialized || planner == null) return;
+            base.OnUpdate();
+            // bail out if these are null, no need to check the EntityStateController since
+            // ecs probably wont be null if we have entityStateController
+            if (this.planner == null || this.ecs == null) return;
 
             // if state machine cannot accept commands, bail out
             if (!this.entityStateController.CanStateMachineAcceptCommand)

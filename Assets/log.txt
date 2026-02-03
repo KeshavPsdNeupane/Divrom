@@ -1,0 +1,998 @@
+<color=yellow><b>[Info]</b> </color> [Service] Initialized InputManager: [Global] InputManager_BS_RS via Bootstrapper Registration Service <color=#888888>(at ServiceBase.cs:19)</color>
+UnityEngine.Debug:Log (object,UnityEngine.Object)
+Kope.Core.CompilerServices.MyLogger:Log (string,UnityEngine.Object,string,int) (at Assets/_Project/Scripts/Cores/CompilerServices/Logger.cs:32)
+ServiceLocatorPattern.ServiceBase:Initialize (string,bool,UnityEngine.GameObject) (at Assets/_Project/Scripts/Cores/ServiceLocator/ServiceBase.cs:19)
+InputManager:Initialize (string,bool,UnityEngine.GameObject) (at Assets/_Project/Scripts/Managers/InputManager/InputManager.cs:51)
+ServiceLocatorPattern.GlobalServiceLocator:Register (ServiceLocatorPattern.GlobalServiceBase,string,string) (at Assets/_Project/Scripts/Cores/ServiceLocator/GlobalServiceLocator.cs:72)
+ServiceLocatorPattern.GlobalServiceLocator:RegisterService<InputManager> (System.Func`1<InputManager>) (at Assets/_Project/Scripts/Cores/ServiceLocator/GlobalServiceLocator.cs:61)
+GlobalBootStrap:Init () (at Assets/_Project/_BootStrap/GlobalBootStrap.cs:11)
+
+<color=yellow><b>[Info]</b> </color> [Service] Initialized ItemDragDropManager: [Scene] ItemDragDropManager -  [Scene]_A_RS via SceneService Registered Service <color=#888888>(at ServiceBase.cs:19)</color>
+UnityEngine.Debug:Log (object,UnityEngine.Object)
+Kope.Core.CompilerServices.MyLogger:Log (string,UnityEngine.Object,string,int) (at Assets/_Project/Scripts/Cores/CompilerServices/Logger.cs:32)
+ServiceLocatorPattern.ServiceBase:Initialize (string,bool,UnityEngine.GameObject) (at Assets/_Project/Scripts/Cores/ServiceLocator/ServiceBase.cs:19)
+ItemDragDropManager:Initialize (string,bool,UnityEngine.GameObject) (at Assets/_Project/Scripts/Managers/ItemDragDropManager.cs:24)
+ServiceLocatorPattern.SceneServiceLocator:Register (ServiceLocatorPattern.SceneServiceBase,string,bool) (at Assets/_Project/Scripts/Cores/ServiceLocator/SceneServiceLocator.cs:100)
+ServiceLocatorPattern.SceneServiceLocator:RenameAndRegister<ServiceLocatorPattern.SceneServiceBase> (ServiceLocatorPattern.SceneServiceBase,string,string,bool) (at Assets/_Project/Scripts/Cores/ServiceLocator/SceneServiceLocator.cs:91)
+ServiceLocatorPattern.SceneServiceLocator:RegisterService<ServiceLocatorPattern.SceneServiceBase> (ServiceLocatorPattern.SceneServiceBase) (at Assets/_Project/Scripts/Cores/ServiceLocator/SceneServiceLocator.cs:51)
+ServiceLocatorPattern.SceneServiceLocator:Awake () (at Assets/_Project/Scripts/Cores/ServiceLocator/SceneServiceLocator.cs:33)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnUpdate () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:82)
+Kope.Core.Init.InitializableBase.Update () (at Assets/_Project/Scripts/Cores/Init/InitializableBase.cs:83)
+
+NullReferenceException: Object reference not set to an instance of an object
+Kope.Character.Stats.CharacterStatsSystem.OnDisable () (at Assets/_Project/Scripts/Features/EntityStat/Runtime/CharacterStats/CharacterStatsSystem.cs:70)
+

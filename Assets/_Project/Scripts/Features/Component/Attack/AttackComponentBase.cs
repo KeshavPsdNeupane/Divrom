@@ -3,15 +3,17 @@ using UnityEngine;
 using UnityEngine.Events;
 using Kope.Core.Init;
 using Kope.Character.Stats;
+using Kope.Core.EntityComponentSystem;
 /// <summary>
 /// Base attack logic component. Can be used for both player and AI.
 /// Handles stat subscription and damage calculation.
 /// </summary>
 public abstract class AttackComponentBase : InitializableBase
 {
-    [SerializeField] private AnimationComponentBase animationComponent;
-    [SerializeField] protected CharacterStatsSystem statsSystem;
-    [SerializeField] WeaponSO equippedWeaponDataSO;
+    [SerializeField] private EntityComponentStore ecs;
+    [SerializeField] private WeaponSO equippedWeaponDataSO;
+    private AnimationComponentBase animationComponent;
+    protected CharacterStatsSystem statsSystem;
     protected float attack;
     protected float normalizedCriticalChance;
     protected float normalizedCriticalDamage;
@@ -20,19 +22,34 @@ public abstract class AttackComponentBase : InitializableBase
 
     public event UnityAction OnAttackPerformed;
 
-    public override void Init()
+    public override void OnInit()
     {
-        if (this.IsInitialized) return;
-        base.Init();
-        if (this.statsSystem == null)
+        base.OnInit();
+        if (ecs == null)
         {
-            MyLogger.Warn("CharacterStatsSystem not assigned in AttackComponentBase, trying to get it from the GameObject.");
-            this.statsSystem = GetComponent<CharacterStatsSystem>();
+            MyLogger.Error("EntityComponentStore reference is missing in AttackComponentBase." +
+            GetParentGameObjectStackTraceMessage());
+            return;
         }
-        if (this.animationComponent == null)
+        if (this.ecs.ComponentRegistry.TryGetComponent(out AnimationComponentBase animComp))
         {
-            MyLogger.Warn("AnimationComponent not assigned in AttackComponentBase, trying to get it from the GameObject.");
-            this.animationComponent = GetComponent<AnimationComponentBase>();
+            this.animationComponent = animComp;
+        }
+        else
+        {
+            MyLogger.Error("AnimationComponentBase not found in EntityComponentStore." +
+            GetParentGameObjectStackTraceMessage());
+        }
+
+        if (this.ecs.ComponentRegistry.TryGetComponent(out CharacterStatsSystem statsSys))
+        {
+            this.statsSystem = statsSys;
+        }
+        else
+        {
+            MyLogger.Error("CharacterStatsSystem not found in EntityComponentStore. " +
+            "AttackComponentBase will not function properly." +
+            GetParentGameObjectStackTraceMessage());
         }
 
         SubscribeToStats();
@@ -43,6 +60,7 @@ public abstract class AttackComponentBase : InitializableBase
 
     protected void SubscribeToStats()
     {
+        if (!IsInitialized || statsSystem == null) return;
         if (statsSystem != null && statsSystem.CurrentStats != null)
         {
             statsSystem.StatsSubscribe(CharacterStatType.ATK, AttackCallback);

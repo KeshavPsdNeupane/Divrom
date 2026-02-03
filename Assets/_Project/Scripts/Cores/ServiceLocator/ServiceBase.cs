@@ -35,7 +35,7 @@ namespace ServiceLocatorPattern
         {
             // Finds all instances of the specific concrete class (e.g., AudioManager)
             var type = GetType();
-            var instances = Object.FindObjectsByType(type, FindObjectsSortMode.None);
+            var instances = FindObjectsByType(type, FindObjectsSortMode.None);
 
             if (instances.Length > 1)
             {

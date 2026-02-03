@@ -9,10 +9,9 @@ public class PanelController : UIState
     [SerializeField] private PlayerInputActionMap inputActionMap = PlayerInputActionMap.Menu;
     private InputManager inputManager;
     public string PanelName => this.panelName;
-    public override void Init()
+    public override void OnInit()
     {
-        if (this.IsInitialized) return;
-        base.Init();
+        base.OnInit();
         if (this.currentPanel == null)
         {
             MyLogger.Error($"{this.panelName}Controller: {this.panelName} "

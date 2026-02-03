@@ -45,10 +45,9 @@ namespace Kope.Core.Init
             }
         }
 
-        public override void Init()
+        public override void OnInit()
         {
-            if (this.IsInitialized) return;
-            base.Init();
+            base.OnInit();
 
             if (this.autoPopulate)
                 PopulateInitializables();

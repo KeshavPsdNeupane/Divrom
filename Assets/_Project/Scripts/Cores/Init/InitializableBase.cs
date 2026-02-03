@@ -2,17 +2,36 @@ using UnityEngine;
 namespace Kope.Core.Init
 {
     /// <summary>
+    /// InitializableBase.cs<br/>
     /// Convenience base class for MonoBehaviours that participate in InitManager lifecycle.
     /// Derive from this so components automatically implement IInitializable.
     /// Make sure your are placing the Init() call in the correct order in InitLifecycleManager.
+    /// U can think of this as Kope's version of MonoBehaviour.Awake/Start but with explicit Init()/Shutdown() calls.
+    /// <br/>
+    /// <inheritdoc cref="IInitializable"/>
     /// </summary>
     public abstract class InitializableBase : MonoBehaviour, IInitializable
     {
-
-        // this bool just means whether Init() has been called or not yet for the instance
-        // it does not guarantee that all dependencies are injected or valid
-        // that is up to the derived class to ensure during its Init() implementation
+        /// <summary>
+        /// this bool just means whether Init() has been called or not yet for the instance
+        /// it does not guarantee that all dependencies are injected or valid
+        /// that is up to the derived class to ensure during its Init() implementation   
+        /// </summary>
         public bool IsInitialized { get; protected set; } = false;
+
+        ///<summary> 
+        /// this flag is used to log warning only once when Update() is called on uninitialized component
+        /// so we dont spam the console every frame
+        /// </summary>
+        private bool hasLoggedNotInitializedWarning = false;
+
+
+        private string parentGameObjectStackTrace = "";
+
+        public string GetParentGameObjectStackTraceMessage()
+        {
+            return $" GameObject Stack Trace: {this.parentGameObjectStackTrace}";
+        }
 
         /// <summary>
         /// Sets the IsInitialized boolean value.
@@ -22,52 +41,84 @@ namespace Kope.Core.Init
         /// <param name="value"></param>
         public void SetInitBoolean(bool value = true) => this.IsInitialized = value;
 
-        /// <summary>
-        /// Called during initialization. Override for setup.
-        /// Always call base.Init() to set IsInitialized = true.
-        /// at the top of your override. since other components may check IsInitialized in their Init().
-        /// </summary>
-        public virtual void Init()
+        public void Init()
         {
+            if (this.IsInitialized) return;
             this.IsInitialized = true;
+            this.hasLoggedNotInitializedWarning = false;
+            this.parentGameObjectStackTrace = FindAllParentStackString(this.transform.parent);
+            OnInit();
         }
 
+        /// <summary>
+        /// Called during initialization. Override this instead of Init().
+        /// Init() will call this after setting IsInitialized = true.
+        /// The base implementation does nothing.
+        /// this method is completely optional to override.
+        /// Just being used as Template Method pattern.
+        /// so child classes can hook into Init without overriding it.
+        /// </summary>
+        public virtual void OnInit()
+        {
+            // no op
+        }
+
+
+        public void Shutdown()
+        {
+            if (!this.IsInitialized) return;
+            this.IsInitialized = false;
+            this.hasLoggedNotInitializedWarning = false;
+            OnShutdown();
+        }
         /// <summary>
         /// Called during shutdown. Override for teardown.
         /// Always call base.Shutdown() to set IsInitialized = false.
         /// Completely optional to override.
         /// </summary>
-        public virtual void Shutdown()
-        {
-            this.IsInitialized = false;
-        }
-
+        protected virtual void OnShutdown() { }
 
 
         /// <summary>
-        /// Update method called every frame by UnityLifecycleManager.
-        /// If you override, always call base.Update() to get the warning
-        /// And also add if (!this.IsInitialized) return; to avoid processing when not initialized.
+        /// Update method called every frame.
+        /// Do NOT override Update() directly. Override OnUpdate() instead.
         /// </summary>
-        protected virtual void Update()
+        protected void Update()
         {
-            if (this.IsInitialized) return;
-            string referenceStack = "";
-            FindAllParentStackString(this.transform.parent, ref referenceStack);
-            if (referenceStack == "")
-                referenceStack = "(root)";
-            else
-                referenceStack = "(root) -> " + referenceStack + " -> " + this.name;
-
-            Debug.LogWarning($"Component {this.name} is not initialized on stack {referenceStack} but is receiving Update calls. Please place the component on the InitLifecycleManager Init() call order correctly.");
-
-
+            if (!this.IsInitialized)
+            {
+                if (!this.hasLoggedNotInitializedWarning)
+                {
+                    this.parentGameObjectStackTrace = FindAllParentStackString(this.transform.parent);
+                    this.hasLoggedNotInitializedWarning = true;
+                }
+                return;
+            }
+            OnUpdate();
         }
-        private void FindAllParentStackString(Transform currentTransform, ref string stackString)
+
+        /// <summary>
+        /// Called every frame after IsInitialized check. Override this instead of Update().
+        /// The base implementation does nothing.
+        /// this method is completely optional to override.
+        /// Just being used as Template Method pattern.
+        /// so child classes can hook into Update without overriding it.
+        /// </summary>
+        protected virtual void OnUpdate() { }
+
+        private string FindAllParentStackString(Transform currentTransform)
         {
-            if (currentTransform == null) return;
-            stackString = currentTransform.name + (stackString == "" ? "" : " -> " + stackString);
-            FindAllParentStackString(currentTransform.parent, ref stackString);
+            Transform cursor = currentTransform;
+            string path = "";
+
+            while (cursor != null)
+            {
+                path = cursor.name + (path == "" ? "" : " -> " + path);
+                cursor = cursor.parent;
+            }
+            // This ensures even root objects look like "(root) -> MyObject"
+            string prefix = "(root)";
+            return path == "" ? $"{prefix} -> {this.name}" : $"{prefix} -> {path} -> {this.name}";
         }
     }
 }

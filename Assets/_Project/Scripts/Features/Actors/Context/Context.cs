@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using ZLinq;
+using Kope.Core.EntityComponentSystem;
 
 /// <summary>
 /// Stores the context of an entity and its targets.
@@ -9,20 +10,20 @@ using ZLinq;
 /// </summary>
 public class Context : IReadOnlyContext
 {
-    private readonly EntityContext currentEntityContext;
+    private readonly EntityComponentRegistry currentEntityContext;
 
     // Mutable target contexts
-    private readonly Dictionary<HashedTag, List<EntityContext>> targetEntityContexts = new();
+    private readonly Dictionary<HashedTag, List<EntityComponentRegistry>> targetEntityContexts = new();
 
     // Cached read-only wrappers
-    private readonly Dictionary<HashedTag, IReadOnlyList<IReadOnlyEntityContext>> cachedReadOnly = new();
+    private readonly Dictionary<HashedTag, IReadOnlyList<IReadOnlyEntityRegistry>> cachedReadOnly = new();
 
-    public EntityContext CurrentMutableEntityContext => this.currentEntityContext;
+    public EntityComponentRegistry CurrentMutableEntityContext => this.currentEntityContext;
 
     //<inheritdoc/>
-    public IReadOnlyEntityContext ReadOnlyEntityContext => this.currentEntityContext;
+    public IReadOnlyEntityRegistry ReadOnlyEntityContext => this.currentEntityContext;
 
-    public Context(EntityContext currentEntityContext)
+    public Context(EntityComponentRegistry currentEntityContext)
     {
         this.currentEntityContext = currentEntityContext;
     }
@@ -32,11 +33,11 @@ public class Context : IReadOnlyContext
     /// </summary>
     /// <param name="tag"></param>
     /// <param name="targetContext"></param>
-    public void AddTargetEntityContext(HashedTag tag, EntityContext targetContext)
+    public void AddTargetEntityContext(HashedTag tag, EntityComponentRegistry targetContext)
     {
         if (!this.targetEntityContexts.TryGetValue(tag, out var list))
         {
-            list = new List<EntityContext>();
+            list = new List<EntityComponentRegistry>();
             this.targetEntityContexts[tag] = list;
         }
 
@@ -49,7 +50,7 @@ public class Context : IReadOnlyContext
     /// <summary>
     /// Removes a target entity context. Clears cache to maintain consistency.
     /// </summary>
-    public void RemoveTargetEntityContext(HashedTag tag, EntityContext targetContext)
+    public void RemoveTargetEntityContext(HashedTag tag, EntityComponentRegistry targetContext)
     {
         if (this.targetEntityContexts.TryGetValue(tag, out var list))
         {
@@ -76,13 +77,13 @@ public class Context : IReadOnlyContext
     /// <param name="tag"></param>
     /// <param name="targetContext"></param>
     /// <returns></returns>
-    public bool TryGetMutableTargetContext(HashedTag tag, out List<EntityContext> targetContext)
+    public bool TryGetMutableTargetContext(HashedTag tag, out List<EntityComponentRegistry> targetContext)
     {
         return this.targetEntityContexts.TryGetValue(tag, out targetContext);
     }
 
     //<inheritdoc/>
-    public bool TryGetReadOnlyTargetContext(HashedTag tag, out IReadOnlyList<IReadOnlyEntityContext> targetEntityContexts)
+    public bool TryGetReadOnlyTargetContext(HashedTag tag, out IReadOnlyList<IReadOnlyEntityRegistry> targetEntityContexts)
     {
         // Return cached wrapper if available
         if (this.cachedReadOnly.TryGetValue(tag, out var cached))
@@ -92,12 +93,12 @@ public class Context : IReadOnlyContext
         }
         if (this.targetEntityContexts.TryGetValue(tag, out var mutableList))
         {
-            targetEntityContexts = mutableList.AsValueEnumerable().Cast<IReadOnlyEntityContext>().ToList();
+            targetEntityContexts = mutableList.AsValueEnumerable().Cast<IReadOnlyEntityRegistry>().ToList();
             this.cachedReadOnly[tag] = targetEntityContexts;
             return true;
         }
 
-        targetEntityContexts = Array.Empty<IReadOnlyEntityContext>();
+        targetEntityContexts = Array.Empty<IReadOnlyEntityRegistry>();
         return false;
     }
 }

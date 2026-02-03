@@ -27,8 +27,6 @@ namespace Kope.AI
     {
         public abstract string AlgorithmName { get; }
 
-
-
         /// <summary>
         /// Generates a flattened, sequential decision plan from the given entity context.
         /// 

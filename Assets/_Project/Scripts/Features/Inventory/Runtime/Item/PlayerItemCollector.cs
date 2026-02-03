@@ -1,36 +1,43 @@
 using Kope.Core.CompilerServices;
 using UnityEngine;
 using Kope.Core.Init;
-
+using Kope.Core.EntityComponentSystem;
 
 [RequireComponent(typeof(CircleCollider2D))]
 public class PlayerItemCollector : InitializableBase
 {
-    [SerializeField] private InventoryHolder inventoryHolder;
+    [SerializeField] private EntityComponentStore ecs;
     [SerializeField] private CircleCollider2D detectionCollider;
     [SerializeField] private float detectionRadius = 1.0f;
+    private InventoryHolder inventoryHolder;
 
-    public override void Init()
+    public override void OnInit()
     {
-        if (this.IsInitialized) return;
-        base.Init();
-        if (detectionCollider == null)
-            detectionCollider = GetComponent<CircleCollider2D>();
+        base.OnInit();
 
-        if (detectionCollider != null)
+        if (this.detectionCollider == null)
         {
-            // Adjust radius so it's in world scale (ignores parent scale)
-            Vector3 parentScale = transform.lossyScale;
-            detectionCollider.radius = detectionRadius / Mathf.Max(parentScale.x, parentScale.y);
-            detectionCollider.isTrigger = true;
+            MyLogger.Error("No CircleCollider2D assigned to PlayerItemCollector" + GetParentGameObjectStackTraceMessage());
+            return;
+        }
+        if (ecs == null)
+        {
+            MyLogger.Error("No EntityComponentStore assigned to PlayerItemCollector" + GetParentGameObjectStackTraceMessage());
+            return;
+        }
+        if (ecs.ComponentRegistry.TryGetComponent<InventoryHolder>(out var invHolder))
+        {
+            this.inventoryHolder = invHolder;
         }
         else
         {
-            MyLogger.Error($"No CircleCollider2D assigned to PlayerItemCollector = {this}");
+            MyLogger.Error("No InventoryHolder found in EntityComponentStoreConfig for PlayerItemCollector" + GetParentGameObjectStackTraceMessage());
+            return;
         }
-
-        if (inventoryHolder == null)
-            MyLogger.Error($"No InventoryHolder assigned to PlayerItemCollector = {gameObject.name}");
+        this.detectionCollider.isTrigger = true;
+        Vector3 parentScale = transform.lossyScale;
+        this.detectionCollider.radius = detectionRadius / Mathf.Max(parentScale.x, parentScale.y);
+        this.detectionCollider.radius = this.detectionRadius;
 
     }
 

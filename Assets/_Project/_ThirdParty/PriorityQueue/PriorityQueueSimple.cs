@@ -90,14 +90,15 @@ public class PriorityQueueSimple<TElement, TPriority>
     /// </summary>
     public void Enqueue(TElement element)
     {
+        TPriority cost = element.GetCost();
         if (_useIndex && _indexMap.ContainsKey(element))
         {
             // Update priority if element exists
-            TryUpdatePriority(element, element.GetCost());
+            TryUpdatePriority(element, cost);
         }
         else
         {
-            Enqueue(element, element.GetCost());
+            Enqueue(element, cost);
         }
     }
 

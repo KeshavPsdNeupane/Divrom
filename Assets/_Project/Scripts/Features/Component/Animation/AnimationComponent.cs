@@ -15,20 +15,19 @@ public class AnimationComponentBase : InitializableBase
 
     public void SetDefaultAnimationSpeed() => this.anim.speed = DEAFULT_ANIMATION_SPEED;
 
-    public override void Init()
+    public override void OnInit()
     {
-        if (this.IsInitialized) return;
-        base.Init();
-        if (this.anim == null)
-        {
-            this.anim = GetComponent<Animator>();
-            MyLogger.Warn("Animator not assigned in AnimationComponent, " +
-            $"auto-assigned in Init on {gameObject.name}.");
-        }
+        base.OnInit();
         /// Defaulting to faceing down on init
         /// this is needed because otherwise the animator will at 0,0 direction 
         /// then when moving it will interpolate from 0,0 to the movement direction
         MoveAnimation(new Vector2(0, -1));
+
+        if (this.anim == null)
+        {
+            MyLogger.Error("Animator component is not assigned in AnimationComponent." + GetParentGameObjectStackTraceMessage());
+        }
+
     }
     public void AnimationTrigger()
     {

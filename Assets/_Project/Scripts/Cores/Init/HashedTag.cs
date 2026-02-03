@@ -1,5 +1,11 @@
 using System;
 
+
+public interface IHashTagProvider
+{
+    HashedTag GetHashedTag();
+}
+
 public readonly struct HashedTag
 {
     private readonly string tag;
@@ -35,3 +41,5 @@ public readonly struct HashedTag
         }
     }
 }
+
+

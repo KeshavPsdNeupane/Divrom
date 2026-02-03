@@ -2,7 +2,7 @@ using Kope.Core.CompilerServices;
 using UnityEngine;
 using Kope.Core.Init;
 using Kope.Character.Stats;
-
+using Kope.Core.EntityComponentSystem;
 
 namespace Kope.Component.Movement
 {
@@ -17,7 +17,6 @@ namespace Kope.Component.Movement
         Move = 10,
 
     }
-
 
 
     public struct MovementIntent
@@ -47,8 +46,10 @@ namespace Kope.Component.Movement
     public class MovementComponentBase : InitializableBase
     {
         [SerializeField] protected Rigidbody2D rb;
-        [SerializeField] protected CharacterStatsSystem characterStatsSystem;
+        [SerializeField] protected EntityComponentStore ecs;
         [SerializeField] protected float defaultMovementSpeed = 2f;
+
+        private CharacterStatsSystem characterStatsSystem;
 
         /// <summary>
         /// this is universal threshold to determine if direction is significant enough to consider.
@@ -57,18 +58,41 @@ namespace Kope.Component.Movement
         public const float MOVEMENT_EPSILON = 0.1f;
 
         protected MovementIntent currentIntent;
-        public Rigidbody2D Rigidbody => this.rb;
+        public float Mass => this.rb.mass;
         public Vector2 Direction => this.currentIntent.Direction;
         public Vector2 Position => this.rb.position;
-        public override void Init()
+
+        /// <summary>
+        /// Gets the Rigidbody2D associated with this movement component.
+        /// Highly discouraged to use this reference to manipulate movement directly.
+        /// Use SetMovementIntent instead to ensure proper movement handling.
+        /// </summary>
+        public Rigidbody2D Rigidbody => this.rb;
+        public override void OnInit()
         {
-            if (this.IsInitialized) return;
-            base.Init();
-            if (this.characterStatsSystem == null)
+            base.OnInit();
+            if (this.ecs == null)
             {
-                this.characterStatsSystem = GetComponent<CharacterStatsSystem>();
+                MyLogger.Error($"MovementComponentBase ({gameObject.name}): " +
+               $"EntityComponentStore not assigned. Movement will remain uninitialized.\n{GetParentGameObjectStackTraceMessage()}");
+                return;
+            }
+
+            if (this.rb == null)
+            {
+                MyLogger.Error($"MovementComponentBase ({gameObject.name}): " +
+               $"Rigidbody2D not assigned. Movement will remain uninitialized.\n{GetParentGameObjectStackTraceMessage()}");
+                return;
+            }
+
+            if (this.ecs.ComponentRegistry.TryGetComponent(out CharacterStatsSystem statsSystem))
+            {
+                this.characterStatsSystem = statsSystem;
+            }
+            else
+            {
                 MyLogger.Warn($"MovementComponentBase ({gameObject.name}): " +
-               "CharacterStatsSystem not assigned, attempting to fetch from same GameObject.");
+               $"CharacterStatsSystem not found in {this.ecs.name}.store name {this.ecs.StoreName}. Stats-based movement speed will be unavailable.\n{GetParentGameObjectStackTraceMessage()}");
             }
         }
 

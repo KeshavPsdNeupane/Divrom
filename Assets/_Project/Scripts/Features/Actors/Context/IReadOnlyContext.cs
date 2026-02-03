@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Kope.Core.EntityComponentSystem;
 
 
 /// <summary>
@@ -17,7 +18,7 @@ public interface IReadOnlyContext
     /// Please do not mutate data via this reference. If u do, 
     /// it is your responsibility since you opted into this contract.
     /// </summary>
-    public IReadOnlyEntityContext ReadOnlyEntityContext { get; }
+    public IReadOnlyEntityRegistry ReadOnlyEntityContext { get; }
 
     /// <summary>
     /// Tries to get the "Read Only" target contexts associated with the given tag.
@@ -26,6 +27,6 @@ public interface IReadOnlyContext
     /// Please do not mutate data via the returned contexts. If u do, 
     /// it is your responsibility since you opted into this contract.
     /// </summary>
-    public bool TryGetReadOnlyTargetContext(HashedTag tag, out IReadOnlyList<IReadOnlyEntityContext> targetEntityContexts);
+    public bool TryGetReadOnlyTargetContext(HashedTag tag, out IReadOnlyList<IReadOnlyEntityRegistry> targetEntityContexts);
 }
 

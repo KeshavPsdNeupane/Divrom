@@ -30,10 +30,9 @@ namespace Kope.Character.Stats
         public Dictionary<DamageType, StatBase> ResistanceStats => this.resistanceStats;
 
 
-        public override void Init()
+        public override void OnInit()
         {
-            if (this.IsInitialized) return;
-            base.Init();
+            base.OnInit();
             this.currentStats ??= new Dictionary<CharacterStatType, AdvanceStat>();
             this.resistanceStats ??= new Dictionary<DamageType, StatBase>();
             this.levelIncreasingStatWithLevelingValue ??= new Dictionary<CharacterStatType, float>();
@@ -56,6 +55,8 @@ namespace Kope.Character.Stats
 
         private void OnEnable()
         {
+            if (this.currentStats == null || this.resistanceStats == null) return;
+
             foreach (var stat in this.currentStats.Values)
                 stat?.OnEnable();
 
@@ -65,6 +66,8 @@ namespace Kope.Character.Stats
 
         private void OnDisable()
         {
+            if (this.currentStats == null || this.resistanceStats == null) return;
+
             foreach (var stat in this.currentStats.Values)
                 stat?.OnDisable();
 
@@ -72,10 +75,10 @@ namespace Kope.Character.Stats
                 stat?.OnDisable();
         }
 
-        protected override void Update()
+        protected override void OnUpdate()
         {
-            base.Update();
-            if (!this.IsInitialized) return;
+            base.OnUpdate();
+            if (this.currentStats == null || this.resistanceStats == null) return;
 
             foreach (var stat in this.currentStats.Values)
                 stat?.Update();

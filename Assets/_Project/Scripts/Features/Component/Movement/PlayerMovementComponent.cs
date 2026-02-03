@@ -14,10 +14,9 @@ public class PlayerMovementComponent : MovementComponentBase
     private InputManager inputManager;
 
 
-    public override void Init()
+    public override void OnInit()
     {
-        if (this.IsInitialized) return;
-        base.Init();
+        base.OnInit();
         if (GlobalServiceLocator.Instance.TryGetService(out InputManager inputManager))
         {
             this.inputManager = inputManager;

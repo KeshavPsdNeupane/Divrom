@@ -15,10 +15,9 @@ public class TabController : InitializableBase
     [SerializeField] private Tab[] tabs;
     [SerializeField] private Button[] buttons;
 
-    public override void Init()
+    public override void OnInit()
     {
-        if (this.IsInitialized) return;
-        base.Init();
+        base.OnInit();
         for (int i = 0; i < buttons.Length; i++)
         {
             int index = i;

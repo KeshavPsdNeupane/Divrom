@@ -19,5 +19,6 @@ namespace Kope.Core.Extensions
             }
             return str;
         }
+        public static HashedTag ToHashedTag(this string tag) => new(tag);
     }
 }

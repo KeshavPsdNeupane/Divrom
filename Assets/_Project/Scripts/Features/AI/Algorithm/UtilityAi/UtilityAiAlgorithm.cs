@@ -92,10 +92,9 @@ namespace Kope.AI.Utility
 
         #endregion
 
-        public override void Init()
+        public override void OnInit()
         {
-            if (this.IsInitialized) return;
-            base.Init();
+            base.OnInit();
             InitializeActionSet();
         }
 
