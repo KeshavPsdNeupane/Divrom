@@ -594,11 +594,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4aa1be8ba1d1eec2ba65053308af535, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Kope.AI.Algorithm.Utility.UtilityAiAlgorithm
+  idleAction: {fileID: 11400000, guid: d053e9b321b787902adce0839c756deb, type: 2}
   config: {fileID: 0}
   useConfig: 0
   algorithmName: Utility AI
   actionSOs:
   - {fileID: 11400000, guid: 55f0fced5ba3438c0ab41b97654eae60, type: 2}
+  maxLoopIterations: 5
 --- !u!1 &8468679303110247825
 GameObject:
   m_ObjectHideFlags: 0
@@ -644,7 +646,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ed4193d2b789d4dcaabbdf0a6ba2bbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Kope.AI.AIBrain
-  ecs: {fileID: 0}
+  ecs: {fileID: 4512281911964162701}
   planner: {fileID: 6355112809349495206}
   components:
   - {fileID: 4204933291776501059}

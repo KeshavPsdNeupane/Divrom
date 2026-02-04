@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using Kope.Core.EntityComponentSystem;
+using Unity.VisualScripting;
 
 namespace Kope.AI
 {

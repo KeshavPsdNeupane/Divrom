@@ -7129,12 +7129,16 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 3638312336222781528, guid: 9772af79b74a077ec8dd339b7b2c7dfc, type: 3}
-      propertyPath: ecs
-      value: 
-      objectReference: {fileID: 1306435630}
+      propertyPath: refreshInterval
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 4513367037071607233, guid: 9772af79b74a077ec8dd339b7b2c7dfc, type: 3}
       propertyPath: m_Name
       value: EnemyNew
+      objectReference: {fileID: 0}
+    - target: {fileID: 6355112809349495206, guid: 9772af79b74a077ec8dd339b7b2c7dfc, type: 3}
+      propertyPath: maxLoopIterations
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7870155893999714083, guid: 9772af79b74a077ec8dd339b7b2c7dfc, type: 3}
       propertyPath: m_LocalPosition.x
@@ -8461,6 +8465,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SceneExecutionOrderTracker
   trackedComponents:
+  - typeName: EntityInitCaller
+    order: -30
+    gameObjectName: InitCaller
   - typeName: InGameUIInitCaller
     order: -30
     gameObjectName: UI
@@ -8470,9 +8477,6 @@ MonoBehaviour:
   - typeName: EntityInitCaller
     order: -30
     gameObjectName: ECS and InitManager
-  - typeName: EntityInitCaller
-    order: -30
-    gameObjectName: InitCaller
 --- !u!1 &900482250
 GameObject:
   m_ObjectHideFlags: 0
@@ -10008,17 +10012,6 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
   CustomBlends: {fileID: 0}
---- !u!114 &1306435630 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4512281911964162701, guid: 9772af79b74a077ec8dd339b7b2c7dfc, type: 3}
-  m_PrefabInstance: {fileID: 644571514}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0ec1ce75969574c18af1816b31cb755, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Kope.Core.Runtime::Kope.Core.EntityComponentSystem.EntityComponentStore
 --- !u!1 &1335616151
 GameObject:
   m_ObjectHideFlags: 0

@@ -17,6 +17,10 @@ namespace Kope.Core.Extensions
         /// <returns></returns>
         public static float GetCompensatedUtility(this float value, int size)
         {
+            // Just return the original value if it's less than or equal to 0,
+            // or if there is only one consideration (size <= 1).
+            if (value <= 0f || size <= 1) return value;
+
             float orginal = value;
             float modFactor = 1f - (1f / size);
             float makeup = (1f - orginal) * modFactor;

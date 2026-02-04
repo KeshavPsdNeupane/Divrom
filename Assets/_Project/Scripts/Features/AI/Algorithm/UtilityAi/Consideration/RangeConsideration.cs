@@ -1,7 +1,7 @@
 using UnityEngine;
 using Kope.AI.Utility;
 
-[CreateAssetMenu(fileName = "RangeConsideration", menuName = "AI/UtilityAi/Considerations/RangeConsideration")]
+[CreateAssetMenu(fileName = "RangeConsideration", menuName = "Scriptable Objects/AI/UtilityAi/Considerations/RangeConsideration")]
 public class RangeConsideration : ConsiderationSO
 {
     [SerializeField] private string considerationName = "Range Consideration";

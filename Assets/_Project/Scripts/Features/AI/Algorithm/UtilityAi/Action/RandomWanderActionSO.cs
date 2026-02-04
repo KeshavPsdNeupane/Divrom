@@ -30,21 +30,18 @@ public class RandomWanderActionSO : ActionSO
         {
             this.mc.StopMovement();
         }
-        this.mc = null;
         base.EndOrAbort(ctx);
     }
 
     private bool CacheComponents(EntityComponentRegistry ctx, string message)
     {
-        if (this.mc == null)
+        // always try to fetch fresh component references even they were cached before.
+        if (!ctx.TryGetComponent(out MovementComponentBase newMc))
         {
-            if (!ctx.TryGetComponent(out MovementComponentBase newMc))
-            {
-                Debug.LogError(message);
-                return false;
-            }
-            this.mc = newMc;
+            Debug.LogError(message);
+            return false;
         }
+        this.mc = newMc;
         return true;
     }
 
@@ -72,20 +69,15 @@ public class RandomWanderActionSO : ActionSO
 
             // never cache any value from mc.Direction, as it is mutable.
             var currentDirection = this.mc.Direction;
-
             float turnSpeed = 5f / mass; // Adjust turn speed based on mass
             currentDirection = Vector2.Lerp(currentDirection, targetDirection, turnSpeed * Time.fixedDeltaTime);
             currentDirection.Normalize();
             this.mc.SetMovementIntent(new MovementIntent(currentDirection, MovementIntentType.Move));
             yield return new WaitForFixedUpdate();
         }
-
         this.mc.StopMovement();
-        yield return new WaitForSeconds(idleTimeAfterReachingTarget);
         MarkCompleted();
     }
-
-
 
     /// <summary>
     /// Using until my NavMesh2d solution is ready.

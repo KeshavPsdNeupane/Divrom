@@ -31,6 +31,10 @@ namespace Kope.AI.Utility
     /// </summary>
     public class UtilityAiAlgorithm : AIBrainAlgorithm
     {
+        [Header("Default Actions, Must be assigned in Inspector")]
+        [SerializeField] private ActionSO idleAction;
+
+
         [Header("Provide The Configuration or Do Direct Setup,\n if no configuration is provided, local setup will be used")]
         [SerializeField, Tooltip("The configuration defining the actions and parameters for this Utility AI.")]
         private UtilityAiConfig config;
@@ -40,11 +44,18 @@ namespace Kope.AI.Utility
         [SerializeField, Tooltip("Display name of this AI logic. " +
             "Use a unique name for easier debugging and identification.")]
         protected string algorithmName = "Utility AI";
-
         [SerializeField] private List<ActionSO> actionSOs;
 
-        private readonly HashSet<ActionSO> actionSOSet = new();
+        [SerializeField, Range(1, 10), Tooltip("Define after how many iteration of same action the AI should fall back to idle action as penalty" +
+            "This prevents the AI from getting stuck repeating the same action indefinitely.")]
+        private int maxLoopIterations = 5;
 
+
+        private readonly HashSet<ActionSO> actionSOSet = new();
+        private ActionSO idleActionInstance;
+
+        private ActionSO lastSelectedAction;
+        private int currentLoopCount = 0;
 
         #region  Internal or Exposed Properties
         public override string AlgorithmName => this.useConfig && this.config != null
@@ -59,10 +70,37 @@ namespace Kope.AI.Utility
 
 
         #region Unity Callbacks For Safeguarding Action Set
-        void OnEnable() => InitializeActionSet();
-        void OnDisable() => CleanUp();
-        void OnDestroy() => CleanUp();
-        public override void CleanUp()
+        void OnEnable() => OnInit();
+        void OnDisable() => OnCleanUp();
+
+        protected override void InitializeAI()
+        {
+            if (this.idleAction == null)
+            {
+                Debug.LogError($"UtilityAiAlgorithm Error: Idle Action is not assigned in {this.name}." +
+                    $" Please assign a default Idle Action in the inspector to avoid runtime errors."
+                    + GetParentGameObjectStackTraceMessage());
+                return;
+            }
+            if (this.useConfig && this.config == null)
+            {
+                Debug.LogWarning("UtilityAiAlgorithm: useConfig is true but config is null. Falling back to local action list." +
+                    GetParentGameObjectStackTraceMessage());
+            }
+            this.idleActionInstance = Instantiate(this.idleAction);
+            if (this.GetActualActionSOs() == null || this.GetActualActionSOs().Count == 0)
+            {
+                Debug.LogWarning($"UtilityAiAlgorithm Warning: No actions assigned in {this.name}. " +
+                    $"The AI will only be able to perform the idle action." +
+                    GetParentGameObjectStackTraceMessage());
+            }
+            foreach (var action in GetActualActionSOs())
+            {
+                actionSOSet.Add(Instantiate(action));
+            }
+        }
+
+        protected override void CleanUpAI()
         {
             if (actionSOSet != null)
             {
@@ -72,51 +110,29 @@ namespace Kope.AI.Utility
                 }
                 actionSOSet.Clear();
             }
+            this.idleActionInstance = null;
+            this.lastSelectedAction = null;
+            this.currentLoopCount = 0;
         }
-
-        private void InitializeActionSet()
-        {
-            if (useConfig && config == null)
-            {
-                Debug.LogWarning("UtilityAiAlgorithm: useConfig is true but config is null. Falling back to local action list.");
-            }
-
-            CleanUp();
-
-            foreach (var action in GetActualActionSOs())
-            {
-                // Instantiate per entity to ensure independent mutable state
-                actionSOSet?.Add(Instantiate(action));
-            }
-        }
-
         #endregion
 
-        public override void OnInit()
-        {
-            base.OnInit();
-            InitializeActionSet();
-        }
 
-        public void SetContext(Context ctx)
-        {
-            foreach (var action in actionSOSet)
-            {
-                action.Initialize(ctx.CurrentMutableEntityContext);
-            }
-        }
 
         public override IEnumerable<BaseActionSO> GetDecisionPlan(IReadOnlyContext ctx)
         {
-            // Returns only the highest-scoring action
-            yield return GetHighestScoringAction(ctx);
+            // Returns only the highest-scoring action or idle action if penalized.
+            yield return GetCorrectAction(ctx);
         }
 
-        private ActionSO GetHighestScoringAction(IReadOnlyContext ctx)
+        private ActionSO GetCorrectAction(IReadOnlyContext ctx)
+        {
+            return ValidateAndSanitizeAction(EvaluateAllActions(ctx));
+        }
+
+        private ActionSO EvaluateAllActions(IReadOnlyContext ctx)
         {
             ActionSO bestAction = null;
             float highestScore = float.MinValue;
-
             foreach (var action in actionSOSet)
             {
                 float score = action.Evaluate(ctx);
@@ -126,10 +142,38 @@ namespace Kope.AI.Utility
                     bestAction = action;
                 }
             }
-
             return bestAction;
         }
 
+        private ActionSO ValidateAndSanitizeAction(ActionSO selectedAction)
+        {
+            if (selectedAction == null)
+            {
+                this.lastSelectedAction = this.idleActionInstance;
+                this.currentLoopCount = 0;
+                return this.idleActionInstance;
+            }
+            //  Debug.Log($"<color=white><b>[AI Check]</b></color> {selectedAction.name} | Current Count: {currentLoopCount} | Max: {maxLoopIterations}");
 
+            if (ReferenceEquals(selectedAction, this.lastSelectedAction))
+            {
+                if (this.currentLoopCount >= this.maxLoopIterations)
+                {
+                    this.currentLoopCount = 0;
+                    this.lastSelectedAction = this.idleActionInstance;
+
+                    // Debug.LogWarning($"<color=orange><b>[AI Penalty]</b></color> {selectedAction.name} hit limit! Forcing Idle.");
+                    return this.idleActionInstance;
+                }
+                this.currentLoopCount++;
+            }
+            else
+            {
+                this.lastSelectedAction = selectedAction;
+                this.currentLoopCount = 1;
+            }
+
+            return selectedAction;
+        }
     }
 }
