@@ -15,4 +15,9 @@ public class IdleAction : ActionSO
         yield return new WaitForSeconds(idleDuration);
         MarkCompleted();
     }
+
+    public override void ExecutePhysic(Context ctx)
+    {
+        return ; // no op
+    }
 }

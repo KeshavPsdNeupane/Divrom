@@ -209,7 +209,7 @@ namespace Kope.AI
             finally
             {
                 action.OnActionCompleted -= handler;
-                Debug.Log($"<color=green><b>[AI Action]</b></color> {action.name} completed on {gameObject.name}");
+//                Debug.Log($"<color=green><b>[AI Action]</b></color> {action.name} completed on {gameObject.name}");
                 if (this.currentAction == action)
                 {
                     action.EndOrAbort(this.ctx.CurrentMutableEntityContext);

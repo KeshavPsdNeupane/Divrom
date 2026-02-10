@@ -9,7 +9,6 @@ using Kope.Core.EntityComponentSystem;
 public class RandomWanderActionSO : ActionSO
 {
     [SerializeField] private float wanderRadius = 5f;
-    [SerializeField] private float idleTimeAfterReachingTarget = 1f; // Wait time after reaching target
 
     [SerializeField] private int maxAttemptsToFindValidPoint = 10;
 
@@ -77,6 +76,12 @@ public class RandomWanderActionSO : ActionSO
         }
         this.mc.StopMovement();
         MarkCompleted();
+    }
+
+
+    public override void ExecutePhysic(Context ctx)
+    {
+        return ; // no op
     }
 
     /// <summary>

@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using UnityEngine;
 using Kope.Core.EntityComponentSystem;
-using Unity.VisualScripting;
 
 namespace Kope.AI
 {
@@ -88,6 +87,10 @@ namespace Kope.AI
         /// <param name="ctx"></param>
         /// <returns></returns>
         public abstract IEnumerator Execute(Context ctx);
+
+        public abstract void ExecutePhysic(Context ctx);
+
+        
 
         /// <summary>
         /// Mark the action as completed.
