@@ -86,11 +86,9 @@ public class Context : IReadOnlyContext
     public bool TryGetReadOnlyTargetContext(HashedTag tag, out IReadOnlyList<IReadOnlyEntityRegistry> targetEntityContexts)
     {
         // Return cached wrapper if available
-        if (this.cachedReadOnly.TryGetValue(tag, out var cached))
-        {
-            targetEntityContexts = cached;
-            return true;
-        }
+        if (this.cachedReadOnly.TryGetValue(tag, out targetEntityContexts)) return true;
+
+
         if (this.targetEntityContexts.TryGetValue(tag, out var mutableList))
         {
             targetEntityContexts = mutableList.AsValueEnumerable().Cast<IReadOnlyEntityRegistry>().ToList();

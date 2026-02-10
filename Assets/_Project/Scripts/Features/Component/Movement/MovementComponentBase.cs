@@ -122,7 +122,7 @@ namespace Kope.Component.Movement
             }
         }
 
-        protected virtual void FixedUpdate()
+        protected override void OnFixedUpdate()
         {
             ApplyPhysics();
         }

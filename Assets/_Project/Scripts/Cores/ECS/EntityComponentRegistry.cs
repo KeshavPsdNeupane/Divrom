@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 
 namespace Kope.Core.EntityComponentSystem
@@ -145,7 +146,7 @@ namespace Kope.Core.EntityComponentSystem
             }
         }
 
-        public bool TryGetComponent<Tcomponent>(out Tcomponent component)
+        public bool TryGetComponent<Tcomponent>([MaybeNullWhen(false)] out Tcomponent component)
         {
             var type = typeof(Tcomponent);
 

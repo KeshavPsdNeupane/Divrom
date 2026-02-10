@@ -1,5 +1,6 @@
-using UnityEngine;
 
+using UnityEngine;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Kope.Core.EntityComponentSystem
 {
@@ -30,6 +31,6 @@ namespace Kope.Core.EntityComponentSystem
         /// <typeparam name="T"></typeparam>
         /// <param name="component"></param>
         /// <returns></returns>
-        bool TryGetComponent<T>(out T component);
+        bool TryGetComponent<T>([MaybeNullWhen(false)] out T component);
     }
 }

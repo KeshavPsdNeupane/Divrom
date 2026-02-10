@@ -3,10 +3,10 @@ using System;
 
 public interface IHashTagProvider
 {
-    HashedTag GetHashedTag();
+    HashedTag HashedTag { get; }
 }
 
-public readonly struct HashedTag
+public readonly struct HashedTag : IEquatable<HashedTag>
 {
     private readonly string tag;
     private readonly int tagHash;
@@ -17,15 +17,18 @@ public readonly struct HashedTag
         this.tagHash = CreateHash(tag);
     }
 
-    public override int GetHashCode() => tagHash;
+    public bool Equals(HashedTag other)
+    {
+        return tagHash == other.tagHash && tag == other.tag;
+    }
 
     public override bool Equals(object obj)
-        => obj is HashedTag other && tagHash == other.tagHash && tag == other.tag;
+        => obj is HashedTag other && Equals(other);
 
     public static bool operator ==(HashedTag a, HashedTag b) => a.Equals(b);
-    public static bool operator !=(HashedTag a, HashedTag b) => !(a == b);
+    public static bool operator !=(HashedTag a, HashedTag b) => !a.Equals(b);
 
-
+    public override int GetHashCode() => tagHash;
 
     private static int CreateHash(string tag)
     {
@@ -40,6 +43,8 @@ public readonly struct HashedTag
             return hash;
         }
     }
+
+
 }
 
 

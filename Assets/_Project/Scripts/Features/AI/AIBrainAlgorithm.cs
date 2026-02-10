@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Kope.Core.Init;
-using UnityEngine;
 
 namespace Kope.AI
 {

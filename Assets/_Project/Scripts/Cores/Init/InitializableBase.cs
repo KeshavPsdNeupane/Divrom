@@ -89,12 +89,23 @@ namespace Kope.Core.Init
             {
                 if (!this.hasLoggedNotInitializedWarning)
                 {
+                    // calling FindAllParentStackString every frame is expensive, so we only do it once when we log the warning for the first time.
+                    // for now calling it again in this if so that we can get the correct stack trace even if the hierarchy changes after initialization. since we only log once, it should be fine.
                     this.parentGameObjectStackTrace = FindAllParentStackString(this.transform.parent);
                     this.hasLoggedNotInitializedWarning = true;
                 }
                 return;
             }
             OnUpdate();
+        }
+
+        protected void FixedUpdate()
+        {
+            // just return the Update gives the error log, no need to also log in FixedUpdate. 
+            // since usually if Update is not initialized, FixedUpdate will also not be initialized.
+            if (!this.IsInitialized) return;
+
+            OnFixedUpdate();
         }
 
         /// <summary>
@@ -105,6 +116,15 @@ namespace Kope.Core.Init
         /// so child classes can hook into Update without overriding it.
         /// </summary>
         protected virtual void OnUpdate() { }
+
+        /// <summary>
+        /// Called every fixed frame after IsInitialized check. Override this instead of FixedUpdate().
+        /// The base implementation does nothing.
+        /// this method is completely optional to override.
+        /// Just being used as Template Method pattern.
+        /// so child classes can hook into FixedUpdate without overriding it.
+        /// </summary>
+        protected virtual void OnFixedUpdate() { }
 
         private string FindAllParentStackString(Transform currentTransform)
         {

@@ -22,7 +22,7 @@ namespace Kope.AI.Editor
             GUILayout.Space(10);
             GUI.enabled = Application.isPlaying; // Only let us click if the game is running
 
-            if (GUILayout.Button("Force Plan Refresh", GUILayout.Height(30)))
+            if (GUILayout.Button("Soft Interrupt AI", GUILayout.Height(30)))
             {
                 brain.ForceInterrupt(InterruptPriority.Soft);
             }
@@ -30,6 +30,10 @@ namespace Kope.AI.Editor
             if (GUILayout.Button("Hard Stop AI", GUILayout.Height(30)))
             {
                 brain.ForceInterrupt(InterruptPriority.Hard);
+            }
+            if (GUILayout.Button("Death Interrupt AI", GUILayout.Height(30)))
+            {
+                brain.ForceInterrupt(InterruptPriority.Death);
             }
 
             GUI.enabled = true;

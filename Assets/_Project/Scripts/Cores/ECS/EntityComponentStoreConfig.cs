@@ -20,7 +20,6 @@ namespace Kope.Core.EntityComponentSystem
         [SerializeField] private List<string> excludedTypeNames = null;
 
         private HashSet<Type> excludedTypeSet;
-
         /// <summary>
         /// Gets the set of excluded types based on the provided type names.
         /// Search through all loaded assemblies to find matching types.

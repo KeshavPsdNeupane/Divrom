@@ -70,7 +70,6 @@ namespace Kope.AI.Utility
 
 
         #region Unity Callbacks For Safeguarding Action Set
-        void OnEnable() => OnInit();
         void OnDisable() => OnCleanUp();
 
         protected override void InitializeAI()

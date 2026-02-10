@@ -49,7 +49,7 @@ public class EntityStateController : InitializableBase
     }
 
 
-    private void FixedUpdate() => this.stateMachine?.CurrentState?.PhysicUpdate();
+    protected override void OnFixedUpdate() => this.stateMachine?.CurrentState?.PhysicUpdate();
 
 
     // this delegate func called when AttackComponent invokes OnAttackPerformed event

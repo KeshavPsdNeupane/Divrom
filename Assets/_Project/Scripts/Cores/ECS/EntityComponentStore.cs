@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using Kope.Core.Init;
 using UnityEngine;
-using ZLinq;
 
 namespace Kope.Core.EntityComponentSystem
 {
@@ -18,14 +17,17 @@ namespace Kope.Core.EntityComponentSystem
     /// <inheritdoc cref="InitializableBase"/>
     /// </summary>
 
-    public class EntityComponentStore : InitializableBase
+    public class EntityComponentStore : InitializableBase, IHashTagProvider
     {
-        [SerializeField] private string storeName;
+        [SerializeField, Tooltip("Make sure this is same for all instances of the same type of entity. This is used for debugging and optimization purposes. " +
+        "For example, all Goblin entities should have the same store name 'GoblinStore' so that we can easily identify them in the hierarchy and logs. " +
+        "This is NOT used as a unique identifier for the entity, since multiple entities can share the same store name. " +
+        "The unique identifier for the entity is determined by its HashedTag, which is generated from the store name and other factors at runtime.")]
+        private string storeName;
         [SerializeField] private Transform entityTransform;
         [SerializeField, Tooltip("Indicates whether this EntityComponentStore contains state/AI/sensor components." +
         "So that the EntityComponentRegistry can optimize its registrations accordingly. and other systems can query this info easily.")]
         private bool hasBehavioralComponents = false;
-
         [SerializeField] private EntityComponentStoreConfig config;
         /// <summary>
         /// The list of components stored in this EntityComponentStore.
@@ -34,11 +36,31 @@ namespace Kope.Core.EntityComponentSystem
         private List<InitializableBase> components = new();
         private EntityComponentRegistry componentRegistry;
 
+        private HashedTag hashedTag;
+
         /// <summary>
         /// Runtime registry of this EntityComponentStore.
         /// </summary>
         public EntityComponentRegistry ComponentRegistry => componentRegistry;
         public string StoreName => storeName;
+
+
+        /// <summary>
+        /// Mainly used for putting this EntityComponentStore into the Context and other systems that require a hashed tag for identification and optimization purposes.
+        /// The HashedTag is generated from the store name and other factors at runtime, so it is not guaranteed to be the same across different runs or builds.
+        /// However, it is guaranteed to be the same for the same store name within the same run, so it can be used for efficient lookups and comparisons.
+        /// </summary>
+        public HashedTag HashedTag
+        {
+            get
+            {
+                if (this.hashedTag == default)
+                {
+                    this.hashedTag = new HashedTag(this.storeName);
+                }
+                return this.hashedTag;
+            }
+        }
 
         public override void OnInit()
         {

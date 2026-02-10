@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using UnityEngine;
 using Kope.Core.EntityComponentSystem;
 
@@ -52,22 +51,25 @@ namespace Kope.AI
         /// Call this on the planner init call so we can cache any needed components. only once.
         /// for current entity. since all the components are reference types. so no need to do this per action execution.
         /// </summary>
-        public virtual void Initialize(EntityComponentRegistry ctx)
+        public void Initialize(EntityComponentRegistry ctx)
         {
             this.actionStatus = ExecutionActionStatus.Running;
+            OnInilialize(ctx);
         }
-
+        protected abstract void OnInilialize(EntityComponentRegistry ctx);
         /// <summary>
         /// End or abort the action.
         /// Always override this method when needed.
         /// First clean up any state related to the action,
         /// do validations, then call base.EndOrAbort(ctx) to reset status.
         /// </summary>
-        public virtual void EndOrAbort(EntityComponentRegistry ctx)
+        public void EndOrAbort(EntityComponentRegistry ctx)
         {
+            OnEndOrAbort(ctx);
             actionStatus = ExecutionActionStatus.NotInitialized;
             OnActionCompleted = null;
         }
+        protected abstract void OnEndOrAbort(EntityComponentRegistry ctx);
 
         /// <summary>
         /// Execute the action with the given context.
@@ -86,11 +88,28 @@ namespace Kope.AI
         /// </summary>
         /// <param name="ctx"></param>
         /// <returns></returns>
-        public abstract IEnumerator Execute(Context ctx);
+        public abstract void TickUpdate(Context ctx);
 
-        public abstract void ExecutePhysic(Context ctx);
+        /// <summary>
+        /// Execute the action logic during the Physics (FixedUpdate) cycle.
+        /// Should be implemented by derived classes for movement, force application, or any Rigidbody manipulation.
+        /// This ensures movement behavior is consistent with the physics engine's timing, preventing jitter.
+        /// 
+        /// Need full context for execution since actions may need to read other target contexts.
+        /// Even though the context is passed as mutable, any action can mutate only its own entity context.
+        /// 
+        /// It is recommended to use the ReadOnlyEntityContext property and use the function
+        /// TryGetReadOnlyTargetContext of IReadOnlyContext to get "Read-Only" access to target contexts.
+        /// This enforces the read-only contract of target contexts to prevent inconsistent states
+        /// and preserve the assumptions made by AI algorithms and other actions.
+        /// 
+        /// SO PLEASE BE WARNED: DO NOT MUTATE TARGET CONTEXTS DIRECTLY IN TICKFIXEDUPDATE UNLESS EXTREMELY NECESSARY.
+        /// THIS IS A LAST RESORT. INSTEAD, MUTATE ONLY THE CURRENT ENTITY'S CONTEXT.
+        /// </summary>
+        /// <param name="ctx">The AI context containing current and target entity data.</param>
+        public abstract void TickFixedUpdate(Context ctx);
 
-        
+
 
         /// <summary>
         /// Mark the action as completed.

@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Kope.Core.CompilerServices;
 namespace ServiceLocatorPattern
 {
@@ -18,7 +19,7 @@ namespace ServiceLocatorPattern
         }
         public void Lock() => this._canRegister = false;
 
-        public bool TryGetService<TService>(out TService service) where TService : GlobalServiceBase
+        public bool TryGetService<TService>([MaybeNullWhen(false)] out TService service) where TService : GlobalServiceBase
         {
             var type = typeof(TService);
 

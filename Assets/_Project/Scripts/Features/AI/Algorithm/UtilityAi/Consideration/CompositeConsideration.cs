@@ -18,9 +18,9 @@ public class CompositeConsideration : ConsiderationSO
         {
             var (score, count) = consideration.Evaluate(context, totalMultiplicationCount);
             finalScore *= score;
-            if (finalScore <= 0f) return (0f, totalMultiplicationCount);
             // ++ is needed to account for the current multiplication
             totalMultiplicationCount = ++count;
+            if (finalScore <= 0f) return (0f, totalMultiplicationCount);
         }
         return (finalScore, totalMultiplicationCount);
     }
