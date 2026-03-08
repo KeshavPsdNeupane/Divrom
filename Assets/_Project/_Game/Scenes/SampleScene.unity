@@ -9089,8 +9089,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EntityInitCaller
   initializables:
-  - {fileID: 962445446}
   - {fileID: 1374625429}
+  - {fileID: 962445446}
   canCallInAwake: 1
   autoPopulate: 0
   includeChildren: 1
@@ -10246,7 +10246,8 @@ MonoBehaviour:
   entityTransform: {fileID: 962445445}
   hasBehavioralComponents: 0
   config: {fileID: 11400000, guid: fcace0391532e5648a86e8f603e94c7d, type: 2}
-  components: []
+  components:
+  - {fileID: 1374625430}
 --- !u!114 &1374625430
 MonoBehaviour:
   m_ObjectHideFlags: 0
