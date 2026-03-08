@@ -1,5 +1,5 @@
 using UnityEngine;
-using ThirdParty;
+using ThirdParty.SerializableDictionary;
 namespace Kope.Character.Stats
 {
     [CreateAssetMenu(fileName = "CharacterStateSO", menuName = "Scriptable Character/CharacterStateSO")]

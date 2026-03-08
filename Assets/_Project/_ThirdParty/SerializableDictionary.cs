@@ -1,14 +1,12 @@
 using System;
 using System.Collections.Generic;
-using Kope.Core.CompilerServices;
 using UnityEngine;
 
-namespace ThirdParty
+namespace ThirdParty.SerializableDictionary
 {
     /// <summary>
     /// Serializable dictionary for Unity serialization.    
     /// </summary>
-
     [Serializable]
     public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, ISerializationCallbackReceiver
     {
@@ -35,7 +33,7 @@ namespace ThirdParty
             this.Clear();
             if (keys.Count != values.Count)
             {
-                MyLogger.Warn($"SerializableDictionary<{typeof(TKey)}, {typeof(TValue)}> mismatch: {keys.Count} keys, {values.Count} values. Clearing...");
+                Debug.LogWarning($"SerializableDictionary<{typeof(TKey)}, {typeof(TValue)}> mismatch: {keys.Count} keys, {values.Count} values. Clearing...");
                 keys = new List<TKey>();
                 values = new List<TValue>();
                 return;

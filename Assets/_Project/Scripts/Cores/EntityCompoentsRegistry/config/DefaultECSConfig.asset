@@ -12,6 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b7bd589522d321d6be9c61990ced8da, type: 3}
   m_Name: DefaultECSConfig
   m_EditorClassIdentifier: Assembly-CSharp::EntityComponentStoreConfig
+  commonEntityNames:
+  - Player
+  - Enemy
   excludedTypeNames:
   - Kope.Core.Init.InitializableBase
   - Kope.Core.Init.IInitializable

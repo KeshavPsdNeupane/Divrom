@@ -178,10 +178,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5412391102036166286}
-  - component: {fileID: 860332554604597980}
   - component: {fileID: 4512281911964162701}
   m_Layer: 0
-  m_Name: ECS and InitManager
+  m_Name: EntityComponentsRegistry
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -202,24 +201,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 7870155893999714083}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &860332554604597980
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4335047405112921079}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ffd0ac4ef1ba07c7fa439d5abd24b190, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerInitCaller
-  initializables:
-  - {fileID: 4512281911964162701}
-  canCallInAwake: 1
-  autoPopulate: 0
-  includeChildren: 1
-  traversal: 0
 --- !u!114 &4512281911964162701
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -232,7 +213,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0ec1ce75969574c18af1816b31cb755, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Kope.Core.Runtime::Kope.Core.EntityComponentSystem.EntityComponentStore
-  storeName: Enemy Store
   entityTransform: {fileID: 7870155893999714083}
   hasBehavioralComponents: 1
   config: {fileID: 11400000, guid: fcace0391532e5648a86e8f603e94c7d, type: 2}
@@ -242,7 +222,7 @@ MonoBehaviour:
   - {fileID: 3663409563878092839}
   - {fileID: 264589805506960240}
   - {fileID: 7652927087965265889}
-  - {fileID: 73212219776477661}
+  - {fileID: 0}
   - {fileID: 3638312336222781528}
 --- !u!1 &4424315005683123007
 GameObject:
@@ -289,7 +269,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyMovementComponent
   rb: {fileID: 7428367574571897464}
-  ecs: {fileID: 4512281911964162701}
+  ecr: {fileID: 4512281911964162701}
   defaultMovementSpeed: 2
 --- !u!1 &4513367037071607233
 GameObject:
@@ -303,6 +283,9 @@ GameObject:
   - component: {fileID: 6908094264203775830}
   - component: {fileID: 6528310715214574038}
   - component: {fileID: 7428367574571897464}
+  - component: {fileID: 1048981498321793666}
+  - component: {fileID: 1814066906529279447}
+  - component: {fileID: 66932067619678931}
   m_Layer: 0
   m_Name: EnemyNew
   m_TagString: Player
@@ -417,6 +400,55 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
+--- !u!114 &1048981498321793666
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4513367037071607233}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5f2a7e09a5e7f4dfaad5c673c86dc7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Kope.Core.Runtime::Kope.Core.UniqueID
+  guid: 1ae586d1-7dc7-4e79-a897-af96e335a43f
+  absoluteHierarchyPath: SampleScene-->EnemyNew
+--- !u!114 &1814066906529279447
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4513367037071607233}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bceaae993f9ebf280b4c92d8d12a3d46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Kope.Core.Runtime::EntityManager
+  commonEntityName: Enemy
+  uniqueID: {fileID: 1048981498321793666}
+  entityComponentRegistry: {fileID: 4512281911964162701}
+  config: {fileID: 11400000, guid: 296b484721bdc20d2b51d78c4a7374ac, type: 2}
+--- !u!114 &66932067619678931
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4513367037071607233}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffd0ac4ef1ba07c7fa439d5abd24b190, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInitCaller
+  initializables:
+  - {fileID: 4512281911964162701}
+  - {fileID: 1814066906529279447}
+  canCallInAwake: 1
+  autoPopulate: 0
+  includeChildren: 1
+  traversal: 0
 --- !u!1 &4797224322138825074
 GameObject:
   m_ObjectHideFlags: 0
@@ -461,7 +493,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7d971b1a74bb9a47bfb7343d07bc903, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAttackComponent
-  ecs: {fileID: 4512281911964162701}
+  ecr: {fileID: 4512281911964162701}
   equippedWeaponDataSO: {fileID: 11400000, guid: 4108109141f9b5663a6dbf1c537616eb, type: 2}
 --- !u!1 &5746142724939792863
 GameObject:
@@ -544,12 +576,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10ca6cbcd6ccab44ba17ff59bcf73a28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StatusEffectConnector
-  StatusObjectTagName: StatusEffect
   detectionCollider: {fileID: 1192811313593498086}
-  ecs: {fileID: 4512281911964162701}
+  detectableLayers:
+    serializedVersion: 2
+    m_Bits: 1
   detectionRadius: 0.5
   isTrigger: 1
-  showGizmos: 0
+  usesExitDetection: 0
+  visualizeGizmos: 1
+  gizmoColor: {r: 0, g: 1, b: 1, a: 1}
+  StatusObjectTagName: StatusEffect
+  ecr: {fileID: 4512281911964162701}
 --- !u!1 &5902837853673280984
 GameObject:
   m_ObjectHideFlags: 0
@@ -600,7 +637,7 @@ MonoBehaviour:
   algorithmName: Utility AI
   actionSOs:
   - {fileID: 11400000, guid: 55f0fced5ba3438c0ab41b97654eae60, type: 2}
-  maxLoopIterations: 5
+  maxLoopIterations: 2
 --- !u!1 &8468679303110247825
 GameObject:
   m_ObjectHideFlags: 0
@@ -646,11 +683,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ed4193d2b789d4dcaabbdf0a6ba2bbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Kope.AI.AIBrain
-  ecs: {fileID: 4512281911964162701}
+  ecr: {fileID: 4512281911964162701}
   planner: {fileID: 6355112809349495206}
   components:
   - {fileID: 4204933291776501059}
-  refreshInterval: 5.5
+  refreshInterval: 6
+  sensor: {fileID: 0}
 --- !u!1 &9153279180399708285
 GameObject:
   m_ObjectHideFlags: 0

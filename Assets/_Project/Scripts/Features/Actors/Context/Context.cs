@@ -1,102 +1,121 @@
 using System;
 using System.Collections.Generic;
-using ZLinq;
+using UnityEngine;
+using System.Linq;
 using Kope.Core.EntityComponentSystem;
-
 /// <summary>
-/// Stores the context of an entity and its targets.
-/// Since the is a reference type, the underlying data can be mutated via this reference.<br/>
-/// <inheritdoc cref="IReadOnlyContext"/>
+/// Stores the operational context of an entity and its collection of targets.
+/// <para>
+/// <b>Self-Identity:</b> Provides mutable access to the current entity's registry for state changes.
+/// <br/><b>Targets:</b> Provides strictly read-only access to target entities to prevent unintended external mutations.
+/// </para>
 /// </summary>
 public class Context : IReadOnlyContext
 {
-    private readonly EntityComponentRegistry currentEntityContext;
+	private readonly ComponentRegistry currentEntityContext;
 
-    // Mutable target contexts
-    private readonly Dictionary<HashedTag, List<EntityComponentRegistry>> targetEntityContexts = new();
+	// Primary Storage: Nested dictionary for O(1) individual lookups
+	private readonly Dictionary<HashedTag, Dictionary<HashedTag, IReadOnlyEntityRegistry>> targetEntityContexts = new();
 
-    // Cached read-only wrappers
-    private readonly Dictionary<HashedTag, IReadOnlyList<IReadOnlyEntityRegistry>> cachedReadOnly = new();
+	private readonly Dictionary<HashedTag, List<IReadOnlyEntityRegistry>> listCache = new();
 
-    public EntityComponentRegistry CurrentMutableEntityContext => this.currentEntityContext;
+	public ComponentRegistry CurrentMutableEntityContext => this.currentEntityContext;
+	public IReadOnlyEntityRegistry ReadOnlyEntityContext => this.currentEntityContext;
 
-    //<inheritdoc/>
-    public IReadOnlyEntityRegistry ReadOnlyEntityContext => this.currentEntityContext;
+	public int GetTotalEntityCount()
+	{
+		return this.targetEntityContexts.Count == 0 ? 0 : this.targetEntityContexts.Values.Sum(innerDict => innerDict.Count);
+	}
 
-    public Context(EntityComponentRegistry currentEntityContext)
-    {
-        this.currentEntityContext = currentEntityContext;
-    }
+	public Context(ComponentRegistry currentEntityContext)
+	{
+		this.currentEntityContext = currentEntityContext ?? throw new ArgumentNullException(nameof(currentEntityContext));
+	}
 
-    /// <summary>
-    /// Adds a target entity context. Clears cache to maintain consistency.
-    /// </summary>
-    /// <param name="tag"></param>
-    /// <param name="targetContext"></param>
-    public void AddTargetEntityContext(HashedTag tag, EntityComponentRegistry targetContext)
-    {
-        if (!this.targetEntityContexts.TryGetValue(tag, out var list))
-        {
-            list = new List<EntityComponentRegistry>();
-            this.targetEntityContexts[tag] = list;
-        }
+	public void RegisterEntityContext(EntityDetail entityDetail)
+	{
+		var commonTag = entityDetail.CommonEntityHashedTag;
+		var individualTag = entityDetail.UniqueID.HashedTag;
+		var targetContext = entityDetail.EntityComponentRegistry.ComponentRegistry;
 
-        list.Add(targetContext);
+		// Ensure the common category exists
+		if (!targetEntityContexts.TryGetValue(commonTag, out var innerDict))
+		{
+			innerDict = new Dictionary<HashedTag, IReadOnlyEntityRegistry>();
+			targetEntityContexts[commonTag] = innerDict;
+			listCache[commonTag] = new List<IReadOnlyEntityRegistry>();
+		}
 
-        // Invalidate cached read-only wrapper
-        this.cachedReadOnly.Remove(tag);
-    }
+		// Only add if it's a new individual entity
+		if (!innerDict.ContainsKey(individualTag))
+		{
+			innerDict[individualTag] = targetContext;
+			listCache[commonTag].Add(targetContext);
+			// only subscribe to the entity's death/pooled event if it's a new entry to prevent multiple subscriptions
+			// for the same entity
+			entityDetail.EntityDiedOrPooledHandler.OnEntityDiedOrPooled += RemoveEntityDueToSignal;
+		}
+		// If it exists, the reference is already shared. Do nothing.
+	}
+	public void RemoveTargetEntityContext(UniqueID individualTag, HashedTag commonTag)
+	{
+		//Debug.Log($"[Context] Removing target entity context: CommonTag={commonTag}, IndividualTag={individualTag}");
+		if (targetEntityContexts.TryGetValue(commonTag, out var innerDict))
+		{
+			var individualHashedTag = individualTag.HashedTag;
+			if (innerDict.TryGetValue(individualHashedTag, out var context))
+			{
+				// Remove from cache list
+				if (listCache.TryGetValue(commonTag, out var cacheList))
+				{
+					cacheList.Remove(context);
+					//Debug.Log($"[Context] Removed target entity from cache: CommonTag={commonTag}, IndividualTag={individualTag}");
+				}
 
-    /// <summary>
-    /// Removes a target entity context. Clears cache to maintain consistency.
-    /// </summary>
-    public void RemoveTargetEntityContext(HashedTag tag, EntityComponentRegistry targetContext)
-    {
-        if (this.targetEntityContexts.TryGetValue(tag, out var list))
-        {
-            list.Remove(targetContext);
-            if (list.Count == 0)
-                this.targetEntityContexts.Remove(tag);
-        }
+				innerDict.Remove(individualHashedTag);
+				if (innerDict.Count == 0)
+				{
+					//	Debug.Log($"[Context] All entities removed from category: CommonTag={commonTag}");
+					targetEntityContexts.Remove(commonTag);
+					listCache.Remove(commonTag);
+				}
+			}
+		}
+	}
 
-        this.cachedReadOnly.Remove(tag);
-    }
+	/// <summary>
+	/// Now 100% allocation-free and O(1).
+	/// </summary>
+	public bool TryGetReadOnlyTargetContext(HashedTag commonTag, HashedTag individualTag, out IReadOnlyEntityRegistry targetEntityContext)
+	{
+		if (this.targetEntityContexts.TryGetValue(commonTag, out var dict))
+		{
+			return dict.TryGetValue(individualTag, out targetEntityContext);
+		}
 
-    /// <summary>
-    /// Tries to get the mutable target contexts associated with the given tag.
-    /// Returns true if found, false otherwise.
-    /// Recommended to use only when it is extremely necessary to mutate target contexts.
-    /// Otherwise, use IReadOnlyContext.TryGetTargetContext to get "Read-Only" access.
-    /// Not Recommended to mutate target contexts directly as it may lead to inconsistent states.
-    /// And may break the assumptions made by AI algorithms and actions.
-    /// And most of time in Execute Method of any child of BaseActionSO, we only need read-only access.
-    /// Even though the Context is passed there since we might need to read other target contexts.
-    /// and mutate only the current entity's context. so recommended to use IReadOnlyContext in Execute methods too.
-    ///  PLEASE BE WARNED. USE THIS METHOD ONLY WHEN IT IS EXTREMELY NECESSARY TO MUTATE TARGET CONTEXTS.
-    /// </summary>
-    /// <param name="tag"></param>
-    /// <param name="targetContext"></param>
-    /// <returns></returns>
-    public bool TryGetMutableTargetContext(HashedTag tag, out List<EntityComponentRegistry> targetContext)
-    {
-        return this.targetEntityContexts.TryGetValue(tag, out targetContext);
-    }
+		targetEntityContext = null;
+		return false;
+	}
 
-    //<inheritdoc/>
-    public bool TryGetReadOnlyTargetContext(HashedTag tag, out IReadOnlyList<IReadOnlyEntityRegistry> targetEntityContexts)
-    {
-        // Return cached wrapper if available
-        if (this.cachedReadOnly.TryGetValue(tag, out targetEntityContexts)) return true;
+	/// <summary>
+	/// Returns the cached list. No "new List" allocation at runtime.
+	/// </summary>
+	public bool TryGetReadOnlyTargetContexts(HashedTag commonTag, out IReadOnlyList<IReadOnlyEntityRegistry> targetEntityContexts)
+	{
+		if (this.listCache.TryGetValue(commonTag, out var cache))
+		{
+			targetEntityContexts = cache;
+			return true;
+		}
+
+		targetEntityContexts = Array.Empty<IReadOnlyEntityRegistry>();
+		return false;
+	}
 
 
-        if (this.targetEntityContexts.TryGetValue(tag, out var mutableList))
-        {
-            targetEntityContexts = mutableList.AsValueEnumerable().Cast<IReadOnlyEntityRegistry>().ToList();
-            this.cachedReadOnly[tag] = targetEntityContexts;
-            return true;
-        }
-
-        targetEntityContexts = Array.Empty<IReadOnlyEntityRegistry>();
-        return false;
-    }
+	private void RemoveEntityDueToSignal(UniqueID individualTag, HashedTag commonTag)
+	{
+		Debug.Log($"[Context] Received entity death/pooled signal: CommonTag={commonTag}, IndividualTag={individualTag}");
+		RemoveTargetEntityContext(individualTag, commonTag);
+	}
 }

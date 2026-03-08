@@ -1,7 +1,9 @@
 {
     "name": "Kope.Core.Runtime",
     "rootNamespace": "Kope.Core",
-    "references": [],
+    "references": [
+        "GUID:815402b415daa9c298856ab850cef985"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

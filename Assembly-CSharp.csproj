@@ -57,6 +57,7 @@
     <Compile Include="Assets/_Project/Scripts/Features/AI/AIBrain.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/UI/ItemSlotDoubleTap.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/UI/InventoryDisplays/PlayerInventoryDisplay.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/AI/EntitySensor.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/UI/ItemSlotUI/SimpleItemUIDragAndDropInteractionHelperClass.cs" />
     <Compile Include="Assets/PlayerInput.cs" />
     <Compile Include="Assets/_Project/UI/Menu/TabController.cs" />

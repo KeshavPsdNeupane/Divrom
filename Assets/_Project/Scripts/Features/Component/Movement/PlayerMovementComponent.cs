@@ -4,10 +4,15 @@ using ServiceLocatorPattern;
 using Kope.Core.CompilerServices;
 using Kope.Component.Movement;
 /// <summary>
-/// Player-specific movement component that handles input and movement application.
-/// The ApplyMovement Must be called externally, typically from a PlayerController or similar script.
-/// For player to move, this Class just provides the movement logic based on input received.
-/// Actual Movement application should be managed by the caller.
+/// PlayerMovementComponent.cs<br/>
+/// This component handles player movement input and translates it into movement intents for the movement system to process.
+/// It subscribes to the InputManager's input events and updates the movement intent accordingly.
+/// <br/>
+/// This component is designed to be flexible and can be easily extended to support additional movement-related input (e.g., sprinting, crouching) by adding more input action subscriptions and handling them in the corresponding callback methods.
+/// <br/>
+/// Note: This component assumes that the InputManager is properly set up and that the relevant input actions (e.g., "Move") are defined in the input action asset. Make sure to configure the InputManager and input actions correctly for this component to function as intended.
+/// <br/>
+/// <inheritdoc cref="MovementComponentBase"/>      
 /// </summary>
 public class PlayerMovementComponent : MovementComponentBase
 {
@@ -23,7 +28,7 @@ public class PlayerMovementComponent : MovementComponentBase
         }
         else
         {
-            MyLogger.Error($"{this.gameObject.name}Controller: InputManager service not found!");
+            MyLogger.Error($"{this.gameObject.name}Controller: InputManager service not found!" + GetParentGameObjectStackTraceMessage());
         }
     }
     protected override void OnEnable()

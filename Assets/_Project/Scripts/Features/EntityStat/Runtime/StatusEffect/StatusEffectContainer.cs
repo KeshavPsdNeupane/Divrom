@@ -1,15 +1,49 @@
+using Kope.Character.Stats;
+using Kope.Core.Init;
 using UnityEngine;
 
 [RequireComponent(typeof(CircleCollider2D))]
-public class StatusEffectContainer : MonoBehaviour
+public class StatusEffectContainer : InitializableBase
 {
-    [SerializeField] private CircleCollider2D circle;
-    [SerializeField] public StatusEffect statusEffect;
+	[SerializeField] private CircleCollider2D circle;
 
-    private void Awake()
-    {
-        if (this.circle == null)
-            this.circle = this.gameObject.GetComponent<CircleCollider2D>();
-        this.circle.isTrigger = true;
-    }
+	[Header("Info")]
+	[SerializeField] private string source = "Default";
+	[SerializeField] private string effectName = "None";
+	[SerializeField] private CharacterStatType statType;
+	[SerializeField] private float modifierAmount;
+
+	[Tooltip("If you put the value exact -1, it means the buff is permanent")]
+	[Min(-1f)]
+	[SerializeField] private float totalDuration;
+
+	[SerializeField] private bool isPercentage;
+	[SerializeField] private bool isDebuffFromArmor;
+	[SerializeField] private bool isDebuffFromEnemy;
+	[SerializeField] private int debuffPriority;
+
+	[TextArea]
+	[SerializeField] private string description;
+
+	private StatusEffect statusEffect;
+	public StatusEffect StatusEffect => this.statusEffect ??= new StatusEffect
+	{
+		source = this.source,
+		effectName = this.effectName,
+		statType = this.statType,
+		modifierAmount = this.modifierAmount,
+		totalDuration = this.totalDuration,
+		isPercentage = this.isPercentage,
+		isDebuffFromArmor = this.isDebuffFromArmor,
+		isDebuffFromEnemy = this.isDebuffFromEnemy,
+		debuffPriority = this.debuffPriority,
+		description = this.description
+	};
+
+	private void Awake()
+	{
+		if (this.circle == null)
+			this.circle = this.gameObject.GetComponent<CircleCollider2D>();
+		this.circle.isTrigger = true;
+	}
 }

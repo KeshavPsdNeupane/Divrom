@@ -56,9 +56,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6671984905160279280}
+  - component: {fileID: 794350931459441688}
   - component: {fileID: 5760765433560478908}
   - component: {fileID: 3817346171218316597}
   - component: {fileID: 5028322666046906755}
+  - component: {fileID: 8698070850850616}
+  - component: {fileID: 6069060705174550741}
   m_Layer: 0
   m_Name: PlayerNew
   m_TagString: Player
@@ -88,6 +91,20 @@ Transform:
   - {fileID: 6608268893706211379}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &794350931459441688
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2033154260760698069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5f2a7e09a5e7f4dfaad5c673c86dc7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Kope.Core.Runtime::UniqueID
+  guid: 95ab4cc4-16e1-4db8-af83-4f23ba2c63ca
+  absoluteHierarchyPath: SampleScene-->PlayerNew
 --- !u!114 &5760765433560478908
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -173,6 +190,41 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
+--- !u!114 &8698070850850616
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2033154260760698069}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bceaae993f9ebf280b4c92d8d12a3d46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Kope.Core.Runtime::EntityManager
+  commonEntityName: Player
+  uniqueID: {fileID: 794350931459441688}
+  entityComponentRegistry: {fileID: 6037248722059709900}
+  config: {fileID: 11400000, guid: 296b484721bdc20d2b51d78c4a7374ac, type: 2}
+--- !u!114 &6069060705174550741
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2033154260760698069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffd0ac4ef1ba07c7fa439d5abd24b190, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInitCaller
+  initializables:
+  - {fileID: 6037248722059709900}
+  - {fileID: 8698070850850616}
+  canCallInAwake: 1
+  autoPopulate: 0
+  includeChildren: 1
+  traversal: 0
 --- !u!1 &2336535472576801368
 GameObject:
   m_ObjectHideFlags: 0
@@ -261,10 +313,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6954758242764582700}
-  - component: {fileID: 645018554015784863}
   - component: {fileID: 6037248722059709900}
   m_Layer: 0
-  m_Name: ECS and InitManager
+  m_Name: EntityComponentsRegistry
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -285,24 +336,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6671984905160279280}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &645018554015784863
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3334636408711061821}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ffd0ac4ef1ba07c7fa439d5abd24b190, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerInitCaller
-  initializables:
-  - {fileID: 6037248722059709900}
-  canCallInAwake: 1
-  autoPopulate: 0
-  includeChildren: 1
-  traversal: 0
 --- !u!114 &6037248722059709900
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -315,7 +348,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0ec1ce75969574c18af1816b31cb755, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EntityComponentStore
-  storeName: Player Store
   entityTransform: {fileID: 6671984905160279280}
   hasBehavioralComponents: 1
   config: {fileID: 11400000, guid: fcace0391532e5648a86e8f603e94c7d, type: 2}
@@ -326,8 +358,6 @@ MonoBehaviour:
   - {fileID: 2559965507949131218}
   - {fileID: 2247624721500832756}
   - {fileID: 196204471101592853}
-  - {fileID: 6766132971903874346}
-  - {fileID: 2074568686396004027}
 --- !u!1 &4072795266852849281
 GameObject:
   m_ObjectHideFlags: 0
@@ -406,7 +436,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovementComponent
   rb: {fileID: 5028322666046906755}
-  ecs: {fileID: 0}
+  ecr: {fileID: 6037248722059709900}
   defaultMovementSpeed: 2
 --- !u!1 &4974842170559838876
 GameObject:
@@ -489,12 +519,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10ca6cbcd6ccab44ba17ff59bcf73a28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StatusEffectConnector
-  StatusObjectTagName: StatusEffect
   detectionCollider: {fileID: 2553193555243041833}
-  ecs: {fileID: 0}
-  detectionRadius: 0.25
+  detectableLayers:
+    serializedVersion: 2
+    m_Bits: 512
+  detectionRadius: 0.33
   isTrigger: 1
-  showGizmos: 0
+  usesExitDetection: 0
+  visualizeGizmos: 1
+  gizmoColor: {r: 1, g: 0, b: 0.6640477, a: 1}
+  StatusObjectTagName: StatusEffect
+  ecr: {fileID: 6037248722059709900}
 --- !u!1 &5774743694550367341
 GameObject:
   m_ObjectHideFlags: 0
@@ -610,7 +645,7 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 0.0001
+  m_Radius: 0.1
 --- !u!114 &6766132971903874346
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -623,10 +658,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8829443166a12ae4fac4536be193a515, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerItemCollector
-  ecs: {fileID: 0}
   detectionCollider: {fileID: 7730815850288028167}
-  detectionRadius: 2
-  showGizmos: 0
+  detectableLayers:
+    serializedVersion: 2
+    m_Bits: 256
+  detectionRadius: 1.51
+  isTrigger: 1
+  usesExitDetection: 0
+  visualizeGizmos: 1
+  gizmoColor: {r: 0.004805972, g: 0.33962262, b: 0.028440127, a: 1}
+  ecr: {fileID: 6037248722059709900}
 --- !u!1 &7488356841142336552
 GameObject:
   m_ObjectHideFlags: 0
@@ -671,7 +712,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2dcc3c998b5f98b6891e422fd5e29ded, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAttackComponent
-  ecs: {fileID: 0}
+  ecr: {fileID: 6037248722059709900}
   equippedWeaponDataSO: {fileID: 11400000, guid: 4108109141f9b5663a6dbf1c537616eb, type: 2}
 --- !u!1 &7729364741673237887
 GameObject:

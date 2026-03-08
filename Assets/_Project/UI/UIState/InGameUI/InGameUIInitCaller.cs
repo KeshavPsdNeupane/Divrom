@@ -7,4 +7,6 @@
 /// related to In-Game UI.
 /// </remarks>
 using Kope.Core.Init;
-public class InGameUIInitCaller : InitLifecycleManager { }
+public class InGameUIInitCaller : InitLifecycleManager
+{
+}
