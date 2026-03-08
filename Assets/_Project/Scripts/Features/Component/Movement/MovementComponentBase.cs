@@ -15,7 +15,7 @@ namespace Kope.Component.Movement
 	{
 		Stop = 0,
 		Move = 10,
-
+		Attacking = 20,
 	}
 
 
@@ -32,12 +32,10 @@ namespace Kope.Component.Movement
 		/// and so on.
 		/// </summary>
 		public MovementIntentType IntentType;
-		public float intentSpeedMultiplier;
-		public MovementIntent(Vector2 direction, MovementIntentType intentType = MovementIntentType.Stop, float speedMultiplier = 1f)
+		public MovementIntent(Vector2 direction, MovementIntentType intentType = MovementIntentType.Stop)
 		{
 			this.Direction = direction;
 			this.IntentType = intentType;
-			this.intentSpeedMultiplier = Mathf.Clamp01(speedMultiplier);
 		}
 	}
 
@@ -61,7 +59,7 @@ namespace Kope.Component.Movement
 		public float Mass => this.rb.mass;
 		public Vector2 Direction => this.currentIntent.Direction;
 		public Vector2 Position => this.rb.position;
-
+		private float speedMultiplier = 1f;
 		/// <summary>
 		/// Gets the Rigidbody2D associated with this movement component.
 		/// Highly discouraged to use this reference to manipulate movement directly.
@@ -127,6 +125,19 @@ namespace Kope.Component.Movement
 			ApplyPhysics();
 		}
 
+		/// <summary>
+		/// Sets the speed multiplier for this movement component.
+		/// This multiplier scales the default movement speed, allowing for temporary speed boosts or reductions.
+		/// Like when attacking, we can set it to 0.5 to reduce movement speed, 
+		/// or when using a speed boost, we can set it to 1.5 to increase movement speed.
+		/// this is mainly used to restrict movement during certain actions (like attacking) 
+		/// or to apply temporary speed for for dodge or so on.
+		/// </summary>
+		/// <param name="multiplier"></param>
+		public void SetSpeedMultiplier(float multiplier = 1f)
+		{
+			this.speedMultiplier = multiplier;
+		}
 
 		/// <summary>
 		/// Sets the default movement speed.
@@ -167,7 +178,7 @@ namespace Kope.Component.Movement
 			Vector2 targetVelocity = Vector2.zero;
 			if (this.currentIntent.IntentType != MovementIntentType.Stop)
 			{
-				targetVelocity = this.currentIntent.intentSpeedMultiplier * this.defaultMovementSpeed * this.currentIntent.Direction;
+				targetVelocity = this.speedMultiplier * this.defaultMovementSpeed * this.currentIntent.Direction;
 			}
 
 			// Blend physics velocity (from collisions) with desired velocity
