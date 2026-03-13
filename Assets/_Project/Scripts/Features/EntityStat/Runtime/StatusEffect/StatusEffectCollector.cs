@@ -1,8 +1,11 @@
 using UnityEngine;
-using Kope.Core.Init;
 using Kope.Character.Stats;
 using Kope.Core.CompilerServices;
 using Kope.Core.EntityComponentSystem;
+using Kope.Core.Sensor;
+using Codice.Client.Commands;
+
+
 
 [RequireComponent(typeof(CircleCollider2D))]
 public class StatusEffectCollector : SensorBase
@@ -17,16 +20,17 @@ public class StatusEffectCollector : SensorBase
 
 		if (ecr == null)
 		{
-			MyLogger.Error("No EntityComponentStore assigned to StatusEffectCollector" + this.parentGameObjectStackTraceMessage);
+			MyLogger.Error("No EntityComponentStore assigned to StatusEffectCollector" + this.parentGOHiearchPathMessage);
 			return;
 		}
-		if (ecr.ComponentRegistry.TryGetComponent<CharacterStatsSystem>(out var statsSystem))
+		// since we are mutating the CharacterStatsSystem by adding stat modifiers to it, we need mutatable access here. so using TryGetMutatableComponent for semantic clarity
+		if (ecr.ComponentRegistry.TryGetMutatableComponent(out CharacterStatsSystem statsSystem))
 		{
 			this.characterStats = statsSystem;
 		}
 		else
 		{
-			MyLogger.Error("No CharacterStatsSystem found in EntityComponentStoreConfig for StatusEffectCollector" + this.parentGameObjectStackTraceMessage);
+			MyLogger.Error("No CharacterStatsSystem found in EntityComponentStoreConfig for StatusEffectCollector" + this.parentGOHiearchPathMessage);
 			return;
 		}
 	}
@@ -34,12 +38,36 @@ public class StatusEffectCollector : SensorBase
 	{
 		if (other.CompareTag(StatusObjectTagName))
 		{
-			StatusEffectContainer effect = other.GetComponent<StatusEffectContainer>();
+			EntityManager mgr = other.GetComponent<EntityManager>();
+			// using tryGet so we can satisfy the semantic clarity of "if it has the component, 
+			// we will use it, if not, we will log an error and return". since we are not mutating
+			// the StatusEffectContainer, we don't need mutatable access, so TryGetComponent is sufficient here.
+
+			// we are garunteed to get StatusEffectContainer from the detected object, 
+			// because we are only detecting objects with the specified tag,
+			//  and we have a convention that any object with that tag must have 
+			// a StatusEffectContainer component. so if we don't find it, it means something is
+			//  wrong with the setup of the detected object, and we log an error to notify the developer to fix it.
+			if (!mgr.EntityDetail.EntityComponentRegistry.ComponentRegistry.TryGetComponent(out StatusEffectContainer effect))
+			{
+				MyLogger.Error("No StatusEffectContainer found on detected object with tag " + StatusObjectTagName + ". Please ensure the object has a StatusEffectContainer component." + this.parentGOHiearchPathMessage);
+				return;
+			}
 			if (effect != null && effect.StatusEffect != null && this.characterStats != null)
 			{
 				if (this.characterStats.AddStatModifier(effect.StatusEffect))
 				{
+					// always call NotifyEntityDiedOrPooled before destroying the gameobject,
+					//  so that any systems that need to react to the entity's death or pooling 
+					// can do so before the gameobject is destroyed and becomes inaccessible.
+
+					mgr.NotifyEntityDiedOrPooled();
+
+					// for this case we are treating the status effect as a "pickup" that the character can collect
+					//  and apply to themselves, so we destroy the gameobject after collecting it.
+					// we could even use pooling but the format will be same as we are already notifying the EntityManager that the entity is "pooled" (in this case, returned to the pool instead of actually being destroyed), so any pooling system that listens to the OnEntityDiedOrPooled event can handle it accordingly, whether it's actually destroying the gameobject or just deactivating it and returning it to the pool for later reuse.
 					Destroy(other.gameObject);
+
 				}
 
 			}

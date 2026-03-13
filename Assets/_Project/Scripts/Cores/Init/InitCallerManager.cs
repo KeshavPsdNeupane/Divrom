@@ -45,45 +45,53 @@ namespace Kope.Core.Init
 			}
 		}
 
-		public override void OnInit()
+		public override bool OnInit()
 		{
-			base.OnInit();
 
-			if (this.autoPopulate)
-				PopulateInitializables();
-
-			this.ordered.Clear();
-			foreach (var mono in this.initializables)
+			try
 			{
-				if (mono == null) continue;
-				if (mono is IInitializable initable)
+				if (this.autoPopulate)
+					PopulateInitializables();
+
+				this.ordered.Clear();
+				foreach (var mono in this.initializables)
 				{
-					if (initable.IsInitialized)
+					if (mono == null) continue;
+					if (mono is IInitializable initable)
 					{
-						MyLogger.Warn($"{mono.name} is already initialized " +
-						" and will be skipped by InitCallerManager.");
-						continue;
+						if (initable.IsInitialized)
+						{
+							MyLogger.Warn($"{mono.name} is already initialized " +
+							" and will be skipped by InitCallerManager.");
+							continue;
+						}
+						if (!this.ordered.Contains(initable))
+						{
+							this.ordered.Add(initable);
+						}
 					}
-					if (!this.ordered.Contains(initable))
+					else
 					{
-						this.ordered.Add(initable);
+						MyLogger.Warn($"{mono.name} does not implement IInitializable and will be skipped by InitCallerManager.");
 					}
 				}
-				else
+
+				// Call Init in order
+				foreach (var item in this.ordered)
 				{
-					MyLogger.Warn($"{mono.name} does not implement IInitializable and will be skipped by InitCallerManager.");
+					try { item.Init(); }
+					catch (System.Exception ex)
+					{
+						MyLogger.Error($"InitCallerManager: " +
+					   $"Exception in Init of {item.GetType().Name}: {ex}");
+					}
 				}
+				return true;
 			}
-
-			// Call Init in order
-			foreach (var item in this.ordered)
+			catch (System.Exception ex)
 			{
-				try { item.Init(); }
-				catch (System.Exception ex)
-				{
-					MyLogger.Error($"InitCallerManager: " +
-				   $"Exception in Init of {item.GetType().Name}: {ex}");
-				}
+				Debug.LogError($"InitCallerManager: Exception during OnInit: {ex}" + GetParentGameObjectHeirarchyMessage());
+				return false;
 			}
 		}
 

@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using Kope.Core.Sensor;
 [RequireComponent(typeof(CircleCollider2D))]
 public class EntitySensor : SensorBase
 {
@@ -29,7 +29,7 @@ public class EntitySensor : SensorBase
 	{
 		if (this.context == null)
 		{
-			Debug.LogWarning($"[EntitySensor] Context is not assigned for {gameObject.name}. Please call InitContext with a valid Context instance before the sensor starts detecting." + this.parentGameObjectStackTraceMessage);
+			Debug.LogWarning($"[EntitySensor] Context is not assigned for {gameObject.name}. Please call InitContext with a valid Context instance before the sensor starts detecting." + this.parentGOHiearchPathMessage);
 		}
 	}
 

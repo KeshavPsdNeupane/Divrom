@@ -168,6 +168,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b704fae97497b629a70cd2df1251f15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterStatsSystem
+  characterName: Enemy
   characterStateSo: {fileID: 11400000, guid: 3fa16491f1d935845b253ff3d4586e7a, type: 2}
 --- !u!1 &4335047405112921079
 GameObject:
@@ -222,7 +223,6 @@ MonoBehaviour:
   - {fileID: 3663409563878092839}
   - {fileID: 264589805506960240}
   - {fileID: 7652927087965265889}
-  - {fileID: 0}
   - {fileID: 3638312336222781528}
 --- !u!1 &4424315005683123007
 GameObject:
@@ -421,7 +421,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4513367037071607233}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bceaae993f9ebf280b4c92d8d12a3d46, type: 3}
   m_Name: 
@@ -563,7 +563,7 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 0.75
+  m_Radius: 0.0001
 --- !u!114 &73212219776477661
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -583,7 +583,7 @@ MonoBehaviour:
   detectionRadius: 0.5
   isTrigger: 1
   usesExitDetection: 0
-  visualizeGizmos: 1
+  visualizeGizmos: 0
   gizmoColor: {r: 0, g: 1, b: 1, a: 1}
   StatusObjectTagName: StatusEffect
   ecr: {fileID: 4512281911964162701}
@@ -637,7 +637,99 @@ MonoBehaviour:
   algorithmName: Utility AI
   actionSOs:
   - {fileID: 11400000, guid: 55f0fced5ba3438c0ab41b97654eae60, type: 2}
-  maxLoopIterations: 2
+  shortTermMemorySize: 5
+  actionRecurrencePenalty: 0.8
+  minActionWeight: 0.1
+--- !u!1 &6938015882305579110
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 83866771616670144}
+  - component: {fileID: 5476396435574818036}
+  - component: {fileID: 3594846146065954779}
+  m_Layer: 0
+  m_Name: Sensor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &83866771616670144
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6938015882305579110}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4792860859861781601}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!58 &5476396435574818036
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6938015882305579110}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_Radius: 0.0001
+--- !u!114 &3594846146065954779
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6938015882305579110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8a4339c7a34bdac29c4a6f9e7f12520, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Sensor
+  detectionCollider: {fileID: 5476396435574818036}
+  detectableLayers:
+    serializedVersion: 2
+    m_Bits: 576
+  detectionRadius: 10
+  isTrigger: 1
+  usesExitDetection: 1
+  visualizeGizmos: 1
+  gizmoColor: {r: 0, g: 0.14774561, b: 1, a: 1}
 --- !u!1 &8468679303110247825
 GameObject:
   m_ObjectHideFlags: 0
@@ -669,6 +761,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 559014764016938391}
+  - {fileID: 83866771616670144}
   m_Father: {fileID: 7870155893999714083}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3638312336222781528
@@ -688,7 +781,8 @@ MonoBehaviour:
   components:
   - {fileID: 4204933291776501059}
   refreshInterval: 6
-  sensor: {fileID: 0}
+  sensor: {fileID: 3594846146065954779}
+  initPlannerOnBrainInit: 1
 --- !u!1 &9153279180399708285
 GameObject:
   m_ObjectHideFlags: 0

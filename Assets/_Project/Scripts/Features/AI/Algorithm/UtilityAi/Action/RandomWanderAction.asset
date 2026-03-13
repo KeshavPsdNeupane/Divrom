@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd94531e1192e8e1bbb42f99ace6917a, type: 3}
   m_Name: RandomWanderAction
   m_EditorClassIdentifier: Assembly-CSharp::RandomWanderActionSO
-  actionName: Base Action
+  actionName: RandomWander
   isInterruptible: 1
   considerations:
   - {fileID: 11400000, guid: 4a8fd9b298b7bdfbb90367f87dabf469, type: 2}
   wanderRadius: 3
+  maxAttemptsToFindValidPoint: 10

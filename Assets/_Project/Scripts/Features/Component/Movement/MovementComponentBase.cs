@@ -66,23 +66,24 @@ namespace Kope.Component.Movement
 		/// Use SetMovementIntent instead to ensure proper movement handling.
 		/// </summary>
 		public Rigidbody2D Rigidbody => this.rb;
-		public override void OnInit()
+		public override bool OnInit()
 		{
-			base.OnInit();
 			if (this.ecr == null)
 			{
 				MyLogger.Error($"MovementComponentBase ({gameObject.name}): " +
-			   $"EntityComponentStore not assigned. Movement will remain uninitialized.\n{GetParentGameObjectStackTraceMessage()}");
-				return;
+			   $"EntityComponentStore not assigned. Movement will remain uninitialized.\n{GetParentGameObjectHeirarchyMessage()}");
+				return false;
 			}
 
 			if (this.rb == null)
 			{
 				MyLogger.Error($"MovementComponentBase ({gameObject.name}): " +
-			   $"Rigidbody2D not assigned. Movement will remain uninitialized.\n{GetParentGameObjectStackTraceMessage()}");
-				return;
+			   $"Rigidbody2D not assigned. Movement will remain uninitialized.\n{GetParentGameObjectHeirarchyMessage()}");
+				return false;
 			}
-
+			// MovementComponentBase is not muating the CharacterStatsSystem, so TryGetComponent is sufficient here.
+			// we are only subscribing to stat changes, not modifying the stats directly, 
+			// so we don't need mutatable access. so using TryGetComponent for semantic clarity
 			if (this.ecr.ComponentRegistry.TryGetComponent(out CharacterStatsSystem statsSystem))
 			{
 				this.characterStatsSystem = statsSystem;
@@ -90,8 +91,10 @@ namespace Kope.Component.Movement
 			else
 			{
 				MyLogger.Warn($"MovementComponentBase ({gameObject.name}): " +
-			   $"CharacterStatsSystem not found in {this.ecr.name}. Stats-based movement speed will be unavailable.\n{GetParentGameObjectStackTraceMessage()}");
+			   $"CharacterStatsSystem not found in {this.ecr.name}. Stats-based movement speed will be unavailable.\n{GetParentGameObjectHeirarchyMessage()}");
+				return false;
 			}
+			return true;
 		}
 
 		protected virtual void OnEnable() => SubscribeToStats();
@@ -107,7 +110,7 @@ namespace Kope.Component.Movement
 				this.characterStatsSystem.CurrentStats != null)
 			{
 				this.characterStatsSystem.StatsSubscribe(CharacterStatType.SPD, SetDefaultMovementSpeed);
-				// Initial fetch 
+				// initial fetch
 				SetDefaultMovementSpeed(this.characterStatsSystem.CurrentStats[CharacterStatType.SPD].GetValue());
 			}
 		}
@@ -144,7 +147,9 @@ namespace Kope.Component.Movement
 		/// This is usually called by the CharacterStatsSystem when the SPD stat changes.
 		/// </summary>
 		public virtual void SetDefaultMovementSpeed(float speed)
-		=> this.defaultMovementSpeed = speed;
+		{
+			this.defaultMovementSpeed = speed;
+		}
 
 		/// <summary>
 		/// Sets the movement intent for this component.

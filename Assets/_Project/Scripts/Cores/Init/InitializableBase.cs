@@ -1,4 +1,5 @@
 using System.Text;
+using Kope.Core.Extensions;
 using UnityEngine;
 namespace Kope.Core.Init
 {
@@ -30,13 +31,18 @@ namespace Kope.Core.Init
 
 		private string parentGameObjectStackTrace = string.Empty;
 
-		public string GetParentGameObjectStackTraceMessage()
+		public string GetParentGameObjectHeirarchyMessage()
 		{
 			if (string.IsNullOrEmpty(this.parentGameObjectStackTrace))
 			{
-				this.parentGameObjectStackTrace = FindAllParentStackString(this.transform);
+				this.parentGameObjectStackTrace = this.GetGameObjectHierarchyPath();
+				if (string.IsNullOrEmpty(this.parentGameObjectStackTrace))
+				{
+					this.parentGameObjectStackTrace = "Could not determine GameObject hierarchy.";
+
+				}
 			}
-			return $" GameObject Stack Trace: {this.parentGameObjectStackTrace}";
+			return $" (GameObjectPath): {this.parentGameObjectStackTrace}";
 		}
 
 		/// <summary>
@@ -50,10 +56,11 @@ namespace Kope.Core.Init
 		public void Init()
 		{
 			if (this.IsInitialized) return;
-			this.IsInitialized = true;
+			this.parentGameObjectStackTrace = this.GetGameObjectHierarchyPath();
 			this.hasLoggedNotInitializedWarning = false;
-			this.parentGameObjectStackTrace = FindAllParentStackString(this.transform);
-			OnInit();
+			// call the virtual OnInit for actual initialization logic, and 
+			// set IsInitialized based on its return value.
+			this.IsInitialized = OnInit();
 		}
 
 		/// <summary>
@@ -64,9 +71,9 @@ namespace Kope.Core.Init
 		/// Just being used as Template Method pattern.
 		/// so child classes can hook into Init without overriding it.
 		/// </summary>
-		public virtual void OnInit()
+		public virtual bool OnInit()
 		{
-			// no op
+			return true;
 		}
 
 
@@ -75,6 +82,7 @@ namespace Kope.Core.Init
 			if (!this.IsInitialized) return;
 			this.IsInitialized = false;
 			this.hasLoggedNotInitializedWarning = false;
+			this.parentGameObjectStackTrace = string.Empty;
 			OnShutdown();
 		}
 		/// <summary>
@@ -97,7 +105,7 @@ namespace Kope.Core.Init
 				{
 					// calling FindAllParentStackString every frame is expensive, so we only do it once when we log the warning for the first time.
 					// for now calling it again in this if so that we can get the correct stack trace even if the hierarchy changes after initialization. since we only log once, it should be fine.
-					this.parentGameObjectStackTrace = FindAllParentStackString(this.transform);
+					this.parentGameObjectStackTrace = this.GetGameObjectHierarchyPath();
 					this.hasLoggedNotInitializedWarning = true;
 				}
 				return;
@@ -132,25 +140,6 @@ namespace Kope.Core.Init
 		/// </summary>
 		protected virtual void OnFixedUpdate() { }
 
-		private string FindAllParentStackString(Transform currentTransform)
-		{
-			// using builder to avoid string concatenation in loop, 
-			// which can cause GC allocs and performance issues. since this method can be  
-			// called in Update when not initialized, we want to minimize the performance impact as much as possible.
-			StringBuilder sb = new();
-			Transform cursor = currentTransform;
 
-			while (cursor != null)
-			{
-				// Insert at the beginning to maintain Root -> Child order
-				// -> indicate hierarchy level, so we can easily split them later if needed. and also visually clear.
-				if (sb.Length > 0) sb.Insert(0, "->");
-				sb.Insert(0, cursor.name);
-				cursor = cursor.parent;
-			}
-			// --> indicate end of hierarchy, so we can easily split them later if needed. and also visually clear.
-			string sceneName = gameObject.scene.name ?? "UnknownScene";
-			return $"{sceneName}-->{sb}";
-		}
 	}
 }

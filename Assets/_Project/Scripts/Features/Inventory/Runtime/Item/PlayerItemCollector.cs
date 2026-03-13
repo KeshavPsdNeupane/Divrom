@@ -1,8 +1,7 @@
 using Kope.Core.CompilerServices;
 using UnityEngine;
-using Kope.Core.Init;
 using Kope.Core.EntityComponentSystem;
-
+using Kope.Core.Sensor;
 [RequireComponent(typeof(CircleCollider2D))]
 public class PlayerItemCollector : SensorBase
 {
@@ -15,21 +14,23 @@ public class PlayerItemCollector : SensorBase
 	{
 		if (this.ecr == null)
 		{
-			MyLogger.Error("No EntityComponentStore assigned to PlayerItemCollector" + this.parentGameObjectStackTraceMessage);
+			MyLogger.Error("No EntityComponentStore assigned to PlayerItemCollector" + this.parentGOHiearchPathMessage);
 			return;
 		}
 		if (this.ecr.ComponentRegistry == null)
 		{
-			MyLogger.Error("The EntityComponentStore assigned to PlayerItemCollector does not have a valid ComponentRegistry" + this.parentGameObjectStackTraceMessage);
+			MyLogger.Error("The EntityComponentStore assigned to PlayerItemCollector does not have a valid ComponentRegistry" + this.parentGOHiearchPathMessage);
 			return;
 		}
-		if (this.ecr.ComponentRegistry.TryGetComponent<InventoryHolder>(out var invHolder))
+		// since we are mutating the InventoryHolder by adding items to it, 
+		// we need mutatable access here. so using TryGetMutatableComponent for semantic clarity
+		if (this.ecr.ComponentRegistry.TryGetMutatableComponent<InventoryHolder>(out var invHolder))
 		{
 			this.inventoryHolder = invHolder;
 		}
 		else
 		{
-			MyLogger.Error("No InventoryHolder found in EntityComponentStoreConfig for PlayerItemCollector" + this.parentGameObjectStackTraceMessage);
+			MyLogger.Error("No InventoryHolder found in EntityComponentStoreConfig for PlayerItemCollector" + this.parentGOHiearchPathMessage);
 			return;
 		}
 	}
@@ -47,7 +48,7 @@ public class PlayerItemCollector : SensorBase
 		}
 		else
 		{
-			MyLogger.Warn("Inventory full - cannot pick up item" + this.parentGameObjectStackTraceMessage);
+			MyLogger.Warn("Inventory full - cannot pick up item" + this.parentGOHiearchPathMessage);
 		}
 	}
 }

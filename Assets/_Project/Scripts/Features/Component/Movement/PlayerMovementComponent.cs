@@ -16,54 +16,59 @@ using Kope.Component.Movement;
 /// </summary>
 public class PlayerMovementComponent : MovementComponentBase
 {
-    private InputManager inputManager;
+	private InputManager inputManager;
 
 
-    public override void OnInit()
-    {
-        base.OnInit();
-        if (GlobalServiceLocator.Instance.TryGetService(out InputManager inputManager))
-        {
-            this.inputManager = inputManager;
-        }
-        else
-        {
-            MyLogger.Error($"{this.gameObject.name}Controller: InputManager service not found!" + GetParentGameObjectStackTraceMessage());
-        }
-    }
-    protected override void OnEnable()
-    {
-        base.OnEnable();
-        Subscribe();
-    }
+	public override bool OnInit()
+	{
+		// we need to check if we already sub to the stats
+		// since base is not InitializableBase, we need to call it to make sure
+		//  we get the stat value from the stats
+		if (!base.OnInit()) return false; // impt if the base class is not InilializableBase
+		if (GlobalServiceLocator.Instance.TryGetService(out InputManager inputManager))
+		{
+			this.inputManager = inputManager;
+		}
+		else
+		{
+			MyLogger.Error($"{this.gameObject.name}Controller: InputManager service not found!" + GetParentGameObjectHeirarchyMessage());
+			return false;
+		}
+		return true;
+	}
+	protected override void OnEnable()
+	{
+		base.OnEnable();
+		Subscribe();
+	}
 
 
-    protected override void OnDisable()
-    {
-        base.OnDisable();
-        Unsubscribe();
-    }
+	protected override void OnDisable()
+	{
+		base.OnDisable();
+		Unsubscribe();
+	}
 
-    private void Subscribe()
-    {
-        if (this.inputManager == null) return;
-        this.inputManager.SubscribeToInputAction(
-            PlayerInputActionMap.Player,
-            PlayerInputActionKey.Move.ToString(),
-            MoveForInputSystem);
-    }
+	private void Subscribe()
+	{
+		if (this.inputManager == null) return;
+		this.inputManager.SubscribeToInputAction(
+			PlayerInputActionMap.Player,
+			PlayerInputActionKey.Move.ToString(),
+			MoveForInputSystem);
+	}
 
-    private void Unsubscribe()
-    {
-        if (this.inputManager == null) return;
-        this.inputManager.UnsubscribeFromInputAction(
-            PlayerInputActionMap.Player,
-            PlayerInputActionKey.Move.ToString(),
-            MoveForInputSystem);
-    }
+	private void Unsubscribe()
+	{
+		if (this.inputManager == null) return;
+		this.inputManager.UnsubscribeFromInputAction(
+			PlayerInputActionMap.Player,
+			PlayerInputActionKey.Move.ToString(),
+			MoveForInputSystem);
+	}
 
 
-    public void MoveForInputSystem(InputAction.CallbackContext context)
-    => SetMovementIntent(new MovementIntent(context.ReadValue<Vector2>(), MovementIntentType.Move));
+	public void MoveForInputSystem(InputAction.CallbackContext context)
+	=> SetMovementIntent(new MovementIntent(context.ReadValue<Vector2>(), MovementIntentType.Move));
 
 }

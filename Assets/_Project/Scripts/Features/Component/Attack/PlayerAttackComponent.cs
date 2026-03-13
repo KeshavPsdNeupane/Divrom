@@ -3,67 +3,72 @@ using ServiceLocatorPattern;
 using Kope.Core.CompilerServices;
 public class PlayerAttackComponent : AttackComponentBase
 {
-    private InputManager inputManager;
+	private InputManager inputManager;
 
-    public override void OnInit()
-    {
-        base.OnInit();
-        if (GlobalServiceLocator.Instance.TryGetService(out InputManager inputManager))
-        {
-            this.inputManager = inputManager;
-        }
-        else
-        {
-            MyLogger.Error($"{this.gameObject.name}Controller: InputManager service not found!");
-        }
-    }
+	public override bool OnInit()
+	{
+		// we need to check if we already sub to the stats
+		// since base is not InitializableBase, we need to call it to make sure
+		//  we get the stat value from the stats
+		if (!base.OnInit()) return false; // impt if the base class is not InilializableBase
+		if (GlobalServiceLocator.Instance.TryGetService(out InputManager inputManager))
+		{
+			this.inputManager = inputManager;
+		}
+		else
+		{
+			MyLogger.Error($"{this.gameObject.name}Controller: InputManager service not found!");
+			return false;
+		}
+		return true;
+	}
 
-    protected override void OnEnable()
-    {
-        base.OnEnable();
-        Subscribe();
-    }
+	protected override void OnEnable()
+	{
+		base.OnEnable();
+		Subscribe();
+	}
 
-    private void Subscribe()
-    {
-        if (inputManager == null) return;
+	private void Subscribe()
+	{
+		if (inputManager == null) return;
 
-        inputManager.SubscribeToInputAction(
-            PlayerInputActionMap.Player,
-            PlayerInputActionKey.Fire.ToString(),
-            AttackForInputSystem
-       );
+		inputManager.SubscribeToInputAction(
+			PlayerInputActionMap.Player,
+			PlayerInputActionKey.Fire.ToString(),
+			AttackForInputSystem
+	   );
 
-    }
+	}
 
-    protected override void OnDisable()
-    {
-        base.OnDisable();
-        Unsubscribe();
-    }
+	protected override void OnDisable()
+	{
+		base.OnDisable();
+		Unsubscribe();
+	}
 
-    private void Unsubscribe()
-    {
-        if (inputManager == null) return;
+	private void Unsubscribe()
+	{
+		if (inputManager == null) return;
 
-        inputManager.UnsubscribeFromInputAction(
-            PlayerInputActionMap.Player,
-            PlayerInputActionKey.Fire.ToString(),
-            AttackForInputSystem
-        );
+		inputManager.UnsubscribeFromInputAction(
+			PlayerInputActionMap.Player,
+			PlayerInputActionKey.Fire.ToString(),
+			AttackForInputSystem
+		);
 
-    }
+	}
 
-    private void AttackForInputSystem(InputAction.CallbackContext context)
-    {
-        if (context.performed) PerformAttack();
-    }
+	private void AttackForInputSystem(InputAction.CallbackContext context)
+	{
+		if (context.performed) PerformAttack();
+	}
 
-    protected override void PerformAttackInternal()
-    {
+	protected override void PerformAttackInternal()
+	{
 
-        float damage = CalculateDamage();
-        // For testing so no need for logger
-        MyLogger.Log($"Attack performed! Damage: {damage}, Base attack: {attack}");
-    }
+		float damage = CalculateDamage();
+		// For testing so no need for logger
+		MyLogger.Log($"Attack performed! Damage: {damage}, Base attack: {attack}");
+	}
 }

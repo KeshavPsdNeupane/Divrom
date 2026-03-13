@@ -16,7 +16,7 @@ public class RandomWanderActionSO : ActionSO
 
 	protected override void OnInilialize(ComponentRegistry ctx)
 	{
-		if (!ctx.TryGetComponent(out MovementComponentBase newMc))
+		if (!ctx.TryGetMutatableComponent(out MovementComponentBase newMc))
 		{
 			Debug.LogError("RandomWanderActionSO Initialization failed: MovementComponentBase not found.");
 			return;

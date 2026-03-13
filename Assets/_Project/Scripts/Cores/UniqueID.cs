@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Kope.Core.Attribute;
-using System.Text;
+using Kope.Core.Extensions;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -136,23 +136,7 @@ public class UniqueID : MonoBehaviour
 
 	private string BuildHierarchyPath(Transform currentTransform)
 	{
-		// using builder to avoid string concatenation in loop, 
-		// which can cause GC allocs and performance issues. since this method can be  
-		// called in Update when not initialized, we want to minimize the performance impact as much as possible.
-		StringBuilder sb = new();
-		Transform cursor = currentTransform;
-
-		while (cursor != null)
-		{
-			// Insert at the beginning to maintain Root -> Child order
-			// -> indicate hierarchy level, so we can easily split them later if needed. and also visually clear.
-			if (sb.Length > 0) sb.Insert(0, "->");
-			sb.Insert(0, cursor.name);
-			cursor = cursor.parent;
-		}
-		// --> indicate end of hierarchy, so we can easily split them later if needed. and also visually clear.
-		string sceneName = gameObject.scene.name ?? "UnknownScene";
-		return $"{sceneName}-->{sb}";
+		return this.GetGameObjectHierarchyPath();
 	}
 
 	public void ResetId()
@@ -197,5 +181,10 @@ public class UniqueID : MonoBehaviour
 	public static bool TryGetByTag(HashedTag tag, out GameObject go)
 	{
 		return AllIds.TryGetValue(tag, out go);
+	}
+
+	public override string ToString()
+	{
+		return this.guid;
 	}
 }

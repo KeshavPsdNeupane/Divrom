@@ -62,7 +62,7 @@ GameObject:
   - component: {fileID: 5028322666046906755}
   - component: {fileID: 8698070850850616}
   - component: {fileID: 6069060705174550741}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: PlayerNew
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -197,7 +197,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2033154260760698069}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bceaae993f9ebf280b4c92d8d12a3d46, type: 3}
   m_Name: 
@@ -367,7 +367,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6608268893706211379}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: collectors
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -449,7 +449,7 @@ GameObject:
   - component: {fileID: 5278300828148743300}
   - component: {fileID: 2553193555243041833}
   - component: {fileID: 2074568686396004027}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: StatusEffectCollector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -588,7 +588,7 @@ GameObject:
   - component: {fileID: 2622145661708167649}
   - component: {fileID: 7730815850288028167}
   - component: {fileID: 6766132971903874346}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: ItemCollector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -758,6 +758,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b704fae97497b629a70cd2df1251f15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterStatsSystem
+  characterName: Player
   characterStateSo: {fileID: 11400000, guid: e06becc107dbd2a41bc1b329d3a6b6b4, type: 2}
 --- !u!1001 &8456934485472912313
 PrefabInstance:

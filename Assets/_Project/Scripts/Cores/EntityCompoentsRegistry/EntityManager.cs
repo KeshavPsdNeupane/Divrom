@@ -3,8 +3,6 @@ using Kope.Core.Init;
 using Kope.Core.EntityComponentSystem;
 using System;
 
-
-
 /// <summary>
 /// Store the Unique ID for an Entity and its EntityComponentStore reference. This is the main component that 
 /// defines an Entity in the ECS architecture.
@@ -59,15 +57,14 @@ public class EntityManager : InitializableBase, IEntityDiedOrPooled
 	public EntityDetail EntityDetail => this.entityDetail;
 
 
-	public override void OnInit()
+	public override bool OnInit()
 	{
-		if (!Validate()) return;
+		if (!Validate()) return false;
 		// After validation, we can be sure that the EntityComponentStore and its ComponentRegistry are properly initialized and ready to use.
 
 		this.entityComponentRegistry.ComponentRegistry.Register(this.entityComponentRegistry);
 		this.entityDetail = new EntityDetail(this.uniqueID, this.commonEntityHashedTag, this.entityComponentRegistry, this);
-		Debug.Log("[EntityManager] Initialized EntityManager for Entity with UniqueID: " + this.uniqueID.HashedTag + " and CommonEntityName: " + this.commonEntityName
-			+ ". Registered EntityComponentStore: " + this.entityComponentRegistry.name + GetParentGameObjectStackTraceMessage());
+		return true;
 	}
 
 	public void NotifyEntityDiedOrPooled()
@@ -82,7 +79,7 @@ public class EntityManager : InitializableBase, IEntityDiedOrPooled
 
 	private bool EditorOnlyValidate()
 	{
-		string parentStackTraceMessage = GetParentGameObjectStackTraceMessage();
+		string parentStackTraceMessage = GetParentGameObjectHeirarchyMessage();
 		if (uniqueID == null)
 		{
 			Debug.LogError($"EntityManager on GameObject '{this.gameObject.name}' is missing a UniqueID reference. Please assign one for proper identification and optimization.{parentStackTraceMessage}", this.gameObject);
@@ -120,7 +117,9 @@ public class EntityManager : InitializableBase, IEntityDiedOrPooled
 		var registry = this.entityComponentRegistry.ComponentRegistry;
 		if (registry == null)
 		{
-			Debug.LogError($"EntityManager: EntityComponentStore '{this.commonEntityName}' has no valid ComponentRegistry! Please check the EntityComponentStore's initialization. Disabling EntityManager.\n{GetParentGameObjectStackTraceMessage()}", this.gameObject);
+			Debug.LogError($"[EntityManager] there is an issue , 'the component registry is not initialized yet', for {this.gameObject.name}" +
+			"Please check the InitManager and make sure the EntityComponentRegistry is placed on list" +
+			$"And the EntityManager is placed after the EntityComponentRegistry in the execution order, and that the EntityComponentRegistry is properly initialized in its OnInit method.{GetParentGameObjectHeirarchyMessage()}", this.gameObject);
 			return false;
 		}
 		return true;

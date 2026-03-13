@@ -168,7 +168,25 @@ namespace Kope.Core.EntityComponentSystem
 			component = default;
 			return false;
 		}
-
+		/// <summary>
+		/// Convenience method for TryGetComponent when you want to get a mutable reference to the component.
+		/// Since the components are stored as objects, TryGetComponent already returns a reference to 
+		/// the component instance, so this method simply calls TryGetComponent and allows the caller to get a mutable
+		/// But TryGetComponent is a contract that defines that out component must be used as ReadOnly, 
+		/// so this method is just a semantic convenience to indicate that the caller intends to mutate the component,
+		///  and it can be used to differentiate between read-only and mutable access in the codebase.
+		/// Use this method only on the Same Entity's components, since getting a mutable reference to a component of another
+		///  entity can lead to unintended side effects and break the encapsulation of the Entity's internal state. 
+		/// Always prefer using TryGetComponent for cross-entity access to ensure that you are treating
+		/// the component as read-only and respecting the boundaries of each Entity's context.
+		/// </summary>
+		/// <typeparam name="Tcomponent"></typeparam>
+		/// <param name="component"></param>
+		/// <returns></returns>
+		public bool TryGetMutatableComponent<Tcomponent>([MaybeNullWhen(false)] out Tcomponent component) where Tcomponent : class
+		{
+			return TryGetComponent(out component);
+		}
 
 	}
 }

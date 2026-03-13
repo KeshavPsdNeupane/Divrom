@@ -13,50 +13,54 @@ public class PlayerInventoryDisplayUI : InventoryDisplay
 	private readonly Queue<ItemSlotUI> slotPool = new();
 	private bool prewarmed = false;
 
-	public override void OnInit()
+	public override bool OnInit()
 	{
-		base.OnInit();
+
+		if (!base.OnInit()) return false; // impt if the base class is not InilializableBase
 		if (this.slotPrefab == null)
 		{
-			MyLogger.Error($"PlayerInventoryDisplayUI ({this.gameObject.name}): Slot Prefab is not assigned!" + GetParentGameObjectStackTraceMessage());
-			return;
+			MyLogger.Error($"PlayerInventoryDisplayUI ({this.gameObject.name}): Slot Prefab is not assigned!" + GetParentGameObjectHeirarchyMessage());
+			return false;
 		}
 		if (this.slotParent == null)
 		{
-			MyLogger.Error($"PlayerInventoryDisplayUI ({this.gameObject.name}): Slot Parent is not assigned!" + GetParentGameObjectStackTraceMessage());
-			return;
+			MyLogger.Error($"PlayerInventoryDisplayUI ({this.gameObject.name}): Slot Parent is not assigned!" + GetParentGameObjectHeirarchyMessage());
+			return false;
 		}
 
 		if (this.ecr == null)
 		{
-			MyLogger.Error($"PlayerInventoryDisplayUI ({this.gameObject.name}): EntityComponentStore is not assigned!" + GetParentGameObjectStackTraceMessage());
-			return;
+			MyLogger.Error($"PlayerInventoryDisplayUI ({this.gameObject.name}): EntityComponentStore is not assigned!" + GetParentGameObjectHeirarchyMessage());
+			return false;
 		}
 		if (this.ecr.ComponentRegistry == null)
 		{
-			MyLogger.Error($"PlayerInventoryDisplayUI ({this.gameObject.name}): ComponentRegistry in EntityComponentStore is null!" + GetParentGameObjectStackTraceMessage());
-			return;
+			MyLogger.Error($"PlayerInventoryDisplayUI ({this.gameObject.name}): ComponentRegistry in EntityComponentStore is null!" + GetParentGameObjectHeirarchyMessage());
+			return false;
 		}
-		if (this.ecr.ComponentRegistry.TryGetComponent<InventoryHolder>(out var invHolder))
+		// since we are mutating the InventoryHolder by adding items to it, 
+		// we need mutatable access here. so using TryGetMutatableComponent for semantic clarity
+		if (this.ecr.ComponentRegistry.TryGetMutatableComponent<InventoryHolder>(out var invHolder))
 		{
 			this.inventoryHolder = invHolder;
 		}
 		else
 		{
-			MyLogger.Error($"PlayerInventoryDisplayUI ({this.gameObject.name}): InventoryHolder not found in EntityComponentStore!" + GetParentGameObjectStackTraceMessage());
-			return;
+			MyLogger.Error($"PlayerInventoryDisplayUI ({this.gameObject.name}): InventoryHolder not found in EntityComponentStore!" + GetParentGameObjectHeirarchyMessage());
+			return false;
 		}
 
 		if (this.inventoryHolder.PrimaryInventorySystem == null)
 		{
-			MyLogger.Error($"PlayerInventoryDisplayUI ({this.gameObject.name}): PrimaryInventorySystem is null in InventoryHolder!" + GetParentGameObjectStackTraceMessage());
-			return;
+			MyLogger.Error($"PlayerInventoryDisplayUI ({this.gameObject.name}): PrimaryInventorySystem is null in InventoryHolder!" + GetParentGameObjectHeirarchyMessage());
+			return false;
 		}
 
 		// Prewarm the slot pool to avoid runtime instantiation hitches
 		// Dont have to check if inventory is assigned since we already did above
 		if (!this.prewarmed)
 			Prewarm();
+		return true;
 	}
 
 	private void Prewarm()

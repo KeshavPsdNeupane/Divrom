@@ -39,29 +39,35 @@ namespace Kope.Core.EntityComponentSystem
 
 
 
-		public override void OnInit()
+		public override bool OnInit()
 		{
-			base.OnInit();
-
-			this.componentRegistry = new ComponentRegistry(
+			try
+			{
+				this.componentRegistry = new ComponentRegistry(
 				this.entityTransform,
 				this.hasBehavioralComponents,
 				this.config.ExcludedTypeSet
 			);
 
-			// First register all components
-			foreach (var c in components)
-			{
-				if (c != null) componentRegistry.Register(c);
+				// First register all components
+				foreach (var c in components)
+				{
+					if (c != null) componentRegistry.Register(c);
+				}
+				// Then init all components, this will ensure that dependencies are resolved during Init
+				// since all components are already registered. and no runtime race conditions occur.
+				// but still order of components in the list matters anyway 
+				foreach (var c in components)
+				{
+					if (c != null) c.Init();
+				}
+				return true;
 			}
-			// Then init all components, this will ensure that dependencies are resolved during Init
-			// since all components are already registered. and no runtime race conditions occur.
-			// but still order of components in the list matters anyway 
-			foreach (var c in components)
+			catch (System.Exception ex)
 			{
-				if (c != null) c.Init();
+				Debug.LogError($"Exception during EntityComponentsRegistry initialization: {ex.Message}\n{ex.StackTrace}" + GetParentGameObjectHeirarchyMessage());
+				return false;
 			}
-
 		}
 	}
 

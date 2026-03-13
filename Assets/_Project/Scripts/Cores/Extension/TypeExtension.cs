@@ -1,5 +1,4 @@
 using System;
-using UnityEngine;
 namespace Kope.Core.Extensions
 {
 	public static class TypeExtension

@@ -22,26 +22,26 @@ public abstract class AttackComponentBase : InitializableBase
 
 	public event UnityAction OnAttackPerformed;
 
-	public override void OnInit()
+	public override bool OnInit()
 	{
-		base.OnInit();
 		if (ecr == null)
 		{
 			MyLogger.Error("EntityComponentStore reference is missing in AttackComponentBase." +
-			GetParentGameObjectStackTraceMessage());
-			return;
+			GetParentGameObjectHeirarchyMessage());
+			return false;
 		}
-		if (this.ecr.ComponentRegistry.TryGetComponent(out AnimationComponentBase animComp))
+		if (this.ecr.ComponentRegistry.TryGetMutatableComponent(out AnimationComponentBase animComp))
 		{
 			this.animationComponent = animComp;
 		}
 		else
 		{
 			MyLogger.Error("AnimationComponentBase not found in EntityComponentStore." +
-			GetParentGameObjectStackTraceMessage());
+			GetParentGameObjectHeirarchyMessage());
+			return false;
 		}
 
-		if (this.ecr.ComponentRegistry.TryGetComponent(out CharacterStatsSystem statsSys))
+		if (this.ecr.ComponentRegistry.TryGetMutatableComponent(out CharacterStatsSystem statsSys))
 		{
 			this.statsSystem = statsSys;
 		}
@@ -49,10 +49,12 @@ public abstract class AttackComponentBase : InitializableBase
 		{
 			MyLogger.Error("CharacterStatsSystem not found in EntityComponentStore. " +
 			"AttackComponentBase will not function properly." +
-			GetParentGameObjectStackTraceMessage());
+			GetParentGameObjectHeirarchyMessage());
+			return false;
 		}
 
 		SubscribeToStats();
+		return true;
 	}
 
 	protected virtual void OnEnable() => SubscribeToStats();

@@ -4,19 +4,19 @@ using Kope.Core.Init;
 
 public class InventoryHolder : InitializableBase
 {
-    [SerializeField] private int primaryInventorySize;
+	[SerializeField] private int primaryInventorySize;
 
-    // this is not a InitiazableBase so no need for the ECS reference
-    [SerializeField] protected InventorySystem primaryInventorySystem;
+	// this is not a InitiazableBase so no need for the ECS reference
+	[SerializeField] protected InventorySystem primaryInventorySystem;
 
-    public InventorySystem PrimaryInventorySystem => primaryInventorySystem;
+	public InventorySystem PrimaryInventorySystem => primaryInventorySystem;
 
-    //public static UnityAction<InventorySystem> onDynamicInventoryDisplayRequested;
+	//public static UnityAction<InventorySystem> onDynamicInventoryDisplayRequested;
 
-    public override void OnInit()
-    {
-        base.OnInit();
-        this.primaryInventorySystem = new InventorySystem(this.primaryInventorySize);
-    }
+	public override bool OnInit()
+	{
+		this.primaryInventorySystem = new InventorySystem(this.primaryInventorySize);
+		return true;
+	}
 
 }

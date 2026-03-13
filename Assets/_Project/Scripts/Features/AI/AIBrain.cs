@@ -21,6 +21,10 @@ namespace Kope.AI
 		private float refreshInterval = 1.0f;
 
 		[SerializeField] private EntitySensor sensor;
+
+		[Header("Debug Utilities")]
+		[SerializeField, Tooltip("If checked, the planner will be initialized when the brain is initialized.")]
+		private bool initPlannerOnBrainInit = true;
 		#endregion
 
 		#region Private Fields
@@ -32,22 +36,20 @@ namespace Kope.AI
 		private readonly List<IInterruptOther> interrupters = new();
 		#endregion
 
-		public override void OnInit()
+		public override bool OnInit()
 		{
-			base.OnInit();
-
 			if (this.ecr == null || this.planner == null)
 			{
 				Debug.LogError($"AIBrain Error: Missing ECS or Planner on {gameObject.name}" +
-				 GetParentGameObjectStackTraceMessage());
-				return;
+				 GetParentGameObjectHeirarchyMessage());
+				return false;
 			}
 
-			if (!this.ecr.ComponentRegistry.TryGetComponent(out this.entityStateController))
+			if (!this.ecr.ComponentRegistry.TryGetMutatableComponent(out this.entityStateController))
 			{
 				Debug.LogError($"AIBrain Error: EntityStateController not found on {gameObject.name}" +
-				 GetParentGameObjectStackTraceMessage());
-				return;
+				 GetParentGameObjectHeirarchyMessage());
+				return false;
 			}
 
 			this.ctx = new Context(this.ecr.ComponentRegistry);
@@ -63,7 +65,10 @@ namespace Kope.AI
 				}
 			}
 
-			this.planner.OnInit();
+			if (this.initPlannerOnBrainInit)
+			{
+				this.planner.OnInit();
+			}
 
 			if (this.refreshInterval > 0f)
 			{
@@ -72,6 +77,7 @@ namespace Kope.AI
 				this.refreshTimer.Start();
 			}
 			this.sensor.InitContext(this.ctx);
+			return true;
 		}
 
 		private void OnDestroy()
@@ -110,7 +116,11 @@ namespace Kope.AI
 		}
 
 		#region Update Logic Chunks
-		protected virtual bool IsBrainValid() => this.planner != null && this.ecr != null;
+		protected virtual bool IsBrainValid()
+		=> this.planner != null && this.ecr != null && !this.planner.IsInitialized;
+		// need to check if the planner is initialized, because the brain might run its update before the 
+		// planner's OnInit is called,
+		//  and we don't want it to try to fetch a plan before the planner is ready.
 
 		protected virtual void UpdateInternalTimers()
 		{

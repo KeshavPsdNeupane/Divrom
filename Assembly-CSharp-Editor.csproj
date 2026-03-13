@@ -52,7 +52,6 @@
   <ItemGroup>
     <Compile Include="Assets/_Project/Scripts/Features/AI/Editor/AIBrainEditor.cs" />
     <Compile Include="Assets/_Project/_Game/Editor/ReadOnlyDrawer.cs" />
-    <Compile Include="Assets/_Project/_Game/Editor/StatusEffectDrawer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

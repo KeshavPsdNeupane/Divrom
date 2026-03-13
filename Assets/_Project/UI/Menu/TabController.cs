@@ -14,14 +14,14 @@ public class TabController : InitializableBase
 	[SerializeField] private Tab[] tabs;
 	[SerializeField] private Button[] buttons;
 
-	public override void OnInit()
+	public override bool OnInit()
 	{
-		base.OnInit();
 		for (int i = 0; i < buttons.Length; i++)
 		{
 			int index = i;
 			this.buttons[i].onClick.AddListener(() => ActivateTab(index));
 		}
+		return true;
 	}
 
 	void Start()

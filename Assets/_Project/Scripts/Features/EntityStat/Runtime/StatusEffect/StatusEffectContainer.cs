@@ -4,6 +4,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(CircleCollider2D))]
 public class StatusEffectContainer : InitializableBase
+// needed so it can be put on ECR prefab and have the status effect data set in the inspector
 {
 	[SerializeField] private CircleCollider2D circle;
 

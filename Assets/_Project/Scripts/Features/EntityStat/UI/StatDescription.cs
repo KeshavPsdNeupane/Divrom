@@ -22,10 +22,9 @@ public class StatDescription : InitializableBase
 
 	private RectTransform panelRect; // cache panelRect to avoid fetching multiple times
 
-	public override void OnInit()
+	public override bool OnInit()
 	{
-		base.OnInit();
-		Validate();
+		return Validate();
 	}
 
 
@@ -51,37 +50,40 @@ public class StatDescription : InitializableBase
 		this.statsCallbacksDict.Clear();
 	}
 
-	private void Validate()
+	private bool Validate()
 	{
 		if (this.characterStats == null)
 		{
 			if (ecr == null)
 			{
 				MyLogger.Error("EntityComponentStore reference was missing," +
-			  " unable to retrieve CharacterStatsSystem." + GetParentGameObjectStackTraceMessage());
-				return;
+			  " unable to retrieve CharacterStatsSystem." + GetParentGameObjectHeirarchyMessage());
+				return false;
 			}
+			// using tryGet since this only shows the stats on UI and does not modify the stats,
+			//  so we don't need mutatable access here. so TryGetComponent is sufficient for semantic clarity.
 			if (ecr.ComponentRegistry.TryGetComponent<CharacterStatsSystem>(out var statsSystem))
 			{
 				this.characterStats = statsSystem;
 			}
 			else
 			{
-				MyLogger.Error("No CharacterStatsSystem found in EntityComponentStore for StatDescription" + GetParentGameObjectStackTraceMessage());
-				return;
+				MyLogger.Error("No CharacterStatsSystem found in EntityComponentStore for StatDescription" + GetParentGameObjectHeirarchyMessage());
+				return false;
 			}
 		}
 		if (this.statDescriptionUIPanel == null)
 		{
-			MyLogger.Error("StatDescriptionUIPanel is not assigned." + GetParentGameObjectStackTraceMessage());
-			return;
+			MyLogger.Error("StatDescriptionUIPanel is not assigned." + GetParentGameObjectHeirarchyMessage());
+			return false;
 		}
 		if (this.panelRect == null && this.statDescriptionUIPanel != null)
 		{
 			this.panelRect = this.statDescriptionUIPanel.GetComponent<RectTransform>();
 			if (this.panelRect == null)
-				MyLogger.Error("Stat Panel requires RectTransform." + GetParentGameObjectStackTraceMessage());
+				MyLogger.Error("Stat Panel requires RectTransform." + GetParentGameObjectHeirarchyMessage());
 		}
+		return true;
 	}
 
 	private void CreateTMPObjects()

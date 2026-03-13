@@ -15,9 +15,8 @@ public class GameplayUIController : InitializableBase
 
 	// Must be called In Init lifecycle
 	// to setup the UIStateManager and default states
-	public override void OnInit()
+	public override bool OnInit()
 	{
-		base.OnInit();
 		this.uiStateManager = new();
 		this.uiStateManager.Init();
 		if (GlobalServiceLocator.Instance.TryGetService<InputManager>(out InputManager inputManager))
@@ -27,7 +26,9 @@ public class GameplayUIController : InitializableBase
 		else
 		{
 			MyLogger.Error($"{this.gameObject.name}Controller: InputManager service not found!");
+			return false;
 		}
+		return true;
 	}
 
 	void OnEnable()
