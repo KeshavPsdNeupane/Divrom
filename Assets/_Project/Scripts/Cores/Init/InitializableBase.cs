@@ -1,4 +1,3 @@
-using System.Text;
 using Kope.Core.Extensions;
 using UnityEngine;
 namespace Kope.Core.Init

@@ -638,7 +638,6 @@ MonoBehaviour:
   actionSOs:
   - {fileID: 11400000, guid: 55f0fced5ba3438c0ab41b97654eae60, type: 2}
   shortTermMemorySize: 5
-  actionRecurrencePenalty: 0.8
   minActionWeight: 0.1
 --- !u!1 &6938015882305579110
 GameObject:

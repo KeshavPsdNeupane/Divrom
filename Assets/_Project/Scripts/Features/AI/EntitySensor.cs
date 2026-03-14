@@ -1,11 +1,8 @@
 using UnityEngine;
 using Kope.Core.Sensor;
 [RequireComponent(typeof(CircleCollider2D))]
-public class EntitySensor : SensorBase
-{
+public class EntitySensor : SensorBase {
 	private Context context;
-
-
 	int tempCounter = 0;
 
 	/// <summary>
@@ -14,10 +11,8 @@ public class EntitySensor : SensorBase
 	/// <param name="context"></param>
 	public void InitContext(Context context) => this.context = context;
 
-	void Update()
-	{
-		if (this.tempCounter != context.GetTotalEntityCount())
-		{
+	void Update() {
+		if (this.tempCounter != context.GetTotalEntityCount()) {
 			this.tempCounter = context.GetTotalEntityCount();
 			Debug.Log($"[EntitySensor] Total entities in context: {this.tempCounter}");
 			// this is just to verify that the sensor is properly 
@@ -25,16 +20,13 @@ public class EntitySensor : SensorBase
 		}
 	}
 
-	public override void OnStart()
-	{
-		if (this.context == null)
-		{
+	public override void OnStart() {
+		if (this.context == null) {
 			Debug.LogWarning($"[EntitySensor] Context is not assigned for {gameObject.name}. Please call InitContext with a valid Context instance before the sensor starts detecting." + this.parentGOHiearchPathMessage);
 		}
 	}
 
-	public override void OnDetect(Collider2D other)
-	{
+	public override void OnDetect(Collider2D other) {
 		var entityManager = other.GetComponentInParent<EntityManager>();
 		if (entityManager == null || this.context == null) return;
 		// this is garunteed to be valid for all entity since we check the commonname on the EM itself,
@@ -44,8 +36,7 @@ public class EntitySensor : SensorBase
 		this.context.RegisterEntityContext(entityManager.EntityDetail);
 	}
 
-	public override void OnDetectExit(Collider2D other)
-	{
+	public override void OnDetectExit(Collider2D other) {
 		var entityManager = other.GetComponentInParent<EntityManager>();
 		if (entityManager == null || this.context == null) return;
 		var ed = entityManager.EntityDetail;

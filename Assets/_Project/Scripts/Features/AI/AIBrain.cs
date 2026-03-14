@@ -6,11 +6,9 @@ using ThirdParty;
 using System;
 using Kope.Core.EntityComponentSystem;
 
-namespace Kope.AI
-{
+namespace Kope.AI {
 
-	public class AIBrain : InitializableBase
-	{
+	public class AIBrain : InitializableBase {
 		#region Inspector Fields
 		[SerializeField] private EntityComponentsRegistry ecr;
 		[SerializeField, Tooltip("The AI brain algorithm that defines the decision-making logic.")]
@@ -36,17 +34,14 @@ namespace Kope.AI
 		private readonly List<IInterruptOther> interrupters = new();
 		#endregion
 
-		public override bool OnInit()
-		{
-			if (this.ecr == null || this.planner == null)
-			{
+		public override bool OnInit() {
+			if (this.ecr == null || this.planner == null) {
 				Debug.LogError($"AIBrain Error: Missing ECS or Planner on {gameObject.name}" +
 				 GetParentGameObjectHeirarchyMessage());
 				return false;
 			}
 
-			if (!this.ecr.ComponentRegistry.TryGetMutatableComponent(out this.entityStateController))
-			{
+			if (!this.ecr.ComponentRegistry.TryGetMutatableComponent(out this.entityStateController)) {
 				Debug.LogError($"AIBrain Error: EntityStateController not found on {gameObject.name}" +
 				 GetParentGameObjectHeirarchyMessage());
 				return false;
@@ -54,40 +49,36 @@ namespace Kope.AI
 
 			this.ctx = new Context(this.ecr.ComponentRegistry);
 
-			foreach (var comp in components)
-			{
+			foreach (var comp in components) {
 				this.ctx.CurrentMutableEntityContext.Register(comp);
-				if (comp is IInterruptOther interrupter)
-				{
+				if (comp is IInterruptOther interrupter) {
 					interrupter.OnInterruptRequested -= HandleInterruptSignal;
 					interrupter.OnInterruptRequested += HandleInterruptSignal;
 					this.interrupters.Add(interrupter);
 				}
 			}
 
-			if (this.initPlannerOnBrainInit)
-			{
+			if (this.initPlannerOnBrainInit) {
 				this.planner.OnInit();
 			}
 
-			if (this.refreshInterval > 0f)
-			{
+			if (this.refreshInterval > 0f) {
 				this.refreshTimer = new CountdownTimer(this.refreshInterval);
 				this.refreshTimer.OnTimerStop += RefreshTimerCallback;
 				this.refreshTimer.Start();
 			}
+			Debug.Log("Sensor Init Context called from AIBrain OnInit");
 			this.sensor.InitContext(this.ctx);
+			Debug.Log($"[AIBrain] Initialization complete for {gameObject.name}. Context and Planner are set up." + GetParentGameObjectHeirarchyMessage());
 			return true;
 		}
 
-		private void OnDestroy()
-		{
+		private void OnDestroy() {
 			foreach (var interrupter in this.interrupters)
 				interrupter.OnInterruptRequested -= HandleInterruptSignal;
 		}
 
-		protected override void OnUpdate()
-		{
+		protected override void OnUpdate() {
 			base.OnUpdate();
 
 			if (!IsBrainValid()) return;
@@ -98,15 +89,13 @@ namespace Kope.AI
 
 			HandleActionCompletion();
 
-			if (this.currentAction == null)
-			{
+			if (this.currentAction == null) {
 				TryAdvancePlan();
 			}
 			TickCurrentAction();
 		}
 
-		protected override void OnFixedUpdate()
-		{
+		protected override void OnFixedUpdate() {
 			base.OnFixedUpdate();
 			if (!IsBrainValid()) return;
 			if (!this.entityStateController.CanStateMachineAcceptCommand) return;
@@ -122,92 +111,72 @@ namespace Kope.AI
 		// planner's OnInit is called,
 		//  and we don't want it to try to fetch a plan before the planner is ready.
 
-		protected virtual void UpdateInternalTimers()
-		{
+		protected virtual void UpdateInternalTimers() {
 			refreshTimer?.Tick(Time.deltaTime);
 		}
 
 		/// <summary>
 		/// Returns true if the entity is physically unable to execute AI commands.
 		/// </summary>
-		protected virtual bool HandleStateMachine()
-		{
-			if (!this.entityStateController.CanStateMachineAcceptCommand)
-			{
+		protected virtual bool HandleStateMachine() {
+			if (!this.entityStateController.CanStateMachineAcceptCommand) {
 				if (this.currentAction != null) StopCurrentAction();
 				return true;
 			}
 			return false;
 		}
 
-		protected virtual void HandleActionCompletion()
-		{
-			if (this.currentAction != null && this.currentAction.IsCompleted)
-			{
+		protected virtual void HandleActionCompletion() {
+			if (this.currentAction != null && this.currentAction.IsCompleted) {
 				this.currentAction.EndOrAbort(this.ctx.CurrentMutableEntityContext);
 				this.currentAction = null;
 			}
 		}
 
-		protected virtual void TryAdvancePlan()
-		{
+		protected virtual void TryAdvancePlan() {
 			if (this.currentPlanEnumerator == null) FetchNewPlan();
 
-			if (this.currentPlanEnumerator != null && this.currentAction == null)
-			{
+			if (this.currentPlanEnumerator != null && this.currentAction == null) {
 				ExecuteNextActionInPlan();
 			}
 		}
 
-		protected virtual void ExecuteNextActionInPlan()
-		{
-			if (this.currentPlanEnumerator.MoveNext())
-			{
+		protected virtual void ExecuteNextActionInPlan() {
+			if (this.currentPlanEnumerator.MoveNext()) {
 				var nextAction = this.currentPlanEnumerator.Current;
-				if (nextAction != null)
-				{
+				if (nextAction != null) {
 					this.currentAction = nextAction;
 					this.currentAction.Initialize(this.ctx.CurrentMutableEntityContext);
 				}
-			}
-			else
-			{
+			} else {
 				this.currentPlanEnumerator = null;
 				this.currentAction = null; // Ensure we are clean if MoveNext is false
 			}
 		}
 
-		protected virtual void TickCurrentAction()
-		{
-			if (this.currentAction != null && !this.currentAction.IsCompleted)
-			{
+		protected virtual void TickCurrentAction() {
+			if (this.currentAction != null && !this.currentAction.IsCompleted) {
 				this.currentAction.TickUpdate(this.ctx);
 			}
 		}
 
-		protected virtual void TickCurrentActionPhysic()
-		{
-			if (this.currentAction != null && !this.currentAction.IsCompleted)
-			{
+		protected virtual void TickCurrentActionPhysic() {
+			if (this.currentAction != null && !this.currentAction.IsCompleted) {
 				this.currentAction.TickFixedUpdate(this.ctx);
 			}
 		}
 		#endregion
 
 		#region Helpers & Callbacks
-		protected virtual void FetchNewPlan()
-		{
+		protected virtual void FetchNewPlan() {
 			var plan = this.planner.GetDecisionPlan(this.ctx);
-			if (plan != null)
-			{
+			if (plan != null) {
 				this.currentPlanEnumerator = plan.GetEnumerator();
 			}
 		}
 
-		protected virtual void StopCurrentAction()
-		{
-			if (this.currentAction != null)
-			{
+		protected virtual void StopCurrentAction() {
+			if (this.currentAction != null) {
 				this.currentAction.EndOrAbort(this.ctx.CurrentMutableEntityContext);
 			}
 			this.currentAction = null;
@@ -216,10 +185,8 @@ namespace Kope.AI
 
 		private void HandleInterruptSignal(InterruptPriority priority) => ForceInterrupt(priority);
 
-		public virtual void ForceInterrupt(InterruptPriority priority = InterruptPriority.Soft)
-		{
-			switch (priority)
-			{
+		public virtual void ForceInterrupt(InterruptPriority priority = InterruptPriority.Soft) {
+			switch (priority) {
 				case InterruptPriority.Soft:
 					//Debug.Log($"[AIBrain] Soft Interrupt received on {gameObject.name}. Will attempt to stop current action if it is interruptible." + GetParentGameObjectStackTraceMessage());
 					this.currentPlanEnumerator = null;
@@ -238,8 +205,7 @@ namespace Kope.AI
 			}
 		}
 
-		protected virtual void RefreshTimerCallback()
-		{
+		protected virtual void RefreshTimerCallback() {
 			this.refreshTimer.Start();
 			this.currentPlanEnumerator = null;
 		}

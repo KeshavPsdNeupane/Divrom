@@ -1,0 +1,21 @@
+# This is the top-most .editorconfig file
+root = true
+
+[*.cs]
+# 1. Braces on the same line for EVERYTHING (if, methods, classes)
+csharp_new_line_before_open_brace = none
+
+# 2. Keep "else", "catch", and "finally" on the same line as the closing brace
+# This turns "} else" into "} else" instead of moving "else" to a new line
+csharp_new_line_before_else = false
+csharp_new_line_before_catch = false
+csharp_new_line_before_finally = false
+
+# 3. Match your settings.json preferences
+indent_style = tab
+indent_size = 4
+tab_width = 4
+
+# 4. Cleanup settings
+csharp_preserve_single_line_blocks = true
+csharp_preserve_single_line_statements = true
