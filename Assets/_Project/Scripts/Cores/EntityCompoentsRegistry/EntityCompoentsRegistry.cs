@@ -2,8 +2,7 @@ using System.Collections.Generic;
 using Kope.Core.Init;
 using UnityEngine;
 
-namespace Kope.Core.EntityComponentSystem
-{
+namespace Kope.Core.EntityComponentSystem {
 	/// <summary>
 	/// Stores a collection of components associated with an entity and initializes them.
 	/// Components registered here do **not** need to be initialized elsewhere; 
@@ -15,14 +14,13 @@ namespace Kope.Core.EntityComponentSystem
 	/// <br/>
 	/// <inheritdoc cref="InitializableBase"/>
 	/// </summary>
-	public class EntityComponentsRegistry : InitializableBase
-	{
+	public class EntityComponentsRegistry : InitializableBase {
 
 		[SerializeField] private Transform entityTransform;
 		[SerializeField, Tooltip("Indicates whether this EntityComponentStore contains state/AI/sensor components." +
 		"So that the EntityComponentRegistry can optimize its registrations accordingly. and other systems can query this info easily.")]
 		private bool hasBehavioralComponents = false;
-		[SerializeField] private EntityComponentStoreConfig config;
+		[SerializeField] private EntityComponentRegistryConfig config;
 		/// <summary>
 		/// The list of components stored in this EntityComponentStore.
 		/// </summary>
@@ -39,10 +37,8 @@ namespace Kope.Core.EntityComponentSystem
 
 
 
-		public override bool OnInit()
-		{
-			try
-			{
+		public override bool OnInit() {
+			try {
 				this.componentRegistry = new ComponentRegistry(
 				this.entityTransform,
 				this.hasBehavioralComponents,
@@ -50,21 +46,17 @@ namespace Kope.Core.EntityComponentSystem
 			);
 
 				// First register all components
-				foreach (var c in components)
-				{
+				foreach (var c in components) {
 					if (c != null) componentRegistry.Register(c);
 				}
 				// Then init all components, this will ensure that dependencies are resolved during Init
 				// since all components are already registered. and no runtime race conditions occur.
 				// but still order of components in the list matters anyway 
-				foreach (var c in components)
-				{
+				foreach (var c in components) {
 					if (c != null) c.Init();
 				}
 				return true;
-			}
-			catch (System.Exception ex)
-			{
+			} catch (System.Exception ex) {
 				Debug.LogError($"Exception during EntityComponentsRegistry initialization: {ex.Message}\n{ex.StackTrace}" + GetParentGameObjectHeirarchyMessage());
 				return false;
 			}

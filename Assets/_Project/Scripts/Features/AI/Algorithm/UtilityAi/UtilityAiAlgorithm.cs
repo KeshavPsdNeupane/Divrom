@@ -1,12 +1,12 @@
-using System;
 using System.Collections.Generic;
 using Kope.AI.Utility.Config;
+using ThirdParty.PriorityQueeu;
 using UnityEngine;
 
 namespace Kope.AI.Utility {
 	public class UtilityAiAlgorithm : AIBrainAlgorithm {
 		private const float DEFAULT_INITIAL_WEIGHT = 1f;
-
+		private const float DEFAULT_FIXED_DELTA = 0.016f;
 
 		[Header("Default Actions")]
 		[SerializeField] private ActionSO idleAction;
@@ -22,50 +22,62 @@ namespace Kope.AI.Utility {
 		[Header("Behavior Control"), Range(1, 20)]
 		[SerializeField] private int shortTermMemorySize = 5;
 
-		[SerializeField, Range(0.05f, 1.0f), Tooltip("The minimum weight an action can decay to in memory." +
-		" This prevents actions from becoming completely irrelevant over time.")]
+		[SerializeField, Range(0.05f, 1.0f), Tooltip("The minimum weight an action can decay to.")]
 		private float minActionWeight = 0.1f;
 
 		#region Internal Classes
-		protected internal class ActionEntry {
+		protected internal class ActionEntry : IHasCost<float> {
 			private readonly ActionSO action;
 			private float biasWeight;
 			private bool isActive;
 			public ActionSO Action => this.action;
+
 			public ActionEntry(ActionSO action, float weight) {
 				this.action = action;
 				this.biasWeight = weight;
 				this.isActive = false;
 			}
+
+			public float GetCost() => this.biasWeight;
+
 			public float Evaluate(IReadOnlyContext ctx) {
 				float score = this.action.Evaluate(ctx) * this.biasWeight;
 				if (this.isActive) score += this.action.MomentumBias;
-				// just return raw, let the x>1, so we have more dynamic range.
-				// x will never be x<0, since the base evaluation will always be >= 0,
-				//  and bias weight and momentum bias are also >= 0. 
-				// so no need to clamp or anything. just return the raw score to allow 
-				// for more dynamic range and more interesting decision making.
 				return score;
 			}
+
 			public void ApplyDecay(float minWeight)
-			=> this.biasWeight = Mathf.Max(minWeight, this.biasWeight * this.action.DecayRate);
+				=> this.biasWeight = Mathf.Max(minWeight, this.biasWeight * this.action.DecayRate);
+
 			public void ResetWeight(float weight) => this.biasWeight = weight;
+
+			public void RegenWeights(int numberOfTicks) {
+				if (this.isActive || numberOfTicks <= 0) return;
+				// Compound interest recovery
+				float compoundedRegenAmount = this.biasWeight * (Mathf.Pow(1 + this.action.WeightRegenRate, numberOfTicks) - 1);
+				this.biasWeight = Mathf.Min(1f, this.biasWeight + compoundedRegenAmount);
+			}
+
 			public void SetIsActive(bool isActive) => this.isActive = isActive;
 		}
+
 		protected internal class Memory {
-			private readonly Queue<ActionEntry> actionQueue;
+			private readonly PriorityQueueSimple<ActionEntry, float> actionQueue;
 			private readonly HashSet<ActionEntry> actionSet;
-			private readonly int capacity;
+			private readonly int memoryCapacity;
 			public int Count => this.actionQueue.Count;
+
 			public Memory(int capacity) {
-				this.actionQueue = new Queue<ActionEntry>(capacity);
+				this.actionQueue = new PriorityQueueSimple<ActionEntry, float>(capacity);
 				this.actionSet = new HashSet<ActionEntry>(capacity);
-				this.capacity = capacity;
+				this.memoryCapacity = capacity;
 			}
+
 			public bool Contains(ActionEntry action) => this.actionSet.Contains(action);
+
 			public ActionEntry Enqueue(ActionEntry action) {
 				ActionEntry removed = null;
-				if (this.actionQueue.Count >= this.capacity) {
+				if (this.actionQueue.Count >= this.memoryCapacity) {
 					removed = this.actionQueue.Dequeue();
 					this.actionSet.Remove(removed);
 				}
@@ -80,6 +92,23 @@ namespace Kope.AI.Utility {
 				this.actionSet.Remove(removed);
 				return removed;
 			}
+
+			public void UpdatePriority(ActionEntry entry) => this.actionQueue.TryUpdatePriority(entry);
+
+			public void RegenWeights(ActionEntry except, float lastTime, float currentTime, float deltaTime) {
+				// BUG FIX: Prevent division by zero if deltaTime is 0
+				float safeDelta = deltaTime > 0 ? deltaTime : DEFAULT_FIXED_DELTA;
+				int ticks = Mathf.RoundToInt((currentTime - lastTime) / safeDelta);
+
+				if (ticks <= 0) return;
+
+				foreach (var entry in this.actionSet) {
+					if (entry == except) continue;
+					entry.RegenWeights(ticks);
+					this.actionQueue.TryUpdatePriority(entry);
+				}
+			}
+
 			public void Clear() {
 				this.actionQueue.Clear();
 				this.actionSet.Clear();
@@ -91,128 +120,129 @@ namespace Kope.AI.Utility {
 		private ActionEntry currentlyActiveEntry;
 		private readonly List<ActionEntry> actionEntries = new();
 		private Memory memory;
+		private float lastEvaluationTime = 0f;
+		private float evaluatedScore = 0f;
 
-		#region Properties
+		public override string AlgorithmName => this.useConfig && this.config != null ? this.config.AlgorithmName : this.algorithmName;
 
-		public override string AlgorithmName =>
-			this.useConfig && this.config != null
-				? this.config.AlgorithmName
-				: this.algorithmName;
-
-		private List<ActionSO> GetActualActionSOs() =>
-			this.useConfig && this.config != null
-				? this.config.ActionSOs
-				: this.actionSOs;
-
-		#endregion
-		float evaluatedScore = 0f;
 		#region Initialization
-
 		protected override bool InitializeAI() {
-			if (this.idleAction == null) {
-				Debug.LogError("UtilityAiAlgorithm: Idle action missing.");
-				return false;
-			}
+			if (this.idleAction == null) return false;
 
-			this.idleActionEntry = new ActionEntry(
-				Instantiate(this.idleAction), DEFAULT_INITIAL_WEIGHT);
+			this.idleActionEntry = new ActionEntry(Instantiate(this.idleAction), DEFAULT_INITIAL_WEIGHT);
 			this.actionEntries.Add(this.idleActionEntry);
 
-			var actions = GetActualActionSOs();
-
+			var actions = this.useConfig && this.config != null ? this.config.ActionSOs : this.actionSOs;
 			if (actions != null) {
 				foreach (var action in actions) {
 					if (action == null) continue;
-					var instance = Instantiate(action);
-					this.actionEntries.Add(new ActionEntry(
-						instance, DEFAULT_INITIAL_WEIGHT));
+					this.actionEntries.Add(new ActionEntry(Instantiate(action), DEFAULT_INITIAL_WEIGHT));
 				}
 			}
 
-			// Ensure memory size is at least 1 and
-			//  does not exceed the number of available actions 
-			// minus one (to allow for the idle action).
-			var size = Mathf.Clamp(
-				this.shortTermMemorySize, 1,
-				Mathf.Max(1, this.actionEntries.Count - 1)
-			);
+			int size = Mathf.Clamp(this.shortTermMemorySize, 1, Mathf.Max(1, this.actionEntries.Count - 1));
+			Debug.Log($"MemorySize = {size}");
 			this.memory = new Memory(size);
 			return true;
 		}
 
 		protected override void CleanUpAI() {
-			if (this.actionEntries != null) {
-				foreach (var actionEntry in this.actionEntries) {
-					if (actionEntry.Action != null)
-						Destroy(actionEntry.Action);
-				}
-				this.actionEntries.Clear();
-			}
+			foreach (var entry in this.actionEntries) if (entry.Action != null) Destroy(entry.Action);
+			this.actionEntries.Clear();
 			this.memory?.Clear();
 			this.memory = null;
-			// No need to destroy idle action separately since it's included in actionEntries
-			// just nullify the reference to allow GC to clean it up
-			this.idleActionEntry = null;
 		}
-
 		#endregion
-
-
-		#region Decision
 
 		public override IEnumerable<BaseActionSO> GetDecisionPlan(IReadOnlyContext ctx) {
 			yield return SelectBestAction(ctx);
 		}
 
 		private ActionSO SelectBestAction(IReadOnlyContext ctx) {
-			// If there's only one action (the idle action), return it immediately without evaluation.
-			// no need to waste computation on evaluating the idle action against itself,
-			//  and this also prevents any potential issues with memory or biasing when 
-			// only the idle action is present.
 			if (this.actionEntries.Count == 1) return this.idleActionEntry.Action;
 
+			this.memory.RegenWeights(this.currentlyActiveEntry, this.lastEvaluationTime, Time.time, Time.deltaTime);
+
 			var best = EvaluateActions(ctx);
-			return ApplyMemoryPenalty(best);
+			return RunMemoryTask(best);
 		}
 
 		private ActionEntry EvaluateActions(IReadOnlyContext ctx) {
 			ActionEntry bestAction = null;
 			float highestScore = float.MinValue;
 
-			foreach (var actionEntry in this.actionEntries) {
-				float score = actionEntry.Evaluate(ctx);
-				//Debug.Log($"[UtilityAiAlgorithm] Evaluating action: {actionEntry.Action.name}, Score: {score}. " + GetParentGameObjectHeirarchyMessage());
+			foreach (var entry in this.actionEntries) {
+				float score = entry.Evaluate(ctx);
 				if (score > highestScore) {
 					highestScore = score;
-					bestAction = actionEntry;
+					bestAction = entry;
 				}
+#if UNITY_EDITOR
+				var entryName = entry.Action != null ? entry.Action.ActionName : "None";
+				Debug.Log($"[UtilityAI] Evaluating the action named {entryName} with the score = {score}");
+#endif
 			}
+
 			if (bestAction != this.currentlyActiveEntry) {
 				this.currentlyActiveEntry?.SetIsActive(false);
 				bestAction?.SetIsActive(true);
 				this.currentlyActiveEntry = bestAction;
 			}
 			evaluatedScore = highestScore;
+#if UNITY_EDITOR
+			var bestName = bestAction?.Action != null ? bestAction.Action.ActionName : "None";
+			Debug.Log($"[UtilityAI] Found Best Action named {bestName} with score = {highestScore}");
+#endif
 			return bestAction;
 		}
 
-		#endregion
+		private ActionSO RunMemoryTask(ActionEntry actionEntry) {
+			// BUG FIX: Ensure actionEntry isn't null for the logic below
+			actionEntry ??= this.idleActionEntry;
 
-
-		#region Memory + Recurrence
-		private ActionSO ApplyMemoryPenalty(ActionEntry actionEntry) {
-			if (actionEntry == null) return this.idleActionEntry.Action;
-
-			if (this.memory.Contains(actionEntry)) {
+			if (actionEntry == this.idleActionEntry) {
+				var rescued = this.memory.Dequeue();
+				if (rescued != null) {
+					rescued.ResetWeight(DEFAULT_INITIAL_WEIGHT);
+					var evicted = this.memory.Enqueue(rescued);
+					evicted?.ResetWeight(DEFAULT_INITIAL_WEIGHT);
+				}
+			} else if (this.memory.Contains(actionEntry)) {
 				actionEntry.ApplyDecay(this.minActionWeight);
+				this.memory.UpdatePriority(actionEntry); // Sync decay changes
 			} else {
 				var removed = this.memory.Enqueue(actionEntry);
-				if (removed != null) removed.ResetWeight(DEFAULT_INITIAL_WEIGHT);
+				removed?.ResetWeight(DEFAULT_INITIAL_WEIGHT);
 				actionEntry.ResetWeight(DEFAULT_INITIAL_WEIGHT);
+				actionEntry.ApplyDecay(this.minActionWeight);
+				this.memory.UpdatePriority(actionEntry); // Sync initial decay
 			}
-			//Debug.Log($"[UtilityAiAlgorithm] Selected action: {actionEntry.Action.name} with evaluated score: {evaluatedScore}. Memory updated. Current memory count: {this.memory.Count}." + GetParentGameObjectHeirarchyMessage());
+
+			this.lastEvaluationTime = Time.time;
 			return actionEntry.Action;
 		}
-		#endregion
+
+#if UNITY_EDITOR
+		void OnDrawGizmos() {
+			if (!Application.isPlaying || this.currentlyActiveEntry == null) return;
+
+			// Setup a clean, readable style
+			GUIStyle style = new();
+			style.normal.textColor = Color.black;
+			style.fontSize = 30;
+			style.fontStyle = FontStyle.Bold;
+			style.alignment = TextAnchor.UpperCenter;
+
+			string currentActionName = this.currentlyActiveEntry.Action != null
+			   ? this.currentlyActiveEntry.Action.name
+			   : "None";
+
+			// Draw only the requested info
+			string labelText = $"{currentActionName}\n({evaluatedScore:F2})";
+
+			UnityEditor.Handles.Label(transform.position + Vector3.up * 2.0f, labelText, style);
+		}
+#endif
+
 	}
 }

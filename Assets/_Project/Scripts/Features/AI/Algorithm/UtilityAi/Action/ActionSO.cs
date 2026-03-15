@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Kope.Core.Extensions;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Kope.AI.Utility {
@@ -17,11 +16,15 @@ namespace Kope.AI.Utility {
 		Tooltip("This value is used to decay the bias weight of an action over time when it is not selected, " +
 		"to encourage variety in action selection.")]
 		private float decayRate = 0.7f;
+		[SerializeField, Range(0.0f, 1.0f), Tooltip("If the current active action is not this action and" +
+		"this action is in memory, this rate will try to regenerate the bias weight of this action to make it more likely to be selected again in the future.")]
+		private float weightRegenRate = 0.20f;
 		[SerializeField, Range(0.01f, 0.1f),
 		 Tooltip("Very Small Momentum Factor Provided to AI, to encourage repetition.")]
 		private float momentumBias = 0.05f;
 		public float DecayRate => this.decayRate;
 		public float MomentumBias => this.momentumBias;
+		public float WeightRegenRate => this.weightRegenRate;
 
 		/// <summary>
 		/// Evaluates the action's utility based on its considerations and the given context.
@@ -32,21 +35,24 @@ namespace Kope.AI.Utility {
 		/// </summary>
 		/// <param name="context"></param>
 		/// <returns></returns>
-		public float Evaluate(IReadOnlyContext context) {
+		public virtual float Evaluate(IReadOnlyContext context) {
+			// marking virtual so we can add logging or other custom behavior in specific actions if needed without affecting the base evaluation logic
+
+
 			// tracks how many considerations have been multiplied together
 			// to apply compensated utility correctly
 			// this is needed to avoid penalizing actions with many considerations too harshly
 			int totalMul = 0;
 			float totalScore = 1f;
 			foreach (var consideration in considerations) {
-				(float score, int newCount) = consideration.Evaluate(context, totalMul);
+				(float score, int newCount) = consideration.Evaluate(context);
 				totalScore *= score;
 				if (totalScore == 0f)
 					return 0f;
 				// ++ needed to account for this consideration multiplication being applied
-				totalMul = ++newCount;
+				totalMul += newCount + 1; // the +1 is for the current consideration's multiplication
 			}
-			return totalScore.GetCompensatedUtility(totalMul);
+			return Mathf.Max(totalScore.GetCompensatedUtility(totalMul), 0.0f);
 		}
 	}
 

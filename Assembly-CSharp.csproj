@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets/_Project/Scripts/Features/Component/Attack/AttackComponentBase.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/AI/Algorithm/UtilityAi/Action/RangeAction.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/UI/InventoryDisplays/InventoryDisplay.cs" />
     <Compile Include="Assets/_Project/Scripts/Managers/InputManager/InputManager.cs" />
     <Compile Include="Assets/_Project/_BootStrap/GlobalBootStrap.cs" />

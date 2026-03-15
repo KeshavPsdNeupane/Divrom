@@ -7,37 +7,40 @@ using Kope.Core.Sensor;
 
 
 [RequireComponent(typeof(CircleCollider2D))]
-public class StatusEffectCollector : SensorBase
-{
+public class StatusEffectCollector : SensorBase {
 	[SerializeField] private string StatusObjectTagName = "StatusEffect";
 	[SerializeField] private EntityComponentsRegistry ecr;
 	private CharacterStatsSystem characterStats;
 
 
-	public override void OnStart()
-	{
+	public override void OnStart() {
 
-		if (ecr == null)
-		{
+		if (ecr == null) {
 			MyLogger.Error("No EntityComponentStore assigned to StatusEffectCollector" + this.parentGOHiearchPathMessage);
 			return;
 		}
 		// since we are mutating the CharacterStatsSystem by adding stat modifiers to it, we need mutatable access here. so using TryGetMutatableComponent for semantic clarity
-		if (ecr.ComponentRegistry.TryGetMutatableComponent(out CharacterStatsSystem statsSystem))
-		{
+		if (ecr.ComponentRegistry.TryGetMutatableComponent(out CharacterStatsSystem statsSystem)) {
 			this.characterStats = statsSystem;
-		}
-		else
-		{
+		} else {
 			MyLogger.Error("No CharacterStatsSystem found in EntityComponentStoreConfig for StatusEffectCollector" + this.parentGOHiearchPathMessage);
 			return;
 		}
 	}
-	public override void OnDetect(Collider2D other)
-	{
-		if (other.CompareTag(StatusObjectTagName))
-		{
-			EntityManager mgr = other.GetComponent<EntityManager>();
+	public override void OnDetect(Collider2D other) {
+		if (other.CompareTag(StatusObjectTagName)) {
+			// we are using TryGetComponent here instead of GetComponent because we want to log an error 
+			// if the component is not found, rather than throwing an exception. since we are only trying
+			//  to get the StatusEffectContainer component, and it's possible that the detected object might
+			//  not have it (if it's not set up correctly), using TryGetComponent allows us to handle that case
+			//  gracefully by logging an error message and returning early, rather than having an unhandled exception
+			//  that could disrupt the game flow.
+			if (!other.TryGetComponent(out EntityManager mgr)) {
+				MyLogger.Error("No EntityManager found on detected object with tag " + StatusObjectTagName + ". Please ensure the object has an EntityManager component." + this.parentGOHiearchPathMessage);
+				return;
+			}
+
+
 			// using tryGet so we can satisfy the semantic clarity of "if it has the component, 
 			// we will use it, if not, we will log an error and return". since we are not mutating
 			// the StatusEffectContainer, we don't need mutatable access, so TryGetComponent is sufficient here.
@@ -47,15 +50,12 @@ public class StatusEffectCollector : SensorBase
 			//  and we have a convention that any object with that tag must have 
 			// a StatusEffectContainer component. so if we don't find it, it means something is
 			//  wrong with the setup of the detected object, and we log an error to notify the developer to fix it.
-			if (!mgr.EntityDetail.EntityComponentRegistry.ComponentRegistry.TryGetComponent(out StatusEffectContainer effect))
-			{
+			if (!mgr.EntityDetail.EntityComponentRegistry.ComponentRegistry.TryGetComponent(out StatusEffectContainer effect)) {
 				MyLogger.Error("No StatusEffectContainer found on detected object with tag " + StatusObjectTagName + ". Please ensure the object has a StatusEffectContainer component." + this.parentGOHiearchPathMessage);
 				return;
 			}
-			if (effect != null && effect.StatusEffect != null && this.characterStats != null)
-			{
-				if (this.characterStats.AddStatModifier(effect.StatusEffect))
-				{
+			if (effect != null && effect.StatusEffect != null && this.characterStats != null) {
+				if (this.characterStats.AddStatModifier(effect.StatusEffect)) {
 					// always call NotifyEntityDiedOrPooled before destroying the gameobject,
 					//  so that any systems that need to react to the entity's death or pooling 
 					// can do so before the gameobject is destroyed and becomes inaccessible.
