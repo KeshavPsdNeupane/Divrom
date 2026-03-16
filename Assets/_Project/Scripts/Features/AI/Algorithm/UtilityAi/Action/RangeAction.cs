@@ -10,7 +10,7 @@ public class RangeAction : ActionSO {
 	///  before completing. This is used to demonstrate the Utility AI system and should 
 	/// be replaced with actual logic for performing an action based on range considerations.
 	/// </summary>
-	private readonly float tempIdleDuration = 2f;
+	private readonly float tempIdleDuration = 0.5f;
 	private CountdownTimer idleTimer;
 
 	protected override void OnInilialize(ComponentRegistry ctx) {

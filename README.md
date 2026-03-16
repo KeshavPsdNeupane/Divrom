@@ -93,13 +93,10 @@ A custom lightweight ECS-like architecture that provides centralized component m
 #### Usage Example
 
 ```csharp
-// Register components in EntityComponentStore
 [SerializeField] private EntityComponentStore ecr;
 
-// Retrieve components at runtime
 if (ecr.ComponentRegistry.TryGetComponent<CharacterStatsSystem>(out var statsSystem))
 {
-    // Use the component
     float health = statsSystem.GetStatValue(CharacterStatType.HP);
 }
 ```
@@ -116,17 +113,10 @@ A robust initialization framework ensuring proper component setup and lifecycle 
 - **`InitCallerManager`**: Orchestrates initialization order
 - **`IInitializable`**: Interface for initialization contract
 
-#### Features
-
-- Guaranteed initialization order
-- Lifecycle hooks: `OnInit()`, `OnUpdate()`, `OnFixedUpdate()`
-- Debug tracking with stack trace information
-- Prevention of duplicate initialization
-
 #### Lifecycle Flow
 
 ```
-OnInit() → OnEnable() → OnUpdate()/OnFixedUpdate() → OnDisable()
+OnInit() → OnEnable() → OnUpdate() / OnFixedUpdate() → OnDisable()
 ```
 
 ---
@@ -137,14 +127,9 @@ Provides global and scene-based service management without tight coupling.
 
 #### Components
 
-- **`GlobalServiceLocator`**: Singleton for game-wide services (InputManager, etc.)
+- **`GlobalServiceLocator`**: Singleton for game-wide services
 - **`SceneServiceLocator`**: Scene-specific services
 - **`ServiceBase`**: Base class for all services
-
-#### Registered Services
-
-- `InputManager`: Centralized input handling
-- `ItemDragDropManager`: UI drag-and-drop operations
 
 ---
 
@@ -152,13 +137,13 @@ Provides global and scene-based service management without tight coupling.
 
 ### AI System
 
-A powerful, extensible AI framework supporting multiple decision-making algorithms.
+A layered, extensible AI framework with a clean separation between **execution** and **decision-making**. The `AIBrain` drives action execution and lifecycle; the `AIBrainAlgorithm` is a swappable planner that decides what to do next. This means alternative planners (GOAP, Behavior Trees) can be dropped in without touching action implementations.
 
 #### Architecture
 
 ```
 AIBrain (Executor)
-    ├── AIBrainAlgorithm (Planner)
+    ├── AIBrainAlgorithm (Planner — swappable)
     │   ├── UtilityAiAlgorithm
     │   └── [Future: GOAP, Behavior Trees]
     ├── Context (World State)
@@ -166,34 +151,140 @@ AIBrain (Executor)
     └── BaseActionSO (Actions)
 ```
 
-#### Utility AI Algorithm
+#### Action Layers
 
-- **Considerations**: Evaluate world state conditions
-- **Actions**: Executable behaviors with utility scores
-- **Compensated Utility**: Balances multi-factor scoring
-- **Loop Prevention**: Automatic fallback to idle action after repeated selections
+Actions are split across two base types to keep execution and decision-making concerns separate:
 
-#### Key Features
+- **`BaseActionSO`** — execution contract only. Knows nothing about utility scoring. Implements `Initialize`, `TickUpdate`, `TickFixedUpdate`, `EndOrAbort`, and `MarkCompleted`. Any planner can use these.
+- **`ActionSO`** — extends `BaseActionSO` with utility-specific data: considerations, decay, momentum bias, weight regeneration, and cooldown. Only relevant to the Utility AI planner.
 
-1. **Modular Actions**: ScriptableObject-based action definitions
-2. **Context System**: Centralized world state management
-3. **Sensor Integration**: Circle-based entity detection
-4. **Interrupt System**: Priority-based action interruption
-5. **Refresh Timer**: Periodic plan reevaluation
+This means if you swap the planner for GOAP tomorrow, all your `BaseActionSO` implementations remain untouched.
 
 #### Action Lifecycle
 
+```
+Initialize() → TickUpdate() / TickFixedUpdate() → MarkCompleted() / EndOrAbort()
+```
+
+Status flows through `ExecutionActionStatus`:
+
+```
+NotInitialized → Running → Success
+                         → NotInitialized (via EndOrAbort)
+```
+
+#### Interrupt System
+
+`AIBrain` supports priority-based interrupts via `IInterruptOther` components:
+
+| Priority | Behavior |
+|----------|----------|
+| `Soft` | Clears plan; stops current action only if it is interruptible |
+| `Hard` | Forces stop of current action unconditionally |
+| `Death` | Forces stop and disables the brain entirely |
+
+---
+
+### Utility AI Algorithm
+
+The `UtilityAiAlgorithm` is the primary planner. Rather than picking the highest-scoring action every tick naively, it maintains a **short-term memory** of recently selected actions and uses **bias weights** to shape behavior over time — producing natural variety without hardcoded state machines.
+
+#### How It Works
+
+Every action carries a `biasWeight` (starts at 1.0) that modifies its raw utility score at evaluation time:
+
+```
+effectiveScore = action.Evaluate(ctx) * biasWeight  [+ momentumBias if currently active]
+```
+
+The algorithm then applies three mechanisms to keep behavior varied and healthy:
+
+**1. Decay** — when an action is selected, its `biasWeight` is multiplied by `DecayRate` (< 1.0). Repeated selections progressively lower the effective score, creating pressure to try other actions. Weight cannot fall below `minActionWeight` to prevent permanent suppression.
+
+**2. Compound Regeneration** — while an action sits idle in memory, its weight recovers using a compound growth formula:
+
+```
+recovered = biasWeight * ((1 + WeightRegenRate)^ticks - 1)
+```
+
+Recovery accelerates over time — a long-ignored action bounces back faster than a recently suppressed one, which produces natural behavioral cycles.
+
+**3. Momentum Bias** — a small flat bonus added to the currently active action's score. This discourages jittery switching when two actions score similarly.
+
+#### Short-Term Memory
+
+A bounded `Memory` structure (priority queue + hash set) tracks recently used actions:
+
+- New actions enter memory and immediately receive their first decay
+- Actions already in memory receive further decay each time they are selected
+- When memory is full, the lowest-weight action is evicted and its weight is reset — anti-starvation
+- When idle wins, the most-suppressed action in memory is rescued and its weight reset, giving it a fair second chance
+
+Memory capacity is configurable via `shortTermMemorySize` in the inspector.
+
+#### Cooldown
+
+For actions where decay alone is insufficient to prevent immediate re-selection (e.g. a ranged attack that scores persistently high while the player is in range), a time-based cooldown is available:
+
 ```csharp
-Initialize() → TickUpdate() → TickFixedUpdate() → EndOrAbort()
+// On the ActionSO asset — set in the inspector
+[SerializeField, Min(0f)] private float cooldownDuration = 0f;
 ```
 
-#### Utility Scoring
+When an action deactivates, `cooldownUntil = Time.time + cooldownDuration`. The action is skipped entirely during evaluation until the timer expires. The idle action is always exempt from cooldown to guarantee a safe fallback.
 
-Uses multiplicative scoring with compensated utility:
+`CooldownDuration` maps directly to wall-clock seconds regardless of how frequently the external caller drives evaluation — making it reliable even with irregular tick rates.
+
+#### Utility Scoring — Considerations
+
+Each `ActionSO` holds a list of `ConsiderationSO` assets. Scoring uses **multiplicative evaluation with compensated utility** to balance actions fairly across different numbers of considerations:
+
 ```
-FinalScore = (C1 × C2 × C3 × ...)^(1/N)
+FinalScore = (C1 × C2 × ... × CN) ^ (1/N)
 ```
-Where N is the number of considerations.
+
+The `^(1/N)` normalization (compensated utility) prevents actions with many considerations from being unfairly penalized compared to simpler ones.
+
+**ConsiderationSO** is abstract — implement `Evaluate(IReadOnlyContext)` returning a `(float score, int multiplicationCount)` tuple. The multiplication count drives the compensated utility normalization correctly.
+
+**CompositeConsideration** allows nesting multiple considerations under a single slot on an action — useful for compound conditions like "is in range AND has line of sight AND has ammo":
+
+```
+ActionSO
+├── CompositeConsideration  ("Combat Ready")
+│   ├── InRangeConsideration
+│   ├── HasLineOfSightConsideration
+│   └── HasAmmoConsideration
+└── HealthThresholdConsideration
+```
+
+Composite considerations propagate their internal multiplication counts correctly so compensated utility remains accurate regardless of nesting depth.
+
+#### Evaluation is Event-Driven
+
+`AIBrain` drives evaluation — not a per-frame loop. A new plan is fetched either when the current action completes or when the optional `refreshInterval` timer fires. This means the AI ticks at a controlled cadence rather than every frame, and `CooldownDuration` values should be tuned relative to your `refreshInterval`.
+
+#### Inspector Reference
+
+| Field | Location | Purpose |
+|-------|----------|---------|
+| `shortTermMemorySize` | `UtilityAiAlgorithm` | How many recent actions to track (1–20) |
+| `minActionWeight` | `UtilityAiAlgorithm` | Floor weight an action can decay to (0.05–1.0) |
+| `refreshInterval` | `AIBrain` | Seconds between forced re-evaluations (0 = disabled) |
+| `decayRate` | `ActionSO` | Per-selection weight multiplier (0.05–1.0) |
+| `weightRegenRate` | `ActionSO` | Compound recovery rate per idle tick (0.0–1.0) |
+| `momentumBias` | `ActionSO` | Flat score bonus while action is active (0.01–0.1) |
+| `cooldownDuration` | `ActionSO` | Seconds before action can be re-selected (0 = none) |
+
+#### Tuning Guide
+
+- **Patrol / Idle** — low decay, no cooldown. These are filler behaviors; keep them freely available.
+- **Reposition / Take Cover** — higher decay, no cooldown. Should happen occasionally, not on loop.
+- **Ranged Attack** — moderate decay + cooldown. Decay prevents tunnel vision; cooldown enforces fire rate. Set `cooldownDuration = 1f / attacksPerSecond`.
+
+#### Debug
+
+In Play Mode, an `OnDrawGizmos` overlay renders above each agent showing the currently active action name and its evaluated score — useful for rapid tuning without opening the Profiler.
 
 ---
 
@@ -204,29 +295,9 @@ Flexible, event-driven stat management with modifiers and scaling.
 #### Stat Types
 
 ```csharp
-public enum CharacterStatType
-{
-    HP,      // Health Points
-    ATK,     // Physical Attack
-    DEF,     // Defense
-    MATK,    // Magic Attack
-    SPD,     // Movement Speed
-    CRATE,   // Critical Rate
-    CDMG     // Critical Damage
-}
-
-public enum DamageType
-{
-    Physical, Fire, Ice, Lightning, Poison
-}
+public enum CharacterStatType { HP, ATK, DEF, MATK, SPD, CRATE, CDMG }
+public enum DamageType { Physical, Fire, Ice, Lightning, Poison }
 ```
-
-#### Components
-
-- **`AdvanceStat`**: Complex stat with base, multiplier, point, and perk modifiers
-- **`StatBase`**: Simple stat with basic modifiers
-- **`CharacterStatsSystem`**: Central stat management system
-- **`CharacterStatsSO`**: ScriptableObject configuration
 
 #### Stat Composition
 
@@ -236,102 +307,34 @@ FinalValue = (BaseValue + PointStats) × (1 + Multiplier) + PerkStats
 
 #### Features
 
-- **Event-Driven**: Subscribe to stat changes for reactive UI updates
-- **Status Effects**: Temporary stat modifiers with duration
-- **Level Scaling**: Automatic stat increases on level-up
-- **Resistance System**: Damage type-specific resistances
-
-#### Usage Example
-
-```csharp
-// Subscribe to stat changes
-statsSystem.StatsSubscribe(CharacterStatType.HP, (newValue) => 
-{
-    healthBar.UpdateDisplay(newValue);
-});
-
-// Modify stats
-statsSystem.AddStatModifier(new StatusEffect 
-{
-    statType = CharacterStatType.ATK,
-    modifier = 10f,
-    duration = 5f,
-    isPercentage = false
-});
-
-// Level up
-statsSystem.TriggerLevelUp();
-```
+- Event-driven subscription model for reactive UI updates
+- Status effects with duration
+- Level scaling with configurable growth
+- Damage type-specific resistances
 
 ---
 
 ### Modular Sprite Animation System
 
-Advanced 2D character customization and animation system supporting multiple body parts, genders, races, and color variations.
+Advanced 2D character customization supporting multiple body parts, genders, races, and color variations.
 
-#### Architecture
+#### Generic Type System
 
-**Generic Type System**:
 ```csharp
 SpriteAnimationLibraryAssetDefinition<TGender, TRace, TColorPermutation, TPart>
 ```
 
-#### Components
-
-1. **Asset Definitions**:
-   - `BodyRegionAnimationLibraryAsset`: Character body parts
-   - `EquipmentAnimationLibraryAsset`: Weapons, armor, accessories
-
-2. **Runtime Resolvers**:
-   - `StaticBaseCharacterAnimationLibraryResolver`: Manages sprite library overrides
-
-3. **Custom Libraries**:
-   - `CustomSpriteLibraryDefinition<TPart>`: Part-specific sprite management
-
 #### Features
 
-- **Multi-Part System**: Support for 100+ unique body/equipment parts
-- **Gender & Race Support**: Configurable character variants
-- **Color Permutations**: Multiple color schemes per asset
-- **Runtime Switching**: Dynamic character customization
-- **Editor Preview**: Real-time visualization in Unity Editor
-
-#### Example Enums
-
-```csharp
-public enum BodyRegionEnum : short
-{
-    None = 0,
-    Head = 100,
-    Torso = 200,
-    Legs = 300,
-    Arms = 400
-}
-
-public enum EquipmentPartEnum : short
-{
-    None = 0,
-    Helmet = 100,
-    Chest = 200,
-    Weapon = 300
-}
-```
+- Multi-part system supporting 100+ unique body and equipment parts
+- Runtime library switching for dynamic customization
+- Editor preview with real-time visualization
 
 ---
 
 ### Inventory System
 
 Component-based inventory management with UI integration.
-
-#### Components
-
-- **`InventorySystem`**: Core inventory logic
-- **`InventoryHolder`**: Entity inventory component
-- **`PlayerInventoryDisplay`**: UI visualization
-- **`ItemSlotUI`**: Individual item slot representation
-- **`PlayerItemCollector`**: Automatic item pickup
-
-#### Features
 
 - Object pooling for UI elements
 - Drag-and-drop item management
@@ -344,68 +347,25 @@ Component-based inventory management with UI integration.
 
 Hierarchical state machine for player and AI entities.
 
-#### Architecture
-
 ```
-EntityStateManager (State Machine)
-    ├── EntityStateController (Context)
-    └── EntityStates (State Collection)
-        ├── EntityIdle
-        ├── EntityMove
-        └── EntityAttack
-```
-
-#### Features
-
-- Animation state integration
-- Command acceptance filtering
-- State transition validation
-- Physics-aware updates
-
-#### State Interface
-
-```csharp
-public interface IStateCanAcceptCommand
-{
-    bool CanAcceptCommand { get; }
-}
+EntityStateManager
+    ├── EntityStateController
+    └── EntityStates (Idle, Move, Attack, ...)
 ```
 
 ---
 
 ### Movement & Combat
 
-#### Movement System
+Intent-based movement with stats-modulated speed and physics integration. Combat supports critical hits, damage types, and resistance lookups against `CharacterStatsSystem`.
 
-**`MovementComponentBase`**:
-- Input-driven movement intents
-- Stats-based speed modulation
-- Physics integration (Rigidbody2D)
-- Flexible intent system
-
-**Movement Intent Types**:
 ```csharp
-public enum MovementIntentType
-{
-    Move,      // Standard movement
-    Dash,      // Quick burst
-    Knockback  // Force-based movement
-}
+public enum MovementIntentType { Move, Dash, Knockback }
 ```
-
-#### Combat System
-
-**`AttackComponentBase`**:
-- Weapon data integration
-- Critical hit system
-- Damage calculation with stats
-- Animation-driven attacks
 
 ---
 
 ## Custom Assemblies
-
-The project uses Assembly Definition files for clean code organization:
 
 | Assembly | Purpose |
 |----------|---------|
@@ -421,16 +381,15 @@ The project uses Assembly Definition files for clean code organization:
 
 ### Unity Packages
 
-- **Unity 2D Packages**: Animation, Tilemap, Sprite utilities
-- **Unity Input System** (1.14.2): Modern input handling
-- **Cinemachine** (3.1.5): Camera control
-- **Universal Render Pipeline** (17.2.0): 2D rendering
-- **TextMeshPro**: Advanced text rendering
-- **NuGet for Unity**: External package management
+- Unity 2D packages (Animation, Tilemap, Sprite utilities)
+- Unity Input System (1.14.2)
+- Cinemachine (3.1.5)
+- Universal Render Pipeline (17.2.0)
+- TextMeshPro
 
 ### Third-Party Libraries
 
-- **ZLinq**: Custom LINQ utilities for performance
+- **ZLinq**: Performance-optimized LINQ alternative
 
 ---
 
@@ -438,31 +397,25 @@ The project uses Assembly Definition files for clean code organization:
 
 ### Prerequisites
 
-- **Unity 2022.3 LTS** or newer
-- **Git LFS**: For large binary assets
-- **.NET SDK**: For C# compilation
+- Unity 6000.3.10f1 (or closest compatible LTS)
+- Git LFS for large binary assets
 
 ### Installation
 
 1. Clone the repository:
    ```bash
    git clone [repository-url]
-   cd Divrom
    ```
+2. Open the folder from Unity Hub
+3. Open the bootstrap scene in `Assets/_Project/_BootStrap/`
+4. Press Play
 
-2. Open the project in Unity Hub
+### Controls
 
-3. Let Unity import packages (may take 5-10 minutes on first load)
-
-4. Open the bootstrap scene: `Assets/_Project/_BootStrap/Bootstrap.unity`
-
-### Running the Project
-
-1. Press **Play** in Unity Editor
-2. Use WASD or arrow keys to move
-3. Press designated attack button (configured in Input System)
-4. Open inventory with Tab/I key
-5. Access menu with Escape
+- **WASD / Arrow Keys**: Move
+- **Attack Button**: Configured via Input System
+- **Tab / I**: Open inventory
+- **Escape**: Menu
 
 ---
 
@@ -470,53 +423,33 @@ The project uses Assembly Definition files for clean code organization:
 
 ### Sprite Tools
 
-#### Grid Auto Slicer
-**Menu**: `Tools → Grid Auto Slicer`
-
-Automatically slices sprite sheets into animation frames with:
-- Grid-based slicing
-- Auto-naming based on `SpriteRowNamingData`
-- Subcategory support
-- Transparent frame detection
-
-#### Sprite Library Populator
-**Menu**: `Tools → Populate Library From Dummy`
-
-Creates sprite library instances from template structures:
-- Category/label matching
-- Automatic sprite assignment
-- Batch processing
+- **Grid Auto Slicer** (`Tools → Grid Auto Slicer`): Batch-slices sprite sheets with auto-naming and transparent frame detection
+- **Sprite Library Populator** (`Tools → Populate Library From Dummy`): Creates sprite library instances from template structures
 
 ### Animation Tools
 
-#### Static Animation Library Resolver Editor
-
-Custom inspector for resolving sprite libraries with:
-- Category/label preview
-- Manual sprite snapping
-- Multi-object editing support
+- **Static Animation Library Resolver Editor**: Custom inspector with category/label preview and manual sprite snapping
 
 ---
 
 ## Architecture Patterns
 
-### Patterns Used
-
-1. **Service Locator**: Global service access without singletons
-2. **Component Pattern**: Modular entity behaviors
-3. **Observer Pattern**: Event-driven stat and UI updates
-4. **Strategy Pattern**: Interchangeable AI algorithms
-5. **Command Pattern**: Input action encapsulation
-6. **Object Pool**: UI element recycling
-7. **State Pattern**: Entity behavior states
+| Pattern | Where Used |
+|---------|-----------|
+| Service Locator | Global and scene service access |
+| Strategy | Swappable `AIBrainAlgorithm` implementations |
+| Observer | Event-driven stat and UI updates |
+| Component | Modular entity behaviors via ECS registry |
+| Command | Input action encapsulation |
+| Object Pool | UI element recycling in inventory |
+| State | Entity behavior state machine |
 
 ### Design Principles
 
-- **Separation of Concerns**: Clear module boundaries
-- **Open/Closed Principle**: Extensible without modification
-- **Dependency Inversion**: Depend on abstractions
-- **Interface Segregation**: Small, focused interfaces
-- **Single Responsibility**: Each class has one purpose
+- **Separation of Concerns**: Execution layer (`BaseActionSO`) is fully decoupled from decision layer (`ActionSO`, planners)
+- **Open/Closed**: New actions, considerations, and planners extend without modifying core
+- **Dependency Inversion**: Systems depend on `IReadOnlyContext`, not concrete world state
+- **Single Responsibility**: Each class has one clearly defined purpose
 
 ---
 
@@ -524,15 +457,16 @@ Custom inspector for resolving sprite libraries with:
 
 ### Naming Conventions
 
-- **Classes/Structs**: PascalCase (`CharacterStatsSystem`)
+- **Classes / Structs**: PascalCase (`CharacterStatsSystem`)
 - **Methods**: PascalCase (`GetStatValue()`)
-- **Private Fields**: camelCase with prefix (`this.statsSystem`)
+- **Private Fields**: camelCase with `this.` prefix (`this.statsSystem`)
 - **Public Properties**: PascalCase (`CurrentStats`)
-- **Constants**: UPPER_CASE (`ATTACK_ANIMATION_THRESHOLD`)
+- **Constants**: UPPER_CASE (`DEFAULT_INITIAL_WEIGHT`)
 
 ### Documentation
 
 All public APIs use XML documentation:
+
 ```csharp
 /// <summary>
 /// Retrieves the current value of a character stat.
@@ -546,26 +480,18 @@ public float GetStatValue(CharacterStatType type) { }
 
 ## Performance Considerations
 
-### Optimizations
-
-1. **Component Caching**: Components retrieved once during initialization
-2. **Dictionary Lookups**: O(1) component retrieval
-3. **Object Pooling**: Reduced garbage collection for UI
-4. **Event-Based Updates**: Only update when values change
-5. **Custom Update Loops**: Avoid MonoBehaviour overhead where possible
-
-### Profiling Tips
-
-- Use Unity Profiler for frame time analysis
-- Monitor GC allocations in inventory UI
-- Check AI planner update frequency
-- Profile sprite library resolution times
+- **Component Caching**: Components retrieved once during initialization, stored as references
+- **Dictionary Lookups**: O(1) component retrieval via `ComponentRegistry`
+- **Priority Queue**: O(log n) memory updates in `UtilityAiAlgorithm`
+- **Object Pooling**: Reduced GC pressure in inventory UI
+- **Event-Based Updates**: Stat UI only redraws on change
+- **Controlled AI Tick Rate**: Evaluation driven by action completion and refresh timer, not every frame
 
 ---
 
 ## Known Issues & Limitations
 
-1. **AI System**: Currently only Utility AI implemented (GOAP planned)
+1. **AI System**: Only Utility AI implemented (GOAP and Behavior Trees planned)
 2. **Multiplayer**: Not yet implemented
 3. **Save System**: Entity state persistence not implemented
 4. **Animation**: Limited to 2D sprite-based animation
@@ -574,75 +500,23 @@ public float GetStatValue(CharacterStatType type) { }
 
 ## Future Roadmap
 
-### Planned Features
-
 - [ ] GOAP (Goal-Oriented Action Planning) AI algorithm
-- [ ] Behavior Tree AI algorithm  
+- [ ] Behavior Tree AI algorithm
 - [ ] Save/Load system with JSON serialization
 - [ ] Quest system
 - [ ] Dialogue system
 - [ ] Network multiplayer support
-- [ ] Advanced particle effects
 - [ ] Sound system integration
 - [ ] Localization support
 
 ---
 
-## Contributing
-
-### Guidelines
-
-1. Follow existing code style and architecture patterns
-2. Write XML documentation for public APIs
-3. Add unit tests for new systems
-4. Update this README when adding major features
-5. Use meaningful commit messages
-
-### Branch Strategy
-
-- `main`: Stable release branch
-- `develop`: Integration branch for features
-- `feature/*`: Individual feature branches
-- `bugfix/*`: Bug fix branches
-
----
-
-## License
-
-[Specify your license here]
-
----
-
-## Credits
-
-### Development Team
-
-[Add your team members here]
-
-### Third-Party Assets
-
-- **Unity Technologies**: 2D packages, URP, Input System
-- **ZLinq**: Performance-optimized LINQ alternative
-
----
-
-## Contact
-
-For questions, issues, or contributions:
-- **Project Repository**: [Add GitHub/GitLab URL]
-- **Issue Tracker**: [Add issue tracker URL]
-- **Documentation**: [Add docs URL if available]
-
----
-
 ## Changelog
-
-### Version 0.1.0 (Current)
 
 **Features**:
 - ✅ Entity Component System
-- ✅ Utility AI with context system
-- ✅ Character stats with modifiers
+- ✅ Utility AI with short-term memory, decay, compound regen, momentum, and cooldown
+- ✅ Character stats with modifiers and status effects
 - ✅ Modular sprite animation
 - ✅ Basic inventory system
 - ✅ Player movement and combat
@@ -650,14 +524,16 @@ For questions, issues, or contributions:
 - ✅ Service locator pattern
 - ✅ Custom editor tools
 
-**Systems**:
-- Core initialization framework
-- Input management system
-- UI state management
-- Sensor-based entity detection
+---
+
+## License
+
+This repository uses MIT for original code authored in this project (see `LICENSE`).
+
+Third-party libraries, external assets, and Unity/Mono runtime components retain their own licenses.
 
 ---
 
-**Last Updated**: February 2026  
-**Unity Version**: 2022.3+  
+**Last Updated**: 2026-03-16
+**Unity Version**: 6000.3.10f1
 **Render Pipeline**: Universal Render Pipeline (URP)

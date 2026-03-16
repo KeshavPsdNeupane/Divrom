@@ -4,8 +4,7 @@ using ServiceLocatorPattern;
 using Kope.Core.CompilerServices;
 using Kope.Core.Init;
 
-public class GameplayUIController : InitializableBase
-{
+public class GameplayUIController : InitializableBase {
 	[SerializeField] private UIState inGameplayMenu;
 	[SerializeField] private UIState inventoryMenu;
 	private UIStateManager uiStateManager;
@@ -15,40 +14,31 @@ public class GameplayUIController : InitializableBase
 
 	// Must be called In Init lifecycle
 	// to setup the UIStateManager and default states
-	public override bool OnInit()
-	{
+	protected override bool OnInit() {
 		this.uiStateManager = new();
 		this.uiStateManager.Init();
-		if (GlobalServiceLocator.Instance.TryGetService<InputManager>(out InputManager inputManager))
-		{
+		if (GlobalServiceLocator.Instance.TryGetService<InputManager>(out InputManager inputManager)) {
 			this.inputManager = inputManager;
-		}
-		else
-		{
+		} else {
 			MyLogger.Error($"{this.gameObject.name}Controller: InputManager service not found!");
 			return false;
 		}
 		return true;
 	}
 
-	void OnEnable()
-	{
+	void OnEnable() {
 		Subscribe();
 	}
-	public void OnDisable()
-	{
-		if (this.uiStateManager != null)
-		{
-			if (this.uiStateManager.CurrentUIState != null)
-			{
+	public void OnDisable() {
+		if (this.uiStateManager != null) {
+			if (this.uiStateManager.CurrentUIState != null) {
 				this.uiStateManager.CurrentUIState.ExitState();
 			}
 			this.uiStateManager = null;
 		}
 		Unsubscribe();
 	}
-	private void Subscribe()
-	{
+	private void Subscribe() {
 		if (this.inputManager == null) return;
 		this.inputManager.SubscribeToInputAction(
 			PlayerInputActionMap.Player,
@@ -71,8 +61,7 @@ public class GameplayUIController : InitializableBase
 
 	}
 
-	private void Unsubscribe()
-	{
+	private void Unsubscribe() {
 		if (this.inputManager == null) return;
 		this.inputManager.UnsubscribeFromInputAction(
 			PlayerInputActionMap.Player,
@@ -100,47 +89,37 @@ public class GameplayUIController : InitializableBase
 
 
 
-	protected override void OnUpdate()
-	{
+	protected override void OnUpdate() {
 		base.OnUpdate();
 
 		if (this.uiStateManager == null) return;
 
 		this.uiStateManager.ProcessStateChanges();
-		if (this.uiStateManager.CurrentUIState != null)
-		{
+		if (this.uiStateManager.CurrentUIState != null) {
 			this.uiStateManager.CurrentUIState.UpdateState();
 		}
 	}
 
 
-	public void EsePressed(InputAction.CallbackContext context)
-	{
+	public void EsePressed(InputAction.CallbackContext context) {
 
-		if (context.performed)
-		{
-			if (this.uiStateManager.IsEmptyStateStack())
-			{
+		if (context.performed) {
+			if (this.uiStateManager.IsEmptyStateStack()) {
 				this.uiStateManager.AddState(this.inGameplayMenu, true);
-			}
-			else // here else since ese should pop any current state
-			{
+			} else // here else since ese should pop any current state
+			  {
 				this.uiStateManager.PopState();
 			}
 		}
 	}
 
-	public void TabPressed(InputAction.CallbackContext context)
-	{
-		if (context.performed)
-		{
-			if (this.uiStateManager.IsEmptyStateStack())
-			{
+	public void TabPressed(InputAction.CallbackContext context) {
+		if (context.performed) {
+			if (this.uiStateManager.IsEmptyStateStack()) {
 				this.uiStateManager.AddState(this.inventoryMenu, true);
 			}
 			// here we only pop if the current state is the inventory menu
-			else if (this.uiStateManager.CurrentUIState == this.inventoryMenu)
-			{
+			else if (this.uiStateManager.CurrentUIState == this.inventoryMenu) {
 				this.uiStateManager.PopState();
 			}
 		}

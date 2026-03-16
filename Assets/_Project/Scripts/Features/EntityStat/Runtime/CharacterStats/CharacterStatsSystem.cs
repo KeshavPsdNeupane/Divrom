@@ -5,11 +5,9 @@ using Kope.Core.CompilerServices;
 using Kope.Core.Init;
 
 
-namespace Kope.Character.Stats
-{
+namespace Kope.Character.Stats {
 	public enum CharacterStatType { HP, ATK, DEF, MATK, SPD, CRATE, CDMG, }
-	public enum DamageType
-	{
+	public enum DamageType {
 		Physical,
 		Fire,
 		Ice,
@@ -17,8 +15,7 @@ namespace Kope.Character.Stats
 		Poison,
 	}
 
-	public class CharacterStatsSystem : InitializableBase
-	{
+	public class CharacterStatsSystem : InitializableBase {
 		[SerializeField] private string characterName = "DefaultCharacter";
 		private Dictionary<CharacterStatType, AdvanceStat> currentStats;
 		private Dictionary<DamageType, StatBase> resistanceStats;
@@ -31,40 +28,31 @@ namespace Kope.Character.Stats
 		public Dictionary<CharacterStatType, AdvanceStat> CurrentStats => this.currentStats;
 		public Dictionary<DamageType, StatBase> ResistanceStats => this.resistanceStats;
 
-		public override bool OnInit()
-		{
-			try
-			{
+		protected override bool OnInit() {
+			try {
 				this.currentStats ??= new Dictionary<CharacterStatType, AdvanceStat>();
 				this.resistanceStats ??= new Dictionary<DamageType, StatBase>();
 				this.levelIncreasingStatWithLevelingValue ??= new Dictionary<CharacterStatType, float>();
 				// calling it here since, i  havent implemented any event system for world load yet
 				OnFirstWorldLoad();
 				return true;
-			}
-			catch (System.Exception ex)
-			{
+			} catch (System.Exception ex) {
 				MyLogger.Error($"CharacterStatsSystem initialization failed: {ex.Message}" + GetParentGameObjectHeirarchyMessage());
 				return false;
 			}
 
 		}
 
-		private void OnFirstWorldLoad()
-		{
-			foreach (var kvp in this.characterStateSo.BasestatsDict)
-			{ this.currentStats[kvp.Key] = new AdvanceStat(kvp.Value); }
+		private void OnFirstWorldLoad() {
+			foreach (var kvp in this.characterStateSo.BasestatsDict) { this.currentStats[kvp.Key] = new AdvanceStat(kvp.Value); }
 
-			foreach (var kvp in this.characterStateSo.ResistanceStatsDict)
-			{ this.resistanceStats[kvp.Key] = new StatBase(kvp.Value); }
+			foreach (var kvp in this.characterStateSo.ResistanceStatsDict) { this.resistanceStats[kvp.Key] = new StatBase(kvp.Value); }
 
 			var levelingStats = characterStateSo.GetLevelingStatsWithoutZero();
-			foreach (var kvp in levelingStats)
-			{ this.levelIncreasingStatWithLevelingValue[kvp.Key] = kvp.Value; }
+			foreach (var kvp in levelingStats) { this.levelIncreasingStatWithLevelingValue[kvp.Key] = kvp.Value; }
 		}
 
-		private void OnEnable()
-		{
+		private void OnEnable() {
 			if (this.currentStats == null || this.resistanceStats == null) return;
 
 			foreach (var stat in this.currentStats.Values)
@@ -74,8 +62,7 @@ namespace Kope.Character.Stats
 				stat?.OnEnable();
 		}
 
-		private void OnDisable()
-		{
+		private void OnDisable() {
 			if (this.currentStats == null || this.resistanceStats == null) return;
 
 			foreach (var stat in this.currentStats.Values)
@@ -85,8 +72,7 @@ namespace Kope.Character.Stats
 				stat?.OnDisable();
 		}
 
-		protected override void OnUpdate()
-		{
+		protected override void OnUpdate() {
 			base.OnUpdate();
 			if (this.currentStats == null || this.resistanceStats == null) return;
 
@@ -98,32 +84,27 @@ namespace Kope.Character.Stats
 		}
 
 
-		public void StatsSubscribe(CharacterStatType type, UnityAction<float> callback)
-		{
+		public void StatsSubscribe(CharacterStatType type, UnityAction<float> callback) {
 			if (currentStats.TryGetValue(type, out AdvanceStat stat))
 				stat.OnStatsModified += callback;
 		}
 
-		public void StatsUnsubscribe(CharacterStatType type, UnityAction<float> callback)
-		{
+		public void StatsUnsubscribe(CharacterStatType type, UnityAction<float> callback) {
 			if (currentStats.TryGetValue(type, out AdvanceStat stat))
 				stat.OnStatsModified -= callback;
 		}
 
-		public void ResistanceSubscribe(DamageType type, UnityAction<float> callback)
-		{
+		public void ResistanceSubscribe(DamageType type, UnityAction<float> callback) {
 			if (resistanceStats.TryGetValue(type, out StatBase stat))
 				stat.OnStatsModified += callback;
 		}
 
-		public void ResistanceUnsubscribe(DamageType type, UnityAction<float> callback)
-		{
+		public void ResistanceUnsubscribe(DamageType type, UnityAction<float> callback) {
 			if (resistanceStats.TryGetValue(type, out StatBase stat))
 				stat.OnStatsModified -= callback;
 		}
 
-		public float GetStatValue(CharacterStatType type)
-		{
+		public float GetStatValue(CharacterStatType type) {
 			if (this.currentStats.TryGetValue(type, out AdvanceStat stat))
 				return stat.GetValue();
 
@@ -131,8 +112,7 @@ namespace Kope.Character.Stats
 			return 0f;
 		}
 
-		public float GetResistanceValue(DamageType type)
-		{
+		public float GetResistanceValue(DamageType type) {
 			if (this.resistanceStats.TryGetValue(type, out StatBase stat))
 				return stat.GetValue();
 
@@ -140,8 +120,7 @@ namespace Kope.Character.Stats
 			return 0f;
 		}
 
-		public bool AddStatModifier(StatusEffect effect)
-		{
+		public bool AddStatModifier(StatusEffect effect) {
 			if (this.currentStats.TryGetValue(effect.statType, out AdvanceStat stat))
 				return stat.AddStatusEffect(effect);
 
@@ -151,10 +130,8 @@ namespace Kope.Character.Stats
 
 
 
-		public void TriggerLevelUp()
-		{
-			foreach (var kvp in this.levelIncreasingStatWithLevelingValue)
-			{
+		public void TriggerLevelUp() {
+			foreach (var kvp in this.levelIncreasingStatWithLevelingValue) {
 				if (this.currentStats.TryGetValue(kvp.Key, out AdvanceStat stat))
 					stat.LevelUpStat(kvp.Value);
 				else
@@ -162,14 +139,10 @@ namespace Kope.Character.Stats
 			}
 		}
 
-		public void AddPointToStat(CharacterStatType type, float points)
-		{
-			if (this.currentStats.TryGetValue(type, out AdvanceStat stat))
-			{
+		public void AddPointToStat(CharacterStatType type, float points) {
+			if (this.currentStats.TryGetValue(type, out AdvanceStat stat)) {
 				stat.AddPointStat(points);
-			}
-			else
-			{
+			} else {
 				MyLogger.Warn($"Stat {type} not found for adding points!");
 			}
 		}

@@ -37,7 +37,7 @@ namespace Kope.Core.EntityComponentSystem {
 
 
 
-		public override bool OnInit() {
+		protected override bool OnInit() {
 			try {
 				this.componentRegistry = new ComponentRegistry(
 				this.entityTransform,

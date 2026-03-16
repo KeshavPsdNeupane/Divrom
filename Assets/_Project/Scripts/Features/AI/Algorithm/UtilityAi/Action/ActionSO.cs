@@ -12,19 +12,30 @@ namespace Kope.AI.Utility {
 	public abstract class ActionSO : BaseActionSO {
 
 		[SerializeField] private List<ConsiderationSO> considerations;
+
 		[SerializeField, Range(0.05f, 1.0f),
 		Tooltip("This value is used to decay the bias weight of an action over time when it is not selected, " +
 		"to encourage variety in action selection.")]
 		private float decayRate = 0.7f;
-		[SerializeField, Range(0.0f, 1.0f), Tooltip("If the current active action is not this action and" +
+
+		[SerializeField, Range(0.0f, 1.0f),
+		Tooltip("If the current active action is not this action and " +
 		"this action is in memory, this rate will try to regenerate the bias weight of this action to make it more likely to be selected again in the future.")]
 		private float weightRegenRate = 0.20f;
+
 		[SerializeField, Range(0.01f, 0.1f),
-		 Tooltip("Very Small Momentum Factor Provided to AI, to encourage repetition.")]
+		Tooltip("Very Small Momentum Factor Provided to AI, to encourage repetition.")]
 		private float momentumBias = 0.05f;
+
+		[SerializeField, Min(0f),
+		Tooltip("Minimum seconds before this action can be selected again after deactivation. " +
+		"Use this to enforce a fire rate or recovery window. 0 = no cooldown.")]
+		private float cooldownDuration = 1.0f;
+
 		public float DecayRate => this.decayRate;
 		public float MomentumBias => this.momentumBias;
 		public float WeightRegenRate => this.weightRegenRate;
+		public float CooldownDuration => this.cooldownDuration;
 
 		/// <summary>
 		/// Evaluates the action's utility based on its considerations and the given context.
@@ -38,7 +49,6 @@ namespace Kope.AI.Utility {
 		public virtual float Evaluate(IReadOnlyContext context) {
 			// marking virtual so we can add logging or other custom behavior in specific actions if needed without affecting the base evaluation logic
 
-
 			// tracks how many considerations have been multiplied together
 			// to apply compensated utility correctly
 			// this is needed to avoid penalizing actions with many considerations too harshly
@@ -47,9 +57,8 @@ namespace Kope.AI.Utility {
 			foreach (var consideration in considerations) {
 				(float score, int newCount) = consideration.Evaluate(context);
 				totalScore *= score;
-				if (totalScore == 0f)
-					return 0f;
-				// ++ needed to account for this consideration multiplication being applied
+				if (totalScore == 0f) return 0f;
+
 				totalMul += newCount + 1; // the +1 is for the current consideration's multiplication
 			}
 			return Mathf.Max(totalScore.GetCompensatedUtility(totalMul), 0.0f);

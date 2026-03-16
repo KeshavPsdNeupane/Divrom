@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using Kope.Core.Init;
 
-namespace Kope.AI
-{
+namespace Kope.AI {
 	/// <summary>
 	/// Generic base class for AI decision planners. <br/>
 	/// <br/>
@@ -22,8 +21,7 @@ namespace Kope.AI
 	/// idle and default actions used by the planner.<br/>
 	/// </summary>
 
-	public abstract class AIBrainAlgorithm : InitializableBase
-	{
+	public abstract class AIBrainAlgorithm : InitializableBase {
 
 		public abstract string AlgorithmName { get; }
 		/// <summary>
@@ -37,8 +35,7 @@ namespace Kope.AI
 		/// Always call this method to ensure proper initialization of resources.
 		/// If all checks pass, it calls <see cref="InitializeAI"/> for further setup.
 		/// </summary>
-		public sealed override bool OnInit()
-		{
+		protected sealed override bool OnInit() {
 			OnCleanUp();
 			return InitializeAI();
 		}
@@ -51,8 +48,7 @@ namespace Kope.AI
 		/// <see cref="CleanUpAI"/> for further cleanup.
 		/// Always call this method to ensure proper cleanup of resources.
 		/// </summary>
-		protected void OnCleanUp()
-		{
+		protected void OnCleanUp() {
 			CleanUpAI();
 		}
 

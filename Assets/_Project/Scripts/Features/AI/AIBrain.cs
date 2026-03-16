@@ -34,7 +34,7 @@ namespace Kope.AI {
 		private readonly List<IInterruptOther> interrupters = new();
 		#endregion
 
-		public override bool OnInit() {
+		protected override bool OnInit() {
 			if (this.ecr == null || this.planner == null) {
 				Debug.LogError($"AIBrain Error: Missing ECS or Planner on {gameObject.name}" +
 				 GetParentGameObjectHeirarchyMessage());
@@ -59,7 +59,7 @@ namespace Kope.AI {
 			}
 
 			if (this.initPlannerOnBrainInit) {
-				this.planner.OnInit();
+				this.planner.Init();
 			}
 
 			if (this.refreshInterval > 0f) {
@@ -80,7 +80,6 @@ namespace Kope.AI {
 
 		protected override void OnUpdate() {
 			base.OnUpdate();
-
 			if (!IsBrainValid()) return;
 
 			UpdateInternalTimers();
@@ -93,6 +92,7 @@ namespace Kope.AI {
 				TryAdvancePlan();
 			}
 			TickCurrentAction();
+
 		}
 
 		protected override void OnFixedUpdate() {
@@ -106,10 +106,7 @@ namespace Kope.AI {
 
 		#region Update Logic Chunks
 		protected virtual bool IsBrainValid()
-		=> this.planner != null && this.ecr != null && !this.planner.IsInitialized;
-		// need to check if the planner is initialized, because the brain might run its update before the 
-		// planner's OnInit is called,
-		//  and we don't want it to try to fetch a plan before the planner is ready.
+		=> this.planner != null && this.ecr != null && this.planner.IsInitialized;
 
 		protected virtual void UpdateInternalTimers() {
 			refreshTimer?.Tick(Time.deltaTime);

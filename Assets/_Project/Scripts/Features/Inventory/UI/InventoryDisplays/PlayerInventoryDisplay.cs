@@ -3,8 +3,7 @@ using Kope.Core.CompilerServices;
 using UnityEngine;
 using Kope.Core.EntityComponentSystem;
 
-public class PlayerInventoryDisplayUI : InventoryDisplay
-{
+public class PlayerInventoryDisplayUI : InventoryDisplay {
 	[SerializeField] private EntityComponentsRegistry ecr;
 	[SerializeField] private GameObject slotPrefab;
 	[SerializeField] private Transform slotParent;
@@ -13,45 +12,36 @@ public class PlayerInventoryDisplayUI : InventoryDisplay
 	private readonly Queue<ItemSlotUI> slotPool = new();
 	private bool prewarmed = false;
 
-	public override bool OnInit()
-	{
+	protected override bool OnInit() {
 
 		if (!base.OnInit()) return false; // impt if the base class is not InilializableBase
-		if (this.slotPrefab == null)
-		{
+		if (this.slotPrefab == null) {
 			MyLogger.Error($"PlayerInventoryDisplayUI ({this.gameObject.name}): Slot Prefab is not assigned!" + GetParentGameObjectHeirarchyMessage());
 			return false;
 		}
-		if (this.slotParent == null)
-		{
+		if (this.slotParent == null) {
 			MyLogger.Error($"PlayerInventoryDisplayUI ({this.gameObject.name}): Slot Parent is not assigned!" + GetParentGameObjectHeirarchyMessage());
 			return false;
 		}
 
-		if (this.ecr == null)
-		{
+		if (this.ecr == null) {
 			MyLogger.Error($"PlayerInventoryDisplayUI ({this.gameObject.name}): EntityComponentStore is not assigned!" + GetParentGameObjectHeirarchyMessage());
 			return false;
 		}
-		if (this.ecr.ComponentRegistry == null)
-		{
+		if (this.ecr.ComponentRegistry == null) {
 			MyLogger.Error($"PlayerInventoryDisplayUI ({this.gameObject.name}): ComponentRegistry in EntityComponentStore is null!" + GetParentGameObjectHeirarchyMessage());
 			return false;
 		}
 		// since we are mutating the InventoryHolder by adding items to it, 
 		// we need mutatable access here. so using TryGetMutatableComponent for semantic clarity
-		if (this.ecr.ComponentRegistry.TryGetMutatableComponent<InventoryHolder>(out var invHolder))
-		{
+		if (this.ecr.ComponentRegistry.TryGetMutatableComponent<InventoryHolder>(out var invHolder)) {
 			this.inventoryHolder = invHolder;
-		}
-		else
-		{
+		} else {
 			MyLogger.Error($"PlayerInventoryDisplayUI ({this.gameObject.name}): InventoryHolder not found in EntityComponentStore!" + GetParentGameObjectHeirarchyMessage());
 			return false;
 		}
 
-		if (this.inventoryHolder.PrimaryInventorySystem == null)
-		{
+		if (this.inventoryHolder.PrimaryInventorySystem == null) {
 			MyLogger.Error($"PlayerInventoryDisplayUI ({this.gameObject.name}): PrimaryInventorySystem is null in InventoryHolder!" + GetParentGameObjectHeirarchyMessage());
 			return false;
 		}
@@ -63,11 +53,9 @@ public class PlayerInventoryDisplayUI : InventoryDisplay
 		return true;
 	}
 
-	private void Prewarm()
-	{
+	private void Prewarm() {
 		var size = this.inventoryHolder.PrimaryInventorySystem.InventorySize;
-		for (int i = 0; i < size; i++)
-		{
+		for (int i = 0; i < size; i++) {
 			var go = Instantiate(this.slotPrefab, this.slotParent);
 			var slotUI = go.GetComponent<ItemSlotUI>();
 			slotUI.gameObject.SetActive(false);
@@ -76,35 +64,27 @@ public class PlayerInventoryDisplayUI : InventoryDisplay
 		this.prewarmed = true;
 	}
 
-	protected override void Start()
-	{
+	protected override void Start() {
 		this.primaryInventorySystem = this.inventoryHolder.PrimaryInventorySystem;
 		this.primaryInventorySystem.onInventoryShotChanged += UpdateSlot;
 		AssignSlot(this.primaryInventorySystem);
 	}
 
-	public override void AssignSlot(InventorySystem invToDisplay)
-	{
-		if (this.slotDictionary != null)
-		{
-			foreach (var ui in this.slotDictionary.Values)
-			{
+	public override void AssignSlot(InventorySystem invToDisplay) {
+		if (this.slotDictionary != null) {
+			foreach (var ui in this.slotDictionary.Values) {
 				ui.gameObject.SetActive(false);
 				this.slotPool.Enqueue(ui);
 			}
 		}
 		this.slotDictionary = new Dictionary<ItemSlot, ItemSlotUI>();
 		var invSize = this.primaryInventorySystem.InventorySize;
-		for (int i = 0; i < invSize; i++)
-		{
+		for (int i = 0; i < invSize; i++) {
 			ItemSlotUI slotUI;
 
-			if (this.slotPool.Count > 0)
-			{
+			if (this.slotPool.Count > 0) {
 				slotUI = this.slotPool.Dequeue();
-			}
-			else
-			{
+			} else {
 				var go = Instantiate(this.slotPrefab, this.slotParent);
 				slotUI = go.GetComponent<ItemSlotUI>();
 			}

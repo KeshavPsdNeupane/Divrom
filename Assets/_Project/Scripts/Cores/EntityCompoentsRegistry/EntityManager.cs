@@ -18,8 +18,7 @@ using System;
 /// <br/>
 /// </summary>
 [RequireComponent(typeof(UniqueID))]
-public class EntityManager : InitializableBase, IEntityDiedOrPooled
-{
+public class EntityManager : InitializableBase, IEntityDiedOrPooled {
 	[SerializeField, Tooltip("The name of this EntityComponentStore, used in Context grouping and other systems that require a hashed tag for identification and optimization purposes." +
 		 "For eg, All the goblin based entity should have 'Goblin' as their common entity name, so that the system can easily query all goblin entities by their common hashed tag, without needing to check each individual component's hashed tag." +
 		 "This common entity name is not required to be unique across different EntityComponentStore, but it is recommended to be unique for better identification and optimization. ")]
@@ -57,8 +56,7 @@ public class EntityManager : InitializableBase, IEntityDiedOrPooled
 	public EntityDetail EntityDetail => this.entityDetail;
 
 
-	public override bool OnInit()
-	{
+	protected override bool OnInit() {
 		if (!Validate()) return false;
 		// After validation, we can be sure that the EntityComponentStore and its ComponentRegistry are properly initialized and ready to use.
 
@@ -67,56 +65,46 @@ public class EntityManager : InitializableBase, IEntityDiedOrPooled
 		return true;
 	}
 
-	public void NotifyEntityDiedOrPooled()
-	{
+	public void NotifyEntityDiedOrPooled() {
 		OnEntityDiedOrPooled?.Invoke(this.entityDetail.UniqueID, this.entityDetail.CommonEntityHashedTag);
 	}
 
-	void OnValidate()
-	{
+	void OnValidate() {
 		EditorOnlyValidate();
 	}
 
-	private bool EditorOnlyValidate()
-	{
+	private bool EditorOnlyValidate() {
 		string parentStackTraceMessage = GetParentGameObjectHeirarchyMessage();
-		if (uniqueID == null)
-		{
+		if (uniqueID == null) {
 			Debug.LogError($"EntityManager on GameObject '{this.gameObject.name}' is missing a UniqueID reference. Please assign one for proper identification and optimization.{parentStackTraceMessage}", this.gameObject);
 			return false;
 		}
-		if (entityComponentRegistry == null)
-		{
+		if (entityComponentRegistry == null) {
 			Debug.LogError($"EntityManager on GameObject '{this.gameObject.name}' is missing an EntityComponentStore reference. Please assign one for proper functionality.{parentStackTraceMessage}", this.gameObject);
 			return false;
 		}
 
-		if (string.IsNullOrEmpty(this.commonEntityName))
-		{
+		if (string.IsNullOrEmpty(this.commonEntityName)) {
 			Debug.LogError($"EntityComponentStore on GameObject '{this.gameObject.name}' is missing a common entity name. Please assign one for proper identification and optimization.{parentStackTraceMessage}", this.gameObject);
 			return false;
 		}
-		if (this.config == null)
-		{
+		if (this.config == null) {
 			Debug.LogError($"EntityComponentStore '{this.commonEntityName}' is missing its config reference. Cannot initialize component registry.{parentStackTraceMessage}", this.gameObject);
 			return false;
 		}
 		this.commonEntityHashedTag = new HashedTag(this.commonEntityName);
-		if (!this.config.InternalContains(this.commonEntityHashedTag))
-		{
+		if (!this.config.InternalContains(this.commonEntityHashedTag)) {
 			Debug.LogError($"EntityComponentStore '{this.commonEntityName}' has a common entity name that is not registered in the EntityCommonNameConfig. Please add it to the config for proper initialization and optimization.{parentStackTraceMessage}", this.gameObject);
 			return false;
 		}
 		return true;
 	}
 
-	private bool Validate()
-	{
+	private bool Validate() {
 		bool isValid = EditorOnlyValidate();
 		if (!isValid) return false;
 		var registry = this.entityComponentRegistry.ComponentRegistry;
-		if (registry == null)
-		{
+		if (registry == null) {
 			Debug.LogError($"[EntityManager] there is an issue , 'the component registry is not initialized yet', for {this.gameObject.name}" +
 			"Please check the InitManager and make sure the EntityComponentRegistry is placed on list" +
 			$"And the EntityManager is placed after the EntityComponentRegistry in the execution order, and that the EntityComponentRegistry is properly initialized in its OnInit method.{GetParentGameObjectHeirarchyMessage()}", this.gameObject);

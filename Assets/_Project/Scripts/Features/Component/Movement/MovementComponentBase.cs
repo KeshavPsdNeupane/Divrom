@@ -4,23 +4,20 @@ using Kope.Core.Init;
 using Kope.Character.Stats;
 using Kope.Core.EntityComponentSystem;
 
-namespace Kope.Component.Movement
-{
+namespace Kope.Component.Movement {
 
 	/// <summary>
 	/// Defines the type of movement intent.
 	/// Just a simple enum to indicate what kind of movement is intended.
 	/// </summary>
-	public enum MovementIntentType
-	{
+	public enum MovementIntentType {
 		Stop = 0,
 		Move = 10,
 		Attacking = 20,
 	}
 
 
-	public struct MovementIntent
-	{
+	public struct MovementIntent {
 		public Vector2 Direction;
 
 		/// <summary>
@@ -32,8 +29,7 @@ namespace Kope.Component.Movement
 		/// and so on.
 		/// </summary>
 		public MovementIntentType IntentType;
-		public MovementIntent(Vector2 direction, MovementIntentType intentType = MovementIntentType.Stop)
-		{
+		public MovementIntent(Vector2 direction, MovementIntentType intentType = MovementIntentType.Stop) {
 			this.Direction = direction;
 			this.IntentType = intentType;
 		}
@@ -41,8 +37,7 @@ namespace Kope.Component.Movement
 
 
 
-	public class MovementComponentBase : InitializableBase
-	{
+	public class MovementComponentBase : InitializableBase {
 		[SerializeField] protected Rigidbody2D rb;
 		[SerializeField] protected EntityComponentsRegistry ecr;
 		[SerializeField] protected float defaultMovementSpeed = 2f;
@@ -66,17 +61,14 @@ namespace Kope.Component.Movement
 		/// Use SetMovementIntent instead to ensure proper movement handling.
 		/// </summary>
 		public Rigidbody2D Rigidbody => this.rb;
-		public override bool OnInit()
-		{
-			if (this.ecr == null)
-			{
+		protected override bool OnInit() {
+			if (this.ecr == null) {
 				MyLogger.Error($"MovementComponentBase ({gameObject.name}): " +
 			   $"EntityComponentStore not assigned. Movement will remain uninitialized.\n{GetParentGameObjectHeirarchyMessage()}");
 				return false;
 			}
 
-			if (this.rb == null)
-			{
+			if (this.rb == null) {
 				MyLogger.Error($"MovementComponentBase ({gameObject.name}): " +
 			   $"Rigidbody2D not assigned. Movement will remain uninitialized.\n{GetParentGameObjectHeirarchyMessage()}");
 				return false;
@@ -84,12 +76,9 @@ namespace Kope.Component.Movement
 			// MovementComponentBase is not muating the CharacterStatsSystem, so TryGetComponent is sufficient here.
 			// we are only subscribing to stat changes, not modifying the stats directly, 
 			// so we don't need mutatable access. so using TryGetComponent for semantic clarity
-			if (this.ecr.ComponentRegistry.TryGetComponent(out CharacterStatsSystem statsSystem))
-			{
+			if (this.ecr.ComponentRegistry.TryGetComponent(out CharacterStatsSystem statsSystem)) {
 				this.characterStatsSystem = statsSystem;
-			}
-			else
-			{
+			} else {
 				MyLogger.Warn($"MovementComponentBase ({gameObject.name}): " +
 			   $"CharacterStatsSystem not found in {this.ecr.name}. Stats-based movement speed will be unavailable.\n{GetParentGameObjectHeirarchyMessage()}");
 				return false;
@@ -98,33 +87,27 @@ namespace Kope.Component.Movement
 		}
 
 		protected virtual void OnEnable() => SubscribeToStats();
-		protected virtual void OnDisable()
-		{
+		protected virtual void OnDisable() {
 			UnsubscribeFromStats();
 			StopMovement();
 		}
 
-		private void SubscribeToStats()
-		{
+		private void SubscribeToStats() {
 			if (this.characterStatsSystem != null &&
-				this.characterStatsSystem.CurrentStats != null)
-			{
+				this.characterStatsSystem.CurrentStats != null) {
 				this.characterStatsSystem.StatsSubscribe(CharacterStatType.SPD, SetDefaultMovementSpeed);
 				// initial fetch
 				SetDefaultMovementSpeed(this.characterStatsSystem.CurrentStats[CharacterStatType.SPD].GetValue());
 			}
 		}
-		private void UnsubscribeFromStats()
-		{
+		private void UnsubscribeFromStats() {
 			if (this.characterStatsSystem != null &&
-				this.characterStatsSystem.CurrentStats != null)
-			{
+				this.characterStatsSystem.CurrentStats != null) {
 				this.characterStatsSystem.StatsUnsubscribe(CharacterStatType.SPD, SetDefaultMovementSpeed);
 			}
 		}
 
-		protected override void OnFixedUpdate()
-		{
+		protected override void OnFixedUpdate() {
 			ApplyPhysics();
 		}
 
@@ -137,8 +120,7 @@ namespace Kope.Component.Movement
 		/// or to apply temporary speed for for dodge or so on.
 		/// </summary>
 		/// <param name="multiplier"></param>
-		public void SetSpeedMultiplier(float multiplier = 1f)
-		{
+		public void SetSpeedMultiplier(float multiplier = 1f) {
 			this.speedMultiplier = multiplier;
 		}
 
@@ -146,8 +128,7 @@ namespace Kope.Component.Movement
 		/// Sets the default movement speed.
 		/// This is usually called by the CharacterStatsSystem when the SPD stat changes.
 		/// </summary>
-		public virtual void SetDefaultMovementSpeed(float speed)
-		{
+		public virtual void SetDefaultMovementSpeed(float speed) {
 			this.defaultMovementSpeed = speed;
 		}
 
@@ -159,30 +140,23 @@ namespace Kope.Component.Movement
 		/// it does not do any smoothing or interpolation.
 		/// </summary>
 		/// <param name="intent"></param>
-		public virtual void SetMovementIntent(MovementIntent intent)
-		{
-			if (intent.Direction.sqrMagnitude > MOVEMENT_EPSILON)
-			{
+		public virtual void SetMovementIntent(MovementIntent intent) {
+			if (intent.Direction.sqrMagnitude > MOVEMENT_EPSILON) {
 				intent.Direction.Normalize();
-			}
-			else
-			{
+			} else {
 				intent.Direction = Vector2.zero;
 			}
 			this.currentIntent = intent;
 		}
 
-		public void StopMovement()
-		{
+		public void StopMovement() {
 			this.currentIntent = default;
 		}
 
 
-		protected virtual void ApplyPhysics()
-		{
+		protected virtual void ApplyPhysics() {
 			Vector2 targetVelocity = Vector2.zero;
-			if (this.currentIntent.IntentType != MovementIntentType.Stop)
-			{
+			if (this.currentIntent.IntentType != MovementIntentType.Stop) {
 				targetVelocity = this.speedMultiplier * this.defaultMovementSpeed * this.currentIntent.Direction;
 			}
 

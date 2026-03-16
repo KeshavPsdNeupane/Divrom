@@ -1,36 +1,29 @@
 using UnityEngine.InputSystem;
 using ServiceLocatorPattern;
 using Kope.Core.CompilerServices;
-public class PlayerAttackComponent : AttackComponentBase
-{
+public class PlayerAttackComponent : AttackComponentBase {
 	private InputManager inputManager;
 
-	public override bool OnInit()
-	{
+	protected override bool OnInit() {
 		// we need to check if we already sub to the stats
 		// since base is not InitializableBase, we need to call it to make sure
 		//  we get the stat value from the stats
 		if (!base.OnInit()) return false; // impt if the base class is not InilializableBase
-		if (GlobalServiceLocator.Instance.TryGetService(out InputManager inputManager))
-		{
+		if (GlobalServiceLocator.Instance.TryGetService(out InputManager inputManager)) {
 			this.inputManager = inputManager;
-		}
-		else
-		{
+		} else {
 			MyLogger.Error($"{this.gameObject.name}Controller: InputManager service not found!");
 			return false;
 		}
 		return true;
 	}
 
-	protected override void OnEnable()
-	{
+	protected override void OnEnable() {
 		base.OnEnable();
 		Subscribe();
 	}
 
-	private void Subscribe()
-	{
+	private void Subscribe() {
 		if (inputManager == null) return;
 
 		inputManager.SubscribeToInputAction(
@@ -41,14 +34,12 @@ public class PlayerAttackComponent : AttackComponentBase
 
 	}
 
-	protected override void OnDisable()
-	{
+	protected override void OnDisable() {
 		base.OnDisable();
 		Unsubscribe();
 	}
 
-	private void Unsubscribe()
-	{
+	private void Unsubscribe() {
 		if (inputManager == null) return;
 
 		inputManager.UnsubscribeFromInputAction(
@@ -59,13 +50,11 @@ public class PlayerAttackComponent : AttackComponentBase
 
 	}
 
-	private void AttackForInputSystem(InputAction.CallbackContext context)
-	{
+	private void AttackForInputSystem(InputAction.CallbackContext context) {
 		if (context.performed) PerformAttack();
 	}
 
-	protected override void PerformAttackInternal()
-	{
+	protected override void PerformAttackInternal() {
 
 		float damage = CalculateDamage();
 		// For testing so no need for logger

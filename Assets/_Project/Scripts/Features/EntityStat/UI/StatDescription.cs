@@ -8,8 +8,7 @@ using Kope.Core.Init;
 using Kope.Character.Stats;
 using Kope.Core.EntityComponentSystem;
 
-public class StatDescription : InitializableBase
-{
+public class StatDescription : InitializableBase {
 	[SerializeField] private GameObject statDescriptionUIPanel;
 	[SerializeField] private EntityComponentsRegistry ecr;
 
@@ -22,26 +21,22 @@ public class StatDescription : InitializableBase
 
 	private RectTransform panelRect; // cache panelRect to avoid fetching multiple times
 
-	public override bool OnInit()
-	{
+	protected override bool OnInit() {
 		return Validate();
 	}
 
 
 
-	void OnEnable()
-	{
+	void OnEnable() {
 		if (this.characterStats != null &&
 			this.characterStats.CurrentStats != null &&
-			this.statDescriptionUIPanel != null)
-		{ // with Init , no need to Validate again here 
+			this.statDescriptionUIPanel != null) { // with Init , no need to Validate again here 
 			CreateTMPObjects();
 			SubscribeToStats();
 		}
 	}
 
-	void OnDisable()
-	{
+	void OnDisable() {
 		if (this.characterStats == null) return;
 
 		foreach (var kvp in this.statsCallbacksDict)
@@ -50,35 +45,27 @@ public class StatDescription : InitializableBase
 		this.statsCallbacksDict.Clear();
 	}
 
-	private bool Validate()
-	{
-		if (this.characterStats == null)
-		{
-			if (ecr == null)
-			{
+	private bool Validate() {
+		if (this.characterStats == null) {
+			if (ecr == null) {
 				MyLogger.Error("EntityComponentStore reference was missing," +
 			  " unable to retrieve CharacterStatsSystem." + GetParentGameObjectHeirarchyMessage());
 				return false;
 			}
 			// using tryGet since this only shows the stats on UI and does not modify the stats,
 			//  so we don't need mutatable access here. so TryGetComponent is sufficient for semantic clarity.
-			if (ecr.ComponentRegistry.TryGetComponent<CharacterStatsSystem>(out var statsSystem))
-			{
+			if (ecr.ComponentRegistry.TryGetComponent<CharacterStatsSystem>(out var statsSystem)) {
 				this.characterStats = statsSystem;
-			}
-			else
-			{
+			} else {
 				MyLogger.Error("No CharacterStatsSystem found in EntityComponentStore for StatDescription" + GetParentGameObjectHeirarchyMessage());
 				return false;
 			}
 		}
-		if (this.statDescriptionUIPanel == null)
-		{
+		if (this.statDescriptionUIPanel == null) {
 			MyLogger.Error("StatDescriptionUIPanel is not assigned." + GetParentGameObjectHeirarchyMessage());
 			return false;
 		}
-		if (this.panelRect == null && this.statDescriptionUIPanel != null)
-		{
+		if (this.panelRect == null && this.statDescriptionUIPanel != null) {
 			this.panelRect = this.statDescriptionUIPanel.GetComponent<RectTransform>();
 			if (this.panelRect == null)
 				MyLogger.Error("Stat Panel requires RectTransform." + GetParentGameObjectHeirarchyMessage());
@@ -86,8 +73,7 @@ public class StatDescription : InitializableBase
 		return true;
 	}
 
-	private void CreateTMPObjects()
-	{
+	private void CreateTMPObjects() {
 		if (this.panelRect == null) return;
 
 		int numberOfStats = Enum.GetValues(typeof(CharacterStatType)).Length;
@@ -95,8 +81,7 @@ public class StatDescription : InitializableBase
 		float lineHeight = panelHeight / (numberOfStats + 1);
 
 		int index = 0;
-		foreach (CharacterStatType type in Enum.GetValues(typeof(CharacterStatType)))
-		{
+		foreach (CharacterStatType type in Enum.GetValues(typeof(CharacterStatType))) {
 			if (statTextObjects.ContainsKey(type)) continue;
 
 			GameObject textGO = new GameObject(type.ToString());
@@ -124,19 +109,16 @@ public class StatDescription : InitializableBase
 		}
 	}
 
-	private void SubscribeToStats()
-	{
+	private void SubscribeToStats() {
 		if (this.characterStats == null || this.characterStats.CurrentStats == null) return;
 
-		foreach (CharacterStatType type in Enum.GetValues(typeof(CharacterStatType)))
-		{
+		foreach (CharacterStatType type in Enum.GetValues(typeof(CharacterStatType))) {
 			// check if the stat exists to avoid errors
 			if (!this.characterStats.CurrentStats.ContainsKey(type)) continue;
 
 			this.statsValues[type] = this.characterStats.GetStatValue(type);
 
-			void callback(float val)
-			{
+			void callback(float val) {
 				this.statsValues[type] = val;
 				if (this.statTextObjects.TryGetValue(type, out var tmp))
 					tmp.text = $"{type}: {val:0}";

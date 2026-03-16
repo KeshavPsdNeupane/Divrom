@@ -2,8 +2,7 @@
 using Kope.Core.Init;
 using Kope.Component.Movement;
 
-public class EntityStateController : InitializableBase
-{
+public class EntityStateController : InitializableBase {
 	[SerializeField] private MovementComponentBase movementComponent;
 	[SerializeField] private AnimationComponentBase animationComponent;
 	[SerializeField] private AttackComponentBase attackComponent;
@@ -21,37 +20,30 @@ public class EntityStateController : InitializableBase
 
 	public bool CanStateMachineAcceptCommand => this.stateMachine == null || this.stateMachine.CurrentState is not IStateCanAcceptCommand state || state.CanAcceptCommand;
 
-	public override bool OnInit()
-	{
-		try
-		{
+	protected override bool OnInit() {
+		try {
 			this.stateMachine = new EntityStateManager();
 			this.entityStates = new EntityStates(this.stateMachine, this);
 			this.stateMachine.Initialize(this.entityStates.EntityIdle);
 			return true;
-		}
-		catch (System.Exception ex)
-		{
+		} catch (System.Exception ex) {
 			Debug.LogError($"EntityStateController: Initialization failed with exception: {ex}" + GetParentGameObjectHeirarchyMessage());
 			return false;
 
 		}
 	}
 
-	private void OnEnable()
-	{
+	private void OnEnable() {
 		this.animationComponent.OnAnimationTrigger += HandleAnimationTrigger;
 		this.attackComponent.OnAttackPerformed += Attack;
 	}
 
-	private void OnDisable()
-	{
+	private void OnDisable() {
 		this.animationComponent.OnAnimationTrigger -= HandleAnimationTrigger;
 		this.attackComponent.OnAttackPerformed -= Attack;
 	}
 
-	protected override void OnUpdate()
-	{
+	protected override void OnUpdate() {
 		base.OnUpdate();
 
 		this.stateMachine?.CurrentState?.Update();
@@ -65,8 +57,7 @@ public class EntityStateController : InitializableBase
 	// so we can change state to attack
 	// this decouples the input system from the state controller
 	// and allows for more flexible attack triggering
-	private void Attack()
-	{
+	private void Attack() {
 		this.stateMachine.ChangeState(this.entityStates.EntityAttack);
 	}
 
@@ -78,8 +69,7 @@ public class EntityStateController : InitializableBase
 	/// Enhances decoupling between animation system and other game systems.
 	/// Empty for now, to be implemented later.
 	/// </summary>
-	private void ChangeState(AnimationState state)
-	{
+	private void ChangeState(AnimationState state) {
 		//no op for now
 	}
 
@@ -89,8 +79,7 @@ public class EntityStateController : InitializableBase
 	// this decouples the animation system from the state controller
 	// Might also attach this to a UnityEvent so i dont have to put 
 	// this class on Root Player GameObject
-	public void HandleAnimationTrigger()
-	{
+	public void HandleAnimationTrigger() {
 		this.stateMachine.CurrentState.OnAnimationTrigger();
 	}
 }

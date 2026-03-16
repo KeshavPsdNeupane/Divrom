@@ -16,7 +16,9 @@ MonoBehaviour:
   isInterruptible: 1
   considerations:
   - {fileID: 11400000, guid: 4a8fd9b298b7bdfbb90367f87dabf469, type: 2}
-  recurrencePenaltyWeight: 0.7
+  decayRate: 0.7
+  weightRegenRate: 0.2
   momentumBias: 0.05
+  cooldownDuration: 1
   wanderRadius: 3
   maxAttemptsToFindValidPoint: 10

@@ -30,7 +30,10 @@ namespace Kope.AI.Utility {
 			private readonly ActionSO action;
 			private float biasWeight;
 			private bool isActive;
+			private float cooldownUntil = 0f;
+
 			public ActionSO Action => this.action;
+			public bool IsOnCooldown => Time.time < this.cooldownUntil;
 
 			public ActionEntry(ActionSO action, float weight) {
 				this.action = action;
@@ -58,7 +61,10 @@ namespace Kope.AI.Utility {
 				this.biasWeight = Mathf.Min(1f, this.biasWeight + compoundedRegenAmount);
 			}
 
-			public void SetIsActive(bool isActive) => this.isActive = isActive;
+			public void SetIsActive(bool isActive) {
+				this.isActive = isActive;
+				if (!isActive) this.cooldownUntil = Time.time + this.action.CooldownDuration;
+			}
 		}
 
 		protected internal class Memory {
@@ -143,6 +149,7 @@ namespace Kope.AI.Utility {
 			int size = Mathf.Clamp(this.shortTermMemorySize, 1, Mathf.Max(1, this.actionEntries.Count - 1));
 			Debug.Log($"MemorySize = {size}");
 			this.memory = new Memory(size);
+			Debug.Log("Utility IAI Algorithm initialized with " + this.actionEntries.Count + " actions, including idle.");
 			return true;
 		}
 
@@ -159,6 +166,7 @@ namespace Kope.AI.Utility {
 		}
 
 		private ActionSO SelectBestAction(IReadOnlyContext ctx) {
+			Debug.Log("Selecting Best Action:");
 			if (this.actionEntries.Count == 1) return this.idleActionEntry.Action;
 
 			this.memory.RegenWeights(this.currentlyActiveEntry, this.lastEvaluationTime, Time.time, Time.deltaTime);
@@ -170,17 +178,19 @@ namespace Kope.AI.Utility {
 		private ActionEntry EvaluateActions(IReadOnlyContext ctx) {
 			ActionEntry bestAction = null;
 			float highestScore = float.MinValue;
-
+			Debug.Log("Evaluating Actions:");
 			foreach (var entry in this.actionEntries) {
+				// Skip actions on cooldown, but always allow idle as guaranteed fallback
+				if (entry.IsOnCooldown && entry != this.idleActionEntry) continue;
 				float score = entry.Evaluate(ctx);
 				if (score > highestScore) {
 					highestScore = score;
 					bestAction = entry;
 				}
-#if UNITY_EDITOR
+
 				var entryName = entry.Action != null ? entry.Action.ActionName : "None";
 				Debug.Log($"[UtilityAI] Evaluating the action named {entryName} with the score = {score}");
-#endif
+
 			}
 
 			if (bestAction != this.currentlyActiveEntry) {
@@ -189,10 +199,10 @@ namespace Kope.AI.Utility {
 				this.currentlyActiveEntry = bestAction;
 			}
 			evaluatedScore = highestScore;
-#if UNITY_EDITOR
+
 			var bestName = bestAction?.Action != null ? bestAction.Action.ActionName : "None";
 			Debug.Log($"[UtilityAI] Found Best Action named {bestName} with score = {highestScore}");
-#endif
+
 			return bestAction;
 		}
 
@@ -204,8 +214,9 @@ namespace Kope.AI.Utility {
 				var rescued = this.memory.Dequeue();
 				if (rescued != null) {
 					rescued.ResetWeight(DEFAULT_INITIAL_WEIGHT);
-					var evicted = this.memory.Enqueue(rescued);
-					evicted?.ResetWeight(DEFAULT_INITIAL_WEIGHT);
+					// Since nothing will be removed from enqueue,
+					// no eviction will happen, we can directly re-enqueue the rescued action.
+					this.memory.Enqueue(rescued);
 				}
 			} else if (this.memory.Contains(actionEntry)) {
 				actionEntry.ApplyDecay(this.minActionWeight);

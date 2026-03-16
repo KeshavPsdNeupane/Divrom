@@ -14,43 +14,35 @@ using Kope.Component.Movement;
 /// <br/>
 /// <inheritdoc cref="MovementComponentBase"/>      
 /// </summary>
-public class PlayerMovementComponent : MovementComponentBase
-{
+public class PlayerMovementComponent : MovementComponentBase {
 	private InputManager inputManager;
 
 
-	public override bool OnInit()
-	{
+	protected override bool OnInit() {
 		// we need to check if we already sub to the stats
 		// since base is not InitializableBase, we need to call it to make sure
 		//  we get the stat value from the stats
 		if (!base.OnInit()) return false; // impt if the base class is not InilializableBase
-		if (GlobalServiceLocator.Instance.TryGetService(out InputManager inputManager))
-		{
+		if (GlobalServiceLocator.Instance.TryGetService(out InputManager inputManager)) {
 			this.inputManager = inputManager;
-		}
-		else
-		{
+		} else {
 			MyLogger.Error($"{this.gameObject.name}Controller: InputManager service not found!" + GetParentGameObjectHeirarchyMessage());
 			return false;
 		}
 		return true;
 	}
-	protected override void OnEnable()
-	{
+	protected override void OnEnable() {
 		base.OnEnable();
 		Subscribe();
 	}
 
 
-	protected override void OnDisable()
-	{
+	protected override void OnDisable() {
 		base.OnDisable();
 		Unsubscribe();
 	}
 
-	private void Subscribe()
-	{
+	private void Subscribe() {
 		if (this.inputManager == null) return;
 		this.inputManager.SubscribeToInputAction(
 			PlayerInputActionMap.Player,
@@ -58,8 +50,7 @@ public class PlayerMovementComponent : MovementComponentBase
 			MoveForInputSystem);
 	}
 
-	private void Unsubscribe()
-	{
+	private void Unsubscribe() {
 		if (this.inputManager == null) return;
 		this.inputManager.UnsubscribeFromInputAction(
 			PlayerInputActionMap.Player,

@@ -8,8 +8,7 @@ using Kope.Core.EntityComponentSystem;
 /// Base attack logic component. Can be used for both player and AI.
 /// Handles stat subscription and damage calculation.
 /// </summary>
-public abstract class AttackComponentBase : InitializableBase
-{
+public abstract class AttackComponentBase : InitializableBase {
 	[SerializeField] private EntityComponentsRegistry ecr;
 	[SerializeField] private WeaponSO equippedWeaponDataSO;
 	private AnimationComponentBase animationComponent;
@@ -22,31 +21,23 @@ public abstract class AttackComponentBase : InitializableBase
 
 	public event UnityAction OnAttackPerformed;
 
-	public override bool OnInit()
-	{
-		if (ecr == null)
-		{
+	protected override bool OnInit() {
+		if (ecr == null) {
 			MyLogger.Error("EntityComponentStore reference is missing in AttackComponentBase." +
 			GetParentGameObjectHeirarchyMessage());
 			return false;
 		}
-		if (this.ecr.ComponentRegistry.TryGetMutatableComponent(out AnimationComponentBase animComp))
-		{
+		if (this.ecr.ComponentRegistry.TryGetMutatableComponent(out AnimationComponentBase animComp)) {
 			this.animationComponent = animComp;
-		}
-		else
-		{
+		} else {
 			MyLogger.Error("AnimationComponentBase not found in EntityComponentStore." +
 			GetParentGameObjectHeirarchyMessage());
 			return false;
 		}
 
-		if (this.ecr.ComponentRegistry.TryGetMutatableComponent(out CharacterStatsSystem statsSys))
-		{
+		if (this.ecr.ComponentRegistry.TryGetMutatableComponent(out CharacterStatsSystem statsSys)) {
 			this.statsSystem = statsSys;
-		}
-		else
-		{
+		} else {
 			MyLogger.Error("CharacterStatsSystem not found in EntityComponentStore. " +
 			"AttackComponentBase will not function properly." +
 			GetParentGameObjectHeirarchyMessage());
@@ -60,11 +51,9 @@ public abstract class AttackComponentBase : InitializableBase
 	protected virtual void OnEnable() => SubscribeToStats();
 	protected virtual void OnDisable() => UnsubscribeFromStats();
 
-	protected void SubscribeToStats()
-	{
+	protected void SubscribeToStats() {
 		if (!IsInitialized || statsSystem == null) return;
-		if (statsSystem != null && statsSystem.CurrentStats != null)
-		{
+		if (statsSystem != null && statsSystem.CurrentStats != null) {
 			statsSystem.StatsSubscribe(CharacterStatType.ATK, AttackCallback);
 			statsSystem.StatsSubscribe(CharacterStatType.CRATE, CriticalRateCallBack);
 			statsSystem.StatsSubscribe(CharacterStatType.CDMG, CriticalDamageCallBack);
@@ -76,10 +65,8 @@ public abstract class AttackComponentBase : InitializableBase
 		}
 	}
 
-	protected void UnsubscribeFromStats()
-	{
-		if (statsSystem != null && statsSystem.CurrentStats != null)
-		{
+	protected void UnsubscribeFromStats() {
+		if (statsSystem != null && statsSystem.CurrentStats != null) {
 			statsSystem.StatsUnsubscribe(CharacterStatType.ATK, AttackCallback);
 			statsSystem.StatsUnsubscribe(CharacterStatType.CRATE, CriticalRateCallBack);
 			statsSystem.StatsUnsubscribe(CharacterStatType.CDMG, CriticalDamageCallBack);
@@ -90,12 +77,10 @@ public abstract class AttackComponentBase : InitializableBase
 	protected virtual void CriticalRateCallBack(float value) => this.normalizedCriticalChance = value * 0.01f;
 	protected virtual void CriticalDamageCallBack(float value) => this.normalizedCriticalDamage = 1 + value * 0.01f;
 
-	protected float CalculateDamage()
-	{
+	protected float CalculateDamage() {
 		return CalculateDamage(this.attack);
 	}
-	protected float CalculateDamage(float baseScalingStat)
-	{
+	protected float CalculateDamage(float baseScalingStat) {
 		float damage = baseScalingStat;
 		if (normalizedCriticalChance >= 1f) return damage * normalizedCriticalDamage;
 
@@ -106,24 +91,21 @@ public abstract class AttackComponentBase : InitializableBase
 	/// <summary>
 	/// Abstract method for triggering an attack. Player or AI will implement the actual input/trigger.
 	/// </summary>
-	public void PerformAttack()
-	{
+	public void PerformAttack() {
 		if (!CanPerformAttack()) return;
 		PerformAttackInternal();
 		RaiseOnAttackPerformedEvent();
 	}
 
 
-	private bool CanPerformAttack()
-	{
+	private bool CanPerformAttack() {
 		return this.animationComponent.CanTransitionToAnimation(EquippedWeaponData.PrimaryAttackAnimationHash);
 	}
 
 
 	protected abstract void PerformAttackInternal();
 
-	protected void RaiseOnAttackPerformedEvent()
-	{
+	protected void RaiseOnAttackPerformedEvent() {
 		OnAttackPerformed?.Invoke();
 	}
 }
