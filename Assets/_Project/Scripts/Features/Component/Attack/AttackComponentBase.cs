@@ -77,20 +77,33 @@ public abstract class AttackComponentBase : InitializableBase {
 	protected virtual void CriticalRateCallBack(float value) => this.normalizedCriticalChance = value * 0.01f;
 	protected virtual void CriticalDamageCallBack(float value) => this.normalizedCriticalDamage = 1 + value * 0.01f;
 
-	protected float CalculateDamage() {
+	/// <summary>
+	/// Calculate the final damage based on current base Scaling stat (usually the attack stat) and critical hit chance/damage.
+	/// Overridable to allow for different damage calculation logic based on character design.
+	/// For example, some character scale from 50% of atk, 40% ofdef and 10% of hp, or whatever(at once).
+	/// like we have 100atk, 50def, 200hp, and the damage is calculated as 100*0.5 + 50*0.4 + 200*0.1 = 90, 
+	/// then we apply critical hit multiplier on top of that. 
+	/// so we make it flexible to allow for different scaling logic based on the character's design.
+	/// </summary>
+	/// <returns></returns>
+	protected virtual float CalculateDamage() {
 		return CalculateDamage(this.attack);
 	}
-	protected float CalculateDamage(float baseScalingStat) {
+	/// <summary>
+	/// Calculates the final damage based on the provided base scaling stat (usually the attack stat).
+	/// But some character can scale from Hp, or Def, or whatever. So we make it flexible to allow
+	/// for different scaling stats based on the character's design.
+	/// </summary>
+	/// <param name="baseScalingStat"></param>
+	/// <returns></returns>
+	protected virtual float CalculateDamage(float baseScalingStat) {
 		float damage = baseScalingStat;
-		if (normalizedCriticalChance >= 1f) return damage * normalizedCriticalDamage;
+		if (this.normalizedCriticalChance >= 1f) return damage * this.normalizedCriticalDamage;
 
-		if (UnityEngine.Random.value < normalizedCriticalChance) return damage * normalizedCriticalDamage;
+		if (Random.value < this.normalizedCriticalChance) return damage * this.normalizedCriticalDamage;
 		return damage;
 	}
 
-	/// <summary>
-	/// Abstract method for triggering an attack. Player or AI will implement the actual input/trigger.
-	/// </summary>
 	public void PerformAttack() {
 		if (!CanPerformAttack()) return;
 		PerformAttackInternal();
@@ -102,7 +115,10 @@ public abstract class AttackComponentBase : InitializableBase {
 		return this.animationComponent.CanTransitionToAnimation(EquippedWeaponData.PrimaryAttackAnimationHash);
 	}
 
-
+	/// <summary>
+	/// Hook for subclasses to implement the actual attack logic, such as playing animations, 
+	/// applying damage to targets, etc.
+	/// </summary>
 	protected abstract void PerformAttackInternal();
 
 	protected void RaiseOnAttackPerformedEvent() {

@@ -975,6 +975,17 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &213309426 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4204933291776501059, guid: 9772af79b74a077ec8dd339b7b2c7dfc, type: 3}
+  m_PrefabInstance: {fileID: 644571514}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef22bffa7815bcbc28c6a380400b185b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyMovementComponent
 --- !u!1 &223750729
 GameObject:
   m_ObjectHideFlags: 0
@@ -7196,12 +7207,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6355112809349495206, guid: 9772af79b74a077ec8dd339b7b2c7dfc, type: 3}
       propertyPath: actionSOs.Array.size
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6355112809349495206, guid: 9772af79b74a077ec8dd339b7b2c7dfc, type: 3}
+      propertyPath: 'actionSOs.Array.data[0]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 7166fdc7671e454d280b9f1362b63ba1, type: 2}
     - target: {fileID: 6355112809349495206, guid: 9772af79b74a077ec8dd339b7b2c7dfc, type: 3}
       propertyPath: 'actionSOs.Array.data[1]'
       value: 
-      objectReference: {fileID: 11400000, guid: 7166fdc7671e454d280b9f1362b63ba1, type: 2}
+      objectReference: {fileID: 11400000, guid: 55f0fced5ba3438c0ab41b97654eae60, type: 2}
     - target: {fileID: 7870155893999714083, guid: 9772af79b74a077ec8dd339b7b2c7dfc, type: 3}
       propertyPath: m_LocalPosition.x
       value: -6.44
@@ -7245,7 +7260,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4513367037071607233, guid: 9772af79b74a077ec8dd339b7b2c7dfc, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2072895968}
   m_SourcePrefab: {fileID: 100100000, guid: 9772af79b74a077ec8dd339b7b2c7dfc, type: 3}
 --- !u!1 &684059717
 GameObject:
@@ -8328,6 +8346,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Kope.Core.Runtime::Kope.Core.EntityComponentSystem.EntityComponentsRegistry
   entityTransform: {fileID: 774665641}
+  registryName: DefaultRegistryName
   hasBehavioralComponents: 0
   config: {fileID: 11400000, guid: fcace0391532e5648a86e8f603e94c7d, type: 2}
   components:
@@ -8600,16 +8619,16 @@ MonoBehaviour:
     gameObjectName: PlayerNew
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: EnemyNew
-  - typeName: EntityInitCaller
-    order: -40
     gameObjectName: AddDef (1)
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: AddDef
+    gameObjectName: InitCaller
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: InitCaller
+    gameObjectName: EnemyNew
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: AddDef
   - typeName: InGameUIInitCaller
     order: -30
     gameObjectName: UI
@@ -9007,6 +9026,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Kope.Core.Runtime::Kope.Core.EntityComponentSystem.EntityComponentsRegistry
   entityTransform: {fileID: 962445445}
+  registryName: DefaultRegistryName
   hasBehavioralComponents: 0
   config: {fileID: 11400000, guid: fcace0391532e5648a86e8f603e94c7d, type: 2}
   components:
@@ -9872,7 +9892,7 @@ Transform:
   m_GameObject: {fileID: 1294788625}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8.57067, y: 1.8570099, z: -10}
+  m_LocalPosition: {x: -1.12067, y: 1.66701, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -13539,7 +13559,7 @@ Transform:
   m_GameObject: {fileID: 2071341708}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -8.57067, y: 1.8570099, z: -10}
+  m_LocalPosition: {x: -1.12067, y: 1.66701, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -13619,6 +13639,26 @@ MonoBehaviour:
       BarrelClipping: 0.25
       Anamorphism: 0
   BlendHint: 0
+--- !u!1 &2072895960 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4513367037071607233, guid: 9772af79b74a077ec8dd339b7b2c7dfc, type: 3}
+  m_PrefabInstance: {fileID: 644571514}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2072895968
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2072895960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a90bdc53c37270d70b6405dc023d154d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LookingDirection
+  movementComponent: {fileID: 213309426}
+  gizmoLineLength: 8
+  gizmoColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1 &2088695439
 GameObject:
   m_ObjectHideFlags: 0
@@ -14162,13 +14202,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerNew
       objectReference: {fileID: 0}
+    - target: {fileID: 6037248722059709900, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: registryName
+      value: Player
+      objectReference: {fileID: 0}
     - target: {fileID: 6671984905160279280, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -7.45
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6671984905160279280, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.19
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6671984905160279280, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
       propertyPath: m_LocalPosition.z

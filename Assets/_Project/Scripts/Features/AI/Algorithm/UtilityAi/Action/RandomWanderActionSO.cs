@@ -1,8 +1,6 @@
 using Kope.AI.Utility;
 using UnityEngine;
 using Kope.Component.Movement;
-using Kope.Core.EntityComponentSystem;
-
 
 [CreateAssetMenu(fileName = "RandomWanderAction", menuName = "Scriptable Objects/AI/Utility/Actions/RandomWanderAction")]
 public class RandomWanderActionSO : ActionSO {
@@ -13,34 +11,33 @@ public class RandomWanderActionSO : ActionSO {
 	private Vector2 targetPosition;
 	private MovementComponentBase mc;
 
-	protected override void OnInilialize(ComponentRegistry ctx) {
-		if (!ctx.TryGetMutatableComponent(out MovementComponentBase newMc)) {
+	protected override void OnInitialize(Context ctx) {
+		var entityctx = ctx.CurrentMutableEntityContext;
+		if (!entityctx.TryGetMutatableComponent(out this.mc)) {
 			Debug.LogError("RandomWanderActionSO Initialization failed: MovementComponentBase not found.");
 			return;
 		}
-		this.mc = newMc;
+
 		this.targetPosition = GetRandomValidTarget();
-		// Debug.Log($"RandomWanderActionSO initialized with MovementComponentBase on {ctx.EntityTransform.gameObject.name}"
-		// + "Target Position: " + this.targetPosition);
 	}
-	protected override void OnEndOrAbort(ComponentRegistry ctx) {
-		if (this.mc != null) {
-			this.mc.StopMovement();
-			this.mc = null;
-		}
+	protected override void OnEndOrAbort() {
+		if (this.mc == null) return;
+
+		this.mc.StopMovement();
+		this.mc = null;
 	}
-	public override void TickUpdate(Context ctx) {
+	public override void TickUpdate() {
 		return; // no need to proceed if we are not moving. since this action is purely movement based. 
 				// so all the logic is in fixed update.
 	}
 
-	public override void TickFixedUpdate(Context ctx) {
+	public override void TickFixedUpdate() {
 		if (this.mc == null) return; // no need to proceed. if movement component is missing.
 
 		// this need to be done in fixed update since it is directly manipulating movement component which is used in physics calculations. doing this in regular update can cause jittery movement and inconsistent behavior due to variable frame rates. by using fixed update, we ensure that movement logic is applied consistently with the physics engine's timing, resulting in smoother and more reliable movement behavior for the AI entity.
 		// so the main reason is to ensure consistent and smooth movement behavior that is in sync with the physics engine, which is crucial for an action that directly controls movement like this RandomWanderAction.
 
-		Vector2 target = this.targetPosition;
+		Vector3 target = this.targetPosition;
 		float mass = this.mc.Mass;
 
 		// from 'while' to 'if' to avoid potential infinite loops in single frame.
@@ -66,11 +63,12 @@ public class RandomWanderActionSO : ActionSO {
 	/// Using until my NavMesh2d solution is ready.
 	/// </summary>
 	/// <returns></returns>
-	private Vector2 GetRandomValidTarget() {
+	private Vector3 GetRandomValidTarget() {
 		int dummy = this.maxAttemptsToFindValidPoint;
-		Vector2 target = Random.insideUnitCircle.normalized * wanderRadius + this.mc.Position;
-		// Ensure at least 1 unit distance in either X or Y axis (or both)
-		Vector2 offset = target - this.mc.Position;
+		Vector3 target = Random.insideUnitSphere.normalized * wanderRadius + this.mc.Position;
+		target.z = 0f; // Assuming a 2D plane for wandering. Adjust if using 3D.
+					   // Ensure at least 1 unit distance in either X or Y axis (or both)
+		Vector3 offset = target - this.mc.Position;
 		if (Mathf.Abs(offset.x) < 1f && Mathf.Abs(offset.y) < 1f) {
 			// If both are less than 1, scale the larger component to 1
 			if (Mathf.Abs(offset.x) >= Mathf.Abs(offset.y))
@@ -85,12 +83,12 @@ public class RandomWanderActionSO : ActionSO {
 	}
 
 	#region NavMesh2D Placeholder, Just in case I want to use it later. right now I am using simple random point generation.
-	// private Vector2 GetWanderPoint()
+	// private Vector3 GetWanderPoint()
 	// {
 
 	//     for (int attempt = 0; attempt < this.maxAttemptsToFindValidPoint; ++attempt)
 	//     {
-	//         Vector2 randomPoint = UnityEngine.Random.insideUnitCircle * wanderRadius + this.mc.Position;
+	//         Vector3 randomPoint = UnityEngine.Random.insideUnitCircle * wanderRadius + this.mc.Position;
 
 	//         // Check if the point is valid (e.g., is it on the NavMesh or outside a wall?)
 	//         if (IsValidPoint(randomPoint))
@@ -104,7 +102,7 @@ public class RandomWanderActionSO : ActionSO {
 	// }
 
 	// // Example placeholder for your validation logic
-	// private bool IsValidPoint(Vector2 point)
+	// private bool IsValidPoint(Vector3 point)
 	// {
 	//     // Add your obstacle/boundary detection here
 	//     return true;

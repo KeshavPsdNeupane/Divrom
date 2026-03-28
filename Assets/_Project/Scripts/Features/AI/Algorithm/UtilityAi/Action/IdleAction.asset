@@ -14,8 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::IdleAction
   actionName: IdleAction
   isInterruptible: 1
+  actionType: 20
   considerations:
   - {fileID: 11400000, guid: a3ff4819097ca4cc3930695a1f94a787, type: 2}
-  recurrencePenaltyWeight: 0.7
+  decayRate: 0.7
+  weightRegenRate: 0.2
   momentumBias: 0.04
   idleDuration: 3

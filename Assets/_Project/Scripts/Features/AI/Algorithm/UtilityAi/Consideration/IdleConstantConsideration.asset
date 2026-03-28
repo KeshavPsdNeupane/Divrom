@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cabdbce7df400c81aeca65ad6d6263d, type: 3}
   m_Name: IdleConstantConsideration
   m_EditorClassIdentifier: Assembly-CSharp::ConstantConsideration
+  relevantActionType: 20
   considerationName: Idle Consideration
   constantValue: 0.2

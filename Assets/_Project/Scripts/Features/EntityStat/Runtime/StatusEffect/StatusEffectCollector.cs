@@ -50,7 +50,7 @@ public class StatusEffectCollector : SensorBase {
 			//  and we have a convention that any object with that tag must have 
 			// a StatusEffectContainer component. so if we don't find it, it means something is
 			//  wrong with the setup of the detected object, and we log an error to notify the developer to fix it.
-			if (!mgr.EntityDetail.EntityComponentRegistry.ComponentRegistry.TryGetComponent(out StatusEffectContainer effect)) {
+			if (!mgr.EntityDetail.EntityComponentRegistry.ComponentRegistry.TryGetReadOnlyComponent(out StatusEffectContainer effect)) {
 				MyLogger.Error("No StatusEffectContainer found on detected object with tag " + StatusObjectTagName + ". Please ensure the object has a StatusEffectContainer component." + this.parentGOHiearchPathMessage);
 				return;
 			}

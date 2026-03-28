@@ -215,6 +215,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Kope.Core.Runtime::Kope.Core.EntityComponentSystem.EntityComponentStore
   entityTransform: {fileID: 7870155893999714083}
+  registryName: DefaultRegistryName
   hasBehavioralComponents: 1
   config: {fileID: 11400000, guid: fcace0391532e5648a86e8f603e94c7d, type: 2}
   components:
@@ -268,6 +269,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef22bffa7815bcbc28c6a380400b185b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyMovementComponent
+  dimension: 0
   rb: {fileID: 7428367574571897464}
   ecr: {fileID: 4512281911964162701}
   defaultMovementSpeed: 2
@@ -779,7 +781,7 @@ MonoBehaviour:
   planner: {fileID: 6355112809349495206}
   components:
   - {fileID: 4204933291776501059}
-  refreshInterval: 6
+  refreshInterval: 1
   sensor: {fileID: 3594846146065954779}
   initPlannerOnBrainInit: 1
 --- !u!1 &9153279180399708285

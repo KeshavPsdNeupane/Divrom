@@ -4,10 +4,24 @@ using ThirdParty.PriorityQueeu;
 using UnityEngine;
 
 namespace Kope.AI.Utility {
+	/// <summary>
+	/// A Utility AI implementation that selects actions based on a combination of their evaluated 
+	/// scores and a dynamic bias weight. The algorithm maintains a short-term memory of recently executed actions to encourage
+	/// variety in behavior and prevent the same actions from being chosen repeatedly. Actions that are 
+	/// selected will have their bias weight decayed, making them less likely to be chosen again
+	/// in the near future, while non-selected actions will gradually regenerate their bias weight over time.
+	/// Highly optimized for performance with a focus on minimizing allocations and ensuring fast evaluations,
+	/// making it suitable for real-time decision-making in games.<br/>
+	/// This class is never called every frame. It is only called when the AI needs to make a decision,
+	/// which is determined by the AIBrain component's decision frequency.
+	/// The decision frequency can be configured to balance between responsiveness and performance, 
+	/// allowing for more complex evaluations without impacting frame rate.
+	/// so we had to use Time.time and Time.deltaTime to ensure that the decay and regeneration of 
+	/// action weights are consistent regardless of the decision frequency.
+	/// </summary>
 	public class UtilityAiAlgorithm : AIBrainAlgorithm {
 		private const float DEFAULT_INITIAL_WEIGHT = 1f;
 		private const float DEFAULT_FIXED_DELTA = 0.016f;
-
 		[Header("Default Actions")]
 		[SerializeField] private ActionSO idleAction;
 
@@ -30,10 +44,14 @@ namespace Kope.AI.Utility {
 			private readonly ActionSO action;
 			private float biasWeight;
 			private bool isActive;
-			private float cooldownUntil = 0f;
 
+
+			#region Debug
+			private float evaluatedScore; // Store the last evaluated score for debugging/visualization
+			public float EvaluatedScore => evaluatedScore;
+			public float BiasWeight => biasWeight;
 			public ActionSO Action => this.action;
-			public bool IsOnCooldown => Time.time < this.cooldownUntil;
+			#endregion
 
 			public ActionEntry(ActionSO action, float weight) {
 				this.action = action;
@@ -46,6 +64,7 @@ namespace Kope.AI.Utility {
 			public float Evaluate(IReadOnlyContext ctx) {
 				float score = this.action.Evaluate(ctx) * this.biasWeight;
 				if (this.isActive) score += this.action.MomentumBias;
+				this.evaluatedScore = score;
 				return score;
 			}
 
@@ -63,7 +82,6 @@ namespace Kope.AI.Utility {
 
 			public void SetIsActive(bool isActive) {
 				this.isActive = isActive;
-				if (!isActive) this.cooldownUntil = Time.time + this.action.CooldownDuration;
 			}
 		}
 
@@ -99,7 +117,7 @@ namespace Kope.AI.Utility {
 				return removed;
 			}
 
-			public void UpdatePriority(ActionEntry entry) => this.actionQueue.TryUpdatePriority(entry);
+			public void DecayWeight(ActionEntry entry) => this.actionQueue.TryUpdatePriority(entry);
 
 			public void RegenWeights(ActionEntry except, float lastTime, float currentTime, float deltaTime) {
 				// BUG FIX: Prevent division by zero if deltaTime is 0
@@ -127,7 +145,6 @@ namespace Kope.AI.Utility {
 		private readonly List<ActionEntry> actionEntries = new();
 		private Memory memory;
 		private float lastEvaluationTime = 0f;
-		private float evaluatedScore = 0f;
 
 		public override string AlgorithmName => this.useConfig && this.config != null ? this.config.AlgorithmName : this.algorithmName;
 
@@ -147,9 +164,9 @@ namespace Kope.AI.Utility {
 			}
 
 			int size = Mathf.Clamp(this.shortTermMemorySize, 1, Mathf.Max(1, this.actionEntries.Count - 1));
-			Debug.Log($"MemorySize = {size}");
+			//Debug.Log($"MemorySize = {size}");
 			this.memory = new Memory(size);
-			Debug.Log("Utility IAI Algorithm initialized with " + this.actionEntries.Count + " actions, including idle.");
+			//			Debug.Log("Utility IAI Algorithm initialized with " + this.actionEntries.Count + " actions, including idle.");
 			return true;
 		}
 
@@ -166,9 +183,12 @@ namespace Kope.AI.Utility {
 		}
 
 		private ActionSO SelectBestAction(IReadOnlyContext ctx) {
-			Debug.Log("Selecting Best Action:");
+			// Optimization: If there's only one action (the idle action),
+			// skip evaluation and return it immediately.
 			if (this.actionEntries.Count == 1) return this.idleActionEntry.Action;
 
+			// Regenerate weights for all non-active actions based on the time elapsed since the last evaluation.
+			// using Compound interest formula for more dynamic recovery: newWeight = currentWeight + (currentWeight * (regenRate * ticks))
 			this.memory.RegenWeights(this.currentlyActiveEntry, this.lastEvaluationTime, Time.time, Time.deltaTime);
 
 			var best = EvaluateActions(ctx);
@@ -178,19 +198,18 @@ namespace Kope.AI.Utility {
 		private ActionEntry EvaluateActions(IReadOnlyContext ctx) {
 			ActionEntry bestAction = null;
 			float highestScore = float.MinValue;
-			Debug.Log("Evaluating Actions:");
+			//			Debug.Log("Evaluating Actions:");
 			foreach (var entry in this.actionEntries) {
-				// Skip actions on cooldown, but always allow idle as guaranteed fallback
-				if (entry.IsOnCooldown && entry != this.idleActionEntry) continue;
 				float score = entry.Evaluate(ctx);
+				//Debug.Log($"[UtilityAI] Evaluating the action named {entry.Action.name} with the score = {score} and bias = {entry.BiasWeight}");
 				if (score > highestScore) {
 					highestScore = score;
 					bestAction = entry;
 				}
-
-				var entryName = entry.Action != null ? entry.Action.ActionName : "None";
-				Debug.Log($"[UtilityAI] Evaluating the action named {entryName} with the score = {score}");
-
+#if UNITY_EDITOR
+				//var entryName = entry.Action != null ? entry.Action.ActionName : "None";
+				//Debug.Log($"[UtilityAI] Evaluating the action named {entryName} with the score = {score}");
+#endif
 			}
 
 			if (bestAction != this.currentlyActiveEntry) {
@@ -198,11 +217,10 @@ namespace Kope.AI.Utility {
 				bestAction?.SetIsActive(true);
 				this.currentlyActiveEntry = bestAction;
 			}
-			evaluatedScore = highestScore;
-
-			var bestName = bestAction?.Action != null ? bestAction.Action.ActionName : "None";
-			Debug.Log($"[UtilityAI] Found Best Action named {bestName} with score = {highestScore}");
-
+#if UNITY_EDITOR
+			//var bestName = bestAction?.Action != null ? bestAction.Action.ActionName : "None";
+			//Debug.Log($"[UtilityAI] Found Best Action named {bestName} with score = {highestScore}");
+#endif
 			return bestAction;
 		}
 
@@ -214,19 +232,20 @@ namespace Kope.AI.Utility {
 				var rescued = this.memory.Dequeue();
 				if (rescued != null) {
 					rescued.ResetWeight(DEFAULT_INITIAL_WEIGHT);
-					// Since nothing will be removed from enqueue,
-					// no eviction will happen, we can directly re-enqueue the rescued action.
 					this.memory.Enqueue(rescued);
+					// the above Enqueue will never evict any other action.
+					// since we removed 1 action and added it back, the memory is effectively unchanged,
+					// but we get to reset the weight of the rescued action.
 				}
 			} else if (this.memory.Contains(actionEntry)) {
 				actionEntry.ApplyDecay(this.minActionWeight);
-				this.memory.UpdatePriority(actionEntry); // Sync decay changes
+				this.memory.DecayWeight(actionEntry); // Sync decay changes
 			} else {
 				var removed = this.memory.Enqueue(actionEntry);
 				removed?.ResetWeight(DEFAULT_INITIAL_WEIGHT);
 				actionEntry.ResetWeight(DEFAULT_INITIAL_WEIGHT);
 				actionEntry.ApplyDecay(this.minActionWeight);
-				this.memory.UpdatePriority(actionEntry); // Sync initial decay
+				this.memory.DecayWeight(actionEntry); // Sync initial decay
 			}
 
 			this.lastEvaluationTime = Time.time;
@@ -236,11 +255,10 @@ namespace Kope.AI.Utility {
 #if UNITY_EDITOR
 		void OnDrawGizmos() {
 			if (!Application.isPlaying || this.currentlyActiveEntry == null) return;
-
 			// Setup a clean, readable style
 			GUIStyle style = new();
 			style.normal.textColor = Color.black;
-			style.fontSize = 30;
+			style.fontSize = 20;
 			style.fontStyle = FontStyle.Bold;
 			style.alignment = TextAnchor.UpperCenter;
 
@@ -249,7 +267,8 @@ namespace Kope.AI.Utility {
 			   : "None";
 
 			// Draw only the requested info
-			string labelText = $"{currentActionName}\n({evaluatedScore:F2})";
+			string labelText = $"{currentActionName}\n(Evaluation: {this.currentlyActiveEntry.EvaluatedScore:F2}\n" +
+			$" bias: {this.currentlyActiveEntry.BiasWeight:F2})";
 
 			UnityEditor.Handles.Label(transform.position + Vector3.up * 2.0f, labelText, style);
 		}

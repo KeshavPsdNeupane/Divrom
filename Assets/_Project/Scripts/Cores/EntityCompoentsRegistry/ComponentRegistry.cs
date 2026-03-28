@@ -3,15 +3,14 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 
-namespace Kope.Core.EntityComponentSystem
-{
+namespace Kope.Core.EntityComponentSystem {
 	/// <summary>
 	/// Stores the context of a single entity. <br/>
-	/// <inheritdoc cref="IReadOnlyEntityRegistry"/>
+	/// <inheritdoc cref="IReadOnlyComponentRegistry"/>
 	/// </summary>
 	[Serializable]
-	public class ComponentRegistry : IReadOnlyEntityRegistry
-	{
+	public class ComponentRegistry : IReadOnlyComponentRegistry {
+		private readonly string registryName;
 		/// <summary>
 		/// Indicate whether this EntityContext contains Behavioral components like state machines, AI, sensors etc.
 		/// this is used to differentiate between entities that have state machines and those that do not.
@@ -38,7 +37,7 @@ namespace Kope.Core.EntityComponentSystem
 
 		//<inheritdoc/>
 		public Transform EntityTransform => this.entityTransform;
-
+		public string RegistryName => this.registryName;
 
 		/// <summary>
 		/// Indicates whether this EntityContext contains a state machine context.
@@ -60,21 +59,19 @@ namespace Kope.Core.EntityComponentSystem
 		/// <param name="entityTransform"></param>
 		/// <param name="hasBehavioralComponents"></param>
 		/// <param name="excludedTypes"></param>
-		public ComponentRegistry(Transform entityTransform, bool hasBehavioralComponents, List<string> excludedTypes = null)
-		{
+		[Obsolete("This constructor is deprecated. Use the constructor that accepts a " +
+		"HashSet<Type> for excludedTypes instead for better performance and type safety." +
+		"Provide the hype using the the config asset and the inspector field for excluded types instead of hardcoding them in code.")]
+		public ComponentRegistry(string registryName, Transform entityTransform, bool hasBehavioralComponents, List<string> excludedTypes = null) {
+			this.registryName = registryName;
 			this.entityTransform = entityTransform;
 			this.hasBehavioralComponents = hasBehavioralComponents;
-			if (excludedTypes != null)
-			{
-				foreach (var typeName in excludedTypes)
-				{
+			if (excludedTypes != null) {
+				foreach (var typeName in excludedTypes) {
 					Type type = Type.GetType(typeName);
-					if (type != null)
-					{
+					if (type != null) {
 						this.excludedTypes.Add(type);
-					}
-					else
-					{
+					} else {
 						Debug.LogWarning($"Excluded type '{typeName}' could not be found and will be ignored.");
 					}
 				}
@@ -88,12 +85,11 @@ namespace Kope.Core.EntityComponentSystem
 		/// </summary>
 		/// <param name="entityTransform"></param>
 		/// <param name="excludedTypes"></param>
-		public ComponentRegistry(Transform entityTransform, bool hasBehavioralComponents, HashSet<Type> excludedTypes = null)
-		{
+		public ComponentRegistry(string registryName, Transform entityTransform, bool hasBehavioralComponents, HashSet<Type> excludedTypes = null) {
+			this.registryName = registryName;
 			this.entityTransform = entityTransform;
 			this.hasBehavioralComponents = hasBehavioralComponents;
-			if (excludedTypes != null)
-			{
+			if (excludedTypes != null) {
 				this.excludedTypes.UnionWith(excludedTypes);
 			}
 		}
@@ -106,22 +102,18 @@ namespace Kope.Core.EntityComponentSystem
 		/// </summary>
 		/// <typeparam name="Tcomponent">The type of the component being added.</typeparam>
 		/// <param name="component">The component instance to register.</param>
-		public void Register<Tcomponent>(Tcomponent component)
-		{
-			if (component == null)
-			{
+		public void Register<Tcomponent>(Tcomponent component) {
+			if (component == null) {
 				Debug.LogError("Cannot add a null component to the EntityContext.");
 				return;
 			}
 
-			void Register(Type type)
-			{
+			void Register(Type type) {
 				if (this.components.ContainsKey(type)) return;
 				this.components[type] = component;
 			}
 
-			bool ShouldStop(Type type)
-			{
+			bool ShouldStop(Type type) {
 				return this.excludedTypes.Contains(type);
 			}
 
@@ -130,28 +122,23 @@ namespace Kope.Core.EntityComponentSystem
 
 			// Register all base types (stop at very base framework types) so TryGetComponent can find by base class
 			var baseType = concreteType.BaseType;
-			while (baseType != null && baseType != typeof(object) && !ShouldStop(baseType))
-			{
+			while (baseType != null && baseType != typeof(object) && !ShouldStop(baseType)) {
 				Register(baseType);
 				baseType = baseType.BaseType;
 			}
 
 			// Register implemented interfaces for interface-based lookups
-			foreach (var iface in concreteType.GetInterfaces())
-			{
-				if (!ShouldStop(iface))
-				{
+			foreach (var iface in concreteType.GetInterfaces()) {
+				if (!ShouldStop(iface)) {
 					Register(iface);
 				}
 			}
 		}
 
-		public bool TryGetComponent<Tcomponent>([MaybeNullWhen(false)] out Tcomponent component)
-		{
+		public bool TryGetReadOnlyComponent<Tcomponent>([MaybeNullWhen(false)] out Tcomponent component) {
 			var type = typeof(Tcomponent);
 			// Try to get the component by type
-			if (components.TryGetValue(type, out var comp) && comp is Tcomponent typedComp)
-			{
+			if (components.TryGetValue(type, out var comp) && comp is Tcomponent typedComp) {
 				component = typedComp;
 				return true;
 			}
@@ -183,9 +170,8 @@ namespace Kope.Core.EntityComponentSystem
 		/// <typeparam name="Tcomponent"></typeparam>
 		/// <param name="component"></param>
 		/// <returns></returns>
-		public bool TryGetMutatableComponent<Tcomponent>([MaybeNullWhen(false)] out Tcomponent component) where Tcomponent : class
-		{
-			return TryGetComponent(out component);
+		public bool TryGetMutatableComponent<Tcomponent>([MaybeNullWhen(false)] out Tcomponent component) where Tcomponent : class {
+			return TryGetReadOnlyComponent(out component);
 		}
 
 	}

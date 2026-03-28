@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cabdbce7df400c81aeca65ad6d6263d, type: 3}
   m_Name: RandomWalkConsideration
   m_EditorClassIdentifier: Assembly-CSharp::ConstantConsideration
+  relevantActionType: 41
   considerationName: Wander Consideration
   constantValue: 0.3

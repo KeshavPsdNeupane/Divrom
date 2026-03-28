@@ -6,14 +6,16 @@ using Kope.Core.Init;
 
 
 namespace Kope.Character.Stats {
-	public enum CharacterStatType { HP, ATK, DEF, MATK, SPD, CRATE, CDMG, }
-	public enum DamageType {
-		Physical,
-		Fire,
-		Ice,
-		Lightning,
-		Poison,
+	public enum CharacterStatType {
+		HP, // Health Points
+		ATK, // Attack Power
+		DEF, // Defense
+		SP, // Spell Power, affects magic damage and healing power
+		AGI, // Agility, affects movement speed and attack speed(just give minor/negligible boost to attack speed, main purpose is to increase movement speed)
+		CRATE, // Critical Hit Rate
+		CDMG, // Critical Hit Damage
 	}
+	public enum DamageType { Physical, Fire, Ice, Lightning, Poison, }
 
 	public class CharacterStatsSystem : InitializableBase {
 		[SerializeField] private string characterName = "DefaultCharacter";

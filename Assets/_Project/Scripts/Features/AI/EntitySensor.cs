@@ -27,8 +27,12 @@ public class EntitySensor : SensorBase {
 	}
 
 	public override void OnDetect(Collider2D other) {
+		if (this.context == null) {
+			Debug.LogWarning($"[EntitySensor] Context is not assigned for {gameObject.name}. Cannot register detected entity." + this.parentGOHiearchPathMessage);
+			return;
+		}
 		var entityManager = other.GetComponentInParent<EntityManager>();
-		if (entityManager == null || this.context == null) return;
+		if (entityManager == null) return;
 		// this is garunteed to be valid for all entity since we check the commonname on the EM itself,
 		//  so we can skip the check here and just add it to the context
 		// so if entity manager is valid then all other tags and registry should be valid as well,
@@ -37,6 +41,10 @@ public class EntitySensor : SensorBase {
 	}
 
 	public override void OnDetectExit(Collider2D other) {
+		if (this.context == null) {
+			Debug.LogWarning($"[EntitySensor] Context is not assigned for {gameObject.name}. Cannot remove detected entity." + this.parentGOHiearchPathMessage);
+			return;
+		}
 		var entityManager = other.GetComponentInParent<EntityManager>();
 		if (entityManager == null || this.context == null) return;
 		var ed = entityManager.EntityDetail;

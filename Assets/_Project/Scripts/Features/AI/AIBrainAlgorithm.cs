@@ -6,8 +6,7 @@ namespace Kope.AI {
 	/// Generic base class for AI decision planners. <br/>
 	/// <br/>
 	/// Inherit from this class to implement specific planning algorithms<br/>
-	/// such as Utility AI, GOAP, or Behavior Trees.
-	/// Do not inherit directly from <see cref="AIBrainAlgorithmBase"/> unless required.<br/>
+	/// such as Utility AI, GOAP, or Behavior Trees.<br/>
 	/// <br/>
 	/// This class represents a **pure decision planner**:<br/>
 	/// - Evaluates decisions without mutating entity or global state<br/>
@@ -17,23 +16,15 @@ namespace Kope.AI {
 	/// Loop detection and mitigation are **planner-specific** and must be implemented<br/>
 	/// by each concrete algorithm as needed.
 	/// <br/>
-	/// The generic type <typeparamref name="TAction"/> enforces type safety for
-	/// idle and default actions used by the planner.<br/>
 	/// </summary>
 
 	public abstract class AIBrainAlgorithm : InitializableBase {
 
 		public abstract string AlgorithmName { get; }
+
 		/// <summary>
-		/// Initializes the AI algorithm.
-		/// Do not override this method ,overright InitializeAI instead.<br/>
-		/// AND ALWAYS CALL THIS METHOD TO ENSURE PROPER INITIALIZATION.<br/>
-		/// This method is used as template method for all child classes of AIBrainAlgorithm.
-		/// Since we want to enforce certain checks before calling the actual initialization logic.
-		/// Like checking for required assignments.
-		/// This method checks for required assignments and logs errors if necessary.
-		/// Always call this method to ensure proper initialization of resources.
-		/// If all checks pass, it calls <see cref="InitializeAI"/> for further setup.
+		/// Template method that enforces pre-initialization cleanup before delegating to <see cref="InitializeAI"/>.
+		/// Do not override this method; override <see cref="InitializeAI"/> instead.
 		/// </summary>
 		protected sealed override bool OnInit() {
 			OnCleanUp();
@@ -41,24 +32,18 @@ namespace Kope.AI {
 		}
 
 		/// <summary>
-		/// Cleans up instantiated actions and internal state.
-		/// This method is used as template method for all child classes of AIBrainAlgorithm.
-		/// Since we want to enforce certain cleanup steps before calling the actual cleanup logic.
-		/// This method cleans up the idle action instance and then calls 
-		/// <see cref="CleanUpAI"/> for further cleanup.
-		/// Always call this method to ensure proper cleanup of resources.
+		/// Template method that delegates to <see cref="CleanUpAI"/>.
+		/// Call this to trigger cleanup; do not call <see cref="CleanUpAI"/> directly.
 		/// </summary>
 		protected void OnCleanUp() {
 			CleanUpAI();
 		}
 
 		/// <summary>
-		/// Initializes the AI algorithm, setting up any necessary internal structures or state.
-		/// Override this method to perform custom initialization logic.
-		/// For Any child class of this AIBrainAlgorithm InilializableBase.<br/>
-		/// BUT NEVER CALL THIS METHOD DIRECTLY, ALWAYS CALL <see cref="OnInit"/> INSTEAD.
+		/// Override this to implement algorithm-specific initialization logic.
+		/// Called by <see cref="OnInit"/> after pre-initialization cleanup.
 		/// </summary>
-		/// <returns></returns>
+		/// <returns>True if initialization succeeded; false otherwise.</returns>
 		protected abstract bool InitializeAI();
 
 		/// <summary>
@@ -77,9 +62,8 @@ namespace Kope.AI {
 		public abstract IEnumerable<BaseActionSO> GetDecisionPlan(IReadOnlyContext ctx);
 
 		/// <summary>
-		/// Always override this method to hook into cleanup logic.
-		/// Cleans up any resources or state used by the AI algorithm.
-		/// Never called directly, use <see cref="OnCleanUp"/> instead.
+		/// Override this to release any resources or state owned by the algorithm.
+		/// Called by <see cref="OnCleanUp"/>; do not invoke directly.
 		/// </summary>
 		protected abstract void CleanUpAI();
 	}

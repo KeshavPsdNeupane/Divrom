@@ -14,7 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RangeAction
   actionName: Base Action
   isInterruptible: 1
+  actionType: 42
   considerations:
   - {fileID: 11400000, guid: 53330aabca2aa010e94d70f16ba571d2, type: 2}
   decayRate: 0.7
+  weightRegenRate: 0.2
   momentumBias: 0.05
+  playerFreeSpaceRadius: 0.2
+  maxActionDuration: 2
+  directionChangeFrequency: 3

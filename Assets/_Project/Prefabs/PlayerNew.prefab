@@ -302,6 +302,7 @@ Transform:
   - {fileID: 179205763957248772}
   - {fileID: 3802224159702318278}
   - {fileID: 3327304838387345389}
+  - {fileID: 9132898216058479435}
   m_Father: {fileID: 6671984905160279280}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3334636408711061821
@@ -349,11 +350,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EntityComponentStore
   entityTransform: {fileID: 6671984905160279280}
+  registryName: DefaultRegistryName
   hasBehavioralComponents: 1
   config: {fileID: 11400000, guid: fcace0391532e5648a86e8f603e94c7d, type: 2}
   components:
   - {fileID: 2725148965693703880}
   - {fileID: 5294357042670943928}
+  - {fileID: 3968986674516492649}
   - {fileID: 7100714284575033797}
   - {fileID: 2559965507949131218}
   - {fileID: 2247624721500832756}
@@ -435,6 +438,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 267923a9716b04b4088ffa3a650266e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovementComponent
+  dimension: 0
   rb: {fileID: 5028322666046906755}
   ecr: {fileID: 6037248722059709900}
   defaultMovementSpeed: 2
@@ -760,6 +764,55 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CharacterStatsSystem
   characterName: Player
   characterStateSo: {fileID: 11400000, guid: e06becc107dbd2a41bc1b329d3a6b6b4, type: 2}
+--- !u!1 &8996877740221044493
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9132898216058479435}
+  - component: {fileID: 3968986674516492649}
+  m_Layer: 0
+  m_Name: HealthComponent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9132898216058479435
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8996877740221044493}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1.0518703, y: 5.47465, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 636012089227929340}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3968986674516492649
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8996877740221044493}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6381daa293f31947b53a57c89b0cb0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Kope.Component.Health.HealthComponentBase
+  ecr: {fileID: 6037248722059709900}
+  config: {fileID: 11400000, guid: 6c90447ed9dd89062b08ee34e279d0e1, type: 2}
+  maxHealth: 10
+  currentHealth: 10
+  defence: 0
 --- !u!1001 &8456934485472912313
 PrefabInstance:
   m_ObjectHideFlags: 0

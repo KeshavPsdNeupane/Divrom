@@ -54,7 +54,7 @@ public class StatDescription : InitializableBase {
 			}
 			// using tryGet since this only shows the stats on UI and does not modify the stats,
 			//  so we don't need mutatable access here. so TryGetComponent is sufficient for semantic clarity.
-			if (ecr.ComponentRegistry.TryGetComponent<CharacterStatsSystem>(out var statsSystem)) {
+			if (ecr.ComponentRegistry.TryGetReadOnlyComponent<CharacterStatsSystem>(out var statsSystem)) {
 				this.characterStats = statsSystem;
 			} else {
 				MyLogger.Error("No CharacterStatsSystem found in EntityComponentStore for StatDescription" + GetParentGameObjectHeirarchyMessage());

@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RandomWanderActionSO
   actionName: RandomWander
   isInterruptible: 1
+  actionType: 41
   considerations:
   - {fileID: 11400000, guid: 4a8fd9b298b7bdfbb90367f87dabf469, type: 2}
   decayRate: 0.7
   weightRegenRate: 0.2
   momentumBias: 0.05
-  cooldownDuration: 1
   wanderRadius: 3
   maxAttemptsToFindValidPoint: 10

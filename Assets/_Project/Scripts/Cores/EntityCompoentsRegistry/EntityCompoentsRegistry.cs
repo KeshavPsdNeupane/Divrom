@@ -17,6 +17,7 @@ namespace Kope.Core.EntityComponentSystem {
 	public class EntityComponentsRegistry : InitializableBase {
 
 		[SerializeField] private Transform entityTransform;
+		[SerializeField] private string registryName = "DefaultRegistryName";
 		[SerializeField, Tooltip("Indicates whether this EntityComponentStore contains state/AI/sensor components." +
 		"So that the EntityComponentRegistry can optimize its registrations accordingly. and other systems can query this info easily.")]
 		private bool hasBehavioralComponents = false;
@@ -34,12 +35,10 @@ namespace Kope.Core.EntityComponentSystem {
 		/// </summary>
 		public ComponentRegistry ComponentRegistry => componentRegistry;
 
-
-
-
 		protected override bool OnInit() {
 			try {
 				this.componentRegistry = new ComponentRegistry(
+				this.registryName,
 				this.entityTransform,
 				this.hasBehavioralComponents,
 				this.config.ExcludedTypeSet

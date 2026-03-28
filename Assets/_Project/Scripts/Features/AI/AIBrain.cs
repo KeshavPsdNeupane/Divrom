@@ -15,6 +15,7 @@ namespace Kope.AI {
 		private AIBrainAlgorithm planner;
 		[SerializeField, Tooltip("Components used for context. Only those implementing IInterruptOther will be subscribed.")]
 		private List<InitializableBase> components;
+
 		[SerializeField, Range(0f, 20f), Tooltip("Interval to force the brain to refresh its plan periodically. Set to 0 to disable.")]
 		private float refreshInterval = 1.0f;
 
@@ -67,9 +68,7 @@ namespace Kope.AI {
 				this.refreshTimer.OnTimerStop += RefreshTimerCallback;
 				this.refreshTimer.Start();
 			}
-			Debug.Log("Sensor Init Context called from AIBrain OnInit");
 			this.sensor.InitContext(this.ctx);
-			Debug.Log($"[AIBrain] Initialization complete for {gameObject.name}. Context and Planner are set up." + GetParentGameObjectHeirarchyMessage());
 			return true;
 		}
 
@@ -125,7 +124,7 @@ namespace Kope.AI {
 
 		protected virtual void HandleActionCompletion() {
 			if (this.currentAction != null && this.currentAction.IsCompleted) {
-				this.currentAction.EndOrAbort(this.ctx.CurrentMutableEntityContext);
+				this.currentAction.EndOrAbort();
 				this.currentAction = null;
 			}
 		}
@@ -143,7 +142,7 @@ namespace Kope.AI {
 				var nextAction = this.currentPlanEnumerator.Current;
 				if (nextAction != null) {
 					this.currentAction = nextAction;
-					this.currentAction.Initialize(this.ctx.CurrentMutableEntityContext);
+					this.currentAction.Initialize(this.ctx);
 				}
 			} else {
 				this.currentPlanEnumerator = null;
@@ -153,13 +152,13 @@ namespace Kope.AI {
 
 		protected virtual void TickCurrentAction() {
 			if (this.currentAction != null && !this.currentAction.IsCompleted) {
-				this.currentAction.TickUpdate(this.ctx);
+				this.currentAction.TickUpdate();
 			}
 		}
 
 		protected virtual void TickCurrentActionPhysic() {
 			if (this.currentAction != null && !this.currentAction.IsCompleted) {
-				this.currentAction.TickFixedUpdate(this.ctx);
+				this.currentAction.TickFixedUpdate();
 			}
 		}
 		#endregion
@@ -174,7 +173,7 @@ namespace Kope.AI {
 
 		protected virtual void StopCurrentAction() {
 			if (this.currentAction != null) {
-				this.currentAction.EndOrAbort(this.ctx.CurrentMutableEntityContext);
+				this.currentAction.EndOrAbort();
 			}
 			this.currentAction = null;
 			this.currentPlanEnumerator = null;

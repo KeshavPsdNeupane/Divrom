@@ -1,14 +1,18 @@
 using UnityEngine.InputSystem;
 using ServiceLocatorPattern;
 using Kope.Core.CompilerServices;
+using UnityEngine;
 public class PlayerAttackComponent : AttackComponentBase {
 	private InputManager inputManager;
 
 	protected override bool OnInit() {
-		// we need to check if we already sub to the stats
-		// since base is not InitializableBase, we need to call it to make sure
-		//  we get the stat value from the stats
-		if (!base.OnInit()) return false; // impt if the base class is not InilializableBase
+		// Call base.OnInit() first to initialize stats and animation references.
+		// on base class AttackComponentBase, we need to initialize the reference to
+		//  CharacterStatsSystem and AnimationComponentBase, so we call base.OnInit() first to 
+		// ensure those references are set up before we subscribe to input and potentially use those references
+		//  in our attack logic.
+		// Returns false if any required component is missing, short-circuiting this init.
+		if (!base.OnInit()) return false;
 		if (GlobalServiceLocator.Instance.TryGetService(out InputManager inputManager)) {
 			this.inputManager = inputManager;
 		} else {
@@ -57,7 +61,7 @@ public class PlayerAttackComponent : AttackComponentBase {
 	protected override void PerformAttackInternal() {
 
 		float damage = CalculateDamage();
-		// For testing so no need for logger
-		MyLogger.Log($"Attack performed! Damage: {damage}, Base attack: {attack}");
+		// just a placeholder for now, we will implement the actual attack logic later
+		Debug.Log($"Attack performed! Damage: {damage}, Base attack: {attack}");
 	}
 }

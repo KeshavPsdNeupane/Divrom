@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Kope.Core.EntityComponentSystem;
 using Kope.Core.Extensions;
 using UnityEngine;
 
@@ -10,7 +11,8 @@ namespace Kope.AI.Utility {
 	/// Actions are evaluated based on a set of considerations to determine their utility. <br/>
 	/// </summary>
 	public abstract class ActionSO : BaseActionSO {
-
+		[SerializeField, Tooltip("The type of action this represents.")]
+		protected ActionType actionType = ActionType.None;
 		[SerializeField] private List<ConsiderationSO> considerations;
 
 		[SerializeField, Range(0.05f, 1.0f),
@@ -27,15 +29,10 @@ namespace Kope.AI.Utility {
 		Tooltip("Very Small Momentum Factor Provided to AI, to encourage repetition.")]
 		private float momentumBias = 0.05f;
 
-		[SerializeField, Min(0f),
-		Tooltip("Minimum seconds before this action can be selected again after deactivation. " +
-		"Use this to enforce a fire rate or recovery window. 0 = no cooldown.")]
-		private float cooldownDuration = 1.0f;
-
+		public ActionType ActionType => this.actionType;
 		public float DecayRate => this.decayRate;
 		public float MomentumBias => this.momentumBias;
 		public float WeightRegenRate => this.weightRegenRate;
-		public float CooldownDuration => this.cooldownDuration;
 
 		/// <summary>
 		/// Evaluates the action's utility based on its considerations and the given context.
@@ -62,6 +59,13 @@ namespace Kope.AI.Utility {
 				totalMul += newCount + 1; // the +1 is for the current consideration's multiplication
 			}
 			return Mathf.Max(totalScore.GetCompensatedUtility(totalMul), 0.0f);
+		}
+		protected IReadOnlyComponentRegistry GetSelectedTargetRegistry(ActionType actionType) {
+			foreach (var consideration in considerations) {
+				var registry = consideration.GetSelectedTargetRegistry(actionType);
+				if (registry != null) return registry;
+			}
+			return null;
 		}
 	}
 
