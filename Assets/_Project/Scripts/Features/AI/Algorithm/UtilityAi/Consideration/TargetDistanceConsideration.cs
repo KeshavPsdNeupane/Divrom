@@ -4,8 +4,8 @@ using Kope.Core.EntityComponentSystem;
 using Kope.Component.Movement;
 
 
-[CreateAssetMenu(fileName = "RangeConsideration", menuName = "Scriptable Objects/AI/Utility/Considerations/RangeConsideration")]
-public class RangeConsideration : ConsiderationSO {
+[CreateAssetMenu(fileName = "TargetDistanceConsideration", menuName = "Scriptable Objects/AI/Utility/Considerations/TargetDistanceConsideration")]
+public class TargetDistanceConsideration : ConsiderationSO {
 
 
 	[SerializeField] private string considerationName = "Range Consideration";
@@ -25,12 +25,8 @@ public class RangeConsideration : ConsiderationSO {
 	private IReadOnlyComponentRegistry _closestTargetCache;
 	public override string ConsiderationName => this.considerationName;
 
-	private void OnEnable() => Init();
-	private void OnValidate() => Init();
-
-
 	public override IReadOnlyComponentRegistry GetSelectedTargetRegistry(ActionType actionType) {
-		if (this.relevantActionType != ActionType.None && this.relevantActionType != actionType) {
+		if (!IsRelevantFor(actionType)) {
 			// if this consideration is not relevant for the given action type, 
 			// we return null to avoid providing a target registry that might be irrelevant or misleading for the action.
 			return null;
@@ -39,24 +35,23 @@ public class RangeConsideration : ConsiderationSO {
 	}
 
 
-	private void Init() {
+	protected override void OnInitialize() {
 		this._hashedEntityCommonName = new HashedTag(this.entityCommonName);
 		// Pre-calculate the cosine of the threshold once
 		// Dividing angle by 2 because threshold usually represents total FOV width
 		this._cosineOfAngleThreshold = Mathf.Cos(this.angleThreshold * 0.5f * Mathf.Deg2Rad);
 		ValidateConfig(this._hashedEntityCommonName);
-
 		this._closestTargetCache = null; // Clear cache on init/validate to ensure fresh evaluation
 	}
 
 	private void ValidateConfig(HashedTag commonNameTag) {
 		if (this.entityCommonNameConfig == null) {
-			Debug.LogError($"[{nameof(RangeConsideration)}] Missing EntityCommonNameConfig reference. Please assign it in the inspector.", this);
+			Debug.LogError($"[{this.considerationName}] Missing EntityCommonNameConfig reference. Please assign it in the inspector.", this);
 			return;
 		}
 
 		if (!this.entityCommonNameConfig.InternalContains(commonNameTag)) {
-			Debug.LogError($"[{nameof(RangeConsideration)}] The specified common name '{this.entityCommonName}' was not found in the EntityCommonNameConfig. Please ensure it is defined correctly.", this);
+			Debug.LogError($"[{this.considerationName}] The specified common name '{this.entityCommonName}' was not found in the EntityCommonNameConfig. Please ensure it is defined correctly.", this);
 		}
 	}
 
@@ -66,6 +61,7 @@ public class RangeConsideration : ConsiderationSO {
 	/// </summary>
 
 	public override (float, int) Evaluate(IReadOnlyContext context) {
+		this._closestTargetCache = null;
 		if (this.entityCommonNameConfig == null) return (0f, 0); // no config, no targets, no score
 
 		var closest = FindClosestValidTarget(context, out float actualDistance);
@@ -96,7 +92,7 @@ public class RangeConsideration : ConsiderationSO {
 		var selfContext = context.ReadOnlyEntityContext;
 
 		if (!selfContext.TryGetReadOnlyComponent<MovementComponentBase>(out var movementComponent)) {
-			Debug.LogError($"[{nameof(RangeConsideration)}] The entity does not have a MovementComponentBase. Please ensure it is added to the entity.", this);
+			Debug.LogError($"[{this.considerationName}] The entity does not have a MovementComponentBase. Please ensure it is added to the entity.", this);
 			return null;
 		}
 		Vector3 selfPos = movementComponent.Position;

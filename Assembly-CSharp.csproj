@@ -51,7 +51,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets/_Project/Scripts/Features/Component/Attack/AttackComponentBase.cs" />
-    <Compile Include="Assets/_Project/Scripts/Features/AI/Algorithm/UtilityAi/Action/RangeAction.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/UI/InventoryDisplays/InventoryDisplay.cs" />
     <Compile Include="Assets/_Project/Scripts/Managers/InputManager/InputManager.cs" />
     <Compile Include="Assets/_Project/_BootStrap/GlobalBootStrap.cs" />
@@ -73,28 +72,33 @@
     <Compile Include="Assets/_Project/LookingDirection.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Component/Animation/AnimationVariableHashes.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AI/Algorithm/UtilityAi/Action/IdleAction.cs" />
-    <Compile Include="Assets/_Project/Scripts/Features/Component/Health/HealthComponentConfig.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/Runtime/Item/ItemData.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/Runtime/Slot/ItemSlot.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Component/Attack/PlayerAttackComponent.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Actors/Weapon/WeaponAnimationMapping.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Actors/States/Enemy/ChasePlayer.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/Component/Animation/IAnimationComponent.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AI/AIBrainAlgorithm.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Actors/States/Player/States/PlayerIdle.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AI/Algorithm/UtilityAi/Action/ActionSO.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AI/Algorithm/UtilityAi/Consideration/ConsiderationSO.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AI/Algorithm/UtilityAi/Consideration/ConstantConsideration.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/Component/Health/ReduceHp.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/Runtime/Item/ItemPickup.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/AI/Algorithm/UtilityAi/Consideration/TargetDistanceConsideration.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Component/Attack/EnemyAttackComponent.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/Component/Health/Runtime/HealthComponentBase.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Component/Movement/EnemyMovementComponent.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Actors/EntityStateController.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Actors/States/Player/States/PlayerMove.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AI/Algorithm/UtilityAi/UtilityAiAlgorithm.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Actors/EntityStateManager.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/Component/Health/HealthBar.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Actors/States/Enemy/TestEnemyComponent.cs" />
     <Compile Include="Assets/_Project/UI/UIState/InGameUI/InGameUIInitCaller.cs" />
     <Compile Include="Assets/_Project/UI/Common/PanelController.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Actors/EntityInitCaller.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/Component/Health/Runtime/Config/HealthComponentConfig.cs" />
     <Compile Include="Assets/_Project/UI/UIState/UIStateManager.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Component/Level/CharacterLevel.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Component/Movement/PlayerMovementComponent.cs" />
@@ -102,7 +106,6 @@
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/Runtime/Item/PlayerItemCollector.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AI/BaseActionSO.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Component/IInterruptOther.cs" />
-    <Compile Include="Assets/_Project/Scripts/Features/AI/Algorithm/UtilityAi/Consideration/RangeConsideration.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Actors/Weapon/WeaponSO.cs" />
     <Compile Include="Assets/_Project/UI/UIState/InGameUI/GameplayUIController.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AI/Algorithm/UtilityAi/UtilityAiConfig.cs" />
@@ -112,7 +115,7 @@
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/Runtime/InventorySystem.cs" />
     <Compile Include="Assets/_Project/Scripts/Managers/ItemDatabase/HashUtility.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/Runtime/InventoryHolder.cs" />
-    <Compile Include="Assets/_Project/Scripts/Features/Component/Health/HealthComponentBase.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/AI/Algorithm/UtilityAi/Action/MoveToTargetAction.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/UI/ItemSlotUI/ItemSlotUI.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Actors/AnimationStates.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AI/Algorithm/UtilityAi/Consideration/CompositeConsideration.cs" />

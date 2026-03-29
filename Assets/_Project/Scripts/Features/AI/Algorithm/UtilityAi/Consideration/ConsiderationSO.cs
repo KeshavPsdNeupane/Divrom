@@ -1,6 +1,5 @@
-using System;
+using System.Collections.Generic;
 using Kope.Core.EntityComponentSystem;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Kope.AI.Utility {
@@ -9,9 +8,35 @@ namespace Kope.AI.Utility {
 		"For compositie considerations, this can be set to None since the considerations within the composite handle their own action type relevance." +
 		"And current Implementation of CompositeConsideration just pass the checks to inner consideration, so for composite consideration" +
 		"This field is not needed.")]
-		protected ActionType relevantActionType = ActionType.None;
-
+		private List<ActionType> relevantActionTypes = new() { ActionType.None };
 		public abstract string ConsiderationName { get; }
+		private HashSet<ActionType> _relevantActionTypesSet;
+
+		protected virtual void OnEnable() => Initialize();
+		protected virtual void OnValidate() => Initialize();
+
+		private void Initialize() {
+			BuildHashSet();
+			OnInitialize();
+		}
+		/// <summary>
+		/// Hook for additional Intialization logic in derived classes.
+		/// Called during OnEnable and OnValidate after building the relevant action types hash set.
+		/// U can do regular Initialization logic and as well as validation of config in this method. If you find any config error, just log error and return, the consideration will simply not provide any score or target registry until the config is fixed, but it wont cause any crash or undefined behavior.
+		/// This is to ensure that the consideration always has a chance to initialize its internal state and validate its configuration whenever it is enabled or modified in the inspector, without relying on the user to remember to call a separate initialization method.
+		/// </summary>
+		protected virtual void OnInitialize() { }
+
+		private void BuildHashSet() {
+			this._relevantActionTypesSet = new HashSet<ActionType>(this.relevantActionTypes);
+		}
+
+		public bool IsRelevantFor(ActionType actionType) {
+			if (this._relevantActionTypesSet == null) BuildHashSet();
+
+			return this._relevantActionTypesSet.Contains(ActionType.None) ||
+				   this._relevantActionTypesSet.Contains(actionType);
+		}
 
 
 		/// <summary>

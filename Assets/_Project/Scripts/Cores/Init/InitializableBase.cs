@@ -13,9 +13,10 @@ namespace Kope.Core.Init {
 	/// </summary>
 	public abstract class InitializableBase : MonoBehaviour, IInitializable {
 		/// <summary>
-		/// this bool just means whether Init() has been called or not yet for the instance
-		/// it does not guarantee that all dependencies are injected or valid
-		/// that is up to the derived class to ensure during its Init() implementation   
+		/// Indicates whether this component has been fully initialized. 
+		/// This is set to true after Init() is called and OnInit() returns true.
+		/// This garuntees that the component is ready to be used, 
+		/// and prevents Update/FixedUpdate logic from running before initialization.
 		/// </summary>
 		public bool IsInitialized { get; protected set; } = false;
 

@@ -1,4 +1,5 @@
 using Kope.Component.Movement;
+using Kope.Component.Animation;
 public class EntityAttack : EntityBaseState {
 	private readonly MovementComponentBase movementComponent;
 	private readonly AnimationComponentBase animationComponent;
@@ -31,26 +32,23 @@ public class EntityAttack : EntityBaseState {
 		if (this.animationExists) {
 			this.animationComponent.anim.speed = weapon.AttackSpeed;
 			this.animationComponent.anim.Play(this.currentAnimationHash, 0, 0f);
-			// while attacking we cannot move, so we set speed multiplier to 0 to prevent movement.
-			this.movementComponent.SetSpeedMultiplier(0.0f);
 		} else {
 			SwitchToIdle();
 		}
 	}
 
-	public override void Update() {
+	public override void TickUpdate() {
 		if (!this.animationExists) return;
 		CheckAnimationFinished();
 	}
 
 
-	public override void PhysicUpdate() {
-		// this.movementComponent.ApplyPhysics();
+	public override void TickPhysicUpdate() {
+		// Apply reduced movement speed during attack, can be tweaked or made weapon-specific later if desired.
+		movementComponent.ApplyPhysics(speedMultiplier: 0.5f);
 	}
 	public override void OnAnimationTrigger() => SwitchToIdle();
-	public override void Exit() {
-		this.movementComponent.SetSpeedMultiplier(1f);
-	}
+	public override void Exit() { }
 
 	private void UpdateWeaponData(WeaponData weaponData) {
 		this.currentAnimationState = weaponData.PrimaryAttackAnimation;

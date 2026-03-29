@@ -57,14 +57,18 @@ public class StatusEffectCollector : SensorBase {
 			if (effect != null && effect.StatusEffect != null && this.characterStats != null) {
 				if (this.characterStats.AddStatModifier(effect.StatusEffect)) {
 					// always call NotifyEntityDiedOrPooled before destroying the gameobject,
-					//  so that any systems that need to react to the entity's death or pooling 
+					// so that any systems that need to react to the entity's death or pooling 
 					// can do so before the gameobject is destroyed and becomes inaccessible.
 
 					mgr.NotifyEntityDiedOrPooled();
 
 					// for this case we are treating the status effect as a "pickup" that the character can collect
-					//  and apply to themselves, so we destroy the gameobject after collecting it.
-					// we could even use pooling but the format will be same as we are already notifying the EntityManager that the entity is "pooled" (in this case, returned to the pool instead of actually being destroyed), so any pooling system that listens to the OnEntityDiedOrPooled event can handle it accordingly, whether it's actually destroying the gameobject or just deactivating it and returning it to the pool for later reuse.
+					// and apply to themselves, so we destroy the gameobject after collecting it.
+					// we could even use pooling but the format will be same as we are already notifying
+					// the EntityManager that the entity is "pooled" (in this case, returned to the pool 
+					// instead of actually being destroyed), so any pooling system that listens to the OnEntityDiedOrPooled 
+					// event can handle it accordingly, whether it's actually destroying the gameobject or just deactivating
+					// it and returning it to the pool for later reuse.
 					Destroy(other.gameObject);
 
 				}

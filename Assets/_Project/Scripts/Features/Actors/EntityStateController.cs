@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using Kope.Core.Init;
 using Kope.Component.Movement;
+using Kope.Component.Attack;
+using Kope.Component.Animation;
 
 public class EntityStateController : InitializableBase {
 	[SerializeField] private MovementComponentBase movementComponent;
@@ -46,11 +48,11 @@ public class EntityStateController : InitializableBase {
 	protected override void OnUpdate() {
 		base.OnUpdate();
 
-		this.stateMachine?.CurrentState?.Update();
+		this.stateMachine?.CurrentState?.TickUpdate();
 	}
 
 
-	protected override void OnFixedUpdate() => this.stateMachine?.CurrentState?.PhysicUpdate();
+	protected override void OnFixedUpdate() => this.stateMachine?.CurrentState?.TickPhysicUpdate();
 
 
 	// this delegate func called when AttackComponent invokes OnAttackPerformed event

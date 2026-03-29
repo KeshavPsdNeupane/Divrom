@@ -6,6 +6,9 @@ using Kope.Core.EntityComponentSystem;
 
 namespace Kope.Component.Movement {
 
+
+
+
 	public enum Dimension {
 		TwoD,
 		ThreeD,
@@ -30,15 +33,22 @@ namespace Kope.Component.Movement {
 		}
 	}
 
+	public interface IMovementComponent {
+		Vector3 Direction { get; }
+		Vector3 Position { get; }
+		void SetMovementIntent(MovementIntent intent);
+		Vector3 GetLookingAtDirection();
+	}
 
 
-	public class MovementComponentBase : InitializableBase {
+
+	public class MovementComponentBase : InitializableBase, IMovementComponent {
 		[SerializeField] protected Dimension dimension = Dimension.TwoD;
 		[SerializeField] protected Rigidbody2D rb;
 		[SerializeField] protected EntityComponentsRegistry ecr;
 		[SerializeField] protected float defaultMovementSpeed = 2f;
 
-		private CharacterStatsSystem characterStatsSystem;
+		private CharacterStatsSystem _readOnlycharacterStatsSystem;
 
 		/// <summary>
 		/// this is universal threshold to determine if direction is significant enough to consider.
@@ -46,11 +56,10 @@ namespace Kope.Component.Movement {
 		/// </summary>
 		public const float MOVEMENT_EPSILON = 0.1f;
 
-		protected MovementIntent currentIntent;
+		protected MovementIntent _currentIntent;
 		public float Mass => this.rb.mass;
-		public Vector3 Direction => this.currentIntent.Direction;
+		public Vector3 Direction => this._currentIntent.Direction;
 		public Vector3 Position => this.rb.position;
-		private float speedMultiplier = 1f;
 
 		private Vector3 lastDirection = Vector3.right;
 
@@ -97,7 +106,7 @@ namespace Kope.Component.Movement {
 			// we are only subscribing to stat changes, not modifying the stats directly, 
 			// so we don't need mutatable access. so using TryGetComponent for semantic clarity
 			if (this.ecr.ComponentRegistry.TryGetReadOnlyComponent(out CharacterStatsSystem statsSystem)) {
-				this.characterStatsSystem = statsSystem;
+				this._readOnlycharacterStatsSystem = statsSystem;
 			} else {
 				MyLogger.Warn($"MovementComponentBase ({gameObject.name}): " +
 			   $"CharacterStatsSystem not found in {this.ecr.name}. Stats-based movement speed will be unavailable.\n{GetParentGameObjectHeirarchyMessage()}");
@@ -113,35 +122,18 @@ namespace Kope.Component.Movement {
 		}
 
 		private void SubscribeToStats() {
-			if (this.characterStatsSystem != null &&
-				this.characterStatsSystem.CurrentStats != null) {
-				this.characterStatsSystem.StatsSubscribe(CharacterStatType.AGI, SetDefaultMovementSpeed);
+			if (this._readOnlycharacterStatsSystem != null &&
+				this._readOnlycharacterStatsSystem.CurrentStats != null) {
+				this._readOnlycharacterStatsSystem.StatsSubscribe(CharacterStatType.AGI, SetDefaultMovementSpeed);
 				// initial fetch
-				SetDefaultMovementSpeed(this.characterStatsSystem.CurrentStats[CharacterStatType.AGI].GetValue());
+				SetDefaultMovementSpeed(this._readOnlycharacterStatsSystem.CurrentStats[CharacterStatType.AGI].GetValue());
 			}
 		}
 		private void UnsubscribeFromStats() {
-			if (this.characterStatsSystem != null &&
-				this.characterStatsSystem.CurrentStats != null) {
-				this.characterStatsSystem.StatsUnsubscribe(CharacterStatType.AGI, SetDefaultMovementSpeed);
+			if (this._readOnlycharacterStatsSystem != null &&
+				this._readOnlycharacterStatsSystem.CurrentStats != null) {
+				this._readOnlycharacterStatsSystem.StatsUnsubscribe(CharacterStatType.AGI, SetDefaultMovementSpeed);
 			}
-		}
-
-		protected override void OnFixedUpdate() {
-			ApplyPhysics();
-		}
-
-		/// <summary>
-		/// Sets the speed multiplier for this movement component.
-		/// This multiplier scales the default movement speed, allowing for temporary speed boosts or reductions.
-		/// Like when attacking, we can set it to 0.5 to reduce movement speed, 
-		/// or when using a speed boost, we can set it to 1.5 to increase movement speed.
-		/// this is mainly used to restrict movement during certain actions (like attacking) 
-		/// or to apply temporary speed for for dodge or so on.
-		/// </summary>
-		/// <param name="multiplier"></param>
-		public void SetSpeedMultiplier(float multiplier = 1f) {
-			this.speedMultiplier = multiplier;
 		}
 
 		/// <summary>
@@ -169,19 +161,28 @@ namespace Kope.Component.Movement {
 			} else {
 				intent.Direction = Vector3.zero;
 			}
-			this.currentIntent = intent;
+			this._currentIntent = intent;
 
 		}
 
 		public void StopMovement() {
-			this.currentIntent = default;
+			this._currentIntent = default;
 		}
 
 
-		protected virtual void ApplyPhysics() {
+		/// <summary>
+		/// Applies physics-based movement based on the current movement intent and a speed multiplier.
+		/// The speed multiplier can be used to implement effects like slowing down the entity during attacks or debuffs.
+		/// The method blends the desired velocity from the movement intent with the current physics velocity to allow for
+		/// responsive control while still respecting collisions and other physics interactions.
+		/// Must be called by State themselves in their TickPhysicUpdate to take effect,
+		///  giving them control over when movement is applied during the update cycle.
+		/// </summary>
+		/// <param name="speedMultiplier"></param>
+		public virtual void ApplyPhysics(float speedMultiplier = 1f) {
 			Vector3 targetVelocity = Vector3.zero;
-			if (this.currentIntent.IntentType != MovementIntentType.Stop) {
-				targetVelocity = this.speedMultiplier * this.defaultMovementSpeed * this.currentIntent.Direction;
+			if (this._currentIntent.IntentType != MovementIntentType.Stop) {
+				targetVelocity = speedMultiplier * this.defaultMovementSpeed * this._currentIntent.Direction;
 			}
 
 			// Blend physics velocity (from collisions) with desired velocity

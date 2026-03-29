@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbcd17a8d1b68e347a2e9818f6b928c9, type: 3}
-  m_Name: RangeAction
+  m_Name: MoveToTargetAction
   m_EditorClassIdentifier: Assembly-CSharp::RangeAction
   actionName: Base Action
   isInterruptible: 1

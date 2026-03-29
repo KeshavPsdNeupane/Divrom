@@ -6,8 +6,6 @@ using UnityEngine;
 public class StatusEffectContainer : InitializableBase
 // needed so it can be put on ECR prefab and have the status effect data set in the inspector
 {
-	[SerializeField] private CircleCollider2D circle;
-
 	[Header("Info")]
 	[SerializeField] private string source = "Default";
 	[SerializeField] private string effectName = "None";
@@ -27,8 +25,7 @@ public class StatusEffectContainer : InitializableBase
 	[SerializeField] private string description;
 
 	private StatusEffect statusEffect;
-	public StatusEffect StatusEffect => this.statusEffect ??= new StatusEffect
-	{
+	public StatusEffect StatusEffect => this.statusEffect ??= new StatusEffect {
 		source = this.source,
 		effectName = this.effectName,
 		statType = this.statType,
@@ -40,11 +37,4 @@ public class StatusEffectContainer : InitializableBase
 		debuffPriority = this.debuffPriority,
 		description = this.description
 	};
-
-	private void Awake()
-	{
-		if (this.circle == null)
-			this.circle = this.gameObject.GetComponent<CircleCollider2D>();
-		this.circle.isTrigger = true;
-	}
 }

@@ -1,5 +1,4 @@
 using Kope.AI.Utility;
-using Kope.Core.EntityComponentSystem;
 using ThirdParty;
 using UnityEngine;
 

@@ -9,6 +9,14 @@ using UnityEngine;
 
 namespace Kope.Component.Health {
 
+	public interface IHealthComponent {
+		float CurrentHealth { get; }
+		float MaxHealth { get; }
+
+		event Action<float> OnMaxHealthChanged;
+		event Action<float> OnCurrentHealthChanged;
+	}
+
 
 	// this will be moved to HurtBoxComponentBase in the future, since not all 
 	// damageable entities need to have health component, but for now it's fine to 
@@ -18,17 +26,16 @@ namespace Kope.Component.Health {
 	}
 
 	public struct DamageDetail {
-		public float DamageAmount;
 		public GameObject Source;
 		public DamageType DamageType;
+		public int LevelDifference;
+		public float DamageAmount;
 		public float DefencePierceRatio;
 		public float IgnoreResistance;
-		public int LevelDifference;
-
 		// knockback info will be handled in the future when we implement the knockback system, 
 		// for now we will just ignore it.
-		public float KnockbackForce;
-		public Vector3 KnockbackDirection;
+		// public float KnockbackForce;
+		// public Vector3 KnockbackDirection;
 
 		public DamageDetail(
 			float damageAmount,
@@ -36,21 +43,21 @@ namespace Kope.Component.Health {
 			DamageType damageType,
 			float defencePierceRatio = 0,
 			float ignoreResistance = 0,
-			int levelDifference = 0,
-			float knockbackForce = 0,
-			Vector3 knockbackDirection = default) {
+			int levelDifference = 0
+			/*float knockbackForce = 0,
+			Vector3 knockbackDirection = default*/) {
 			this.DamageAmount = damageAmount;
 			this.Source = source;
 			this.DamageType = damageType;
 			this.DefencePierceRatio = defencePierceRatio;
 			this.IgnoreResistance = ignoreResistance;
 			this.LevelDifference = levelDifference;
-			this.KnockbackForce = knockbackForce;
-			this.KnockbackDirection = knockbackDirection;
+			// this.KnockbackForce = knockbackForce;
+			// this.KnockbackDirection = knockbackDirection;
 		}
 	}
 
-	public class HealthComponentBase : InitializableBase, IDamageable {
+	public class HealthComponentBase : InitializableBase, IDamageable, IHealthComponent {
 
 		[SerializeField] EntityComponentsRegistry ecr;
 		[SerializeField] HealthComponentConfig config;
@@ -73,6 +80,8 @@ namespace Kope.Component.Health {
 #pragma warning disable IDE0044 // Add readonly modifier
 		private MovementComponentBase movementComponent;
 #pragma warning restore IDE0044 // Add readonly modifier
+
+
 		public float CurrentHealth => this.currentHealth;
 		public float MaxHealth => this.maxHealth;
 
@@ -81,9 +90,14 @@ namespace Kope.Component.Health {
 		private float LevelScalingFactor => this.config.LevelScalingFactor;
 		private float InverseResistanceDiminishingReturnsThreshold => this.config.ReciprocalOfResistanceDiminishingReturnsThreshold;
 
+
+		public event Action<float> OnMaxHealthChanged;
+		public event Action<float> OnCurrentHealthChanged;
+
 		private void SetMaxHealth(float newHealth) {
 			this.maxHealth = newHealth;
 			this.currentHealth = Mathf.Clamp(this.currentHealth, 0, this.maxHealth);
+			this.OnMaxHealthChanged?.Invoke(this.maxHealth);
 		}
 		private void SetDefence(float newDefence) {
 			this.defence = newDefence;
@@ -122,6 +136,7 @@ namespace Kope.Component.Health {
 				// setting current health to max health on initialization, 
 				// can be changed later if we want to have entities that spawn with less than max health.
 				SetDefence(this.characterStatsSystem.CurrentStats[CharacterStatType.DEF].GetValue());
+				Debug.Log($"Hp = {this.currentHealth} Def = {this.defence}");
 			}
 		}
 		private void UnSubScribeToStats() {
@@ -147,6 +162,7 @@ namespace Kope.Component.Health {
 			float levelMult = GetLevelMultiplier(damageDetail.LevelDifference);
 			float finalDamage = damageDetail.DamageAmount * defMult * resMult * levelMult;
 			this.currentHealth = Mathf.Clamp(this.currentHealth - finalDamage, 0, this.maxHealth);
+			this.OnCurrentHealthChanged?.Invoke(this.currentHealth);
 			// knock logic will be handled in the future when we implement the knockback system, 
 			// for now we will just ignore it.
 		}
@@ -197,5 +213,21 @@ namespace Kope.Component.Health {
 			if (levelDifference < 0) temp = 1 / temp;
 			return temp;
 		}
+
+
+		/// <summary>
+		/// Used for dubugging purposes, directly reduces HP by a specified amount, ignoring all calculations.
+		/// </summary>
+		/// <param name="amount"></param>
+		public void ReduceHp(float amount, float minHealthAmount = 0.2f) {
+			this.currentHealth = Mathf.Clamp(
+				this.currentHealth - amount,
+				this.maxHealth * minHealthAmount,
+				this.maxHealth
+			);
+			this.OnCurrentHealthChanged?.Invoke(this.currentHealth);
+		}
+
+
 	}
 }
