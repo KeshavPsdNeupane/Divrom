@@ -8073,7 +8073,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 947394590}
-  - component: {fileID: 947394589}
+  - component: {fileID: 947394591}
   m_Layer: 0
   m_Name: Ecaluator
   m_TagString: Untagged
@@ -8081,7 +8081,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &947394589
+--- !u!4 &947394590
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 947394588}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.09, y: 9.73, z: 0}
+  m_LocalScale: {x: 2, y: 2, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &947394591
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8119,23 +8134,10 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   x: 0
-  result: 0.9900498
-  unityResult: 0
---- !u!4 &947394590
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 947394588}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.09, y: 9.73, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  result: 0.99999785
+  unityResult: 1
+  customEvalTime: 0.0005
+  unityEvalTime: 0.0005
 --- !u!114 &1030139793 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1099055355600047168, guid: 9772af79b74a077ec8dd339b7b2c7dfc, type: 3}

@@ -1,60 +1,94 @@
 using UnityEngine;
 
 namespace Kope.AI {
-	[CreateAssetMenu(menuName = "Kope/Curve Asset")]
+	[System.Serializable]
+	public struct BezierPoint {
+		public Vector2 pos;
+		public Vector2 hIn;  // Local offset
+		public Vector2 hOut; // Local offset
+
+		public BezierPoint(Vector2 position) {
+			pos = position;
+			hIn = new Vector2(-0.1f, 0);
+			hOut = new Vector2(0.1f, 0);
+		}
+	}
+
+	[CreateAssetMenu(menuName = "Kope/AI Bezier Asset")]
 	public class CurveAsset : ScriptableObject {
-		[HideInInspector]
-		public Vector2[] controlPoints = new Vector2[]
-		{
-			new(0f, 0f),
-			new(1f, 1f)
+		public BezierPoint[] points = new BezierPoint[] {
+			new(new Vector2(0, 0)),
+			new(new Vector2(1, 1))
 		};
 
 		[HideInInspector] public float[] sampledValues;
-		public int resolution = 64;
+		[HideInInspector] public string lastBakeTime = "Never";
+		public int resolution = 32; // Default for AI
 
-		public void Bake() {
-			if (controlPoints == null || controlPoints.Length < 2) return;
+		public void Bake(bool isAuto = false) {
+			if (points == null || points.Length < 2) return;
 
-			System.Array.Sort(controlPoints, (a, b) => a.x.CompareTo(b.x));
+			// Ensure points stay in chronological order
+			System.Array.Sort(points, (a, b) => a.pos.x.CompareTo(b.pos.x));
+
 			sampledValues = new float[resolution];
-
 			for (int i = 0; i < resolution; i++) {
-				float t = (float)i / (resolution - 1);
-				sampledValues[i] = SampleControlPoints(t);
+				float x = (float)i / (resolution - 1);
+				sampledValues[i] = SampleBezier(x);
 			}
+
+			if (!isAuto) lastBakeTime = System.DateTime.Now.ToString("HH:mm:ss");
 		}
 
-		private float SampleControlPoints(float x) {
-			// Find surrounding control points and cubic Hermite interpolate
-			for (int i = 0; i < controlPoints.Length - 1; i++) {
-				Vector2 p0 = controlPoints[i];
-				Vector2 p1 = controlPoints[i + 1];
+		private float SampleBezier(float x) {
+			for (int i = 0; i < points.Length - 1; i++) {
+				BezierPoint p0 = points[i];
+				BezierPoint p1 = points[i + 1];
 
-				if (x >= p0.x && x <= p1.x) {
-					float t = (p1.x - p0.x) < 1e-6f ? 0f :
-							  (x - p0.x) / (p1.x - p0.x);
+				if (x < p0.pos.x || x > p1.pos.x) continue;
 
-					// Cubic Hermite with Catmull-Rom tangents
-					Vector2 m0 = i > 0
-						? (p1 - controlPoints[i - 1]) * 0.5f
-						: p1 - p0;
-					Vector2 m1 = i < controlPoints.Length - 2
-						? (controlPoints[i + 2] - p0) * 0.5f
-						: p1 - p0;
+				// Binary search for t that gives us the target x
+				float t = BinarySearchT(p0, p1, x);
 
-					float t2 = t * t, t3 = t2 * t;
-					float h00 = 2 * t3 - 3 * t2 + 1;
-					float h10 = t3 - 2 * t2 + t;
-					float h01 = -2 * t3 + 3 * t2;
-					float h11 = t3 - t2;
+				// Now evaluate y at that t
+				float invT = 1f - t;
+				float b0 = invT * invT * invT;
+				float b1 = 3f * invT * invT * t;
+				float b2 = 3f * invT * t * t;
+				float b3 = t * t * t;
 
-					float span = p1.x - p0.x;
-					return h00 * p0.y + h10 * span * m0.y
-						 + h01 * p1.y + h11 * span * m1.y;
-				}
+				return b0 * p0.pos.y
+					 + b1 * (p0.pos.y + p0.hOut.y)
+					 + b2 * (p1.pos.y + p1.hIn.y)
+					 + b3 * p1.pos.y;
 			}
-			return controlPoints[^1].y;
+			return points[^1].pos.y;
+		}
+
+		private float BinarySearchT(BezierPoint p0, BezierPoint p1, float targetX, int iterations = 16) {
+			float lo = 0f, hi = 1f, t = 0.5f;
+
+			for (int i = 0; i < iterations; i++) {
+				float invT = 1f - t;
+				float b0 = invT * invT * invT;
+				float b1 = 3f * invT * invT * t;
+				float b2 = 3f * invT * t * t;
+				float b3 = t * t * t;
+
+				float cx = b0 * p0.pos.x
+						 + b1 * (p0.pos.x + p0.hOut.x)
+						 + b2 * (p1.pos.x + p1.hIn.x)
+						 + b3 * p1.pos.x;
+
+				if (Mathf.Abs(cx - targetX) < 1e-5f) break;
+
+				if (cx < targetX) lo = t;
+				else hi = t;
+
+				t = (lo + hi) * 0.5f;
+			}
+
+			return t;
 		}
 	}
 }
