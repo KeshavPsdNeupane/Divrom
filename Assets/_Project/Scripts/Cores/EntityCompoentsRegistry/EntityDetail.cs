@@ -1,5 +1,4 @@
-namespace Kope.Core.EntityComponentSystem
-{
+namespace Kope.Core.EntityComponentSystem {
 	/// <summary>
 	/// This class serves as a simple data container for essential details about an Entity in the ECS architecture. 
 	/// It encapsulates the UniqueID, CommonEntityHashedTag, and EntityComponentRegistry associated with an Entity.
@@ -8,16 +7,14 @@ namespace Kope.Core.EntityComponentSystem
 	/// in the EntityManager. By using this class, we can ensure that all relevant details about an Entity are 
 	/// easily accessible and organized when needed for various operations within the ECS framework.
 	/// </summary>
-	public class EntityDetail
-	{
+	public class EntityDetail {
 		// simple class that can be made
 		public UniqueID UniqueID { get; private set; }
 		// simple hashed tag imple
 		public HashedTag CommonEntityHashedTag { get; private set; }
-		// by default in ECS architecture
-		public EntityComponentsRegistry EntityComponentRegistry { get; private set; }
+		public IReadOnlyComponentRegistry ComponentRegistry { get; private set; }
 		// every entity with entity manager will have this 
-		public IEntityDiedOrPooled EntityDiedOrPooledHandler { get; private set; }
+		public readonly IEntityDiedOrPooled EventProvider;
 
 		// so this class is a pure data class
 		// the dependency is on only this ECS architecture,
@@ -27,13 +24,11 @@ namespace Kope.Core.EntityComponentSystem
 		public EntityDetail(
 			UniqueID uniqueID,
 			HashedTag commonEntityHashedTag,
-			EntityComponentsRegistry entityComponentRegistry,
-			IEntityDiedOrPooled entityDiedOrPooledHandler)
-		{
+			IReadOnlyComponentRegistry entityComponentRegistry, IEntityDiedOrPooled onEntityDiedOrPooled) {
 			this.UniqueID = uniqueID;
 			this.CommonEntityHashedTag = commonEntityHashedTag;
-			this.EntityComponentRegistry = entityComponentRegistry;
-			this.EntityDiedOrPooledHandler = entityDiedOrPooledHandler;
+			this.ComponentRegistry = entityComponentRegistry;
+			this.EventProvider = onEntityDiedOrPooled;
 		}
 	}
 }

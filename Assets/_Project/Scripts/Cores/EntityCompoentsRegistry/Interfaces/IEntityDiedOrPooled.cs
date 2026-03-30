@@ -1,14 +1,12 @@
 using System;
 
-namespace Kope.Core.EntityComponentSystem
-{
+namespace Kope.Core.EntityComponentSystem {
 	/// <summary>
 	/// Interface for entities that can trigger events when they die or are pooled.
 	/// <para>
 	/// <b>OnEntityDied:</b> This event is triggered when the entity dies, allowing subscribers to perform cleanup, update contexts, or trigger other game logic in response to the
 	/// </summary>
-	public interface IEntityDiedOrPooled
-	{
+	public interface IEntityDiedOrPooled {
 		/// <summary>
 		/// Event triggered when the entity dies or is pooled. Subscribers can use this event to perform necessary
 		///  cleanup, update contexts, or trigger other game logic in response to the entity's death or pooling.
@@ -21,6 +19,6 @@ namespace Kope.Core.EntityComponentSystem
 		///  or deactivated and returned to pool (pooled), but in both cases the entity is no 
 		/// longer active in the game world and needs to be handled similarly by subscribers.
 		/// </summary>
-		event Action<UniqueID, HashedTag> OnEntityDiedOrPooled;
+		event Action<EntityDetail> OnEntityDiedOrPooled;
 	}
 }

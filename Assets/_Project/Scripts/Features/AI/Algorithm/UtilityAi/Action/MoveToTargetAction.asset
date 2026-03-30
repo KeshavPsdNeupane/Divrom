@@ -20,6 +20,6 @@ MonoBehaviour:
   decayRate: 0.7
   weightRegenRate: 0.2
   momentumBias: 0.05
-  playerFreeSpaceRadius: 0.2
+  deadZone: 1
   maxActionDuration: 2
   directionChangeFrequency: 3

@@ -3,32 +3,20 @@ using Kope.Core.Sensor;
 [RequireComponent(typeof(CircleCollider2D))]
 public class EntitySensor : SensorBase {
 	private Context context;
-	int tempCounter = 0;
-
 	/// <summary>
 	/// Pass the context from AIBrain
 	/// </summary>
 	/// <param name="context"></param>
 	public void InitContext(Context context) => this.context = context;
-
-	void Update() {
-		if (this.tempCounter != context.GetTotalEntityCount()) {
-			this.tempCounter = context.GetTotalEntityCount();
-			Debug.Log($"[EntitySensor] Total entities in context: {this.tempCounter}");
-			// this is just to verify that the sensor is properly 
-			// registering and removing entities from the context, and that the count is accurate.
-		}
-	}
-
 	public override void OnStart() {
 		if (this.context == null) {
-			Debug.LogWarning($"[EntitySensor] Context is not assigned for {gameObject.name}. Please call InitContext with a valid Context instance before the sensor starts detecting." + this.parentGOHiearchPathMessage);
+			Debug.LogWarning($"[EntitySensor] Context is not assigned for {gameObject.name}. Please call InitContext with a valid Context instance before the sensor starts detecting." + this._parentGOHiearchPathMessage);
 		}
 	}
 
 	public override void OnDetect(Collider2D other) {
 		if (this.context == null) {
-			Debug.LogWarning($"[EntitySensor] Context is not assigned for {gameObject.name}. Cannot register detected entity." + this.parentGOHiearchPathMessage);
+			Debug.LogWarning($"[EntitySensor] Context is not assigned for {gameObject.name}. Cannot register detected entity." + this._parentGOHiearchPathMessage);
 			return;
 		}
 		var entityManager = other.GetComponentInParent<EntityManager>();
@@ -42,12 +30,25 @@ public class EntitySensor : SensorBase {
 
 	public override void OnDetectExit(Collider2D other) {
 		if (this.context == null) {
-			Debug.LogWarning($"[EntitySensor] Context is not assigned for {gameObject.name}. Cannot remove detected entity." + this.parentGOHiearchPathMessage);
+			Debug.LogWarning($"[EntitySensor] Context is not assigned for {gameObject.name}. Cannot remove detected entity." + this._parentGOHiearchPathMessage);
 			return;
 		}
 		var entityManager = other.GetComponentInParent<EntityManager>();
 		if (entityManager == null || this.context == null) return;
-		var ed = entityManager.EntityDetail;
-		this.context.RemoveTargetEntityContext(ed.UniqueID, ed.CommonEntityHashedTag);
+
+		this.context.RemoveTargetEntityContext(entityManager.EntityDetail);
+	}
+
+
+
+
+	int tempCounter = 0;
+	void Update() {
+		if (this.tempCounter != context.GetTotalEntityCount()) {
+			this.tempCounter = context.GetTotalEntityCount();
+			Debug.Log($"[EntitySensor] Total entities in context: {this.tempCounter}");
+			// this is just to verify that the sensor is properly 
+			// registering and removing entities from the context, and that the count is accurate.
+		}
 	}
 }

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 using System.Linq;
 using Kope.Core.EntityComponentSystem;
 /// <summary>
@@ -11,65 +10,77 @@ using Kope.Core.EntityComponentSystem;
 /// </para>
 /// </summary>
 public class Context : IReadOnlyContext {
-	private readonly ComponentRegistry currentEntityContext;
+	private readonly ComponentRegistry _currentEntityContext;
+	/// <summary>
+	/// Look up structure for very specific target retrieval: [CommonTag] -> [IndividualTag] -> TargetRegistry.
+	/// This is designed for maximum flexibility and performance, allowing both broad category access and specific entity access without any runtime allocations.
+	/// The outer dictionary categorizes entities by their common tag (e.g., "Player"), while the inner dictionary allows for direct access to specific entities by their unique ID, all with O(1) complexity.
+	/// The IReadOnlyComponentRegistry values ensure that target entities are protected from unintended modifications, enforcing a clear separation of concerns where the Context manages entity state while external systems can only read target states without altering them. 
+	/// The design also includes an efficient caching mechanism for lists of targets under a common tag to support considerations that need to evaluate all entities of
+	/// </summary>
+	private readonly Dictionary<HashedTag, Dictionary<HashedTag, IReadOnlyComponentRegistry>> _targetEntityContexts = new();
 
-	// Primary Storage: Nested dictionary for O(1) individual lookups
-	private readonly Dictionary<HashedTag, Dictionary<HashedTag, IReadOnlyComponentRegistry>> targetEntityContexts = new();
+	/// <summary>
+	/// Look of for all targets under a common tag, e.g. "Player", regardless of their individual tags/IDs.
+	/// This is useful for actions/considerations that want to consider all entities of a certain type/category without caring about their individual identities.
+	/// The inner IReadOnlyComponentRegistry list is a cached list of the values from the inner dictionary of _targetEntityContexts for O(1) retrieval
+	/// </summary>
+	private readonly Dictionary<HashedTag, List<IReadOnlyComponentRegistry>> _listCache = new();
 
-	private readonly Dictionary<HashedTag, List<IReadOnlyComponentRegistry>> listCache = new();
-
-	public ComponentRegistry CurrentMutableEntityContext => this.currentEntityContext;
-	public IReadOnlyComponentRegistry ReadOnlyEntityContext => this.currentEntityContext;
+	public ComponentRegistry CurrentMutableEntityContext => this._currentEntityContext;
+	public IReadOnlyComponentRegistry SelfReadOnlyEntityContext => this._currentEntityContext;
 
 	public int GetTotalEntityCount() {
-		return this.targetEntityContexts.Count == 0 ? 0 : this.targetEntityContexts.Values.Sum(innerDict => innerDict.Count);
+		return this._targetEntityContexts.Count == 0 ? 0 : this._targetEntityContexts.Values.Sum(innerDict => innerDict.Count);
 	}
 
 	public Context(ComponentRegistry currentEntityContext) {
-		this.currentEntityContext = currentEntityContext ?? throw new ArgumentNullException(nameof(currentEntityContext));
+		this._currentEntityContext = currentEntityContext ?? throw new ArgumentNullException(nameof(currentEntityContext));
 	}
 
 	public void RegisterEntityContext(EntityDetail entityDetail) {
 		var commonTag = entityDetail.CommonEntityHashedTag;
 		var individualTag = entityDetail.UniqueID.HashedTag;
-		var targetContext = entityDetail.EntityComponentRegistry.ComponentRegistry;
+		var targetContext = entityDetail.ComponentRegistry;
 
 		// Ensure the common category exists
-		if (!targetEntityContexts.TryGetValue(commonTag, out var innerDict)) {
+		if (!_targetEntityContexts.TryGetValue(commonTag, out var innerDict)) {
 			innerDict = new Dictionary<HashedTag, IReadOnlyComponentRegistry>();
-			targetEntityContexts[commonTag] = innerDict;
-			listCache[commonTag] = new List<IReadOnlyComponentRegistry>();
+			_targetEntityContexts[commonTag] = innerDict;
+			_listCache[commonTag] = new List<IReadOnlyComponentRegistry>();
 		}
 
 		// Only add if it's a new individual entity
 		if (!innerDict.ContainsKey(individualTag)) {
 			innerDict[individualTag] = targetContext;
-			listCache[commonTag].Add(targetContext);
+			_listCache[commonTag].Add(targetContext);
 			// only subscribe to the entity's death/pooled event if it's a new entry to prevent multiple subscriptions
 			// for the same entity
-			entityDetail.EntityDiedOrPooledHandler.OnEntityDiedOrPooled += RemoveEntityDueToSignal;
+			entityDetail.EventProvider.OnEntityDiedOrPooled += RemoveEntityDueToSignal;
 		}
 		// If it exists, the reference is already shared. Do nothing.
 	}
-	public void RemoveTargetEntityContext(UniqueID individualTag, HashedTag commonTag) {
-		//Debug.Log($"[Context] Removing target entity context: CommonTag={commonTag}, IndividualTag={individualTag}");
-		if (targetEntityContexts.TryGetValue(commonTag, out var innerDict)) {
+	public void RemoveTargetEntityContext(EntityDetail entityDetail) {
+		var commonTag = entityDetail.CommonEntityHashedTag;
+		var individualTag = entityDetail.UniqueID;
+		if (_targetEntityContexts.TryGetValue(commonTag, out var innerDict)) {
 			var individualHashedTag = individualTag.HashedTag;
-			if (innerDict.TryGetValue(individualHashedTag, out var context)) {
+			if (innerDict.TryGetValue(individualHashedTag, out var IReadOnlyEntityRegistry)) {
 				// Remove from cache list
-				if (listCache.TryGetValue(commonTag, out var cacheList)) {
-					cacheList.Remove(context);
+				if (_listCache.TryGetValue(commonTag, out var cacheList)) {
+					cacheList.Remove(IReadOnlyEntityRegistry);
 					//Debug.Log($"[Context] Removed target entity from cache: CommonTag={commonTag}, IndividualTag={individualTag}");
 				}
 
 				innerDict.Remove(individualHashedTag);
 				if (innerDict.Count == 0) {
 					//	Debug.Log($"[Context] All entities removed from category: CommonTag={commonTag}");
-					targetEntityContexts.Remove(commonTag);
-					listCache.Remove(commonTag);
+					_targetEntityContexts.Remove(commonTag);
+					_listCache.Remove(commonTag);
 
 				}
-				//context.E.EntityDiedOrPooledHandler.OnEntityDiedOrPooled -= RemoveEntityDueToSignal;
+				// Unsubscribe from the entity's death/pooled event to prevent memory leaks and unintended callbacks
+				entityDetail.EventProvider.OnEntityDiedOrPooled -= RemoveEntityDueToSignal;
 			}
 		}
 	}
@@ -78,7 +89,7 @@ public class Context : IReadOnlyContext {
 	/// Now 100% allocation-free and O(1).
 	/// </summary>
 	public bool TryGetReadOnlyTargetContext(HashedTag commonTag, HashedTag individualTag, out IReadOnlyComponentRegistry targetEntityContext) {
-		if (this.targetEntityContexts.TryGetValue(commonTag, out var dict)) {
+		if (this._targetEntityContexts.TryGetValue(commonTag, out var dict)) {
 			return dict.TryGetValue(individualTag, out targetEntityContext);
 		}
 
@@ -90,18 +101,17 @@ public class Context : IReadOnlyContext {
 	/// Returns the cached list. No "new List" allocation at runtime.
 	/// </summary>
 	public bool TryGetReadOnlyTargetContexts(HashedTag commonTag, out IReadOnlyList<IReadOnlyComponentRegistry> targetEntityContexts) {
-		if (this.listCache.TryGetValue(commonTag, out var cache)) {
+		if (this._listCache.TryGetValue(commonTag, out var cache)) {
 			targetEntityContexts = cache;
 			return true;
 		}
-
 		targetEntityContexts = Array.Empty<IReadOnlyComponentRegistry>();
 		return false;
 	}
 
 
-	private void RemoveEntityDueToSignal(UniqueID individualTag, HashedTag commonTag) {
-		Debug.Log($"[Context] Received entity death/pooled signal: CommonTag={commonTag}, IndividualTag={individualTag}");
-		RemoveTargetEntityContext(individualTag, commonTag);
+	private void RemoveEntityDueToSignal(EntityDetail entityDetail) {
+		//Debug.Log($"[Context] Received signal to remove entity: UniqueID={entityDetail.UniqueID}, CommonTag={entityDetail.CommonEntityHashedTag}");
+		RemoveTargetEntityContext(entityDetail);
 	}
 }

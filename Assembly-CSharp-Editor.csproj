@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets/_Project/Scripts/Features/AI/Editor/AIBrainEditor.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/AnimationCurve/Editor/CurveEditorWindow.cs" />
     <Compile Include="Assets/_Project/_Game/Editor/ReadOnlyDrawer.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -1497,10 +1498,12 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp.csproj" />
+    <ProjectReference Include="Kope.Character.Stats.Runtime.csproj" />
+    <ProjectReference Include="Kope.Components.csproj" />
+    <ProjectReference Include="Kope.InputSystem.csproj" />
     <ProjectReference Include="Out.ThirdParty.Stuff.csproj" />
     <ProjectReference Include="Kope.ModularSpriteAnimation.Editor.csproj" />
     <ProjectReference Include="Kope.ModularSpriteAnimation.Runtime.csproj" />
-    <ProjectReference Include="Kope.Character.Stats.Runtime.csproj" />
     <ProjectReference Include="Kope.Core.Runtime.csproj" />
   </ItemGroup>
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />

@@ -32,7 +32,6 @@ namespace Kope.Core.EntityComponentSystem {
 
 		// Need to add the  NavMeshAgent2D later when i have implemented it using my quaternary Heap for A* pathfinding
 		// since there is no NavMeshAgent2D in Unity by default
-
 		// Need to make Sensors/Perception system later to add the runtime context of the entity like visible enemies, items etc.
 
 		//<inheritdoc/>

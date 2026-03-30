@@ -1,14 +1,12 @@
 using Kope.Core.Extensions;
 using UnityEngine;
 
-namespace Kope.Core.Sensor
-{
+namespace Kope.Core.Sensor {
 
 	// can change to SphereCollider if 3D is needed, but CircleCollider2D is more performant
 	// for 2D games and sufficient for most use cases.
 	[RequireComponent(typeof(CircleCollider2D))]
-	public abstract class SensorBase : MonoBehaviour
-	{
+	public abstract class SensorBase : MonoBehaviour {
 		[SerializeField] protected CircleCollider2D detectionCollider;
 		[SerializeField, Tooltip("Layers that this sensor can detect. By default, detects all layers.")]
 		private LayerMask detectableLayers = 1; // by default, set to detect default layer only. Change in inspector to detect other layers or all layers.
@@ -19,27 +17,24 @@ namespace Kope.Core.Sensor
 		[SerializeField] protected bool visualizeGizmos = true;
 		[SerializeField] private Color gizmoColor = Color.cyan;
 
-		private float actualDetectionRadius;
-		protected string parentGOHiearchPathMessage;
+		private float _actualDetectionRadius;
+		protected string _parentGOHiearchPathMessage;
 		/// <summary>	
 		///  Call this on either Awake or Start or 
 		/// any initialization point before the sensor starts detecting. 
 		/// It sets up the collider and other necessary configurations for the sensor to function properly.
 		/// </summary>
-		protected void Start()
-		{
-			this.parentGOHiearchPathMessage = this.GetFullHierarchyPath();
-			if (this.detectionCollider == null)
-			{
+		protected void Start() {
+			this._parentGOHiearchPathMessage = this.GetFullHierarchyPath();
+			if (this.detectionCollider == null) {
 				this.detectionCollider = GetComponent<CircleCollider2D>();
 				Debug.LogWarning($"[SensorBase] No CircleCollider2D assigned on {gameObject.name}." +
 				" Attempting to find one on the same GameObject. So Assign the collider on inpector " +
-				"to avoid this warning and ensure correct setup." + this.parentGOHiearchPathMessage, this.gameObject);
+				"to avoid this warning and ensure correct setup." + this._parentGOHiearchPathMessage, this.gameObject);
 			}
-
 			this.detectionCollider.isTrigger = this.isTrigger;
-			this.actualDetectionRadius = FindActualDetectionRadius();
-			this.detectionCollider.radius = this.actualDetectionRadius;
+			this._actualDetectionRadius = FindActualDetectionRadius();
+			this.detectionCollider.radius = this._actualDetectionRadius;
 			OnStart();
 		}
 		/// <summary>
@@ -52,21 +47,17 @@ namespace Kope.Core.Sensor
 		public virtual void OnStart() { }
 
 
-		void OnTriggerEnter2D(Collider2D other)
-		{
-			if (((1 << other.gameObject.layer) & this.detectableLayers) != 0)
-			{
+		void OnTriggerEnter2D(Collider2D other) {
+			if (((1 << other.gameObject.layer) & this.detectableLayers) != 0) {
 				OnDetect(other);
 			}
 		}
-		void OnTriggerExit2D(Collider2D other)
-		{
+		void OnTriggerExit2D(Collider2D other) {
 			// micro optimization to skip the layer check if exit detection is not used, 
 			// since exit detection is not used in most cases and the layer check can be expensive
 			// if there are many colliders exiting frequently.
 			if (!this.usesExitDetection) return;
-			if (((1 << other.gameObject.layer) & this.detectableLayers) != 0)
-			{
+			if (((1 << other.gameObject.layer) & this.detectableLayers) != 0) {
 				OnDetectExit(other);
 			}
 		}
@@ -93,14 +84,12 @@ namespace Kope.Core.Sensor
 		/// if there are many colliders exiting frequently.
 		/// </summary>
 		/// <param name="other"></param>
-		public virtual void OnDetectExit(Collider2D other)
-		{
+		public virtual void OnDetectExit(Collider2D other) {
 			// By default, do nothing on exit. Derived classes can override this if they need to handle exit detection.
 		}
 
 
-		private void OnDrawGizmos()
-		{
+		private void OnDrawGizmos() {
 			if (!this.enabled || !this.visualizeGizmos) return;
 			Gizmos.color = this.gizmoColor;
 			// no need to scale the radius here
@@ -120,8 +109,7 @@ namespace Kope.Core.Sensor
 		/// scaling applied to the GameObject or its parents.
 		/// </summary>
 		/// <returns></returns>
-		private float FindActualDetectionRadius()
-		{
+		private float FindActualDetectionRadius() {
 			Vector3 parentScale = this.transform.lossyScale;
 			return this.detectionRadius / Mathf.Max(parentScale.x, parentScale.y);
 		}

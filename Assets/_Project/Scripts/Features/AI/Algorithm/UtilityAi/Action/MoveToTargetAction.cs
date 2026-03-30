@@ -6,12 +6,12 @@ using UnityEngine;
 
 [CreateAssetMenu(fileName = "MoveTowardAction", menuName = "Scriptable Objects/AI/Utility/Actions/MoveTowardAction")]
 public class MoveTowardAction : ActionSO {
-	[SerializeField, Tooltip("If this Action is used againt player or other entities that require some distance to be maintained, " +
-	"this radius defines the free space around the target that the AI will try to maintain. " +
-	"Set to 0.001 to effectively disable this feature and have the AI move all the way to the target," +
-	"For entities like portion and such"),
+	[SerializeField, Tooltip("This defines the deadzone around the target." +
+	"If this entity is near this radius the action will be assumed to be completed, and the entity will stop moving." +
+	"Finally make sure this is almost same as the deadzone defined in the TargetDistanceConsideration to avoid jittery movement" +
+	" when the entity is trying to maintain a certain distance from the target."),
 	Range(0.001f, 5f)]
-	private float playerFreeSpaceRadius = 0.2f;
+	private float deadZone = 0.2f;
 
 	[SerializeField, Tooltip("The maximum duration for which the action can. So AI wont be always be in this action" +
 	" Set to 0 to disable this feature."), Range(0f, 10f)]
@@ -45,7 +45,7 @@ public class MoveTowardAction : ActionSO {
 	protected override void OnInitialize(Context ctx) {
 		this._directionChangeTime = 1f / this.directionChangeFrequency;
 		this._directionChangeInterval = this._directionChangeTime;
-		this._squareFreeSpaceRadius = this.playerFreeSpaceRadius * this.playerFreeSpaceRadius;
+		this._squareFreeSpaceRadius = this.deadZone * this.deadZone;
 		var readOnlyTargetComponentRegistry = GetSelectedTargetRegistry(this.actionType);
 
 		// just defensive checking, in case the considerations that provide the target registry 
@@ -79,9 +79,7 @@ public class MoveTowardAction : ActionSO {
 	}
 
 	public override void TickFixedUpdate() {
-		//	Debug.Log($"[RangeAction] TickFixedUpdate called for action {this.name}");
-		// just simple float timer, no need to have a full timer class for this,
-		//  since we dont need any of the extra features of the CountdownTimer for this.
+		// Decouples direction logic from physics updates using a lightweight float timer.
 		this._directionChangeInterval -= Time.fixedDeltaTime;
 
 		if (this._readOnlyTargetTransform == null || this._selfMovementComponent == null) {
@@ -89,38 +87,38 @@ public class MoveTowardAction : ActionSO {
 			return;
 		}
 
-		// just a crude movement logic to move towards the target until we are within the desired range,
-		// then we will move away from the target to maintain some distance, creating a back
-		// and forth movement around the target.
+		// Positions are sampled every FixedUpdate to ensure distance checks remain accurate 
+		// to the physics simulation, preventing deadzone overshooting.
 		Vector3 targetPosition = this._readOnlyTargetTransform.position;
 		Vector3 selfPosition = this._selfMovementComponent.Position;
 		Vector3 directionToTarget = targetPosition - selfPosition;
 
-		// cheap operations, since it can be vectorized by the CPU as (a*x + c) operation in 1 clock cycle,
-		// and we want to do it every frame to
-		// check if we are within the free space radius, even if we are not changing direction every frame.
+		// Use sqrMagnitude to avoid the computationally expensive Square Root (Mathf.Sqrt) operation.
+		// This allows for high-frequency proximity checks with minimal CPU overhead.
+		// and we dont have to worry about the direction vector either.
+		// since we are only comparing absolute distance to deadzone and 
+		// radius mean it is being comparing every direction, so the direction vector being not normalized 
+		// does not affect the logic.
 		float sqrDistFromTargetToCurrentEntity = directionToTarget.sqrMagnitude;
 
-		// if we are within the free space radius, we want to stop moving to avoid jittery movement 
-		// and to maintain a safe distance from the target.
+		// Immediate exit: If within the deadzone, we stop and complete the action.
+		// This provides the 'handshake' with the Consideration's deadzone to maintain stability.
 		if (sqrDistFromTargetToCurrentEntity <= this._squareFreeSpaceRadius) {
 			this._selfMovementComponent.SetMovementIntent(new MovementIntent(Vector3.zero, MovementIntentType.Stop));
 			SetComplete();
 			return;
 		}
 
-		// we only want to change direction at a certain frequency to prevent jittery movement,
-		// especially when the target is moving and we are trying to maintain a certain distance from it.
-		// but above distance check must be done every frame to make sure we can stop at the right time,
-		// even if we are not changing direction every frame.
+		// Throttling the movement intent logic reduces "micro-jitter" caused by 
+		// high-frequency target repositioning and saves performance on vector normalization.
 		if (this._directionChangeInterval > 0f) return;
 		this._directionChangeInterval = this._directionChangeTime;
 
-		// expensive operation, so we only want to do it at a certain frequency, as mentioned above.
+		// Vector normalization and intent dispatch are only performed at the specified frequency.
 		Vector3 directionToMove = directionToTarget.normalized;
 		this._selfMovementComponent.SetMovementIntent(new MovementIntent(directionToMove, MovementIntentType.Move));
-		return;
 	}
+
 	private void SetComplete() {
 		this._selfMovementComponent.SetMovementIntent(new MovementIntent(Vector3.zero, MovementIntentType.Stop));
 		MarkCompleted();

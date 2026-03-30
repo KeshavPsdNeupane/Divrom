@@ -122,7 +122,7 @@ namespace Kope.Character.Stats {
 			return 0f;
 		}
 
-		public bool AddStatModifier(StatusEffect effect) {
+		public bool AddStatModifier(StatModifier effect) {
 			if (this.currentStats.TryGetValue(effect.statType, out AdvanceStat stat))
 				return stat.AddStatusEffect(effect);
 

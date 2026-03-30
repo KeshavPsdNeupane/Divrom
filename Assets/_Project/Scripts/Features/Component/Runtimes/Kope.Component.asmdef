@@ -1,0 +1,19 @@
+{
+    "name": "Kope.Components",
+    "rootNamespace": "Kope.Component",
+    "references": [
+        "GUID:75a6e7529519ea9958833951b8db0538",
+        "GUID:1415229ac17d9d804afb5a91176856c4",
+        "GUID:32256eff5125e73eca315f84bce32080",
+        "GUID:75469ad4d38634e559750d17036d5f7c"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

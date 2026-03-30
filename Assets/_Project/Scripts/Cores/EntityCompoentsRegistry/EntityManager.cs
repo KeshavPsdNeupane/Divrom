@@ -41,7 +41,7 @@ public class EntityManager : InitializableBase, IEntityDiedOrPooled {
 	/// for passing around the Entity's details, including the UniqueID, CommonEntityHashedTag, and EntityComponentRegistry,
 	/// which can be useful for systems that need to access this information when reacting to Entity death or pooling events.
 	/// </summary>
-	public event Action<UniqueID, HashedTag> OnEntityDiedOrPooled;
+	public event Action<EntityDetail> OnEntityDiedOrPooled;
 
 	/// <summary>
 	/// This EntityDetail instance is created and populated during the OnInit method of the EntityManager, 
@@ -61,12 +61,14 @@ public class EntityManager : InitializableBase, IEntityDiedOrPooled {
 		// After validation, we can be sure that the EntityComponentStore and its ComponentRegistry are properly initialized and ready to use.
 
 		this.entityComponentRegistry.ComponentRegistry.Register(this.entityComponentRegistry);
-		this.entityDetail = new EntityDetail(this.uniqueID, this.commonEntityHashedTag, this.entityComponentRegistry, this);
+		this.entityDetail = new EntityDetail(
+			this.uniqueID, this.commonEntityHashedTag,
+			 this.entityComponentRegistry.ComponentRegistry, this);
 		return true;
 	}
 
 	public void NotifyEntityDiedOrPooled() {
-		OnEntityDiedOrPooled?.Invoke(this.entityDetail.UniqueID, this.entityDetail.CommonEntityHashedTag);
+		OnEntityDiedOrPooled?.Invoke(this.entityDetail);
 	}
 
 	void OnValidate() {

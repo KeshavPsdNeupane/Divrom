@@ -19,7 +19,7 @@ public interface IReadOnlyContext {
 	/// Please do not mutate data via this reference. If u do, 
 	/// it is your responsibility since you opted into this contract.
 	/// </summary>
-	public IReadOnlyComponentRegistry ReadOnlyEntityContext { get; }
+	public IReadOnlyComponentRegistry SelfReadOnlyEntityContext { get; }
 
 	/// <summary>
 	/// Tries to get the "Read Only" target contexts associated with the given tag.

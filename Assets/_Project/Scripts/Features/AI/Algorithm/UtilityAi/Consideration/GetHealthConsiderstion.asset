@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 355f367f3867b3089b6c26df64a39e7d, type: 3}
+  m_Name: GetHealthConsiderstion
+  m_EditorClassIdentifier: Assembly-CSharp::CompositeConsideration
+  relevantActionTypes: 2a0000008c000000
+  considerationName: Health Composite
+  considerations:
+  - {fileID: 11400000, guid: 1f669b755e13a25669d250aca3e15679, type: 2}
+  - {fileID: 11400000, guid: 77a2cc4913fa6d8a69ef3b728bd893c0, type: 2}
