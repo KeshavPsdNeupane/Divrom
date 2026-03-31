@@ -6595,6 +6595,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 52776286001874330, guid: 9772af79b74a077ec8dd339b7b2c7dfc, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 985259904, guid: e4cf14472c3524a74b3f281b897a88b1, type: 3}
+    - target: {fileID: 52776286001874330, guid: 9772af79b74a077ec8dd339b7b2c7dfc, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3400886148539648344, guid: 9772af79b74a077ec8dd339b7b2c7dfc, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -6611,6 +6619,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyNew
       objectReference: {fileID: 0}
+    - target: {fileID: 6355112809349495206, guid: 9772af79b74a077ec8dd339b7b2c7dfc, type: 3}
+      propertyPath: actionSOs.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6355112809349495206, guid: 9772af79b74a077ec8dd339b7b2c7dfc, type: 3}
+      propertyPath: 'actionSOs.Array.data[1]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 55f0fced5ba3438c0ab41b97654eae60, type: 2}
+    - target: {fileID: 6355112809349495206, guid: 9772af79b74a077ec8dd339b7b2c7dfc, type: 3}
+      propertyPath: 'actionSOs.Array.data[2]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 7166fdc7671e454d280b9f1362b63ba1, type: 2}
     - target: {fileID: 7870155893999714083, guid: 9772af79b74a077ec8dd339b7b2c7dfc, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.09
@@ -7743,19 +7763,28 @@ MonoBehaviour:
   trackedComponents:
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: AddDef
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: AddSpd
-  - typeName: EntityInitCaller
-    order: -40
     gameObjectName: PlayerNew
   - typeName: EntityInitCaller
     order: -40
     gameObjectName: AddSpd (1)
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: Hpstore (2)
+    gameObjectName: AddSpd
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: AddDef
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: EnemyNew
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Hpstore (1)
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Addhp (1)
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Addhp (2)
   - typeName: EntityInitCaller
     order: -40
     gameObjectName: Addhp
@@ -7764,22 +7793,13 @@ MonoBehaviour:
     gameObjectName: InitCaller
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: Addhp (1)
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: Hpstore
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: Hpstore (1)
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: EnemyNew
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: Addhp (2)
+    gameObjectName: Hpstore (2)
   - typeName: EntityInitCaller
     order: -40
     gameObjectName: AddDef (1)
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Hpstore
   - typeName: InGameUIInitCaller
     order: -30
     gameObjectName: UI
@@ -8136,8 +8156,8 @@ MonoBehaviour:
   x: 0
   result: 0.99999785
   unityResult: 1
-  customEvalTime: 0.0005
-  unityEvalTime: 0.0005
+  customEvalTime: 0.0004
+  unityEvalTime: 0.0011
 --- !u!114 &1030139793 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1099055355600047168, guid: 9772af79b74a077ec8dd339b7b2c7dfc, type: 3}

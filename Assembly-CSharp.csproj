@@ -78,8 +78,8 @@
     <Compile Include="Assets/_Project/Scripts/Features/Actors/States/Enemy/ChasePlayer.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AI/AIBrainAlgorithm.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Actors/States/Player/States/PlayerIdle.cs" />
-    <Compile Include="Assets/_Project/Scripts/Features/AI/Algorithm/UtilityAi/Action/ActionSO.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AI/Algorithm/UtilityAi/Consideration/ConsiderationSO.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/AI/Algorithm/UtilityAi/Action/ActionSO.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/Runtime/Item/ItemPickup.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Component/UI/Health/HealthBar.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Actors/EntityStateController.cs" />

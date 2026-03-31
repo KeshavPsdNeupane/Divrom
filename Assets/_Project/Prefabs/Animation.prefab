@@ -973,8 +973,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 21c2cffcb659a82bfbc806c54fd110ee, type: 2}
   - {fileID: 11400000, guid: 0d20f2b5bb6081f08998fe76db41facb, type: 2}
   - {fileID: 11400000, guid: 9fb8c47a059eba8eeb0e13b204da55e3, type: 2}
-  - {fileID: 11400000, guid: 8e789defe70252217b231be25fb95458, type: 2}
-  - {fileID: 11400000, guid: a484e2297da806b4e94620e51fd72b46, type: 2}
+  - {fileID: 11400000, guid: 643647884ee1ededdb60e3df159f27dc, type: 2}
   equipmentLibraries:
   - {fileID: 2504819488441861470}
   - {fileID: 3201915881795204063}
@@ -1074,7 +1073,7 @@ SpriteRenderer:
   m_SortingLayer: 5
   m_SortingOrder: 2
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 807381572, guid: 95a16fdd7b6603e60a9484aed56aedc9, type: 3}
+  m_Sprite: {fileID: 985259904, guid: e4cf14472c3524a74b3f281b897a88b1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1126,7 +1125,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BodyRegionSpriteLibrary
   m_Library: []
-  m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: 8f22d073cc004bb07a019c7aa393e36f, type: 3}
+  m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: 911c270a3408708d28bea5180aeeea02, type: 3}
   partType: 1
   resolver: {fileID: 7121043095632084342}
 --- !u!1 &5307645063569339120
@@ -1491,7 +1490,7 @@ SpriteRenderer:
   m_SortingLayer: 5
   m_SortingOrder: 2
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 1309771320, guid: d434791f6168f7c10b9c2d4b9fd775dd, type: 3}
+  m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1499,7 +1498,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_SpriteSortPoint: 0
 --- !u!114 &4222768172233793291
 MonoBehaviour:
@@ -1543,7 +1542,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BodyRegionSpriteLibrary
   m_Library: []
-  m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: 45293ecb3fcb31465a0e0074c9a68609, type: 3}
+  m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: 1fd486b84ee5dd11390d58724e865054, type: 3}
   partType: 2
   resolver: {fileID: 1544861726327990890}
 --- !u!1 &6161002798951276132

@@ -47,8 +47,10 @@ namespace Kope.AI.Utility {
 
 
 			#region Debug
-			private float evaluatedScore; // Store the last evaluated score for debugging/visualization
-			public float EvaluatedScore => evaluatedScore;
+			private float _lastRawScore; // Store the last raw score for debugging/visualization
+			private float _evaluatedScore; // Store the last evaluated score for debugging/visualization
+			public float LastRawScore => _lastRawScore;
+			public float EvaluatedScore => _evaluatedScore;
 			public float BiasWeight => biasWeight;
 			public ActionSO Action => this.action;
 			#endregion
@@ -62,9 +64,11 @@ namespace Kope.AI.Utility {
 			public float GetCost() => this.biasWeight;
 
 			public float Evaluate(IReadOnlyContext ctx) {
-				float score = this.action.Evaluate(ctx) * this.biasWeight;
+				float rawScore = this.action.Evaluate(ctx);
+				float score = rawScore * this.biasWeight;
 				if (this.isActive) score += this.action.MomentumBias;
-				this.evaluatedScore = score;
+				this._lastRawScore = rawScore;
+				this._evaluatedScore = score;
 				return score;
 			}
 
@@ -267,8 +271,8 @@ namespace Kope.AI.Utility {
 			   : "None";
 
 			// Draw only the requested info
-			string labelText = $"{currentActionName}\n(Evaluation: {this.currentlyActiveEntry.EvaluatedScore:F2}\n" +
-			$" bias: {this.currentlyActiveEntry.BiasWeight:F2})";
+			string labelText = $"{currentActionName}\n(Raw: {this.currentlyActiveEntry.LastRawScore:F2}\n" +
+			$" bias: {this.currentlyActiveEntry.BiasWeight:F2} \n Eval: {this.currentlyActiveEntry.EvaluatedScore:F2})";
 
 			UnityEditor.Handles.Label(transform.position + Vector3.up * 2.0f, labelText, style);
 		}
