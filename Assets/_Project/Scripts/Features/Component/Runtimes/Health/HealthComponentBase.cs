@@ -137,7 +137,6 @@ namespace Kope.Component.Health {
 				// setting current health to max health on initialization, 
 				// can be changed later if we want to have entities that spawn with less than max health.
 				SetDefence(this.characterStatsSystem.CurrentStats[CharacterStatType.DEF].GetValue());
-				Debug.Log($"Hp = {this.currentHealth} Def = {this.defence}");
 			}
 		}
 		private void UnSubScribeToStats() {

@@ -1,3 +1,6 @@
+// Copyright (c) 2026 Keshav Prasad Neupane (Kope)
+// Licensed under the MIT License. See LICENSE in the repository root for details.
+using System;
 using System.Collections.Generic;
 using Kope.AI.Utility.Config;
 using ThirdParty.PriorityQueeu;
@@ -21,7 +24,7 @@ namespace Kope.AI.Utility {
 	/// </summary>
 	public class UtilityAiAlgorithm : AIBrainAlgorithm {
 		private const float DEFAULT_INITIAL_WEIGHT = 1f;
-		private const float DEFAULT_FIXED_DELTA = 0.016f;
+
 		[Header("Default Actions")]
 		[SerializeField] private ActionSO idleAction;
 
@@ -38,6 +41,9 @@ namespace Kope.AI.Utility {
 
 		[SerializeField, Range(0.05f, 1.0f), Tooltip("The minimum weight an action can decay to.")]
 		private float minActionWeight = 0.1f;
+
+		[SerializeField, Range(1.0f, 10.0f), Tooltip("Multiplier for time elapsed to control the speed of weight regeneration using compound interest formula.")]
+		private float timeElapsedMult = 2.0f;
 
 		#region Internal Classes
 		protected internal class ActionEntry : IHasCost<float> {
@@ -77,10 +83,10 @@ namespace Kope.AI.Utility {
 
 			public void ResetWeight(float weight) => this.biasWeight = weight;
 
-			public void RegenWeights(int numberOfTicks) {
-				if (this.isActive || numberOfTicks <= 0) return;
+			public void RegenWeights(float interval) {
+				if (this.isActive || interval <= 0) return;
 				// Compound interest recovery
-				float compoundedRegenAmount = this.biasWeight * (Mathf.Pow(1 + this.action.WeightRegenRate, numberOfTicks) - 1);
+				float compoundedRegenAmount = this.biasWeight * (Mathf.Pow(1.0f + this.action.WeightRegenRate, interval) - 1.0f);
 				this.biasWeight = Mathf.Min(1f, this.biasWeight + compoundedRegenAmount);
 			}
 
@@ -91,55 +97,55 @@ namespace Kope.AI.Utility {
 
 		protected internal class Memory {
 			private readonly PriorityQueueSimple<ActionEntry, float> actionQueue;
-			private readonly HashSet<ActionEntry> actionSet;
+
 			private readonly int memoryCapacity;
 			public int Count => this.actionQueue.Count;
 
 			public Memory(int capacity) {
 				this.actionQueue = new PriorityQueueSimple<ActionEntry, float>(capacity);
-				this.actionSet = new HashSet<ActionEntry>(capacity);
 				this.memoryCapacity = capacity;
 			}
 
-			public bool Contains(ActionEntry action) => this.actionSet.Contains(action);
+			public bool Contains(ActionEntry action) => this.actionQueue.Contains(action);
 
 			public ActionEntry Enqueue(ActionEntry action) {
 				ActionEntry removed = null;
 				if (this.actionQueue.Count >= this.memoryCapacity) {
+					// it is garunteed that the queue is full, so Dequeue will always return an entry.
 					removed = this.actionQueue.Dequeue();
-					this.actionSet.Remove(removed);
 				}
-				this.actionQueue.Enqueue(action);
-				this.actionSet.Add(action);
+				this.actionQueue.EnqueueOrUpdate(action);
 				return removed;
 			}
 
 			public ActionEntry Dequeue() {
 				if (this.actionQueue.Count == 0) return null;
 				var removed = this.actionQueue.Dequeue();
-				this.actionSet.Remove(removed);
 				return removed;
 			}
 
-			public void DecayWeight(ActionEntry entry) => this.actionQueue.TryUpdatePriority(entry);
+			public void DecayWeight(ActionEntry entry, float minWeight) {
+				if (!Contains(entry)) return;
+				entry.ApplyDecay(minWeight);
+				this.actionQueue.TryUpdatePriority(entry);
+			}
 
-			public void RegenWeights(ActionEntry except, float lastTime, float currentTime, float deltaTime) {
-				// BUG FIX: Prevent division by zero if deltaTime is 0
-				float safeDelta = deltaTime > 0 ? deltaTime : DEFAULT_FIXED_DELTA;
-				int ticks = Mathf.RoundToInt((currentTime - lastTime) / safeDelta);
+			public void RegenWeights(ActionEntry except, float lastTime, float currentTime, float timeElapsedMult) {
+				// elapsed time is in seconds, so we can use it directly with the compound interest formula in ActionEntry.RegenWeights.
+				// and using pow function will not be expensive since elapsed time is small and
+				// we are not doing it every frame, but only when the AI needs to make a decision.
+				float elapsed = (currentTime - lastTime) * timeElapsedMult;
+				if (elapsed <= 0) return;
 
-				if (ticks <= 0) return;
-
-				foreach (var entry in this.actionSet) {
+				var entries = this.actionQueue.GetElements();
+				foreach (var entry in entries) {
 					if (entry == except) continue;
-					entry.RegenWeights(ticks);
+					entry.RegenWeights(elapsed);
 					this.actionQueue.TryUpdatePriority(entry);
 				}
 			}
-
 			public void Clear() {
 				this.actionQueue.Clear();
-				this.actionSet.Clear();
 			}
 		}
 		#endregion
@@ -166,11 +172,10 @@ namespace Kope.AI.Utility {
 					this.actionEntries.Add(new ActionEntry(Instantiate(action), DEFAULT_INITIAL_WEIGHT));
 				}
 			}
-
+			// Ensure short-term memory size is at least 1 and less than the total number of actions to allow for meaningful memory management.
+			// so this ensure the action is from 1 to n-1, where n is the total number of actions including idle.
 			int size = Mathf.Clamp(this.shortTermMemorySize, 1, Mathf.Max(1, this.actionEntries.Count - 1));
-			//Debug.Log($"MemorySize = {size}");
 			this.memory = new Memory(size);
-			//			Debug.Log("Utility IAI Algorithm initialized with " + this.actionEntries.Count + " actions, including idle.");
 			return true;
 		}
 
@@ -189,11 +194,12 @@ namespace Kope.AI.Utility {
 		private ActionSO SelectBestAction(IReadOnlyContext ctx) {
 			// Optimization: If there's only one action (the idle action),
 			// skip evaluation and return it immediately.
-			if (this.actionEntries.Count == 1) return this.idleActionEntry.Action;
+			const int IDLE_ONLY_COUNT = 1;
+			if (this.actionEntries.Count == IDLE_ONLY_COUNT) return this.idleActionEntry.Action;
 
 			// Regenerate weights for all non-active actions based on the time elapsed since the last evaluation.
 			// using Compound interest formula for more dynamic recovery: newWeight = currentWeight + (currentWeight * (regenRate * ticks))
-			this.memory.RegenWeights(this.currentlyActiveEntry, this.lastEvaluationTime, Time.time, Time.deltaTime);
+			this.memory.RegenWeights(this.currentlyActiveEntry, this.lastEvaluationTime, Time.time, this.timeElapsedMult);
 
 			var best = EvaluateActions(ctx);
 			return RunMemoryTask(best);
@@ -210,10 +216,6 @@ namespace Kope.AI.Utility {
 					highestScore = score;
 					bestAction = entry;
 				}
-#if UNITY_EDITOR
-				//var entryName = entry.Action != null ? entry.Action.ActionName : "None";
-				//Debug.Log($"[UtilityAI] Evaluating the action named {entryName} with the score = {score}");
-#endif
 			}
 
 			if (bestAction != this.currentlyActiveEntry) {
@@ -221,10 +223,6 @@ namespace Kope.AI.Utility {
 				bestAction?.SetIsActive(true);
 				this.currentlyActiveEntry = bestAction;
 			}
-#if UNITY_EDITOR
-			//var bestName = bestAction?.Action != null ? bestAction.Action.ActionName : "None";
-			//Debug.Log($"[UtilityAI] Found Best Action named {bestName} with score = {highestScore}");
-#endif
 			return bestAction;
 		}
 
@@ -242,14 +240,12 @@ namespace Kope.AI.Utility {
 					// but we get to reset the weight of the rescued action.
 				}
 			} else if (this.memory.Contains(actionEntry)) {
-				actionEntry.ApplyDecay(this.minActionWeight);
-				this.memory.DecayWeight(actionEntry); // Sync decay changes
+				this.memory.DecayWeight(actionEntry, this.minActionWeight); // Sync decay changes
 			} else {
 				var removed = this.memory.Enqueue(actionEntry);
 				removed?.ResetWeight(DEFAULT_INITIAL_WEIGHT);
-				actionEntry.ResetWeight(DEFAULT_INITIAL_WEIGHT);
-				actionEntry.ApplyDecay(this.minActionWeight);
-				this.memory.DecayWeight(actionEntry); // Sync initial decay
+				actionEntry.ResetWeight(DEFAULT_INITIAL_WEIGHT); ;
+				this.memory.DecayWeight(actionEntry, this.minActionWeight); // Sync initial decay
 			}
 
 			this.lastEvaluationTime = Time.time;

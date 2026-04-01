@@ -42,13 +42,13 @@ public class EntitySensor : SensorBase {
 
 
 
-	int tempCounter = 0;
-	void Update() {
-		if (this.tempCounter != context.GetTotalEntityCount()) {
-			this.tempCounter = context.GetTotalEntityCount();
-			Debug.Log($"[EntitySensor] Total entities in context: {this.tempCounter}");
-			// this is just to verify that the sensor is properly 
-			// registering and removing entities from the context, and that the count is accurate.
-		}
-	}
+	// int tempCounter = 0;
+	// void Update() {
+	// 	if (this.tempCounter != context.GetTotalEntityCount()) {
+	// 		this.tempCounter = context.GetTotalEntityCount();
+	// 		Debug.Log($"[EntitySensor] Total entities in context: {this.tempCounter}");
+	// 		// this is just to verify that the sensor is properly 
+	// 		// registering and removing entities from the context, and that the count is accurate.
+	// 	}
+	// }
 }

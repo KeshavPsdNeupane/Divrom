@@ -957,6 +957,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 7c787eb33a405e4a985289541d12a8e5, type: 2}
   shortTermMemorySize: 5
   minActionWeight: 0.1
+  timeElapsedMult: 2
 --- !u!1 &6191581869214792302
 GameObject:
   m_ObjectHideFlags: 0
