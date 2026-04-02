@@ -27,12 +27,13 @@ namespace Kope.Component {
 			}
 			float currentHp = this.healthComponent.CurrentHealth;
 			float maxHp = this.healthComponent.MaxHealth;
-			Debug.Log($"Current hp: {currentHp}, Max hp: {maxHp}" + this._parentGOHiearchPathMessage, other.gameObject);
 
-			if (this.healthComponent.CurrentHealth < this.healthComponent.MaxHealth) {
+			if (currentHp < maxHp) {
 				float amountToRestore = healthComp.RestoreAmount;
+				// the AmountToRestore is either a flat value or a percentage of max HP, depending on the IsPercentage flag in the HpRestoration component.
+				// if we normalize the percentage value to be between 0 and 1, then we can just multiply it by max HP to get the actual amount to restore.
 				if (healthComp.IsPercentage) {
-					amountToRestore *= this.healthComponent.MaxHealth;
+					amountToRestore *= maxHp * 0.01f;
 				}
 				this.healthComponent.Heal(amountToRestore);
 				mgr.NotifyEntityDiedOrPooled();

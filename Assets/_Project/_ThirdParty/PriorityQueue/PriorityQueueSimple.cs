@@ -47,6 +47,10 @@ namespace ThirdParty.PriorityQueeu {
 		/// <summary>
 		/// Creates a priority queue with the default comparer for TPriority.
 		/// Always uses indexed mode for O(log n) updates. Duplicates are prevented and priority is updated instead.
+		/// example to make max-heap comparator: <br/>
+		/// <code>
+		/// new PriorityQueueSimple&lt;MyElement, int&gt;(comparer: Comparer&lt;int&gt;.Create((a, b) => b.CompareTo(a)))
+		/// </code>
 		/// </summary>
 		public PriorityQueueSimple(int capacity = 16, Comparer<TPriority> comparer = null) {
 			_nodes = new (TElement, TPriority)[Math.Max(4, capacity)];

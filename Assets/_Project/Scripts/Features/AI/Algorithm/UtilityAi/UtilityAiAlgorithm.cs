@@ -86,8 +86,15 @@ namespace Kope.AI.Utility {
 			public void RegenWeights(float interval) {
 				if (this.isActive || interval <= 0) return;
 				// Compound interest recovery
-				float compoundedRegenAmount = this.biasWeight * (Mathf.Pow(1.0f + this.action.WeightRegenRate, interval) - 1.0f);
-				this.biasWeight = Mathf.Min(1f, this.biasWeight + compoundedRegenAmount);
+				// float compoundedRegenAmount = this.biasWeight * (Mathf.Pow(1.0f + this.action.WeightRegenRate, interval) - 1.0f);
+				// this.biasWeight = Mathf.Min(1f, this.biasWeight + compoundedRegenAmount);
+				// below is the optimized version of the above formula, which is mathematically equivalent but with fewer operations.
+				// derivation: let r = this.action.WeightRegenRate, w = this.biasWeight, t = interval
+				// b1 =b0 + b0 * ((1 + r)^t -1) , opening the bracket
+				//    =b0 + b0 * (1 + r)^t - b0 , the b0 and -b0 cancel out
+				//    = b0 * (1 + r)^t, now this formula is always greater than 0,so no need to use max function 
+				// to clamp the minimum value, and we can directly use min function to clamp the maximum value.
+				this.biasWeight = Mathf.Min(1f, this.biasWeight * Mathf.Pow(1.0f + this.action.WeightRegenRate, interval));
 			}
 
 			public void SetIsActive(bool isActive) {
@@ -127,6 +134,9 @@ namespace Kope.AI.Utility {
 			public void DecayWeight(ActionEntry entry, float minWeight) {
 				if (!Contains(entry)) return;
 				entry.ApplyDecay(minWeight);
+			}
+			public void UpdatePriority(ActionEntry entry) {
+				if (!Contains(entry)) return;
 				this.actionQueue.TryUpdatePriority(entry);
 			}
 
@@ -240,12 +250,17 @@ namespace Kope.AI.Utility {
 					// but we get to reset the weight of the rescued action.
 				}
 			} else if (this.memory.Contains(actionEntry)) {
-				this.memory.DecayWeight(actionEntry, this.minActionWeight); // Sync decay changes
+				this.memory.DecayWeight(actionEntry, this.minActionWeight); // apply decay
+				this.memory.UpdatePriority(actionEntry); // sync
 			} else {
 				var removed = this.memory.Enqueue(actionEntry);
+				// no need to update priority for removed there, since they 
+				// are not in memory
 				removed?.ResetWeight(DEFAULT_INITIAL_WEIGHT);
 				actionEntry.ResetWeight(DEFAULT_INITIAL_WEIGHT); ;
-				this.memory.DecayWeight(actionEntry, this.minActionWeight); // Sync initial decay
+				//Apply Decay and update 
+				this.memory.DecayWeight(actionEntry, this.minActionWeight);
+				this.memory.UpdatePriority(actionEntry);
 			}
 
 			this.lastEvaluationTime = Time.time;

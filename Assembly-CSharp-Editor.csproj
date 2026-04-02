@@ -50,7 +50,6 @@
     <Analyzer Include="/mnt/Development/GameDevelopment/Unity/projects/example/Divrom/Library/PackageCache/com.unity.project-auditor@6cc18ad506e9/RoslynAnalyzers/Domain_Reload_Analyzer.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets/_Project/Scripts/Features/AI/Editor/AIBrainEditor.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AnimationCurve/Editor/CurveEditorWindow.cs" />
     <Compile Include="Assets/_Project/_Game/Editor/ReadOnlyDrawer.cs" />
   </ItemGroup>
@@ -1498,12 +1497,15 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp.csproj" />
+    <ProjectReference Include="Kope.InventorySystem.Runtime.csproj" />
+    <ProjectReference Include="Kope.Actor.Runtime.csproj" />
     <ProjectReference Include="Kope.Character.Stats.Runtime.csproj" />
     <ProjectReference Include="Kope.Components.csproj" />
     <ProjectReference Include="Kope.InputSystem.csproj" />
     <ProjectReference Include="Out.ThirdParty.Stuff.csproj" />
     <ProjectReference Include="Kope.ModularSpriteAnimation.Editor.csproj" />
     <ProjectReference Include="Kope.ModularSpriteAnimation.Runtime.csproj" />
+    <ProjectReference Include="Kope.AI.Runtime.csproj" />
     <ProjectReference Include="Kope.Core.Runtime.csproj" />
   </ItemGroup>
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />

@@ -23,8 +23,7 @@ public class ReduceHp : MonoBehaviour {
 	public void ReduceHealth() {
 		if (this.healthComponent != null) {
 			this.healthComponent.ReduceHp(this.hpReductionAmount, this.minHpRatio);
-			Debug.Log($"Reduced HP by {this.hpReductionAmount}. Current HP: {this.healthComponent.CurrentHealth}");
 		}
-	}
 
+	}
 }

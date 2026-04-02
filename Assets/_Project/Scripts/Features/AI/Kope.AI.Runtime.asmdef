@@ -1,0 +1,19 @@
+{
+    "name": "Kope.AI.Runtime",
+    "rootNamespace": "Kope.AI",
+    "references": [
+        "GUID:1415229ac17d9d804afb5a91176856c4",
+        "GUID:2b5b426a91f8c8358b2c9c6b6fad3e9f",
+        "GUID:23d4759d078949898b45e9c008940d49",
+        "GUID:815402b415daa9c298856ab850cef985"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
