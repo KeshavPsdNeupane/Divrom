@@ -4,7 +4,7 @@ using Kope.Component.Interfaces;
 using UnityEngine;
 using ThirdParty;
 using System;
-using Kope.Core.EntityComponentSystem;
+using Kope.Core.Entity;
 
 namespace Kope.AI {
 

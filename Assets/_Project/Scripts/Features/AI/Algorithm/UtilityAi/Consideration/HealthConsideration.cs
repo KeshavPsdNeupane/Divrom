@@ -1,6 +1,6 @@
 using Kope.AI.Utility;
 using Kope.Component.Health;
-using Kope.Core.EntityComponentSystem;
+using Kope.Core.Entity;
 using UnityEngine;
 
 

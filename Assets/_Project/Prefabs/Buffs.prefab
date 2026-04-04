@@ -80,6 +80,7 @@ MonoBehaviour:
   commonEntityName: Defence
   uniqueID: {fileID: 4154965771084270563}
   entityComponentRegistry: {fileID: 1703189556996044989}
+  category: 31
   config: {fileID: 11400000, guid: 296b484721bdc20d2b51d78c4a7374ac, type: 2}
 --- !u!114 &317286741643461728
 MonoBehaviour:
@@ -347,6 +348,7 @@ MonoBehaviour:
   commonEntityName: Health
   uniqueID: {fileID: 8595621163281444643}
   entityComponentRegistry: {fileID: 4784172945682777350}
+  category: 31
   config: {fileID: 11400000, guid: 296b484721bdc20d2b51d78c4a7374ac, type: 2}
 --- !u!114 &1291358592899020709
 MonoBehaviour:
@@ -523,6 +525,7 @@ MonoBehaviour:
   commonEntityName: Defence
   uniqueID: {fileID: 5069068059667772042}
   entityComponentRegistry: {fileID: 5654987288443734813}
+  category: 31
   config: {fileID: 11400000, guid: 296b484721bdc20d2b51d78c4a7374ac, type: 2}
 --- !u!114 &8151917672880718754
 MonoBehaviour:
@@ -651,7 +654,6 @@ Transform:
   - {fileID: 4529134496874935388}
   - {fileID: 7613188475979125402}
   - {fileID: 8538014386256031303}
-  - {fileID: 1467815564682114494}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1072145253226391805
@@ -734,6 +736,7 @@ MonoBehaviour:
   commonEntityName: Health
   uniqueID: {fileID: 4050554562851639622}
   entityComponentRegistry: {fileID: 5306763311426310566}
+  category: 31
   config: {fileID: 11400000, guid: 296b484721bdc20d2b51d78c4a7374ac, type: 2}
 --- !u!114 &8050058343370668024
 MonoBehaviour:
@@ -1045,37 +1048,6 @@ Transform:
   - {fileID: 3430180962361138754}
   m_Father: {fileID: 3641461807115669659}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &2224464687551714904
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1467815564682114494}
-  m_Layer: 9
-  m_Name: AddAttackCollection (1)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1467815564682114494
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2224464687551714904}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.45087004, y: 0.70790005, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3641461807115669659}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2883680590666126685
 GameObject:
   m_ObjectHideFlags: 0
@@ -1156,6 +1128,7 @@ MonoBehaviour:
   commonEntityName: Speed
   uniqueID: {fileID: 1951864918855207819}
   entityComponentRegistry: {fileID: 4630339933961776763}
+  category: 31
   config: {fileID: 11400000, guid: 296b484721bdc20d2b51d78c4a7374ac, type: 2}
 --- !u!114 &5609741558938562842
 MonoBehaviour:
@@ -1514,6 +1487,7 @@ MonoBehaviour:
   commonEntityName: Speed
   uniqueID: {fileID: 188623322283249771}
   entityComponentRegistry: {fileID: 7768581690230232246}
+  category: 31
   config: {fileID: 11400000, guid: 296b484721bdc20d2b51d78c4a7374ac, type: 2}
 --- !u!114 &2698336743556688245
 MonoBehaviour:
@@ -1724,6 +1698,7 @@ MonoBehaviour:
   commonEntityName: Health
   uniqueID: {fileID: 6976223545776199980}
   entityComponentRegistry: {fileID: 9025357845960183026}
+  category: 31
   config: {fileID: 11400000, guid: 296b484721bdc20d2b51d78c4a7374ac, type: 2}
 --- !u!114 &7667280052250439500
 MonoBehaviour:

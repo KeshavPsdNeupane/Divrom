@@ -1,8 +1,7 @@
 using System;
 
 
-public interface IHashTagProvider
-{
+public interface IHashTagProvider {
 	HashedTag HashedTag { get; }
 }
 /// <summary>
@@ -12,19 +11,18 @@ public interface IHashTagProvider
 /// It uses a custom hash function (FNV-1a) to generate a hash code from the input string, and it implements IEquatable for efficient equality checks.
 /// </para>
 /// </summary>
-public readonly struct HashedTag : IEquatable<HashedTag>
-{
+public readonly struct HashedTag : IEquatable<HashedTag> {
 	private readonly string tag;
 	private readonly int tagHash;
 
-	public HashedTag(string tag)
-	{
+	public (string, int) GetSaveDataIdentifier() => (tag, tagHash);
+
+	public HashedTag(string tag) {
 		this.tag = tag ?? throw new ArgumentNullException(nameof(tag));
 		this.tagHash = CreateHash(tag);
 	}
 
-	public bool Equals(HashedTag other)
-	{
+	public bool Equals(HashedTag other) {
 		return tagHash == other.tagHash && tag == other.tag;
 	}
 
@@ -38,10 +36,8 @@ public readonly struct HashedTag : IEquatable<HashedTag>
 
 	public override string ToString() => tag;
 
-	private static int CreateHash(string tag)
-	{
-		unchecked
-		{
+	private static int CreateHash(string tag) {
+		unchecked {
 			const int fnvPrime = 16777619;
 			int hash = (int)2166136261;
 

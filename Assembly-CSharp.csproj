@@ -58,6 +58,7 @@
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/UI/InventoryDisplays/PlayerInventoryDisplay.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/UI/ItemSlotUI/SimpleItemUIDragAndDropInteractionHelperClass.cs" />
     <Compile Include="Assets/_Project/UI/Menu/TabController.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/Inventory/PlayerItemCollector.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Component/UI/Health/ReduceHp.cs" />
     <Compile Include="Assets/_Project/UI/UIState/UIState.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/EntityStat/UI/StatDescription.cs" />
@@ -1166,10 +1167,6 @@
       <HintPath>Library/ScriptAssemblies/Unity.2D.Sprite.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Unity.InternalAPIEngineBridge.001">
-      <HintPath>Library/ScriptAssemblies/Unity.InternalAPIEngineBridge.001.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="UnityEditor.UI.Analytics">
       <HintPath>Library/ScriptAssemblies/UnityEditor.UI.Analytics.dll</HintPath>
       <Private>False</Private>
@@ -1180,6 +1177,10 @@
     </Reference>
     <Reference Include="PsdPlugin">
       <HintPath>Library/ScriptAssemblies/PsdPlugin.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.InternalAPIEngineBridge.001">
+      <HintPath>Library/ScriptAssemblies/Unity.InternalAPIEngineBridge.001.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.Rendering.LightTransport.Editor">
@@ -1472,8 +1473,10 @@
     <ProjectReference Include="Out.ThirdParty.Stuff.csproj" />
     <ProjectReference Include="Kope.ModularSpriteAnimation.Editor.csproj" />
     <ProjectReference Include="Kope.ModularSpriteAnimation.Runtime.csproj" />
+    <ProjectReference Include="Kope.EntityComponentSystem.Runtime.csproj" />
     <ProjectReference Include="Kope.AI.Runtime.csproj" />
     <ProjectReference Include="Kope.Core.Runtime.csproj" />
+    <ProjectReference Include="Kope.SaveSystem.Runtime.csproj" />
   </ItemGroup>
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
   <ItemGroup>

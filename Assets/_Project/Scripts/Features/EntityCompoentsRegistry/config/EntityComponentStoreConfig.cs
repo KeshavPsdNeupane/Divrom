@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Kope.Core.EntityComponentSystem {
+namespace Kope.Core.Entity {
 	[CreateAssetMenu(fileName = "EntityComponentRegistryConfig", menuName = "Scriptable Objects/Actors/EntityComponentRegistryConfig", order = 1)]
 	public class EntityComponentRegistryConfig : ScriptableObject {
 

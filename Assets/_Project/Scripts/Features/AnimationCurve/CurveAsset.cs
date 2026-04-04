@@ -1,3 +1,4 @@
+using Kope.Core.Attribute;
 using UnityEngine;
 
 namespace Kope.AI {
@@ -16,14 +17,14 @@ namespace Kope.AI {
 
 	[CreateAssetMenu(menuName = "Kope/AI Bezier Asset")]
 	public class CurveAsset : ScriptableObject {
+		public int resolution = 32; // Default for AI
 		public BezierPoint[] points = new BezierPoint[] {
 			new(new Vector2(0, 0)),
 			new(new Vector2(1, 1))
 		};
 
-		[HideInInspector] public float[] sampledValues;
-		[HideInInspector] public string lastBakeTime = "Never";
-		public int resolution = 32; // Default for AI
+		[ReadOnly] public float[] sampledValues;
+		[ReadOnly] public string lastBakeTime = "Never";
 
 		public void Bake(bool isAuto = false) {
 			if (points == null || points.Length < 2) return;

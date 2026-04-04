@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Kope.Core.Init;
 using UnityEngine;
 
-namespace Kope.Core.EntityComponentSystem {
+namespace Kope.Core.Entity {
 	/// <summary>
 	/// Stores a collection of components associated with an entity and initializes them.
 	/// Components registered here do **not** need to be initialized elsewhere; 

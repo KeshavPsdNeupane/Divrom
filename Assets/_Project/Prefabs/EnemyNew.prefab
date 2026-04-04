@@ -630,9 +630,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bceaae993f9ebf280b4c92d8d12a3d46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Kope.Core.Runtime::EntityManager
-  commonEntityName: Enemy
+  commonEntityName: Random
   uniqueID: {fileID: 1048981498321793666}
   entityComponentRegistry: {fileID: 4512281911964162701}
+  category: 11
   config: {fileID: 11400000, guid: 296b484721bdc20d2b51d78c4a7374ac, type: 2}
 --- !u!114 &66932067619678931
 MonoBehaviour:
@@ -955,6 +956,8 @@ MonoBehaviour:
   algorithmName: Utility AI
   actionSOs:
   - {fileID: 11400000, guid: 7c787eb33a405e4a985289541d12a8e5, type: 2}
+  - {fileID: 11400000, guid: 55f0fced5ba3438c0ab41b97654eae60, type: 2}
+  - {fileID: 11400000, guid: 7166fdc7671e454d280b9f1362b63ba1, type: 2}
   shortTermMemorySize: 5
   minActionWeight: 0.1
   timeElapsedMult: 2
@@ -1133,7 +1136,7 @@ MonoBehaviour:
   detectionCollider: {fileID: 5476396435574818036}
   detectableLayers:
     serializedVersion: 2
-    m_Bits: 576
+    m_Bits: 832
   detectionRadius: 10
   isTrigger: 1
   usesExitDetection: 1

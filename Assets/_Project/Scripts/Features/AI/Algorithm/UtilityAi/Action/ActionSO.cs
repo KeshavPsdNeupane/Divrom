@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Kope.Core.EntityComponentSystem;
+using Kope.Core.Entity;
 using Kope.Core.Extensions;
 using UnityEngine;
 

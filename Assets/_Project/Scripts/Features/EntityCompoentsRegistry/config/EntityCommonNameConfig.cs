@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Kope.Core.EntityComponentSystem {
+namespace Kope.Core.Entity {
 	[CreateAssetMenu(fileName = "EntityCommonNameConfig", menuName = "Scriptable Objects/Actors/EntityCommonNameConfig", order = 1)]
 	public class EntityCommonNameConfig : ScriptableObject {
 		[SerializeField, Tooltip("List of all valid common entity names used across the system.")]

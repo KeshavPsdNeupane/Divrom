@@ -3,7 +3,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 
-namespace Kope.Core.EntityComponentSystem {
+namespace Kope.Core.Entity {
 	/// <summary>
 	/// Stores the context of a single entity. <br/>
 	/// <inheritdoc cref="IReadOnlyComponentRegistry"/>
@@ -26,17 +26,15 @@ namespace Kope.Core.EntityComponentSystem {
 	{
 		typeof(MonoBehaviour),
 		typeof(Behaviour),
-		typeof(Component),
+		typeof(UnityEngine.Component),
 		typeof(ScriptableObject)
 	};
-
-		// Need to add the  NavMeshAgent2D later when i have implemented it using my quaternary Heap for A* pathfinding
-		// since there is no NavMeshAgent2D in Unity by default
-		// Need to make Sensors/Perception system later to add the runtime context of the entity like visible enemies, items etc.
 
 		//<inheritdoc/>
 		public Transform EntityTransform => this.entityTransform;
 		public string RegistryName => this.registryName;
+
+		public Dictionary<Type, object> Components => this.components;
 
 		/// <summary>
 		/// Indicates whether this EntityContext contains a state machine context.
@@ -132,6 +130,7 @@ namespace Kope.Core.EntityComponentSystem {
 					Register(iface);
 				}
 			}
+
 		}
 
 		public bool TryGetReadOnlyComponent<Tcomponent>([MaybeNullWhen(false)] out Tcomponent component) {

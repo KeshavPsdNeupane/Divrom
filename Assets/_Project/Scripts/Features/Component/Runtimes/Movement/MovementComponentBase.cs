@@ -2,7 +2,7 @@ using Kope.Core.CompilerServices;
 using UnityEngine;
 using Kope.Core.Init;
 using Kope.Character.Stats;
-using Kope.Core.EntityComponentSystem;
+using Kope.Core.Entity;
 
 namespace Kope.Component.Movement {
 

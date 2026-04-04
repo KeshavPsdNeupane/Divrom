@@ -30,20 +30,16 @@ using UnityEditor.SceneManagement;
 /// </summary>
 
 [DisallowMultipleComponent]
-public class UniqueID : MonoBehaviour
-{
+public class UniqueID : MonoBehaviour {
 	[SerializeField, ReadOnly] private string guid;
 	[SerializeField, ReadOnly] private string absoluteHierarchyPath;
 
 	private HashedTag _hashedTag;
 
-	public HashedTag HashedTag
-	{
-		get
-		{
+	public HashedTag HashedTag {
+		get {
 			if (string.IsNullOrEmpty(guid)) GenerateId();
-			if (_hashedTag.ToString() != guid)
-			{
+			if (_hashedTag.ToString() != guid) {
 				_hashedTag = new HashedTag(guid);
 			}
 			return _hashedTag;
@@ -55,10 +51,8 @@ public class UniqueID : MonoBehaviour
 
 	private static readonly Dictionary<HashedTag, GameObject> AllIds = new();
 
-	private void Awake()
-	{
-		if (!AllIds.ContainsValue(this.gameObject))
-		{
+	private void Awake() {
+		if (!AllIds.ContainsValue(this.gameObject)) {
 			InitializeId();
 		}
 	}
@@ -66,15 +60,12 @@ public class UniqueID : MonoBehaviour
 	/// <summary>
 	/// Restores a saved identity. Useful for recreating dynamic entities with their original ID.
 	/// </summary>
-	public void InjectId(string savedId)
-	{
+	public void InjectId(string savedId) {
 		if (string.IsNullOrEmpty(savedId)) return;
 
-		if (!string.IsNullOrEmpty(guid))
-		{
+		if (!string.IsNullOrEmpty(guid)) {
 			HashedTag currentTag = HashedTag;
-			if (AllIds.TryGetValue(currentTag, out var go) && go == this.gameObject)
-			{
+			if (AllIds.TryGetValue(currentTag, out var go) && go == this.gameObject) {
 				AllIds.Remove(currentTag);
 			}
 		}
@@ -85,106 +76,85 @@ public class UniqueID : MonoBehaviour
 		RegisterId();
 	}
 
-	private void InitializeId()
-	{
-		if (string.IsNullOrEmpty(guid) || IsIdConflict())
-		{
+	private void InitializeId() {
+		if (string.IsNullOrEmpty(guid) || IsIdConflict()) {
 			GenerateId();
-		}
-		else
-		{
+		} else {
 			UpdateHierarchyPath();
 		}
 		RegisterId();
 	}
 
-	private bool IsIdConflict()
-	{
+	private bool IsIdConflict() {
 		return AllIds.TryGetValue(HashedTag, out var existing) && existing != this.gameObject;
 	}
 
-	private void RegisterId()
-	{
-		if (!string.IsNullOrEmpty(guid))
-		{
+	private void RegisterId() {
+		if (!string.IsNullOrEmpty(guid)) {
 			AllIds[HashedTag] = this.gameObject;
 		}
 	}
 
-	private void GenerateId()
-	{
+	private void GenerateId() {
 		guid = Guid.NewGuid().ToString();
 		_hashedTag = new HashedTag(guid);
 		UpdateHierarchyPath();
 
 #if UNITY_EDITOR
-		if (!Application.isPlaying)
-		{
+		if (!Application.isPlaying) {
 			EditorUtility.SetDirty(this);
-			if (gameObject.scene.IsValid())
-			{
+			if (gameObject.scene.IsValid()) {
 				EditorSceneManager.MarkSceneDirty(gameObject.scene);
 			}
 		}
 #endif
 	}
 
-	private void UpdateHierarchyPath()
-	{
+	private void UpdateHierarchyPath() {
 		absoluteHierarchyPath = BuildHierarchyPath(this.transform);
 	}
 
-	private string BuildHierarchyPath(Transform currentTransform)
-	{
+	private string BuildHierarchyPath(Transform currentTransform) {
 		return this.GetGameObjectHierarchyPath();
 	}
 
-	public void ResetId()
-	{
+	public void ResetId() {
 		HashedTag current = HashedTag;
-		if (AllIds.TryGetValue(current, out var existing) && existing == this.gameObject)
-		{
+		if (AllIds.TryGetValue(current, out var existing) && existing == this.gameObject) {
 			AllIds.Remove(current);
 		}
 		guid = string.Empty;
 		InitializeId();
 	}
 
-	private void OnDestroy()
-	{
-		if (!string.IsNullOrEmpty(guid))
-		{
+	private void OnDestroy() {
+		if (!string.IsNullOrEmpty(guid)) {
 			HashedTag current = HashedTag;
-			if (AllIds.TryGetValue(current, out var value) && value == this.gameObject)
-			{
+			if (AllIds.TryGetValue(current, out var value) && value == this.gameObject) {
 				AllIds.Remove(current);
 			}
 		}
 	}
 
 #if UNITY_EDITOR
-	private void OnValidate()
-	{
+	private void OnValidate() {
 		if (EditorUtility.IsPersistent(this) || PrefabStageUtility.GetCurrentPrefabStage() != null) return;
 
 		// In the editor, always refresh the path in case the object was renamed or moved
 		UpdateHierarchyPath();
 
-		if (string.IsNullOrEmpty(guid) || IsIdConflict())
-		{
+		if (string.IsNullOrEmpty(guid) || IsIdConflict()) {
 			GenerateId();
 		}
 		RegisterId();
 	}
 #endif
 
-	public static bool TryGetByTag(HashedTag tag, out GameObject go)
-	{
+	public static bool TryGetByTag(HashedTag tag, out GameObject go) {
 		return AllIds.TryGetValue(tag, out go);
 	}
 
-	public override string ToString()
-	{
+	public override string ToString() {
 		return this.guid;
 	}
 }

@@ -1,6 +1,6 @@
 using UnityEngine;
 using Kope.AI.Utility;
-using Kope.Core.EntityComponentSystem;
+using Kope.Core.Entity;
 using Kope.Component.Movement;
 
 

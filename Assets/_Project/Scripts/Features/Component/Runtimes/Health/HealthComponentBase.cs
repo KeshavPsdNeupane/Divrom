@@ -2,7 +2,7 @@ using System;
 using Kope.Character.Stats;
 using Kope.Component.Movement;
 using Kope.Core.Attribute;
-using Kope.Core.EntityComponentSystem;
+using Kope.Core.Entity;
 using Kope.Core.Init;
 using UnityEngine;
 

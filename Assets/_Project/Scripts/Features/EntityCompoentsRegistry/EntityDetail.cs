@@ -1,4 +1,4 @@
-namespace Kope.Core.EntityComponentSystem {
+namespace Kope.Core.Entity {
 	/// <summary>
 	/// This class serves as a simple data container for essential details about an Entity in the ECS architecture. 
 	/// It encapsulates the UniqueID, CommonEntityHashedTag, and EntityComponentRegistry associated with an Entity.

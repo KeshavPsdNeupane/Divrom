@@ -1,6 +1,6 @@
 using System;
 using UnityEngine;
-using Kope.Core.EntityComponentSystem;
+using Kope.Core.Entity;
 
 namespace Kope.AI {
 	public enum ExecutionActionStatus : short {

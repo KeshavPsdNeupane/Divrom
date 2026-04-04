@@ -6,7 +6,7 @@ using TMPro;
 using Kope.Core.CompilerServices;
 using Kope.Core.Init;
 using Kope.Character.Stats;
-using Kope.Core.EntityComponentSystem;
+using Kope.Core.Entity;
 using Kope.Component.Health;
 
 

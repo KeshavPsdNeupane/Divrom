@@ -19,3 +19,6 @@ tab_width = 4
 # 4. Cleanup settings
 csharp_preserve_single_line_blocks = true
 csharp_preserve_single_line_statements = true
+
+# IDE0130: Namespace does not match folder structure
+dotnet_style_namespace_match_folder = false

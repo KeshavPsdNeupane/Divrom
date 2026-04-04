@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Kope.Core.EntityComponentSystem;
+using Kope.Core.Entity;
 /// <summary>
 /// Stores the operational context of an entity and its collection of targets.
 /// <para>

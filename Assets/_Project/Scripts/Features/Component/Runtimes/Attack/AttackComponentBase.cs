@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using Kope.Core.Init;
 using Kope.Character.Stats;
-using Kope.Core.EntityComponentSystem;
+using Kope.Core.Entity;
 using Kope.Component.Animation;
 
 namespace Kope.Component.Attack {

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Kope.Core.CompilerServices;
 using UnityEngine;
-using Kope.Core.EntityComponentSystem;
+using Kope.Core.Entity;
 
 public class PlayerInventoryDisplayUI : InventoryDisplay {
 	[SerializeField] private EntityComponentsRegistry ecr;
