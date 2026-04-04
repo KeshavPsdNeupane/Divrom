@@ -2,8 +2,6 @@ using UnityEngine;
 using Kope.Core.Init;
 using System;
 using Kope.Core.Entity;
-using System.Collections.Generic;
-using Kope.Core.SaveSystem;
 
 namespace Kope.Core.Identity {
 
@@ -22,7 +20,7 @@ namespace Kope.Core.Identity {
 	/// <br/>
 	/// </summary>
 	[RequireComponent(typeof(UniqueID))]
-	public class EntityIdentity : InitializableBase, IEntityDiedOrPooled, IEntitySavePacketProvider {
+	public class EntityIdentity : InitializableBase, IEntityDiedOrPooled {
 		[SerializeField, Tooltip("The name of this EntityComponentStore, used in Context grouping and other systems that require a hashed tag for identification and optimization purposes." +
 			 "For eg, All the goblin based entity should have 'Goblin' as their common entity name, so that the system can easily query all goblin entities by their common hashed tag, without needing to check each individual component's hashed tag." +
 			 "This common entity name is not required to be unique across different EntityComponentStore, but it is recommended to be unique for better identification and optimization. ")]
@@ -46,8 +44,6 @@ namespace Kope.Core.Identity {
 		/// </summary>
 		private EntityDetail _entityDetail;
 
-		private EntitySavePacket _entitySavePacket;
-		private readonly Dictionary<Type, ISaveable> _saveDataChunks = new();
 
 		public string CommonEntityName => commonEntityName;
 
@@ -67,23 +63,21 @@ namespace Kope.Core.Identity {
 
 		public EntityDetail EntityDetail => this._entityDetail;
 
+		/// <summary>
+		/// This api point is for Game save and load system only.
+		/// so dont use on other peurpose.
+		/// </summary>
+		public EntityComponentsRegistry EntityComponentsRegistryForSaveSystemOnly => this.entityComponentRegistry;
 
 		protected override bool OnInit() {
 			if (!Validate()) return false;
-			// After validation, we can be sure that the EntityComponentStore and its ComponentRegistry are properly initialized and ready to use.
 
+			// After validation, we can be sure that the EntityComponentStore and its ComponentRegistry are properly initialized and ready to use.
 			this.entityComponentRegistry.ComponentRegistry.Register(this.entityComponentRegistry);
 			this._entityDetail = new EntityDetail(
 				this.uniqueID, this._commonEntityHashedTag,
-				 this.entityComponentRegistry.ComponentRegistry, this);
+				 this.entityComponentRegistry.ComponentRegistry, this, this.category);
 
-			RegisterSaveDataChunk();
-			this._entitySavePacket = new EntitySavePacket(
-				this._commonEntityHashedTag,
-				this.category,
-				this.uniqueID.HashedTag,
-				this._saveDataChunks
-			);
 			return true;
 		}
 
@@ -145,54 +139,6 @@ namespace Kope.Core.Identity {
 				return false;
 			}
 			return true;
-		}
-
-		public EntitySavePacket GetEntitySavePacket() {
-			if (this._entitySavePacket == null) {
-				this._entitySavePacket = new EntitySavePacket(
-					this._commonEntityHashedTag,
-					this.category,
-					this.uniqueID.HashedTag,
-					this._saveDataChunks
-				);
-			}
-			return this._entitySavePacket;
-		}
-
-		public void RegisterSaveDataChunk() {
-			var source = this.entityComponentRegistry.ComponentRegistry.Components;
-			foreach (var kvp in source) {
-				if (kvp.Value is ISaveable saveableComponent) {
-					this._saveDataChunks[kvp.Key] = saveableComponent;
-				}
-			}
-		}
-
-		public void LoadEntitySavePacket(EntitySavePacket packet) {
-			foreach (var kvp in packet.DataSource) {
-				if (kvp.Value is ISaveable saveableComponent) {
-					Type componentType = kvp.Key;
-					if (this.entityComponentRegistry.ComponentRegistry.Components.TryGetValue(componentType, out var component)) {
-						if (component is ISaveable targetSaveable) {
-							targetSaveable.LoadFromSaveData(saveableComponent.GetSaveData());
-						} else {
-							Debug.LogWarning($"Component of type {componentType} on Entity '{this.commonEntityName}' does not implement ISaveable. Skipping load for this component.");
-						}
-					} else {
-						Debug.LogWarning($"Entity '{this.commonEntityName}' does not have a component of type {componentType} that exists in the save data. Skipping load for this component.");
-					}
-				}
-			}
-			this._entitySavePacket = packet;
-			this._saveDataChunks.Clear();
-			foreach (var kvp in packet.DataSource) {
-				this._saveDataChunks[kvp.Key] = kvp.Value;
-			}
-			this._entityDetail = new EntityDetail(
-				this.uniqueID, this._commonEntityHashedTag,
-				 this.entityComponentRegistry.ComponentRegistry, this);
-			Debug.Log($"Entity '{this.commonEntityName}' loaded from save packet with UniqueID: {packet.UniqueID}");
-
 		}
 	}
 }

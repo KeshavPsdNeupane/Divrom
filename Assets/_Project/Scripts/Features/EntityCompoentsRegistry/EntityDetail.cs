@@ -12,6 +12,8 @@ namespace Kope.Core.Entity {
 		public UniqueID UniqueID { get; private set; }
 		// simple hashed tag imple
 		public HashedTag CommonEntityHashedTag { get; private set; }
+
+		public EntityIdentityCategoryEnum EntityIdentityCategoryEnum { get; private set; }
 		public IReadOnlyComponentRegistry ComponentRegistry { get; private set; }
 		// every entity with entity manager will have this 
 		public readonly IEntityDiedOrPooled EventProvider;
@@ -24,11 +26,14 @@ namespace Kope.Core.Entity {
 		public EntityDetail(
 			UniqueID uniqueID,
 			HashedTag commonEntityHashedTag,
-			IReadOnlyComponentRegistry entityComponentRegistry, IEntityDiedOrPooled onEntityDiedOrPooled) {
+			IReadOnlyComponentRegistry entityComponentRegistry,
+			IEntityDiedOrPooled onEntityDiedOrPooled,
+			EntityIdentityCategoryEnum cate = EntityIdentityCategoryEnum.Player) {
 			this.UniqueID = uniqueID;
 			this.CommonEntityHashedTag = commonEntityHashedTag;
 			this.ComponentRegistry = entityComponentRegistry;
 			this.EventProvider = onEntityDiedOrPooled;
+			this.EntityIdentityCategoryEnum = cate;
 		}
 	}
 }

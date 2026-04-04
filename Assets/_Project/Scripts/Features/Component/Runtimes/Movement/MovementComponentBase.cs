@@ -3,6 +3,8 @@ using UnityEngine;
 using Kope.Core.Init;
 using Kope.Character.Stats;
 using Kope.Core.Entity;
+using Kope.Core.SaveSystem;
+using Kope.Core;
 
 namespace Kope.Component.Movement {
 
@@ -40,9 +42,19 @@ namespace Kope.Component.Movement {
 		Vector3 GetLookingAtDirection();
 	}
 
+	public struct MovementComponentSaveData : ISaveData {
+		public Vec3 Position;
+		public Vec3 Velocity;
+		public Dimension Dimension;
 
+		public MovementComponentSaveData(Vector3 position, Vector3 velocity, Dimension dimension) {
+			this.Position = new Vec3(position);
+			this.Velocity = new Vec3(velocity);
+			this.Dimension = dimension;
+		}
+	}
 
-	public class MovementComponentBase : InitializableBase, IMovementComponent {
+	public class MovementComponentBase : InitializableBase, IMovementComponent, ISaveable {
 		[SerializeField] protected Dimension dimension = Dimension.TwoD;
 		[SerializeField] protected Rigidbody2D rb;
 		[SerializeField] protected EntityComponentsRegistry ecr;
@@ -56,12 +68,12 @@ namespace Kope.Component.Movement {
 		/// </summary>
 		public const float MOVEMENT_EPSILON = 0.1f;
 
+		private Vector3 _lastDirection = Vector3.right;
 		protected MovementIntent _currentIntent;
 		public float Mass => this.rb.mass;
 		public Vector3 Direction => this._currentIntent.Direction;
 		public Vector3 Position => this.rb.position;
 
-		private Vector3 lastDirection = Vector3.right;
 
 		/// <summary>
 		/// Gets the current looking direction of the entity based on its movement intent and dimension.
@@ -75,7 +87,7 @@ namespace Kope.Component.Movement {
 			if (this.dimension == Dimension.TwoD) {
 				// we only care about x and y for 2D movement, so we project the
 				//  lastDirection onto the XY plane.
-				return new Vector3(this.lastDirection.x, this.lastDirection.y, 0f);
+				return new Vector3(this._lastDirection.x, this._lastDirection.y, 0f);
 			} else {
 				// for 3D movement, we can use the Rigidbody's forward direction as the looking direction.
 				// we could change this if we are implementing some kind of strafing movement, 
@@ -157,7 +169,7 @@ namespace Kope.Component.Movement {
 				intent.Direction.Normalize();
 				// we only update lastDirection when we have a significant movement intent,
 				//  to avoid jittery lastDirection when we are trying to stop or have very minor movement.
-				this.lastDirection = intent.Direction;
+				this._lastDirection = intent.Direction;
 			} else {
 				intent.Direction = Vector3.zero;
 			}
@@ -191,6 +203,18 @@ namespace Kope.Component.Movement {
 			Vector3 intentInfluence = targetVelocity * 0.7f;
 
 			this.rb.linearVelocity = physicsInfluence + intentInfluence;
+		}
+
+		public ISaveData GetSaveData() {
+			return new MovementComponentSaveData(this.Position, this.rb.linearVelocity, this.dimension);
+		}
+
+		public void LoadFromSaveData(ISaveData data) {
+			if (data is MovementComponentSaveData saveData) {
+				this.rb.position = saveData.Position.ToVector3();
+				this.rb.linearVelocity = saveData.Velocity.ToVector3();
+				this.dimension = saveData.Dimension;
+			}
 		}
 	}
 

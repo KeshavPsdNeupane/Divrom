@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Kope.Core.Entity;
+using Newtonsoft.Json;
 
 
 namespace Kope.Core.SaveSystem {
@@ -14,10 +15,12 @@ namespace Kope.Core.SaveSystem {
 		// but we will also store the name for debugging and editor purpose.
 		public int SceneBuildIndex { get; private set; }
 		public string SceneName { get; private set; }
-		public ISceneSaveSystemProvider Provider { get; private set; }
-
-		public SceneSaveDataContainer(ISceneSaveSystemProvider provider) {
-			Provider = provider;
+		public List<EntitySavePacket> SceneDataPacket { get; private set; }
+		[JsonConstructor]
+		public SceneSaveDataContainer(int sceneBuildIndex, string sceneName, List<EntitySavePacket> sceneDatas) {
+			SceneBuildIndex = sceneBuildIndex;
+			SceneName = sceneName;
+			SceneDataPacket = sceneDatas;
 		}
 	}
 	/// <summary>
@@ -30,6 +33,7 @@ namespace Kope.Core.SaveSystem {
 	/// </para>
 	/// </summary>
 	public interface IEntitySavePacketProvider {
+		HashedTag UniqueID { get; }
 		EntitySavePacket GetEntitySavePacket();
 		void LoadEntitySavePacket(EntitySavePacket packet);
 		bool ValidateIdentity(string callerInfo = null);
@@ -42,22 +46,21 @@ namespace Kope.Core.SaveSystem {
 		public EntityIdentityCategoryEnum Category { get; private set; }
 		public HashedTag UniqueID { get; private set; }
 
-		public Dictionary<Type, ISaveable> DataSource = new();
+		// Store the DATA, not the Component class
+		public Dictionary<Type, ISaveData> DataSource = new();
+
+		[JsonConstructor]
 		public EntitySavePacket(
-			HashedTag commonNameHashTag,
-			EntityIdentityCategoryEnum category,
-			HashedTag uniqueIDHashTag,
-			Dictionary<Type, ISaveable> dataSource) {
-			CommonNameHashTag = commonNameHashTag;
-			Category = category;
-			UniqueID = uniqueIDHashTag;
-			DataSource = dataSource;
+		HashedTag commonNameHashTag,
+		EntityIdentityCategoryEnum category,
+		HashedTag uniqueID,
+		Dictionary<Type, ISaveData> dataSource) {
+			this.CommonNameHashTag = commonNameHashTag;
+			this.Category = category;
+			this.UniqueID = uniqueID;
+			this.DataSource = dataSource;
 		}
 	}
-
-
-
-
 
 	/// <summary>
 	/// Interface for objects that can be saved and loaded using the save system.

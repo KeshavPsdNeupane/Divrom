@@ -1,7 +1,6 @@
 using UnityEngine.InputSystem;
 using ServiceLocatorPattern;
 using Kope.Core.CompilerServices;
-using UnityEngine;
 
 namespace Kope.Component.Attack {
 	public class PlayerAttackComponent : AttackComponentBase {
@@ -64,7 +63,7 @@ namespace Kope.Component.Attack {
 
 			float damage = CalculateDamage();
 			// just a placeholder for now, we will implement the actual attack logic later
-			Debug.Log($"Attack performed! Damage: {damage}, Base attack: {this._attack}");
+			//Debug.Log($"Attack performed! Damage: {damage}, Base attack: {this._attack}");
 			return damage;
 		}
 	}

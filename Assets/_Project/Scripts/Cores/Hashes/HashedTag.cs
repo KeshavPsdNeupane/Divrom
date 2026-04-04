@@ -1,5 +1,6 @@
 using System;
-
+using Newtonsoft;
+using Newtonsoft.Json;
 
 public interface IHashTagProvider {
 	HashedTag HashedTag { get; }
@@ -11,16 +12,22 @@ public interface IHashTagProvider {
 /// It uses a custom hash function (FNV-1a) to generate a hash code from the input string, and it implements IEquatable for efficient equality checks.
 /// </para>
 /// </summary>
+[Serializable]
 public readonly struct HashedTag : IEquatable<HashedTag> {
+
+	[JsonProperty("tag")]
 	private readonly string tag;
+	[JsonIgnore]
 	private readonly int tagHash;
 
-	public (string, int) GetSaveDataIdentifier() => (tag, tagHash);
 
+
+	[JsonConstructor]
 	public HashedTag(string tag) {
-		this.tag = tag ?? throw new ArgumentNullException(nameof(tag));
-		this.tagHash = CreateHash(tag);
+		this.tag = tag ?? string.Empty;
+		this.tagHash = CreateHash(this.tag);
 	}
+
 
 	public bool Equals(HashedTag other) {
 		return tagHash == other.tagHash && tag == other.tag;

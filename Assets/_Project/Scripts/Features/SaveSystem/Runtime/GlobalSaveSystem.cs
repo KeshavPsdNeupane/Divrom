@@ -28,8 +28,10 @@ namespace Kope.Core.SaveSystem {
 
 
 		private JsonSerializerSettings _settings = new() {
-			TypeNameHandling = TypeNameHandling.Auto, // The magic for ISaveData structs
-			Formatting = Formatting.Indented
+			TypeNameHandling = TypeNameHandling.Auto,
+			Formatting = Formatting.Indented,
+			// ADD THIS:
+			ReferenceLoopHandling = ReferenceLoopHandling.Ignore
 		};
 		private readonly HashSet<IEntitySavePacketProvider> _registeredEntities = new();
 
@@ -45,6 +47,14 @@ namespace Kope.Core.SaveSystem {
 		}
 
 		public void SaveWorld() {
+			Save();
+		}
+
+		public void LoadWorld() {
+			Load();
+		}
+		private void Save() {
+			Debug.Log($"Saving world with {_registeredEntities.Count} registered entities.");
 			// need some refinement here, since we want to have some control over the save data structure, 
 			// instead of just dumping all the data into a big json file.
 			// for now we will do this simple implementation, but in the future we may want to 
@@ -52,25 +62,28 @@ namespace Kope.Core.SaveSystem {
 			// which can be easily extended and modified without breaking the existing save data.
 			var packets = _registeredEntities.Select(e => e.GetEntitySavePacket()).ToList();
 			string json = JsonConvert.SerializeObject(packets, _settings);
+			Debug.Log("World data serialized to JSON:\n" + json);
 			File.WriteAllText(Application.persistentDataPath + "/world.json", json);
 		}
-
-		public void LoadWorld() {
+		private void Load() {
+			Debug.Log("Loading world...");
 			string path = Application.persistentDataPath + "/world.json";
+
 			if (File.Exists(path)) {
 				string json = File.ReadAllText(path);
 				var packets = JsonConvert.DeserializeObject<List<EntitySavePacket>>(json, _settings);
+
+				var providerByID = _registeredEntities.ToDictionary(e => e.UniqueID.ToString());
+
 				foreach (var packet in packets) {
-					var provider = _registeredEntities.FirstOrDefault(e => e.GetEntitySavePacket().UniqueID == packet.UniqueID);
-					if (provider != null) {
-						//provider.LoadFromSavePacket(packet);
+					if (providerByID.TryGetValue(packet.UniqueID.ToString(), out var provider)) {
+						provider.LoadEntitySavePacket(packet);
 					} else {
-						Debug.LogWarning($"No provider found for UniqueID: {packet.UniqueID}");
+						Debug.LogWarning($"Provider was not found for {packet.UniqueID}. This entity will be skipped during loading.");
 					}
 				}
-			} else {
-				Debug.LogWarning("No save file found at " + path);
 			}
+
 		}
 	}
 }
