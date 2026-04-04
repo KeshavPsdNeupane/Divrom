@@ -1,26 +1,133 @@
+using Kope.Core.Extensions;
 using UnityEngine;
-namespace Kope.Core.Init
-{
-    /// <summary>
-    /// Convenience base class for MonoBehaviours that participate in InitManager lifecycle.
-    /// Derive from this so components automatically implement IInitializable.
-    /// Make sure your are placing the Init() call in the correct order in InitLifecycleManager.
-    /// </summary>
-    public abstract class InitializableBase : MonoBehaviour, IInitializable
-    {
-        public bool IsInitialized { get; protected set; } = false;
+namespace Kope.Core.Init {
+	/// <summary>
+	/// <br/>
+	/// <b>InitializableBase.cs</b><br/>
+	/// Convenience base class for MonoBehaviours that participate in InitManager lifecycle.
+	/// Derive from this so components automatically implement IInitializable.
+	/// Make sure your are placing the Init() call in the correct order in InitLifecycleManager.
+	/// U can think of this as Kope's version of MonoBehaviour.Awake/Start but with explicit Init()/Shutdown() calls.
+	/// <br/>
+	/// <inheritdoc cref="IInitializable"/>
+	/// </summary>
+	public abstract class InitializableBase : MonoBehaviour, IInitializable {
+		/// <summary>
+		/// Indicates whether this component has been fully initialized. 
+		/// This is set to true after Init() is called and OnInit() returns true.
+		/// This garuntees that the component is ready to be used, 
+		/// and prevents Update/FixedUpdate logic from running before initialization.
+		/// </summary>
+		public bool IsInitialized { get; protected set; } = false;
 
-        protected void SetInitialized(bool initialized = true)
-        => this.IsInitialized = initialized;
+		///<summary> 
+		/// this flag is used to log warning only once when Update() is called on uninitialized component
+		/// so we dont spam the console every frame
+		/// </summary>
+		private bool hasLoggedNotInitializedWarning = false;
 
-        /// <summary>
-        /// Called once after dependencies are injected. Override or use method-injection.
-        /// </summary>
-        public virtual void Init() { }
 
-        /// <summary>
-        /// Called during shutdown. Override for cleanup.
-        /// </summary>
-        public virtual void Shutdown() { }
-    }
+		private string parentGameObjectStackTrace = string.Empty;
+
+		public string GetParentGameObjectHeirarchyMessage() {
+			if (string.IsNullOrEmpty(this.parentGameObjectStackTrace)) {
+				this.parentGameObjectStackTrace = this.GetGameObjectHierarchyPath();
+				if (string.IsNullOrEmpty(this.parentGameObjectStackTrace)) {
+					this.parentGameObjectStackTrace = "Could not determine GameObject hierarchy.";
+
+				}
+			}
+			return $" (GameObjectPath): {this.parentGameObjectStackTrace}";
+		}
+
+		/// <summary>
+		/// Sets the IsInitialized boolean value.
+		/// Default is true, set to false to mark uninitialized.
+		/// Use with caution; prefer calling Init()/Shutdown() instead.
+		/// </summary>
+		/// <param name="value"></param>
+		public void SetInitBoolean(bool value = true) => this.IsInitialized = value;
+
+		public void Init() {
+			if (this.IsInitialized) return;
+			this.parentGameObjectStackTrace = this.GetGameObjectHierarchyPath();
+			this.hasLoggedNotInitializedWarning = false;
+			// call the virtual OnInit for actual initialization logic, and 
+			// set IsInitialized based on its return value.
+			this.IsInitialized = OnInit();
+		}
+
+		/// <summary>
+		/// Called during initialization. Override this instead of Init().
+		/// Init() will call this after setting IsInitialized = true.
+		/// The base implementation does nothing.
+		/// this method is completely optional to override.
+		/// Just being used as Template Method pattern.
+		/// so child classes can hook into Init without overriding it.
+		/// </summary>
+		protected virtual bool OnInit() {
+			return true;
+		}
+
+
+		public void Shutdown() {
+			if (!this.IsInitialized) return;
+			this.IsInitialized = false;
+			this.hasLoggedNotInitializedWarning = false;
+			this.parentGameObjectStackTrace = string.Empty;
+			OnShutdown();
+		}
+		/// <summary>
+		/// Called during shutdown. Override for teardown.
+		/// Always call base.Shutdown() to set IsInitialized = false.
+		/// Completely optional to override.
+		/// </summary>
+		protected virtual void OnShutdown() { }
+
+
+		/// <summary>
+		/// Update method called every frame.
+		/// Do NOT override Update() directly. Override OnUpdate() instead.
+		/// </summary>
+		protected void Update() {
+			if (!this.IsInitialized) {
+				if (!this.hasLoggedNotInitializedWarning) {
+					// calling FindAllParentStackString every frame is expensive, so we only do it once when we log the warning for the first time.
+					// for now calling it again in this if so that we can get the correct stack trace even if the hierarchy changes after initialization. since we only log once, it should be fine.
+					this.parentGameObjectStackTrace = this.GetGameObjectHierarchyPath();
+					this.hasLoggedNotInitializedWarning = true;
+				}
+				return;
+			}
+			OnUpdate();
+		}
+
+		protected void FixedUpdate() {
+			// just return the Update gives the error log, no need to also log in FixedUpdate. 
+			// since usually if Update is not initialized, FixedUpdate will also not be initialized.
+			if (!this.IsInitialized) return;
+
+			OnFixedUpdate();
+		}
+
+		/// <summary>
+		/// Called every frame after IsInitialized check. Override this instead of Update().
+		/// The base implementation does nothing.
+		/// this method is completely optional to override.
+		/// Just being used as Template Method pattern.
+		/// so child classes can hook into Update without overriding it.
+		/// </summary>
+		protected virtual void OnUpdate() { }
+
+		/// <summary>
+		/// Called every fixed frame after IsInitialized check. Override this instead of FixedUpdate().
+		/// The base implementation does nothing.
+		/// this method is completely optional to override.
+		/// Just being used as Template Method pattern.
+		/// so child classes can hook into FixedUpdate without overriding it.
+		/// </summary>
+		protected virtual void OnFixedUpdate() { }
+
+
+	}
 }

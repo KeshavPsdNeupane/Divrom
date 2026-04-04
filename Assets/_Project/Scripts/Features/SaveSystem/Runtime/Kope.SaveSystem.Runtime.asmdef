@@ -1,0 +1,16 @@
+{
+    "name": "Kope.SaveSystem.Runtime",
+    "rootNamespace": "Kope.SaveSystem",
+    "references": [
+        "GUID:1415229ac17d9d804afb5a91176856c4"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

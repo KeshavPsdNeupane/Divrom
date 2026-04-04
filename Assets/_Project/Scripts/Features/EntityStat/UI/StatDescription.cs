@@ -6,144 +6,160 @@ using TMPro;
 using Kope.Core.CompilerServices;
 using Kope.Core.Init;
 using Kope.Character.Stats;
-public class StatDescription : InitializableBase
-{
-    [SerializeField] private GameObject statDescriptionUIPanel;
-    [SerializeField] private CharacterStatsSystem characterStats;
-    [SerializeField] private TMP_FontAsset fontAsset;
+using Kope.Core.Entity;
+using Kope.Component.Health;
 
-    private readonly Dictionary<CharacterStatType, float> statsValues = new();
-    private readonly Dictionary<CharacterStatType, UnityAction<float>> statsCallbacksDict = new();
-    private readonly Dictionary<CharacterStatType, TextMeshProUGUI> statTextObjects = new();
 
-    private RectTransform panelRect; // cache panelRect to avoid fetching multiple times
-    public override void Init()
-    {
-        Validate();
-    }
+public class StatDescription : InitializableBase {
+	[SerializeField] private GameObject statDescriptionUIPanel;
+	[SerializeField] private EntityComponentsRegistry ecr;
 
-    // for now marking Start as commented out so i can test OnEnable initialization
-    // on Init lifecycle manager
+	[SerializeField] private TMP_FontAsset fontAsset;
 
-    // private void Start()
-    // {
-    //     // it is also here to ensure initialization in case OnEnable is missed
-    //     // and if we disable and enable the component later, we still
-    //     // want to initialize the TMP objects and subscribe to stats
-    //     CachePanelRect();
-    //     CreateTMPObjects();
-    //     SubscribeToStats();
-    // }
+	private CharacterStatsSystem _characterStats;
+	private IHealthComponent _healthComponent;
 
-    void OnEnable()
-    {
-        if (this.characterStats != null &&
-            this.characterStats.CurrentStats != null &&
-            this.statDescriptionUIPanel != null)
-        { // with Init , no need to Validate again here 
-            CreateTMPObjects();
-            SubscribeToStats();
-        }
-    }
+	private readonly Dictionary<CharacterStatType, float> _statsValues = new();
+	private readonly Dictionary<CharacterStatType, UnityAction<float>> _statsCallbacksDict = new();
+	private readonly Dictionary<CharacterStatType, TextMeshProUGUI> _statTextObjects = new();
+	private float _currentHealth;
 
-    void OnDisable()
-    {
-        if (this.characterStats == null) return;
+	private RectTransform _panelRect; // cache panelRect to avoid fetching multiple times
 
-        foreach (var kvp in this.statsCallbacksDict)
-            this.characterStats.StatsUnsubscribe(kvp.Key, kvp.Value);
+	protected override bool OnInit() {
+		return Validate();
+	}
+	private void SetCurrentHp(float hp) => this._currentHealth = hp;
 
-        this.statsCallbacksDict.Clear();
-    }
 
-    private void Validate()
-    {
-        if (this.characterStats == null)
-        {
-            MyLogger.Warn("CharacterStatsSystem reference was missing," +
-          " attempting to get from the same GameObject.");
-        }
-        if (this.statDescriptionUIPanel == null)
-        {
-            MyLogger.Error("StatDescriptionUIPanel is not assigned.");
-            return;
-        }
-        if (this.panelRect == null && this.statDescriptionUIPanel != null)
-        {
-            this.panelRect = this.statDescriptionUIPanel.GetComponent<RectTransform>();
-            if (this.panelRect == null)
-                MyLogger.Error("Stat Panel requires RectTransform.");
-        }
-        SetInitialized();
-    }
+	void OnEnable() {
+		if (this._characterStats != null &&
+			this._characterStats.CurrentStats != null &&
+			this.statDescriptionUIPanel != null &&
+			this._healthComponent != null) { // with Init , no need to Validate again here since OnEnable will only be called after successful Init, but we do need to check for nulls to avoid errors in case of unexpected issues.
+			CreateTMPObjects();
+			SubscribeToStats();
+		}
+	}
 
-    private void CreateTMPObjects()
-    {
-        if (this.panelRect == null) return;
+	void OnDisable() {
+		if (this._characterStats == null || this._healthComponent == null) return;
+		this._healthComponent.OnCurrentHealthChanged -= SetCurrentHp;
+		foreach (var kvp in this._statsCallbacksDict)
+			this._characterStats.StatsUnsubscribe(kvp.Key, kvp.Value);
 
-        int numberOfStats = Enum.GetValues(typeof(CharacterStatType)).Length;
-        float panelHeight = this.panelRect.rect.height;
-        float lineHeight = panelHeight / (numberOfStats + 1);
+		this._statsCallbacksDict.Clear();
+	}
 
-        int index = 0;
-        foreach (CharacterStatType type in Enum.GetValues(typeof(CharacterStatType)))
-        {
-            if (statTextObjects.ContainsKey(type)) continue;
+	private bool Validate() {
+		if (ecr == null) {
+			MyLogger.Error("EntityComponentStore reference was missing," +
+		  " unable to retrieve CharacterStatsSystem." + GetParentGameObjectHeirarchyMessage());
+			return false;
+		}
+		// using tryGet since this only shows the stats on UI and does not modify the stats,
+		//  so we don't need mutatable access here. so TryGetComponent is sufficient for semantic clarity.
+		if (!ecr.ComponentRegistry.TryGetReadOnlyComponent<CharacterStatsSystem>(out var statsSystem)) {
+			MyLogger.Error("No CharacterStatsSystem found in EntityComponentStore for StatDescription" + GetParentGameObjectHeirarchyMessage());
+			return false;
 
-            GameObject textGO = new GameObject(type.ToString());
-            textGO.transform.SetParent(statDescriptionUIPanel.transform, false);
+		}
+		this._characterStats = statsSystem;
 
-            TextMeshProUGUI tmp = textGO.AddComponent<TextMeshProUGUI>();
-            tmp.font = fontAsset;
-            tmp.alignment = TextAlignmentOptions.Left;
-            tmp.color = Color.black;
-            tmp.text = $"{type}: 0";
+		if (!ecr.ComponentRegistry.TryGetReadOnlyComponent<IHealthComponent>(out var healthComponent)) {
+			MyLogger.Error("No IHealthComponent found in EntityComponentStore for StatDescription" + GetParentGameObjectHeirarchyMessage());
+			return false;
 
-            RectTransform rt = tmp.GetComponent<RectTransform>();
-            rt.anchorMin = new Vector2(0, 1);
-            rt.anchorMax = new Vector2(0, 1);
-            rt.pivot = new Vector2(0, 1);
-            rt.anchoredPosition = new Vector2(10f, -index * lineHeight);
-            rt.sizeDelta = new Vector2(panelRect.rect.width - 20f, lineHeight);
+		}
+		this._healthComponent = healthComponent;
 
-            tmp.enableAutoSizing = true;
-            tmp.fontSizeMin = 4;
-            tmp.fontSizeMax = 200;
+		if (this.statDescriptionUIPanel == null) {
+			MyLogger.Error("StatDescriptionUIPanel is not assigned." + GetParentGameObjectHeirarchyMessage());
+			return false;
+		}
+		if (this._panelRect == null && this.statDescriptionUIPanel != null) {
+			this._panelRect = this.statDescriptionUIPanel.GetComponent<RectTransform>();
+			if (this._panelRect == null)
+				MyLogger.Error("Stat Panel requires RectTransform." + GetParentGameObjectHeirarchyMessage());
+		}
+		return true;
+	}
 
-            statTextObjects[type] = tmp;
-            index++;
-        }
-    }
+	private void CreateTMPObjects() {
+		if (this._panelRect == null) return;
 
-    private void SubscribeToStats()
-    {
-        if (this.characterStats == null || this.characterStats.CurrentStats == null) return;
+		int numberOfStats = Enum.GetValues(typeof(CharacterStatType)).Length;
+		float panelHeight = this._panelRect.rect.height;
+		float lineHeight = panelHeight / (numberOfStats + 1);
 
-        foreach (CharacterStatType type in Enum.GetValues(typeof(CharacterStatType)))
-        {
-            // check if the stat exists to avoid errors
-            if (!this.characterStats.CurrentStats.ContainsKey(type)) continue;
+		int index = 0;
+		foreach (CharacterStatType type in Enum.GetValues(typeof(CharacterStatType))) {
+			if (_statTextObjects.ContainsKey(type)) continue;
 
-            this.statsValues[type] = this.characterStats.GetStatValue(type);
+			GameObject textGO = new(type.ToString());
+			textGO.transform.SetParent(statDescriptionUIPanel.transform, false);
 
-            void callback(float val)
-            {
-                this.statsValues[type] = val;
-                if (this.statTextObjects.TryGetValue(type, out var tmp))
-                    tmp.text = $"{type}: {val:0}";
-            }
+			TextMeshProUGUI tmp = textGO.AddComponent<TextMeshProUGUI>();
+			tmp.font = fontAsset;
+			tmp.alignment = TextAlignmentOptions.Left;
+			tmp.color = Color.black;
+			tmp.text = $"{type}: 0";
 
-            // Unsubscribe previous callback if exists
-            if (this.statsCallbacksDict.TryGetValue(type, out var oldCallback))
-                this.characterStats.StatsUnsubscribe(type, oldCallback);
+			RectTransform rt = tmp.GetComponent<RectTransform>();
+			rt.anchorMin = new Vector2(0, 1);
+			rt.anchorMax = new Vector2(0, 1);
+			rt.pivot = new Vector2(0, 1);
+			rt.anchoredPosition = new Vector2(10f, -index * lineHeight);
+			rt.sizeDelta = new Vector2(_panelRect.rect.width - 20f, lineHeight);
 
-            this.statsCallbacksDict[type] = callback;
-            this.characterStats.StatsSubscribe(type, callback);
+			tmp.enableAutoSizing = true;
+			tmp.fontSizeMin = 4;
+			tmp.fontSizeMax = 200;
 
-            // Immediately update TMP text
-            if (statTextObjects.TryGetValue(type, out var text))
-                text.text = $"{type}: {statsValues[type]:0}";
-        }
-    }
+			_statTextObjects[type] = tmp;
+			index++;
+		}
+	}
+
+	private void SubscribeToStats() {
+		if (this._characterStats == null || this._characterStats.CurrentStats == null
+		|| this._healthComponent == null) return;
+		// initial fetch of current health to display in UI immediately, and subscribe to changes for future updates.
+		this._currentHealth = this._healthComponent.CurrentHealth;
+		this._healthComponent.OnCurrentHealthChanged += SetCurrentHp;
+
+		foreach (CharacterStatType type in Enum.GetValues(typeof(CharacterStatType))) {
+			// check if the stat exists to avoid errors
+			if (!this._characterStats.CurrentStats.ContainsKey(type)) continue;
+
+			this._statsValues[type] = this._characterStats.GetStatValue(type);
+
+			void callback(float val) {
+				this._statsValues[type] = val;
+				if (this._statTextObjects.TryGetValue(type, out var tmp))
+					tmp.text = $"{type}: {val:0}";
+			}
+
+			// Unsubscribe previous callback if exists
+			if (this._statsCallbacksDict.TryGetValue(type, out var oldCallback))
+				this._characterStats.StatsUnsubscribe(type, oldCallback);
+
+			this._statsCallbacksDict[type] = callback;
+			this._characterStats.StatsSubscribe(type, callback);
+
+			// Immediately update TMP text
+			if (_statTextObjects.TryGetValue(type, out var text)) {
+				string display;
+				if (type == CharacterStatType.HP) {
+					display = $"{type}: {this._currentHealth:0}/{this._statsValues[type]:0}";
+				} else {
+					display = $"{type}: {this._statsValues[type]:0}";
+				}
+				text.text = display;
+			}
+
+
+		}
+	}
 
 }

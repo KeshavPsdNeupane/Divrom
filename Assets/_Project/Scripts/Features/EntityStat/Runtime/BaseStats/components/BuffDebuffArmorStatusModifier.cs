@@ -1,50 +1,44 @@
 using UnityEngine;
 using ThirdParty;
-using System.Collections.Generic;
-namespace Kope.Character.Stats
-{
-    [System.Serializable]
-    public class BuffDebuffArmorStatusModifier
-    {
-        [HideInInspector] public bool canRemove = false;
-        [HideInInspector] public CountdownTimer durationCountDownTimer;
+namespace Kope.Character.Stats {
+	[System.Serializable]
+	public class BuffDebuffArmorStatusModifier {
+		[HideInInspector] public bool canRemove = false;
+		[HideInInspector] public CountdownTimer durationCountDownTimer;
 
-        [SerializeField] private StatusEffect statusEffect;
+		[SerializeField] private StatModifier statusEffect;
 
-        public bool IsDebuff => this.statusEffect.IsDebuff;
-        public string EffectName => this.statusEffect.effectName;
-        public string Source => this.statusEffect.source;
-        public float ModifierAmount => this.statusEffect.modifierAmount;
-        public bool IsPercentage => this.statusEffect.isPercentage;
-        public bool IsDebuffFromArmor => this.statusEffect.isDebuffFromArmor;
-        public bool IsDebuffFromEnemy => this.statusEffect.isDebuffFromEnemy;
-        public int DebuffPriority => this.statusEffect.debuffPriority;
-        public float Duration => this.statusEffect.totalDuration;
-        public CharacterStatType StatType => this.statusEffect.statType;
+		public bool IsDebuff => this.statusEffect.IsDebuff;
+		public string EffectName => this.statusEffect.effectName;
+		public string Source => this.statusEffect.source;
+		public float ModifierAmount => this.statusEffect.modifierAmount;
+		public bool IsPercentage => this.statusEffect.isPercentage;
+		public bool IsDebuffFromArmor => this.statusEffect.isDebuffFromArmor;
+		public bool IsDebuffFromEnemy => this.statusEffect.isDebuffFromEnemy;
+		public int DebuffPriority => this.statusEffect.debuffPriority;
+		public float Duration => this.statusEffect.totalDuration;
+		public CharacterStatType StatType => this.statusEffect.statType;
 
-        public bool IsPermanentBuff => this.statusEffect.IsPermanentEffect;
+		public bool IsPermanentBuff => this.statusEffect.IsPermanentEffect;
 
 
 
-        public BuffDebuffArmorStatusModifier(StatusEffect effect)
-        {
-            this.statusEffect = effect;
-        }
+		public BuffDebuffArmorStatusModifier(StatModifier effect) {
+			this.statusEffect = effect;
+		}
 
-        public void InitializeTimer()
-        {
-            if (this.statusEffect == null) return;
+		public void InitializeTimer() {
+			if (this.statusEffect == null) return;
 
-            if (this.durationCountDownTimer == null)
-                this.durationCountDownTimer = new CountdownTimer(statusEffect.totalDuration);
-            else
-                this.durationCountDownTimer.Reset(statusEffect.totalDuration);
-        }
+			if (this.durationCountDownTimer == null)
+				this.durationCountDownTimer = new CountdownTimer(statusEffect.totalDuration);
+			else
+				this.durationCountDownTimer.Reset(statusEffect.totalDuration);
+		}
 
-        public void StartTimer()
-        {
-            this.durationCountDownTimer?.Start();
-        }
+		public void StartTimer() {
+			this.durationCountDownTimer?.Start();
+		}
 
-    }
+	}
 }

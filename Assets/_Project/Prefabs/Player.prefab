@@ -365,6 +365,7 @@ MonoBehaviour:
   inventoryHolder: {fileID: 7497465890913298284}
   detectionCollider: {fileID: 6800492162840743801}
   detectionRadius: 2
+  showGizmos: 0
 --- !u!1 &4587433470359711600
 GameObject:
   m_ObjectHideFlags: 0
@@ -409,7 +410,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2dcc3c998b5f98b6891e422fd5e29ded, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AttackComponent
+  animationComponent: {fileID: 0}
   statsSystem: {fileID: 6086364781477239200}
+  equippedWeaponDataSO: {fileID: 0}
 --- !u!1 &5455322508036677526
 GameObject:
   m_ObjectHideFlags: 0
@@ -456,8 +459,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MovementComponent
   rb: {fileID: 3683206385522943912}
   characterStatsSystem: {fileID: 6086364781477239200}
-  movementSpeed: 2
-  characterStats: {fileID: 6086364781477239200}
+  defaultMovementSpeed: 2
 --- !u!1 &5670956036724153890
 GameObject:
   m_ObjectHideFlags: 0
@@ -514,7 +516,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7554677529560786835}
-  - component: {fileID: 340152970956865389}
   - component: {fileID: 9184976835066758022}
   - component: {fileID: 3683206385522943912}
   - component: {fileID: 3495311910968309391}
@@ -547,18 +548,6 @@ Transform:
   - {fileID: 6154926991837497483}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &340152970956865389
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6049217348541250187}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b6ec4e8a30adc9e448e7171477010e0e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SelectionBase
 --- !u!61 &9184976835066758022
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -837,8 +826,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10ca6cbcd6ccab44ba17ff59bcf73a28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StatusEffectConnector
-  characterStats: {fileID: 6086364781477239200}
-  effectArea: {fileID: 628610100222114359}
   StatusObjectTagName: StatusEffect
-  radius: 0.75
+  characterStats: {fileID: 6086364781477239200}
+  detectionCollider: {fileID: 0}
+  detectionRadius: 0.5
   isTrigger: 1
+  showGizmos: 0

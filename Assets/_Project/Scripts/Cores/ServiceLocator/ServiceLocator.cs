@@ -42,21 +42,21 @@ namespace ServiceLocatorPattern
             if (instance == null)
             {
                 instance = this as T;
-                if (isPersistent) DontDestroyOnLoad(gameObject);
+                if (this.isPersistent) DontDestroyOnLoad(this.gameObject);
             }
             else if (instance != this)
             {
-                Destroy(gameObject);
+                Destroy(this.gameObject);
             }
         }
 
-        public bool HasService<TService>() where TService : TBase => services.ContainsKey(typeof(TService));
+        public bool HasService<TService>() where TService : TBase => this.services.ContainsKey(typeof(TService));
         protected virtual void OnDestroy()
         {
             if (instance == this)
             {
                 instance = null;
-                services.Clear();
+                this.services.Clear();
             }
         }
 
@@ -102,7 +102,7 @@ namespace ServiceLocatorPattern
             if (!this.isPersistent || this == null) return;
             // After a new scene is loaded, we want to ensure that no duplicate services exist.
             // 1. Iterate through our registered services
-            foreach (var pair in services)
+            foreach (var pair in this.services)
             {
                 Type serviceType = pair.Key;      // The Type we registered (e.g., InputManager)
                 TBase registeredInstance = pair.Value; // The actual Object we are keeping

@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Kope.Core.CompilerServices;
 namespace ServiceLocatorPattern
 {
@@ -51,7 +52,7 @@ namespace ServiceLocatorPattern
             RenameAndRegister(service, " [Scene]_A_RS", "via SceneService Registered Service", false);
         }
 
-        public bool TryGetService<TService>(out TService service) where TService : SceneServiceBase
+        public bool TryGetService<TService>([MaybeNullWhen(false)] out TService service) where TService : SceneServiceBase
         {
             var type = typeof(TService);
             service = null;

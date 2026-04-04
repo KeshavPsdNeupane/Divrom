@@ -2,6 +2,7 @@ using UnityEngine.U2D.Animation;
 using System.Collections.Generic;
 using UnityEngine;
 using ZLinq;
+using Kope.Core.Extensions;
 
 #if UNITY_EDITOR
 using UnityEditor;

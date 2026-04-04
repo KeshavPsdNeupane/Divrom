@@ -1,0 +1,17 @@
+{
+    "name": "Kope.EntityComponentSystem.Runtime",
+    "rootNamespace": "Kope.EntityComponentSystem",
+    "references": [
+        "GUID:1415229ac17d9d804afb5a91176856c4",
+        "GUID:173f3ef09b911db28bb7476301af59d0"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

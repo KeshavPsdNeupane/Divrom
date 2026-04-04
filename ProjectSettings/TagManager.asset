@@ -10,13 +10,13 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Colliders
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
+  - Entities(Dynamic Entities)
+  - Entities(Static)
+  - PickupItems
+  - Buff And Debuff
   - 
   - 
   - 
