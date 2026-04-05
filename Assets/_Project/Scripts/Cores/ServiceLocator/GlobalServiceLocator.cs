@@ -49,7 +49,7 @@ namespace ServiceLocatorPattern {
 				MyLogger.Error($"[GlobalLocator] Factory for {type.Name} returned null. Registration aborted.");
 				return;
 			}
-			Register(service, "BS_RS", "Bootstrapper Registration Service");
+			Register(service, "Registered_On_Bootstrap", "Bootstrapper Registration Service");
 		}
 		private void Register(GlobalServiceBase service, string tag, string source) {
 			var type = service.GetType();

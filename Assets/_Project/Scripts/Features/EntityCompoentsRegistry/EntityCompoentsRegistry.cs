@@ -4,6 +4,11 @@ using UnityEngine;
 
 namespace Kope.Core.Entity {
 	/// <summary>
+	/// This class takes only InitializableBase as component in inpector but we can,
+	/// bypass the InitializableBase requirement and register any component we want 
+	/// in the ComponentRegistry during runtime just like the SaveSystem does with the EntitySaveSystem component.
+	/// Since for that Save system we dont want to force the user to add an InitializableBase component just for saving/loading purposes, we can just register the EntitySaveSystem directly in the registry during runtime and it will work just fine.
+	/// <br/>
 	/// Stores a collection of components associated with an entity and initializes them.
 	/// Components registered here do **not** need to be initialized elsewhere; 
 	/// providing this class to the InitManager handles their initialization automatically.
@@ -28,6 +33,7 @@ namespace Kope.Core.Entity {
 		[SerializeField, Tooltip("Order matters! \n\nIf you can't avoid circular dependencies (#skillIssue), refactor your life choices.")]
 		private List<InitializableBase> components = new();
 		private ComponentRegistry componentRegistry;
+
 
 
 		/// <summary>

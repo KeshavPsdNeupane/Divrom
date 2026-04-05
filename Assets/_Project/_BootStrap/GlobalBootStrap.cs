@@ -1,4 +1,4 @@
-using Kope.Core.SaveSystem;
+using Kope.SaveSystem;
 using ServiceLocatorPattern;
 using UnityEngine;
 
@@ -9,10 +9,6 @@ public static class GlobalBootStrap {
 		//  MyLogger.Configure();
 		GS.RegisterService(() => new GameObject().AddComponent<InputManager>());
 		GS.RegisterService(() => new GameObject().AddComponent<GlobalSaveSystem>());
-
-		if (GS.TryGetService<GlobalSaveSystem>(out var saveSystem)) {
-			saveSystem.Print();
-		}
 
 		GS.Lock();
 

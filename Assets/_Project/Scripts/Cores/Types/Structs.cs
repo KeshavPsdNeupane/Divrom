@@ -2,13 +2,12 @@ using UnityEngine;
 
 namespace Kope.Core {
 	/// <summary>
-	/// this vector 2 implement field which is used for 
+	/// this vector 2 implementation is used for
 	/// save file serialization, because unity's Vector2 and Vector3 are bloated 
 	/// for the save system.
 	/// </summary>
 	public struct Vec2 {
-		public float x;
-		public float y;
+		public float x, y;
 		public Vec2(float x, float y) {
 			this.x = x;
 			this.y = y;
@@ -22,14 +21,12 @@ namespace Kope.Core {
 		}
 	}
 	/// <summary>
-	/// this vector 3 implement field which is used for 
+	/// this vector 3 implementation is used for
 	/// save file serialization, because unity's Vector2 and Vector3 are bloated 
 	/// for the save system.
 	/// </summary>
 	public struct Vec3 {
-		public float x;
-		public float y;
-		public float z;
+		public float x, y, z;
 		public Vec3(float x, float y, float z) {
 			this.x = x;
 			this.y = y;

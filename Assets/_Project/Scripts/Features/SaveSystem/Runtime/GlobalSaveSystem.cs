@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using UnityEngine;
 
-namespace Kope.Core.SaveSystem {
+namespace Kope.SaveSystem {
 	public class GlobalSaveSystem : GlobalServiceBase {
 		/*
 		TODO:
@@ -24,7 +24,7 @@ namespace Kope.Core.SaveSystem {
 		above 4 points are the future refinement, for now we will just have a simple implementation that can 
 		save and load the world data in a json file.
 		*/
-
+		private string SaveFilePath => Application.persistentDataPath + "/world.json";
 
 
 		private JsonSerializerSettings _settings = new() {
@@ -35,55 +35,55 @@ namespace Kope.Core.SaveSystem {
 		};
 		private readonly HashSet<IEntitySavePacketProvider> _registeredEntities = new();
 
-		public void Print() {
-			Debug.Log("Hello from GlobalSaveSystem!"); // Just to verify that the service is initialized and working
+		private readonly Dictionary<int, SceneSaveDataAggregate> _sceneSaveDataBySceneIndex = new();
+
+
+		public void Awake() {
+
+			GetAllDataFromDisk();
 		}
 
-		public void RegisterTheEntity(IEntitySavePacketProvider provider) {
-			if (!_registeredEntities.Contains(provider)) {
-				_registeredEntities.Add(provider);
-				provider.RegisterSaveDataChunk();
+
+		public void BufferSceneData(SceneSaveDataAggregate datas) {
+			// overright or create the buffered data for the scene index, since 
+			// we only care about the latest save data for each scene,
+			// there will be nothing called caching here, since we always need fresh data for the 
+			// and load process, we will not keep multiple version of save data in the memory,
+			this._sceneSaveDataBySceneIndex[datas.SceneIndex] = datas;
+		}
+
+		public bool TryGetBufferedSceneData(int sceneIndex, out SceneSaveDataAggregate dataAggregate) {
+			if (_sceneSaveDataBySceneIndex.TryGetValue(sceneIndex, out var aggregate)) {
+				dataAggregate = aggregate;
+				return true;
+			} else {
+				Debug.LogWarning($"No buffered data found for scene index {sceneIndex}. Returning default.");
+				dataAggregate = default;
+				return false;
 			}
 		}
 
-		public void SaveWorld() {
-			Save();
+		public void CommitAllToDisk() {
+			Debug.Log("Committing all buffered scene data to disk...");
+			string json = JsonConvert.SerializeObject(_sceneSaveDataBySceneIndex.Values.ToList(), _settings);
+			Debug.Log("All scene data serialized to JSON:\n" + json);
+			File.WriteAllText(this.SaveFilePath, json);
 		}
 
-		public void LoadWorld() {
-			Load();
-		}
-		private void Save() {
-			Debug.Log($"Saving world with {_registeredEntities.Count} registered entities.");
-			// need some refinement here, since we want to have some control over the save data structure, 
-			// instead of just dumping all the data into a big json file.
-			// for now we will do this simple implementation, but in the future we may want to 
-			// have a more structured save data format,
-			// which can be easily extended and modified without breaking the existing save data.
-			var packets = _registeredEntities.Select(e => e.GetEntitySavePacket()).ToList();
-			string json = JsonConvert.SerializeObject(packets, _settings);
-			Debug.Log("World data serialized to JSON:\n" + json);
-			File.WriteAllText(Application.persistentDataPath + "/world.json", json);
-		}
-		private void Load() {
-			Debug.Log("Loading world...");
-			string path = Application.persistentDataPath + "/world.json";
+		public void GetAllDataFromDisk() {
+			Debug.Log("Getting all scene data from disk...");
+			string path = this.SaveFilePath;
 
 			if (File.Exists(path)) {
 				string json = File.ReadAllText(path);
-				var packets = JsonConvert.DeserializeObject<List<EntitySavePacket>>(json, _settings);
-
-				var providerByID = _registeredEntities.ToDictionary(e => e.UniqueID.ToString());
-
-				foreach (var packet in packets) {
-					if (providerByID.TryGetValue(packet.UniqueID.ToString(), out var provider)) {
-						provider.LoadEntitySavePacket(packet);
-					} else {
-						Debug.LogWarning($"Provider was not found for {packet.UniqueID}. This entity will be skipped during loading.");
-					}
+				var dataAggregates = JsonConvert.DeserializeObject<List<SceneSaveDataAggregate>>(json, _settings);
+				foreach (var aggregate in dataAggregates) {
+					this.BufferSceneData(aggregate);
 				}
+				Debug.Log($"Loaded {dataAggregates.Count} scene data aggregates from disk.");
+			} else {
+				Debug.LogWarning($"No save file found at {path}. Starting with empty data.");
 			}
-
 		}
 	}
 }

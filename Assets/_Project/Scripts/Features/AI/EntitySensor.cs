@@ -21,7 +21,7 @@ public class EntitySensor : SensorBase {
 			Debug.LogWarning($"[EntitySensor] Context is not assigned for {gameObject.name}. Cannot register detected entity." + this._parentGOHiearchPathMessage);
 			return;
 		}
-		var entityManager = other.GetComponentInParent<EntityIdentity>();
+		var entityManager = other.GetComponentInParent<EntityInstance>();
 		if (entityManager == null) return;
 		// this is garunteed to be valid for all entity since we check the commonname on the EM itself,
 		//  so we can skip the check here and just add it to the context
@@ -35,7 +35,7 @@ public class EntitySensor : SensorBase {
 			Debug.LogWarning($"[EntitySensor] Context is not assigned for {gameObject.name}. Cannot remove detected entity." + this._parentGOHiearchPathMessage);
 			return;
 		}
-		var entityManager = other.GetComponentInParent<EntityIdentity>();
+		var entityManager = other.GetComponentInParent<EntityInstance>();
 		if (entityManager == null || this.context == null) return;
 
 		this.context.RemoveTargetEntityContext(entityManager.EntityDetail);

@@ -2,28 +2,31 @@ using UnityEngine;
 using Kope.Core.Init;
 using System;
 using Kope.Core.Entity;
+using Kope.EntityComponentSystem;
+using ServiceLocatorPattern;
 
 namespace Kope.Core.Identity {
 
 	/// <summary>
-	/// Store the Unique ID for an Entity and its EntityComponentStore reference. This is the main component that 
+	/// Store the Unique ID for an Entity and its EntityComponentRegistry reference. This is the main component that 
 	/// defines an Entity in the ECS architecture.
-	/// Every Entity must have an EntityManager component at its root, which holds a reference to its UniqueID and
-	///  EntityComponentStore. The EntityManager is responsible for initializing the EntityComponentStore and ensuring
-	/// that the Entity is properly registered in the prefab EntityComponentRegistry. It also provides a 
+	/// Every Entity must have an EntityInstance component at its root, which holds a reference to its UniqueID and
+	///  EntityComponentRegistry. It also provides a 
 	/// common entity name for easier identification and optimization in systems that require hashed tags.
 	/// <br/>
-	/// The EntityManager should be placed at the root of the Entity's GameObject hierarchy, and the UniqueID component 
-	/// should be placed on the same GameObject as the EntityManager to ensure proper identification and registration.
-	///  The EntityComponentStore can be on the same GameObject or a child GameObject, but it must be properly referenced
-	///  in the EntityManager for initialization and registration to work correctly.
+	/// The EntityInstance should be placed at the root of the Entity's GameObject hierarchy, and the UniqueID component 
+	/// should be placed on the same GameObject as the EntityInstance to ensure proper identification and registration.
+	/// The EntityComponentRegistry can be on the same GameObject or a child GameObject, but it must be properly referenced
+	/// in the EntityInstance and the EntityComponentRegistry must be place before the EntityInstance 
+	/// in the InitManager execution order to ensure that it is initialized before the EntityInstance
+	/// tries to access it during its OnInit method.
 	/// <br/>
 	/// </summary>
 	[RequireComponent(typeof(UniqueID))]
-	public class EntityIdentity : InitializableBase, IEntityDiedOrPooled {
-		[SerializeField, Tooltip("The name of this EntityComponentStore, used in Context grouping and other systems that require a hashed tag for identification and optimization purposes." +
+	public class EntityInstance : InitializableBase, IEntityDiedOrPooled {
+		[SerializeField, Tooltip("The name of this EntityComponentRegistry, used in Context grouping and other systems that require a hashed tag for identification and optimization purposes." +
 			 "For eg, All the goblin based entity should have 'Goblin' as their common entity name, so that the system can easily query all goblin entities by their common hashed tag, without needing to check each individual component's hashed tag." +
-			 "This common entity name is not required to be unique across different EntityComponentStore, but it is recommended to be unique for better identification and optimization. ")]
+			 "This common entity name is not required to be unique across different EntityComponentRegistry, but it is recommended to be unique for better identification and optimization. ")]
 		private string commonEntityName;
 		[SerializeField] private UniqueID uniqueID;
 		[SerializeField] private EntityComponentsRegistry entityComponentRegistry;
@@ -43,8 +46,6 @@ namespace Kope.Core.Identity {
 		///  available for various operations within the ECS framework.
 		/// </summary>
 		private EntityDetail _entityDetail;
-
-
 		public string CommonEntityName => commonEntityName;
 
 		/// <summary>
@@ -67,7 +68,7 @@ namespace Kope.Core.Identity {
 		/// This api point is for Game save and load system only.
 		/// so dont use on other peurpose.
 		/// </summary>
-		public EntityComponentsRegistry EntityComponentsRegistryForSaveSystemOnly => this.entityComponentRegistry;
+		public ComponentRegistry ComponentsRegistryForSaveSystemOnly => this.entityComponentRegistry.ComponentRegistry;
 
 		protected override bool OnInit() {
 			if (!Validate()) return false;
@@ -77,9 +78,9 @@ namespace Kope.Core.Identity {
 			this._entityDetail = new EntityDetail(
 				this.uniqueID, this._commonEntityHashedTag,
 				 this.entityComponentRegistry.ComponentRegistry, this, this.category);
-
 			return true;
 		}
+
 
 		public void NotifyEntityDiedOrPooled() {
 			OnEntityDiedOrPooled?.Invoke(this._entityDetail);

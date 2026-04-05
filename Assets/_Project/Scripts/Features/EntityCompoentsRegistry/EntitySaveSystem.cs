@@ -1,55 +1,92 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Kope.Core.SaveSystem;
+using Kope.SaveSystem;
 using ServiceLocatorPattern;
+using Kope.Core.Init;
+using Kope.Core.Entity;
+using Kope.EntityComponentSystem;
 
 namespace Kope.Core.Identity {
-	[RequireComponent(typeof(EntityIdentity))]
-	public class EntitySaveSystem : MonoBehaviour, IEntitySavePacketProvider {
-		[SerializeField] private EntityIdentity identity;
+	[RequireComponent(typeof(EntityInstance))]
+	public class EntitySaveSystem : InitializableBase, IEntitySavePacketProvider {
+		[SerializeField] private EntityInstance identity;
 		private readonly Dictionary<Type, ISaveable> _saveableComponents = new();
 		private GlobalSaveSystem _globalSaveSystem;
 
+		private SavableEntityRegistry _savableEntityRegistry;
+
 		public HashedTag UniqueID => identity.EntityDetail.UniqueID.HashedTag;
 
-		private void Awake() {
-			if (identity == null) identity = GetComponent<EntityIdentity>();
+		protected void Awake() {
+			if (identity == null) this.identity = GetComponent<EntityInstance>();
 			if (!GlobalServiceLocator.Instance.TryGetService(out this._globalSaveSystem)) {
 				Debug.LogError("GlobalSaveSystem not found in the scene. Please ensure it is present for saving functionality to work.");
 				return;
 			}
 
-			this._globalSaveSystem.RegisterTheEntity(this);
+			var registry = this.identity.ComponentsRegistryForSaveSystemOnly;
+			registry.Register(this);
+
+			if (!SceneServiceLocator.Instance.TryGetService<SavableEntityRegistry>(out var savableEntityRegistry)) {
+				Debug.LogError($"[EntitySaveSystem] No SavableEntityRegistry found in the scene. Please ensure that a SavableEntityRegistry is present and properly initialized in the scene for EntitySaveSystem to function correctly.{GetParentGameObjectHeirarchyMessage()}", this.gameObject);
+				return;
+			}
 			RegisterSaveDataChunk();
+			this._savableEntityRegistry = savableEntityRegistry;
+
+			// registering on Awake is still debatable, since we need to solve the mental mapping,
+			// of which type of entity can be registered to the save system, and when should they register,
+			// do we have disabled entity that can be registered to the save system? if so, 
+			// then we need to make sure they register on Awake, since they will never have chance 
+			// to register if they are disabled at the start of the game.
+			// so this 1 line of code need more thought and refinement, but for now we will just 
+			// register the entity on Awake to make sure all the entities are registered to the save system 
+			// before the player can interact with them, and we can refine this logic in the future if needed.
+			this._savableEntityRegistry.RegisterEntity(this);
+
+			return;
 		}
+
+		// Register to event on Enable and Unregister on Disable to ensure that we properly unregister 
+		//  entity from the global save system when the entity is destroyed or pooled,
+		//  preventing potential memory leaks or stale references in the save system.
+		void OnEnable() => this.identity.OnEntityDiedOrPooled += UnRegisterTheEntity;
+		void OnDisable() => this.identity.OnEntityDiedOrPooled -= UnRegisterTheEntity;
 
 		/// <summary>
 		/// Scans the component registry and caches everything that implements ISaveable.
 		/// Called during initialization by the identity or global system.
 		/// </summary>
 		public void RegisterSaveDataChunk() {
-			var registry = identity.EntityComponentsRegistryForSaveSystemOnly.ComponentRegistry;
+			Debug.Log($"[EntitySaveSystem] Registering save data chunk for entity with ID {this.UniqueID}. Scanning components for ISaveable implementations.");
+			var registry = this.identity.ComponentsRegistryForSaveSystemOnly;
 			if (registry == null) return;
 
-			_saveableComponents.Clear();
+			this._saveableComponents.Clear();
 			var processedObjects = new HashSet<ISaveable>();
 
 			foreach (var kvp in registry.Components) {
 				if (kvp.Value is ISaveable saveable && !processedObjects.Contains(saveable)) {
-					_saveableComponents[saveable.GetType()] = saveable;
+					this._saveableComponents[saveable.GetType()] = saveable;
 					processedObjects.Add(saveable);
 				}
 			}
 		}
 
+
+		private void UnRegisterTheEntity(EntityDetail detail) {
+
+			this._savableEntityRegistry.UnregisterEntity(this.UniqueID);
+		}
+
 		public EntitySavePacket GetEntitySavePacket() {
 			var dataChunks = new Dictionary<Type, ISaveData>();
 
-			foreach (var kvp in _saveableComponents) {
+			foreach (var kvp in this._saveableComponents) {
 				dataChunks[kvp.Key] = kvp.Value.GetSaveData();
 			}
-			var ed = identity.EntityDetail;
+			var ed = this.identity.EntityDetail;
 			return new EntitySavePacket(
 				ed.CommonEntityHashedTag,
 				ed.EntityIdentityCategoryEnum,
@@ -59,9 +96,9 @@ namespace Kope.Core.Identity {
 		}
 
 		public void LoadEntitySavePacket(EntitySavePacket packet) {
-			var registry = identity.EntityComponentsRegistryForSaveSystemOnly.ComponentRegistry;
+			var registry = this.identity.ComponentsRegistryForSaveSystemOnly;
 
-			foreach (var kvp in packet.DataSource) {
+			foreach (var kvp in packet.Data) {
 				Type componentType = kvp.Key;
 				ISaveData dataStruct = kvp.Value;
 
@@ -73,6 +110,6 @@ namespace Kope.Core.Identity {
 			}
 		}
 
-		public bool ValidateIdentity(string callerInfo = null) => identity.ValidateIdentity(callerInfo);
+		public bool ValidateIdentity(string callerInfo = null) => this.identity.ValidateIdentity(callerInfo);
 	}
 }

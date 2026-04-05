@@ -5,6 +5,9 @@ using UnityEngine;
 
 namespace Kope.Core.Entity {
 	/// <summary>
+	/// This class takes any class(either it is mono, c# class or interface or the InitializableBase itself) 
+	/// as a component. but the caller must inforce the type safety by only registering components
+	/// of the expected types and checking for those types when retrieving.
 	/// Stores the context of a single entity. <br/>
 	/// <inheritdoc cref="IReadOnlyComponentRegistry"/>
 	/// </summary>
@@ -133,7 +136,7 @@ namespace Kope.Core.Entity {
 
 		}
 
-		public bool TryGetReadOnlyComponent<Tcomponent>([MaybeNullWhen(false)] out Tcomponent component) {
+		public bool TryGetReadOnlyComponent<Tcomponent>([MaybeNullWhen(false)] out Tcomponent component, bool logWarning = true) {
 			var type = typeof(Tcomponent);
 			// Try to get the component by type
 			if (components.TryGetValue(type, out var comp) && comp is Tcomponent typedComp) {
@@ -141,14 +144,16 @@ namespace Kope.Core.Entity {
 				return true;
 			}
 
-			Debug.LogWarning(
-				$"[ECS Warning] Component of type {type.Name} requested but not yet registered. Error Found in {entityTransform.name}.\n" +
-				"Possible reasons:\n" +
-				"1. Circular dependency(#skillIssue) or incorrect Init order.\n" +
-				"2. Component does not exist on this entity.\n" +
-				"3. Accessing a component on a target entity which doesn't have the component.\n" +
-				"4. The component was excluded from registration intentionally."
-			);
+			if (logWarning) {
+				Debug.LogWarning(
+					$"[ECS Warning] Component of type {type.Name} requested but not yet registered. Error Found in {entityTransform.name}.\n" +
+					"Possible reasons:\n" +
+					"1. Circular dependency(#skillIssue) or incorrect Init order.\n" +
+					"2. Component does not exist on this entity.\n" +
+					"3. Accessing a component on a target entity which doesn't have the component.\n" +
+					"4. The component was excluded from registration intentionally."
+				);
+			}
 
 			component = default;
 			return false;
@@ -168,8 +173,8 @@ namespace Kope.Core.Entity {
 		/// <typeparam name="Tcomponent"></typeparam>
 		/// <param name="component"></param>
 		/// <returns></returns>
-		public bool TryGetMutatableComponent<Tcomponent>([MaybeNullWhen(false)] out Tcomponent component) where Tcomponent : class {
-			return TryGetReadOnlyComponent(out component);
+		public bool TryGetMutatableComponent<Tcomponent>([MaybeNullWhen(false)] out Tcomponent component, bool logWarning = true) where Tcomponent : class {
+			return TryGetReadOnlyComponent(out component, logWarning);
 		}
 
 	}

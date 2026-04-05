@@ -35,7 +35,7 @@ public class StatModifierCollector : SensorBase {
 			//  not have it (if it's not set up correctly), using TryGetComponent allows us to handle that case
 			//  gracefully by logging an error message and returning early, rather than having an unhandled exception
 			//  that could disrupt the game flow.
-			if (!other.TryGetComponent(out EntityIdentity mgr)) {
+			if (!other.TryGetComponent(out EntityInstance mgr)) {
 				MyLogger.Error("No EntityManager found on detected object with tag " + StatusObjectTagName + ". Please ensure the object has an EntityManager component." + this._parentGOHiearchPathMessage);
 				return;
 			}

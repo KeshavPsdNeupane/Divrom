@@ -3,7 +3,7 @@ using UnityEngine;
 using Kope.Core.Init;
 using Kope.Character.Stats;
 using Kope.Core.Entity;
-using Kope.Core.SaveSystem;
+using Kope.SaveSystem;
 using Kope.Core;
 
 namespace Kope.Component.Movement {
@@ -102,6 +102,7 @@ namespace Kope.Component.Movement {
 		/// Use SetMovementIntent instead to ensure proper movement handling.
 		/// </summary>
 		public Rigidbody2D Rigidbody => this.rb;
+
 		protected override bool OnInit() {
 			if (this.ecr == null) {
 				MyLogger.Error($"MovementComponentBase ({gameObject.name}): " +
