@@ -2,7 +2,25 @@ using System;
 using System.Collections.Generic;
 using Kope.Core.Entity;
 using Newtonsoft.Json;
-using Unity.VectorGraphics;
+
+/* --- KOPE SAVE SYSTEM Point for future	 ---
+ * * 1. AVOID BOXING: Use the class for the ISavaData interface, instead of struct, 
+ 	 to avoid the boxing/unboxing overhead when using the interface as a dictionary value or
+	 in other contexts where it might be boxed. 
+ *
+ * 2. DECOUPLE FIELDS: Use [JsonProperty("id")] to divorce JSON from C# names.
+ * WHY: Allows you to rename 'Position' to 'WorldPos' in C# without breaking old saves.
+ * EXAMPLE: 
+ * [JsonProperty("p")] public Vec3 Position; // JSON will always show "p"
+ *
+ * 3. DECOUPLE TYPES: Use a ScriptableObject Registry to divorce JSON from Namespaces.
+ * WHY: Maps a stable ID (int/string) to a System.Type. 
+ * Prevents "Missing Type" errors if you move files or change namespaces.
+ * EXAMPLE: 
+ * // In JSON: "T": 101 
+ * // In SO: 101 => typeof(MoveSaveData)
+ */
+
 
 namespace Kope.SaveSystem {
 
@@ -49,8 +67,16 @@ namespace Kope.SaveSystem {
 	/// provides a clear structure for how scene data is organized and stored in the save system.
 	/// </summary>
 	public readonly struct SceneSaveDataAggregate {
+		// why using the JsonProperty attribute here? because we want to make sure that the 
+		// field names in the JSON are consistent and not affected by any potential renaming
+		// or refactoring of the C# code, which can help prevent issues with loading old save data
+		// if the code changes. By using JsonProperty, we can ensure that the JSON structure remains 
+		// stable even if we change the C# field names in the future.
+		[JsonProperty("sceneIndex")]
 		public readonly int SceneIndex;
+		[JsonProperty("sceneName")]
 		public readonly string SceneName;
+		[JsonProperty("sceneDataByProvider")]
 		public readonly Dictionary<SceneDataProviderTypeEnum, SceneSaveDataContainer> SceneDataByProvider;
 		[JsonConstructor]
 		public SceneSaveDataAggregate(int sceneIndex, string sceneName, Dictionary<SceneDataProviderTypeEnum, SceneSaveDataContainer> sceneDataByProvider) {
@@ -88,8 +114,18 @@ namespace Kope.SaveSystem {
 		void OnLoad(SceneSaveDataContainer data);
 	}
 
-	public class SceneSaveDataContainer {
+	/// <summary>
+	/// This struct serves as a container for the save data provided by a scene data provider, 
+	/// encapsulating the provider type and a dictionary of entity save packets.
+	/// The SceneSaveDataContainer is designed to hold the save data for a specific provider type, 
+	/// allowing for organized storage and retrieval of save data related to that provider during the save and load processes.
+	/// By categorizing the save data by provider type, it allows for efficient access to specific
+	///  types of data when needed, and provides a clear structure for how scene data is organized and stored in
+	/// </summary>
+	public struct SceneSaveDataContainer {
+		[JsonProperty("providerType")]
 		public SceneDataProviderTypeEnum ProviderType { get; private set; }
+		[JsonProperty("entitySavePackets")]
 		public Dictionary<HashedTag, EntitySavePacket> EntitySavePackets { get; private set; }
 
 		[JsonConstructor]
@@ -125,14 +161,18 @@ namespace Kope.SaveSystem {
 	}
 
 	[Serializable]
-	public class EntitySavePacket {
+	public struct EntitySavePacket {
+		[JsonProperty("commonNameHashTag")]
 		public HashedTag CommonNameHashTag { get; private set; }
+		[JsonProperty("category")]
 		public EntityIdentityCategoryEnum Category { get; private set; }
+		[JsonProperty("uniqueID")]
 		public HashedTag UniqueID { get; private set; }
 
 		// the type will be used to identify the source of the save data, 
 		// and the save system will use the type to find the corresponding provider to load the data.
-		public Dictionary<Type, ISaveData> Data = new();
+		[JsonProperty("data")]
+		public Dictionary<Type, ISaveData> Data;
 
 		[JsonConstructor]
 		public EntitySavePacket(
@@ -183,13 +223,14 @@ namespace Kope.SaveSystem {
 	}
 
 	/// <summary>
-	/// Marker interface for save data classes.
-	/// Does not define any members, but serves as a common type for all save data structures in the save system.
-	/// This allows for type safety and organization of save-related data, as all save data classes can
-	/// implement this interface to indicate that they are intended for use as save data, and
-	/// can be easily identified and managed within the save system.
-	/// But when we are evaluating the interfact the struct will be boxed but it is not a problem since we are
-	/// only using it for data storage and retrieval, and the performance impact of boxing is negligible in this context.
+	/// Use this to create specific save data classes for different components, allowing for organized 
+	/// and type-safe storage of component state in the save system.
+	/// By implementing the ISaveData interface, these classes can be used to encapsulate the necessary 
+	/// information about a component's state that needs to be saved and loaded.
+	/// No need to worry about the performance of using class instead of struct for the save data, since
+	/// the save data will only be used during the save and load process, which is not a performance-critical
+	/// part of the game, and using class can avoid the boxing/unboxing overhead when using the ISaveData 
+	/// interface as a dictionary value or in other contexts where it might be boxed.
 	/// </summary>
 	public interface ISaveData {
 	}

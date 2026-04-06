@@ -2,8 +2,6 @@ using UnityEngine;
 using Kope.Core.Init;
 using System;
 using Kope.Core.Entity;
-using Kope.EntityComponentSystem;
-using ServiceLocatorPattern;
 
 namespace Kope.Core.Identity {
 

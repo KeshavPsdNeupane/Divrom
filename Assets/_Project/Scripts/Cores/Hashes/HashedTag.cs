@@ -17,7 +17,7 @@ public interface IHashTagProvider {
 [TypeConverter(typeof(HashedTagTypeConverter))]
 public readonly struct HashedTag : IEquatable<HashedTag> {
 
-	[JsonProperty]
+	[JsonProperty("tag")]
 	private readonly string tag;
 
 	[JsonIgnore]

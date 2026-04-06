@@ -4,6 +4,8 @@ using Kope.Component.Movement;
 using Kope.Core.Attribute;
 using Kope.Core.Entity;
 using Kope.Core.Init;
+using Kope.SaveSystem;
+using Newtonsoft.Json;
 using UnityEngine;
 
 
@@ -57,8 +59,27 @@ namespace Kope.Component.Health {
 			// this.KnockbackDirection = knockbackDirection;
 		}
 	}
+	/// <summary>
+	/// SaveData implementation for HealthComponentBase. Currently only saves current health.
+	/// It should only store the CurrentHealth only, since we can grab the Maxhp and def from 
+	/// character stats system and we can store them in the save data of character stats system, 
+	/// so there is no need to store them here.
+	/// Even it is a class but the underying data is immutable, since we only set the current
+	/// health when we load from save data, and we will not change the current health in the save data after that,
+	/// so it is effectively immutable.
+	/// </summary>
+	public class HealthComponentSaveData : ISaveData {
+		[JsonProperty("currentHealth")]
+		public float CurrentHealth { get; private set; }
 
-	public class HealthComponentBase : InitializableBase, IDamageable, IHealthComponent {
+		public HealthComponentSaveData(float currentHealth) {
+			this.CurrentHealth = currentHealth;
+		}
+	}
+
+
+
+	public class HealthComponentBase : InitializableBase, IDamageable, IHealthComponent, ISaveable {
 
 		[SerializeField] EntityComponentsRegistry ecr;
 		[SerializeField] HealthComponentConfig config;
@@ -235,6 +256,17 @@ namespace Kope.Component.Health {
 			this.OnCurrentHealthChanged?.Invoke(this.currentHealth);
 		}
 
+		public ISaveData GetSaveData() {
+			return new HealthComponentSaveData(this.currentHealth);
+		}
 
+		public void LoadFromSaveData(ISaveData data) {
+			if (data is HealthComponentSaveData healthData) {
+				this.currentHealth = healthData.CurrentHealth;
+				this.OnCurrentHealthChanged?.Invoke(this.currentHealth);
+			} else {
+				Debug.LogError($"Invalid save data type for HealthComponentBase. Expected HealthComponentSaveData but got {data.GetType()}");
+			}
+		}
 	}
 }

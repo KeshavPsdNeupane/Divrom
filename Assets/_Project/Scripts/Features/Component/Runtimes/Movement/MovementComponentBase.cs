@@ -5,6 +5,7 @@ using Kope.Character.Stats;
 using Kope.Core.Entity;
 using Kope.SaveSystem;
 using Kope.Core;
+using Newtonsoft.Json;
 
 namespace Kope.Component.Movement {
 
@@ -42,9 +43,14 @@ namespace Kope.Component.Movement {
 		Vector3 GetLookingAtDirection();
 	}
 
-	public struct MovementComponentSaveData : ISaveData {
+
+	[System.Serializable]
+	public class MovementComponentSaveData : ISaveData {
+		[JsonProperty("position")]
 		public Vec3 Position;
+		[JsonProperty("velocity")]
 		public Vec3 Velocity;
+		[JsonProperty("dimension")]
 		public Dimension Dimension;
 
 		public MovementComponentSaveData(Vector3 position, Vector3 velocity, Dimension dimension) {

@@ -7,6 +7,7 @@ namespace Kope.SaveSystem {
 		[SerializeField] private Button saveButton;
 		[SerializeField] private Button loadButton;
 		[SerializeField] private Button commitButton;
+		[SerializeField] private Button commitAsyncButton;
 		private SceneSaveSystem _SceneSaveSystem;
 		private GlobalSaveSystem _GlobalSaveSystem;
 		private void Awake() {
@@ -22,6 +23,9 @@ namespace Kope.SaveSystem {
 				loadButton.onClick.AddListener(OnLoadClicked);
 			if (commitButton != null)
 				commitButton.onClick.AddListener(OnCommit);
+			if (commitAsyncButton != null)
+				commitAsyncButton.onClick.AddListener(CommitAsync);
+
 		}
 
 		private void OnSave() {
@@ -36,8 +40,13 @@ namespace Kope.SaveSystem {
 		private void OnCommit() {
 			this._GlobalSaveSystem.CommitAllToDisk();
 			Debug.Log("Commit button clicked. All buffered scene data committed to disk.");
-			// For testing purposes, we can also directly call the save method to see the difference between buffered save and direct save.
-			// this._GlobalSaveSystem.SaveWorld();
+		}
+		private async void CommitAsync() {
+			bool isbusy = await this._GlobalSaveSystem.CommitAsycTODIsk();
+			if (!isbusy) {
+				Debug.LogWarning("Already saving asynchronously. Please wait for the current save to finish before starting a new one.");
+				return;
+			}
 		}
 
 	}
