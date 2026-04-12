@@ -2,7 +2,7 @@
 using UnityEngine;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Kope.Core.Entity {
+namespace Kope.Core.EntityComponentRegistry {
 	/// <summary>
 	/// IReadOnlyEntityRegistry<br/>
 	/// Stores "Read-Only" context of an entity.

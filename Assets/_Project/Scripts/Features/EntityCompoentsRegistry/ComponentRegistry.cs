@@ -3,7 +3,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 
-namespace Kope.Core.Entity {
+namespace Kope.Core.EntityComponentRegistry {
 	/// <summary>
 	/// This class takes any class(either it is mono, c# class or interface or the InitializableBase itself) 
 	/// as a component. but the caller must inforce the type safety by only registering components

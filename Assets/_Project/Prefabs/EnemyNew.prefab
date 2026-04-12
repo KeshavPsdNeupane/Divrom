@@ -121,10 +121,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Kope.Component.Health.HealthComponentBase
   ecr: {fileID: 4512281911964162701}
-  config: {fileID: 11400000, guid: 6c90447ed9dd89062b08ee34e279d0e1, type: 2}
   maxHealth: 10
   currentHealth: 10
-  defence: 0
 --- !u!1 &1267751104880562012
 GameObject:
   m_ObjectHideFlags: 0
@@ -489,7 +487,6 @@ GameObject:
   - component: {fileID: 1048981498321793666}
   - component: {fileID: 1814066906529279447}
   - component: {fileID: 66932067619678931}
-  - component: {fileID: 3475682439640216788}
   m_Layer: 0
   m_Name: EnemyNew
   m_TagString: Player
@@ -654,21 +651,6 @@ MonoBehaviour:
   autoPopulate: 0
   includeChildren: 1
   traversal: 0
---- !u!114 &3475682439640216788
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4513367037071607233}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a90bdc53c37270d70b6405dc023d154d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LookingDirection
-  movementComponent: {fileID: 4204933291776501059}
-  gizmoLineLength: 8
-  gizmoColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1 &4651032370836652291
 GameObject:
   m_ObjectHideFlags: 0
@@ -1063,6 +1045,7 @@ GameObject:
   - component: {fileID: 83866771616670144}
   - component: {fileID: 5476396435574818036}
   - component: {fileID: 3594846146065954779}
+  - component: {fileID: 152892780873319983}
   m_Layer: 0
   m_Name: Sensor
   m_TagString: Untagged
@@ -1142,6 +1125,26 @@ MonoBehaviour:
   usesExitDetection: 1
   visualizeGizmos: 1
   gizmoColor: {r: 0, g: 0.14774561, b: 1, a: 1}
+  innerDetectionRadius: 1
+  fieldOfViewAngle: 90
+--- !u!114 &152892780873319983
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6938015882305579110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a90bdc53c37270d70b6405dc023d154d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FOVGizmo
+  sensor: {fileID: 3594846146065954779}
+  outerLineColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  innerLineColor: {r: 1, g: 0, b: 0, a: 1}
+  visualizeInnerDetectionRadius: 1
+  innerDetectionRadiusColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  mover: {fileID: 4204933291776501059}
 --- !u!1 &8043826429294845857
 GameObject:
   m_ObjectHideFlags: 0

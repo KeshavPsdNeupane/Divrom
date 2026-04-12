@@ -1,135 +1,107 @@
+using System;
+using System.Collections.Generic;
 using Kope.Core.CompilerServices;
 using UnityEngine;
 using Kope.Core.Init;
 using Kope.Character.Stats;
-using Kope.Core.Entity;
+using Kope.Core.EntityComponentRegistry;
 using Kope.SaveSystem;
 using Kope.Core;
 using Newtonsoft.Json;
+using ThirdParty;
 
 namespace Kope.Component.Movement {
 
+	[Serializable]
+	public class MovementComponentSaveData : ISaveData {
+		[JsonProperty("pos")]
+		public Vec3 Position { get; set; }
+		[JsonProperty("dim")]
+		public Dimension Dimension { get; set; }
 
+		public MovementComponentSaveData() {
+		}
 
+		public MovementComponentSaveData(Dimension dimension, Vec3 position) {
+			this.Dimension = dimension;
+			this.Position = position;
+		}
 
-	public enum Dimension {
-		TwoD,
-		ThreeD,
-	}
-	/// <summary>
-	/// Defines the type of movement intent.
-	/// Just a simple enum to indicate what kind of movement is intended.
-	/// </summary>
-	public enum MovementIntentType {
-		Stop = 0,
-		Move = 10,
-		Attacking = 20,
-	}
-
-
-	public struct MovementIntent {
-		public Vector3 Direction;
-		public MovementIntentType IntentType;
-		public MovementIntent(Vector3 direction, MovementIntentType intentType = MovementIntentType.Stop) {
-			this.Direction = direction;
-			this.IntentType = intentType;
+		public MovementComponentSaveData(Dimension dimension, Vector3 position) {
+			this.Dimension = dimension;
+			this.Position = new Vec3(position);
 		}
 	}
 
-	public interface IMovementComponent {
-		Vector3 Direction { get; }
-		Vector3 Position { get; }
-		void SetMovementIntent(MovementIntent intent);
-		Vector3 GetLookingAtDirection();
-	}
+	/// <summary>
+	/// Represents a single external force acting on the entity.
+	/// Manages its own lifecycle via CountdownTimer.
+	/// </summary>
+	public class ForceInstance {
+		public readonly Vector3 Force;
+		public readonly CountdownTimer Timer;
+		private Action<ForceInstance> _onExpired;
 
+		public bool IsExpired => this.Timer.IsFinished;
 
-	[System.Serializable]
-	public class MovementComponentSaveData : ISaveData {
-		[JsonProperty("position")]
-		public Vec3 Position;
-		[JsonProperty("velocity")]
-		public Vec3 Velocity;
-		[JsonProperty("dimension")]
-		public Dimension Dimension;
+		public ForceInstance(Vector3 force, float duration, Action<ForceInstance> onExpiredCallback) {
+			this.Force = force;
+			this._onExpired = onExpiredCallback;
+			this.Timer = new CountdownTimer(duration);
 
-		public MovementComponentSaveData(Vector3 position, Vector3 velocity, Dimension dimension) {
-			this.Position = new Vec3(position);
-			this.Velocity = new Vec3(velocity);
-			this.Dimension = dimension;
+			// Hook to the timer stop to trigger removal from the component list
+			this.Timer.OnTimerStop += HandleTimerStop;
+			this.Timer.Start();
+		}
+
+		private void HandleTimerStop() {
+			this._onExpired?.Invoke(this);
+		}
+
+		public void Tick(float deltaTime) => this.Timer.Tick(deltaTime);
+
+		public void Dispose() {
+			this.Timer.OnTimerStop -= HandleTimerStop;
+			this._onExpired = null;
+			this.Timer.Stop();
 		}
 	}
 
 	public class MovementComponentBase : InitializableBase, IMovementComponent, ISaveable {
+		[Header("References")]
 		[SerializeField] protected Dimension dimension = Dimension.TwoD;
 		[SerializeField] protected Rigidbody2D rb;
 		[SerializeField] protected EntityComponentsRegistry ecr;
+
+		[Header("Settings")]
 		[SerializeField] protected float defaultMovementSpeed = 2f;
-
-		private CharacterStatsSystem _readOnlycharacterStatsSystem;
-
-		/// <summary>
-		/// this is universal threshold to determine if direction is significant enough to consider.
-		/// so no need to square it every time.
-		/// </summary>
 		public const float MOVEMENT_EPSILON = 0.1f;
 
+		// Force Accumulator State
+		private readonly List<ForceInstance> _activeForces = new();
+		private Vector3 _cachedNetForce = Vector3.zero;
+
+		// Movement Intent State
+		private CharacterStatsSystem _readOnlycharacterStatsSystem;
 		private Vector3 _lastDirection = Vector3.right;
 		protected MovementIntent _currentIntent;
+
 		public float Mass => this.rb.mass;
 		public Vector3 Direction => this._currentIntent.Direction;
 		public Vector3 Position => this.rb.position;
-
-
-		/// <summary>
-		/// Gets the current looking direction of the entity based on its movement intent and dimension.
-		/// For 2D movement, it projects the last movement direction onto the XY plane.
-		/// For 3D movement, it uses the Rigidbody's forward direction as the looking direction.
-		/// If we implement strafing or other movement mechanics in the future, we may
-		///  need to adjust this logic to account for those cases.
-		/// </summary>
-		/// <returns></returns>
-		public virtual Vector3 GetLookingAtDirection() {
-			if (this.dimension == Dimension.TwoD) {
-				// we only care about x and y for 2D movement, so we project the
-				//  lastDirection onto the XY plane.
-				return new Vector3(this._lastDirection.x, this._lastDirection.y, 0f);
-			} else {
-				// for 3D movement, we can use the Rigidbody's forward direction as the looking direction.
-				// we could change this if we are implementing some kind of strafing movement, 
-				// but for now we will just assume the looking direction is the same as the movement direction.
-				return this.rb.transform.forward;
-			}
-		}
-
-		/// <summary>
-		/// Gets the Rigidbody2D associated with this movement component.
-		/// Highly discouraged to use this reference to manipulate movement directly.
-		/// Use SetMovementIntent instead to ensure proper movement handling.
-		/// </summary>
+		public Dimension Dimension => this.dimension;
 		public Rigidbody2D Rigidbody => this.rb;
 
+		#region Initialization & Stats
+
 		protected override bool OnInit() {
-			if (this.ecr == null) {
-				MyLogger.Error($"MovementComponentBase ({gameObject.name}): " +
-			   $"EntityComponentStore not assigned. Movement will remain uninitialized.\n{GetParentGameObjectHeirarchyMessage()}");
+			if (this.ecr == null || this.rb == null) {
+				MyLogger.Error($"MovementComponentBase ({gameObject.name}): Missing required references.");
 				return false;
 			}
 
-			if (this.rb == null) {
-				MyLogger.Error($"MovementComponentBase ({gameObject.name}): " +
-			   $"Rigidbody2D not assigned. Movement will remain uninitialized.\n{GetParentGameObjectHeirarchyMessage()}");
-				return false;
-			}
-			// MovementComponentBase is not muating the CharacterStatsSystem, so TryGetComponent is sufficient here.
-			// we are only subscribing to stat changes, not modifying the stats directly, 
-			// so we don't need mutatable access. so using TryGetComponent for semantic clarity
 			if (this.ecr.ComponentRegistry.TryGetReadOnlyComponent(out CharacterStatsSystem statsSystem)) {
 				this._readOnlycharacterStatsSystem = statsSystem;
-			} else {
-				MyLogger.Warn($"MovementComponentBase ({gameObject.name}): " +
-			   $"CharacterStatsSystem not found in {this.ecr.name}. Stats-based movement speed will be unavailable.\n{GetParentGameObjectHeirarchyMessage()}");
-				return false;
 			}
 			return true;
 		}
@@ -137,92 +109,126 @@ namespace Kope.Component.Movement {
 		protected virtual void OnEnable() => SubscribeToStats();
 		protected virtual void OnDisable() {
 			UnsubscribeFromStats();
-			StopMovement();
+			StopMovementIntent();
 		}
 
 		private void SubscribeToStats() {
-			if (this._readOnlycharacterStatsSystem != null &&
-				this._readOnlycharacterStatsSystem.CurrentStats != null) {
+			if (this._readOnlycharacterStatsSystem?.CurrentStats != null) {
 				this._readOnlycharacterStatsSystem.StatsSubscribe(CharacterStatType.AGI, SetDefaultMovementSpeed);
-				// initial fetch
 				SetDefaultMovementSpeed(this._readOnlycharacterStatsSystem.CurrentStats[CharacterStatType.AGI].GetValue());
 			}
 		}
+
 		private void UnsubscribeFromStats() {
-			if (this._readOnlycharacterStatsSystem != null &&
-				this._readOnlycharacterStatsSystem.CurrentStats != null) {
+			if (this._readOnlycharacterStatsSystem?.CurrentStats != null) {
 				this._readOnlycharacterStatsSystem.StatsUnsubscribe(CharacterStatType.AGI, SetDefaultMovementSpeed);
 			}
 		}
 
-		/// <summary>
-		/// Sets the default movement speed.
-		/// This is usually called by the CharacterStatsSystem when the SPD stat changes.
-		/// </summary>
-		public virtual void SetDefaultMovementSpeed(float speed) {
-			this.defaultMovementSpeed = speed;
-		}
+		public virtual void SetDefaultMovementSpeed(float speed) => this.defaultMovementSpeed = speed;
 
-		/// <summary>
-		/// Sets the movement intent for this component.
-		/// The intent direction will be normalized if its magnitude is greater than the direction epsilon.
-		/// if u wanna do some fancy with direction, just lerp or slerp or whatever before passing it here.
-		/// this function will just assign the direction to velocity after normalization. 
-		/// it does not do any smoothing or interpolation.
-		/// </summary>
-		/// <param name="intent"></param>
+		#endregion
+
+		#region Movement Logic
+
 		public virtual void SetMovementIntent(MovementIntent intent) {
 			if (intent.Direction.sqrMagnitude > MOVEMENT_EPSILON) {
 				intent.Direction.Normalize();
-				// we only update lastDirection when we have a significant movement intent,
-				//  to avoid jittery lastDirection when we are trying to stop or have very minor movement.
 				this._lastDirection = intent.Direction;
 			} else {
 				intent.Direction = Vector3.zero;
 			}
 			this._currentIntent = intent;
-
 		}
 
-		public void StopMovement() {
-			this._currentIntent = default;
+		protected override void OnUpdate() {
+			TickForceInstances(Time.deltaTime);
 		}
 
+		public virtual void ApplyKnockback(Vector3 direction, float duration, float impulse = 1f) {
+			Vector3 forceVector = direction.normalized * impulse;
 
-		/// <summary>
-		/// Applies physics-based movement based on the current movement intent and a speed multiplier.
-		/// The speed multiplier can be used to implement effects like slowing down the entity during attacks or debuffs.
-		/// The method blends the desired velocity from the movement intent with the current physics velocity to allow for
-		/// responsive control while still respecting collisions and other physics interactions.
-		/// Must be called by State themselves in their TickPhysicUpdate to take effect,
-		///  giving them control over when movement is applied during the update cycle.
-		/// </summary>
-		/// <param name="speedMultiplier"></param>
-		public virtual void ApplyPhysics(float speedMultiplier = 1f) {
-			Vector3 targetVelocity = Vector3.zero;
-			if (this._currentIntent.IntentType != MovementIntentType.Stop) {
-				targetVelocity = speedMultiplier * this.defaultMovementSpeed * this._currentIntent.Direction;
+			ForceInstance instance = new(forceVector, duration, HandleForceExpiration);
+			this._activeForces.Add(instance);
+
+			RecalculateNetForce();
+		}
+
+		private void TickForceInstances(float deltaTime) {
+			// Iterate backwards to safely handle removals within the same frame
+			for (int i = this._activeForces.Count - 1; i >= 0; i--) {
+				this._activeForces[i].Tick(deltaTime);
+			}
+		}
+
+		private void HandleForceExpiration(ForceInstance instance) {
+			if (this._activeForces.Remove(instance)) {
+				instance.Dispose();
+				this.RecalculateNetForce();
+			}
+		}
+
+		private void RecalculateNetForce() {
+			_cachedNetForce = Vector3.zero;
+			// Using for-loop instead of foreach to avoid allocation
+			for (int i = 0; i < this._activeForces.Count; i++) {
+				this._cachedNetForce += this._activeForces[i].Force;
 			}
 
-			// Blend physics velocity (from collisions) with desired velocity
-			// This allows entities to push each other while maintaining responsive control
-			Vector3 physicsInfluence = this.rb.linearVelocity * 0.3f; // Preserve collision response
-			Vector3 intentInfluence = targetVelocity * 0.7f;
+			if (this.dimension == Dimension.TwoD) {
+				_cachedNetForce.z = 0;
+			}
+		}
 
+		public virtual void ApplyPhysics(float stateSpeedMultiplier = 1f) {
+			Vector3 moveVelocity = Vector3.zero;
+
+			// 1. Base Input/AI Velocity
+			if (this._currentIntent.IntentType != MovementIntentType.Stop) {
+				moveVelocity = this.defaultMovementSpeed * stateSpeedMultiplier * this._currentIntent.Direction;
+			}
+
+			// 2. Additive Physics Velocity (Net Force)
+			Vector3 targetVelocity = moveVelocity + this._cachedNetForce;
+
+			if (this.dimension == Dimension.TwoD) {
+				targetVelocity.z = 0;
+			}
+
+			// 3. 30/70 Velocity Blending logic
+			Vector3 physicsInfluence = this.rb.linearVelocity * 0.3f;
+			Vector3 intentInfluence = targetVelocity * 0.7f;
 			this.rb.linearVelocity = physicsInfluence + intentInfluence;
 		}
 
-		public ISaveData GetSaveData() {
-			return new MovementComponentSaveData(this.Position, this.rb.linearVelocity, this.dimension);
+		public void StopMovementIntent() {
+			// our intent is stopping not the physics forces, so we clear the intent but keep forces intact
+			this._currentIntent = new MovementIntent(
+				Vector3.zero,
+				MovementIntentType.Stop,
+				MovementIntentPriority.Normal
+			);
 		}
+
+		public virtual Vector3 GetLookingAtDirection() {
+			return this.dimension == Dimension.TwoD
+				? new Vector3(this._lastDirection.x, this._lastDirection.y, 0f)
+				: this.rb.transform.forward;
+		}
+
+		#endregion
+
+		#region Persistence
+
+		public ISaveData GetSaveData() => new MovementComponentSaveData(this.dimension, new Vec3(this.rb.position));
 
 		public void LoadFromSaveData(ISaveData data) {
 			if (data is MovementComponentSaveData saveData) {
 				this.rb.position = saveData.Position.ToVector3();
-				this.rb.linearVelocity = saveData.Velocity.ToVector3();
 				this.dimension = saveData.Dimension;
 			}
 		}
-	}
 
+		#endregion
+	}
 }

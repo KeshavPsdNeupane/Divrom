@@ -23,7 +23,7 @@ public class RandomWanderActionSO : ActionSO {
 	protected override void OnEndOrAbort() {
 		if (this.mc == null) return;
 
-		this.mc.StopMovement();
+		this.mc.StopMovementIntent();
 		this.mc = null;
 	}
 	public override void TickUpdate() {
@@ -53,7 +53,7 @@ public class RandomWanderActionSO : ActionSO {
 			this.mc.SetMovementIntent(new MovementIntent(currentDirection, MovementIntentType.Move));
 			return;
 		}
-		this.mc.StopMovement();
+		this.mc.StopMovementIntent();
 		MarkCompleted();
 	}
 

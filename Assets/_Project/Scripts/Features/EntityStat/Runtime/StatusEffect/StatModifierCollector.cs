@@ -1,7 +1,7 @@
 using UnityEngine;
 using Kope.Character.Stats;
 using Kope.Core.CompilerServices;
-using Kope.Core.Entity;
+using Kope.Core.EntityComponentRegistry;
 using Kope.Core.Sensor;
 using Kope.Core.Identity;
 

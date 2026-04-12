@@ -50,6 +50,7 @@
     <Analyzer Include="/mnt/Development/GameDevelopment/Unity/projects/example/Divrom/Library/PackageCache/com.unity.project-auditor@6cc18ad506e9/RoslynAnalyzers/Domain_Reload_Analyzer.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets/_Project/Scripts/Features/EntityStat/UI/CharacterStatsGUI.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/UI/InventoryDisplays/InventoryDisplay.cs" />
     <Compile Include="Assets/_Project/_BootStrap/GlobalBootStrap.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AnimationCurve/Curve.cs" />
@@ -61,16 +62,17 @@
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/PlayerItemCollector.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Component/UI/Health/ReduceHp.cs" />
     <Compile Include="Assets/_Project/UI/UIState/UIState.cs" />
-    <Compile Include="Assets/_Project/Scripts/Features/EntityStat/UI/StatDescription.cs" />
     <Compile Include="Assets/_Project/UI/Common/PanelFader.cs" />
-    <Compile Include="Assets/_Project/LookingDirection.cs" />
+    <Compile Include="Assets/_Project/FOVGizmo.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AnimationCurve/CurveAsset.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Component/UI/Health/HealthBar.cs" />
     <Compile Include="Assets/_Project/UI/UIState/InGameUI/InGameUIInitCaller.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/TestAbility.cs" />
     <Compile Include="Assets/_Project/UI/Common/PanelController.cs" />
     <Compile Include="Assets/_Project/UI/UIState/UIStateManager.cs" />
     <Compile Include="Assets/_Project/UI/UIState/InGameUI/GameplayUIController.cs" />
     <Compile Include="Assets/_Project/Scripts/Managers/ItemDragDropManager.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/AbilityBase.cs" />
     <Compile Include="Assets/_Project/Scripts/Managers/ItemDatabase/HashUtility.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/UI/ItemSlotUI/ItemSlotUI.cs" />
   </ItemGroup>

@@ -407,9 +407,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b62b74094c783332803b71d6245b2ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StatDescription
-  statDescriptionUIPanel: {fileID: 76764293}
-  ecr: {fileID: 630533316}
-  fontAsset: {fileID: 11400000, guid: 33c0b08db866f2849b4c3e0c23717907, type: 2}
+  characterStats: {fileID: 0}
+  canShowState: 1
+  scale: 2
 --- !u!114 &76764299
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -785,7 +785,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5f2a7e09a5e7f4dfaad5c673c86dc7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Kope.Core.Runtime::UniqueID
-  guid: dcdcb5a8-e567-4bee-9452-ab2f2176f3b9
+  guid: 40340066-601d-48a2-8b8d-1b1b9e420741
   absoluteHierarchyPath: SampleScene-->Hpres->Hpstore (2)
 --- !u!114 &155803198
 MonoBehaviour:
@@ -7850,22 +7850,22 @@ MonoBehaviour:
     gameObjectName: SceneServiceLocator
   - typeName: EntityInitCaller
     order: -40
+    gameObjectName: Hpstore (1)
+  - typeName: EntityInitCaller
+    order: -40
     gameObjectName: Hpstore (2)
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: InitCaller
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: EnemyNew
+    gameObjectName: PlayerNew
   - typeName: EntityInitCaller
     order: -40
     gameObjectName: Hpstore
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: Hpstore (1)
+    gameObjectName: EnemyNew
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: PlayerNew
+    gameObjectName: InitCaller
   - typeName: InGameUIInitCaller
     order: -30
     gameObjectName: UI
@@ -8222,8 +8222,8 @@ MonoBehaviour:
   x: 0.737
   result: 0.3190847
   unityResult: 0.1711241
-  customEvalTime: 0.1462
-  unityEvalTime: 0.0659
+  customEvalTime: 0.1661
+  unityEvalTime: 0.1729
 --- !u!1001 &1031836800
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11504,7 +11504,7 @@ MonoBehaviour:
   - {fileID: 1650404415}
   - {fileID: 2128690284}
   - {fileID: 576055918}
-  - {fileID: 76764298}
+  - {fileID: 0}
   - {fileID: 1987017559}
   - {fileID: 1788062144}
   canCallInAwake: 1
@@ -12171,7 +12171,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5f2a7e09a5e7f4dfaad5c673c86dc7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Kope.Core.Runtime::UniqueID
-  guid: 1bb4a3cf-39b8-48a7-b8cb-f8f18939288b
+  guid: e0b900e1-9e3f-4146-a326-91a013486d7a
   absoluteHierarchyPath: SampleScene-->Hpres->Hpstore (1)
 --- !u!114 &1868347084
 MonoBehaviour:

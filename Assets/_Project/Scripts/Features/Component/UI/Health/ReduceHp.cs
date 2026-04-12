@@ -22,8 +22,16 @@ public class ReduceHp : MonoBehaviour {
 
 	public void ReduceHealth() {
 		if (this.healthComponent != null) {
-			this.healthComponent.ReduceHp(this.hpReductionAmount, this.minHpRatio);
+			float targetHp = healthComponent.CurrentHealth - hpReductionAmount;
+			float minHp = healthComponent.MaxHealth * minHpRatio;
+			// we dont want the health to be reduced below the minimum threshold, so we clamp it to minHp
+			if (targetHp < minHp) {
+				targetHp = 0;
+			}
+			float actualReduction = healthComponent.CurrentHealth - targetHp;
+			this.healthComponent.ApplyDamage(actualReduction);
+		} else {
+			Debug.LogError("HealthComponent reference is not set on ReduceHp script.");
 		}
-
 	}
 }

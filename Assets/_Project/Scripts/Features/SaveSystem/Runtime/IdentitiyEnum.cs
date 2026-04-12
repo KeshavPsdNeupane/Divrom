@@ -1,8 +1,6 @@
 
-namespace Kope.Core.Entity
-{
-	public enum EntityIdentityCategoryEnum : short
-	{
+namespace Kope.Core.Identity {
+	public enum EntityIdentityCategoryEnum : short {
 		None,
 		Player = 1,
 		Enemy = 11,

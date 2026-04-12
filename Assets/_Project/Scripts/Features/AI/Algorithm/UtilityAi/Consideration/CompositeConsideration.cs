@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Kope.AI.Utility;
-using Kope.Core.Entity;
+using Kope.Core.EntityComponentRegistry;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "CompositeConsideration", menuName = "Scriptable Objects/AI/Utility/Considerations/CompositeConsideration")]

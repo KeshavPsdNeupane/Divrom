@@ -1,7 +1,7 @@
 using UnityEngine;
 using Kope.Core.Init;
 using System;
-using Kope.Core.Entity;
+using Kope.Core.EntityComponentRegistry;
 
 namespace Kope.Core.Identity {
 

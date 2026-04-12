@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Kope.Core.Entity;
+using Kope.Component;
+using Kope.Core.EntityComponentRegistry;
+
 /// <summary>
 /// Stores the operational context of an entity and its collection of targets.
 /// <para>
@@ -10,6 +12,9 @@ using Kope.Core.Entity;
 /// </para>
 /// </summary>
 public class Context : IReadOnlyContext {
+	private FieldOfViewData _fieldOfViewData;
+	public FieldOfViewData FieldOfViewData => this._fieldOfViewData;
+
 	private readonly ComponentRegistry _currentEntityContext;
 	/// <summary>
 	/// Look up structure for very specific target retrieval: [CommonTag] -> [IndividualTag] -> TargetRegistry.
@@ -29,6 +34,9 @@ public class Context : IReadOnlyContext {
 
 	public ComponentRegistry CurrentMutableEntityContext => this._currentEntityContext;
 	public IReadOnlyComponentRegistry SelfReadOnlyEntityContext => this._currentEntityContext;
+	public void SetFieldOfViewData(FieldOfViewData data) {
+		this._fieldOfViewData = data;
+	}
 
 	public int GetTotalEntityCount() {
 		return this._targetEntityContexts.Count == 0 ? 0 : this._targetEntityContexts.Values.Sum(innerDict => innerDict.Count);

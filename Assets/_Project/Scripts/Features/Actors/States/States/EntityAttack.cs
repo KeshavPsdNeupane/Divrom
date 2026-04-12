@@ -45,7 +45,7 @@ public class EntityAttack : EntityBaseState {
 
 	public override void TickPhysicUpdate() {
 		// Apply reduced movement speed during attack, can be tweaked or made weapon-specific later if desired.
-		movementComponent.ApplyPhysics(speedMultiplier: 0.5f);
+		movementComponent.ApplyPhysics(0.5f);
 	}
 	public override void OnAnimationTrigger() => SwitchToIdle();
 	public override void Exit() { }

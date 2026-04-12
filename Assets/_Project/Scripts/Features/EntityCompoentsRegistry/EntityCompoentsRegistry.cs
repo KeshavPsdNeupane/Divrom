@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Kope.Core.Init;
 using UnityEngine;
 
-namespace Kope.Core.Entity {
+namespace Kope.Core.EntityComponentRegistry {
 	/// <summary>
 	/// This class takes only InitializableBase as component in inpector but we can,
 	/// bypass the InitializableBase requirement and register any component we want 

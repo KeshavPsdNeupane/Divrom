@@ -4,7 +4,7 @@ using UnityEngine;
 using Kope.SaveSystem;
 using ServiceLocatorPattern;
 using Kope.Core.Init;
-using Kope.Core.Entity;
+using Kope.Core.EntityComponentRegistry;
 using Kope.EntityComponentSystem;
 
 namespace Kope.Core.Identity {

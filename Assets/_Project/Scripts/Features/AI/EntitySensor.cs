@@ -1,19 +1,55 @@
+
+// Copyright (c) 2026 Keshav Prasad Neupane (Kope)
+// Licensed under the MIT License. See LICENSE in the repository root for details.
+
 using UnityEngine;
 using Kope.Core.Sensor;
+using Kope.Component;
 using Kope.Core.Identity;
 
 [RequireComponent(typeof(CircleCollider2D))]
 public class EntitySensor : SensorBase {
+	[SerializeField, Range(0f, 10f), Tooltip("If the entity is inside the inner detection radius, " +
+	"it will be considered a close target. And will be detected even if it's outside the field of view angle.")]
+	private float innerDetectionRadius = 1f;
+	[SerializeField, Range(0f, 360f)] private float fieldOfViewAngle = 90f;
 	private Context context;
+
+	private FieldOfViewData _fieldOfViewData;
+	private bool _fovDataInitialized;
+
+	public FieldOfViewData FieldOfViewData {
+		get {
+			if (!this._fovDataInitialized) {
+				this._fieldOfViewData = new FieldOfViewData(
+					this.fieldOfViewAngle, this.detectionRadius,
+					this.innerDetectionRadius);
+				this._fovDataInitialized = true;
+			}
+			return this._fieldOfViewData;
+		}
+	}
+
 	/// <summary>
 	/// Pass the context from AIBrain
 	/// </summary>
 	/// <param name="context"></param>
-	public void InitContext(Context context) => this.context = context;
+	public void InitContext(Context context) {
+		this.context = context;
+		context.SetFieldOfViewData(this.FieldOfViewData);
+	}
+
+	void OnValidate() {
+		this._fieldOfViewData = new FieldOfViewData(this.fieldOfViewAngle, this.detectionRadius, this.innerDetectionRadius);
+	}
+
+
+
 	public override void OnStart() {
 		if (this.context == null) {
 			Debug.LogWarning($"[EntitySensor] Context is not assigned for {gameObject.name}. Please call InitContext with a valid Context instance before the sensor starts detecting." + this._parentGOHiearchPathMessage);
 		}
+
 	}
 
 	public override void OnDetect(Collider2D other) {
@@ -27,6 +63,11 @@ public class EntitySensor : SensorBase {
 		//  so we can skip the check here and just add it to the context
 		// so if entity manager is valid then all other tags and registry should be valid as well,
 		//  if not then we have bigger problems and should just let it throw an error
+
+
+		// later i am going to make this register an event like
+		// this.OnEntityDetected?.Invoke(entityManager.EntityDetail) 
+		// then brain wire the subcription to the context.
 		this.context.RegisterEntityContext(entityManager.EntityDetail);
 	}
 

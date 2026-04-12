@@ -15,9 +15,22 @@ namespace Kope.Character.Stats {
 		CRATE, // Critical Hit Rate
 		CDMG, // Critical Hit Damage
 	}
+
 	public enum DamageType { Physical, Fire, Ice, Lightning, Poison, }
 
 	public class CharacterStatsSystem : InitializableBase {
+
+		/*
+		No need to save the base stat values because they are already defined in the ScriptableObject 
+		and will be loaded from there when the game starts.
+		If player levels up, we can just grab the level up number from "levelComponent" and trigger 
+		thelevel up function in the "AdvanceStat" which will handle the rest of the logic for 
+		increasing the stats based on the level up values defined in the ScriptableObject as well.
+		As for the modifiers, if they are from enemies or environment, we don't need to save 
+		them because they are temporary and will be gone once the player exits the game.
+		and as for the modifiers from armor, we can just save the currently equipped armor and when loading the game,
+		 we can just reapply the modifiers from the equipped armor.
+		*/
 		[SerializeField] private string characterName = "DefaultCharacter";
 		private Dictionary<CharacterStatType, AdvanceStat> currentStats;
 		private Dictionary<DamageType, StatBase> resistanceStats;
@@ -35,8 +48,10 @@ namespace Kope.Character.Stats {
 				this.currentStats ??= new Dictionary<CharacterStatType, AdvanceStat>();
 				this.resistanceStats ??= new Dictionary<DamageType, StatBase>();
 				this.levelIncreasingStatWithLevelingValue ??= new Dictionary<CharacterStatType, float>();
-				// calling it here since, i  havent implemented any event system for world load yet
-				OnFirstWorldLoad();
+
+				// setting the default values from the ScriptableObject just as a fallback/default,
+				// but later will be overridden by the save data if there is any.
+				SetDefault();
 				return true;
 			} catch (System.Exception ex) {
 				MyLogger.Error($"CharacterStatsSystem initialization failed: {ex.Message}" + GetParentGameObjectHeirarchyMessage());
@@ -45,7 +60,7 @@ namespace Kope.Character.Stats {
 
 		}
 
-		private void OnFirstWorldLoad() {
+		private void SetDefault() {
 			foreach (var kvp in this.characterStateSo.BasestatsDict) { this.currentStats[kvp.Key] = new AdvanceStat(kvp.Value); }
 
 			foreach (var kvp in this.characterStateSo.ResistanceStatsDict) { this.resistanceStats[kvp.Key] = new StatBase(kvp.Value); }
@@ -148,6 +163,5 @@ namespace Kope.Character.Stats {
 				MyLogger.Warn($"Stat {type} not found for adding points!");
 			}
 		}
-
 	}
 }

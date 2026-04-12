@@ -1,6 +1,6 @@
 using Kope.Core.CompilerServices;
 using UnityEngine;
-using Kope.Core.Entity;
+using Kope.Core.EntityComponentRegistry;
 using Kope.Core.Sensor;
 [RequireComponent(typeof(CircleCollider2D))]
 public class PlayerItemCollector : SensorBase {

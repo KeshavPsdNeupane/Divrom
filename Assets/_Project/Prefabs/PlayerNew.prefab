@@ -1341,10 +1341,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Kope.Component.Health.HealthComponentBase
   ecr: {fileID: 6037248722059709900}
-  config: {fileID: 11400000, guid: 6c90447ed9dd89062b08ee34e279d0e1, type: 2}
   maxHealth: 10
   currentHealth: 10
-  defence: 0
 --- !u!1001 &8456934485472912313
 PrefabInstance:
   m_ObjectHideFlags: 0

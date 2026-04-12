@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Kope.Core.Entity;
+using Kope.Core.Identity;
 using Newtonsoft.Json;
 
 /* --- KOPE SAVE SYSTEM Point for future	 ---
@@ -66,7 +66,8 @@ namespace Kope.SaveSystem {
 	/// By categorizing the save data by provider type, it allows for efficient access to specific types of data when needed, and
 	/// provides a clear structure for how scene data is organized and stored in the save system.
 	/// </summary>
-	public readonly struct SceneSaveDataAggregate {
+	[Serializable]
+	public struct SceneSaveDataAggregate {
 		// why using the JsonProperty attribute here? because we want to make sure that the 
 		// field names in the JSON are consistent and not affected by any potential renaming
 		// or refactoring of the C# code, which can help prevent issues with loading old save data
@@ -122,6 +123,7 @@ namespace Kope.SaveSystem {
 	/// By categorizing the save data by provider type, it allows for efficient access to specific
 	///  types of data when needed, and provides a clear structure for how scene data is organized and stored in
 	/// </summary>
+	[Serializable]
 	public struct SceneSaveDataContainer {
 		[JsonProperty("providerType")]
 		public SceneDataProviderTypeEnum ProviderType { get; private set; }

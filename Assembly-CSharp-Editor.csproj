@@ -51,7 +51,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets/_Project/Scripts/Features/AnimationCurve/Editor/CurveEditorWindow.cs" />
-    <Compile Include="Assets/_Project/_Game/Editor/ReadOnlyDrawer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

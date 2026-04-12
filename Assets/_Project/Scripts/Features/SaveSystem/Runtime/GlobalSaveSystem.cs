@@ -14,7 +14,11 @@ namespace Kope.SaveSystem {
 		private readonly JsonSerializerSettings _settings = new() {
 			TypeNameHandling = TypeNameHandling.Auto,
 			Formatting = Formatting.Indented,
-			ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+			ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+			Error = (sender, args) => {
+				Debug.LogError($"[JSON ERROR] Path: {args.ErrorContext.Path} | Message: {args.ErrorContext.Error.Message}");
+				args.ErrorContext.Handled = true;
+			}
 		};
 
 		// ONE lock object to protect all access to the dictionary
@@ -99,7 +103,7 @@ namespace Kope.SaveSystem {
 						this._sceneSaveDataBySceneIndex[aggregate.SceneIndex] = aggregate;
 					}
 				}
-				Debug.Log($"[GlobalSaveSystem] Loaded {dataAggregates?.Count ?? 0} scene aggregates.");
+				//Debug.Log($"[GlobalSaveSystem] Loaded {dataAggregates?.Count ?? 0} scene aggregates.");
 			} catch (Exception e) {
 				Debug.LogError($"[GlobalSaveSystem] Failed to load from disk: {e.Message}");
 			}

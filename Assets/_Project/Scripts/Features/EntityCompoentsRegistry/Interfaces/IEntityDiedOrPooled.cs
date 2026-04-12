@@ -1,6 +1,6 @@
 using System;
 
-namespace Kope.Core.Entity {
+namespace Kope.Core.EntityComponentRegistry {
 	/// <summary>
 	/// Interface for entities that can trigger events when they die or are pooled.
 	/// <para>
