@@ -10,7 +10,7 @@
   <Project Path="Kope.Actor.Runtime.csproj" />
   <Project Path="Kope.ModularSpriteAnimation.Editor.csproj" />
   <Project Path="Kope.InventorySystem.Runtime.csproj" />
-  <Project Path="Out.ThirdParty.Stuff.csproj" />
   <Project Path="Assembly-CSharp-Editor.csproj" />
+  <Project Path="Out.ThirdParty.Stuff.csproj" />
   <Project Path="Kope.InputSystem.csproj" />
 </Solution>

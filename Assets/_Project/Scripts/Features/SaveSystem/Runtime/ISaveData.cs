@@ -73,11 +73,11 @@ namespace Kope.SaveSystem {
 		// or refactoring of the C# code, which can help prevent issues with loading old save data
 		// if the code changes. By using JsonProperty, we can ensure that the JSON structure remains 
 		// stable even if we change the C# field names in the future.
-		[JsonProperty("sceneIndex")]
+		[JsonProperty("sIndex")]
 		public readonly int SceneIndex;
-		[JsonProperty("sceneName")]
+		[JsonProperty("sName")]
 		public readonly string SceneName;
-		[JsonProperty("sceneDataByProvider")]
+		[JsonProperty("sD")]
 		public readonly Dictionary<SceneDataProviderTypeEnum, SceneSaveDataContainer> SceneDataByProvider;
 		[JsonConstructor]
 		public SceneSaveDataAggregate(int sceneIndex, string sceneName, Dictionary<SceneDataProviderTypeEnum, SceneSaveDataContainer> sceneDataByProvider) {
@@ -125,9 +125,9 @@ namespace Kope.SaveSystem {
 	/// </summary>
 	[Serializable]
 	public struct SceneSaveDataContainer {
-		[JsonProperty("providerType")]
+		[JsonProperty("provType")]
 		public SceneDataProviderTypeEnum ProviderType { get; private set; }
-		[JsonProperty("entitySavePackets")]
+		[JsonProperty("esPackets")]
 		public Dictionary<HashedTag, EntitySavePacket> EntitySavePackets { get; private set; }
 
 		[JsonConstructor]
@@ -158,30 +158,33 @@ namespace Kope.SaveSystem {
 		HashedTag UniqueID { get; }
 		EntitySavePacket GetEntitySavePacket();
 		void LoadEntitySavePacket(EntitySavePacket packet);
+		[Obsolete("This method is only for validating the identity during development. " +
+		"It is not intended to be used in production code. Please ensure that the" +
+		" entity's identity is valid before using it in the save system.")]
 		bool ValidateIdentity(string callerInfo = null);
 		void RegisterSaveDataChunk();
 	}
 
 	[Serializable]
 	public struct EntitySavePacket {
-		[JsonProperty("commonNameHashTag")]
+		[JsonProperty("grpTag")]
 		public HashedTag CommonNameHashTag { get; private set; }
-		[JsonProperty("category")]
+		[JsonProperty("cate")]
 		public EntityIdentityCategoryEnum Category { get; private set; }
-		[JsonProperty("uniqueID")]
+		[JsonProperty("id")]
 		public HashedTag UniqueID { get; private set; }
 
 		// the type will be used to identify the source of the save data, 
 		// and the save system will use the type to find the corresponding provider to load the data.
 		[JsonProperty("data")]
-		public Dictionary<Type, ISaveData> Data;
+		public Dictionary<string, ISaveData> Data;
 
 		[JsonConstructor]
 		public EntitySavePacket(
 		HashedTag commonNameHashTag,
 		EntityIdentityCategoryEnum category,
 		HashedTag uniqueID,
-		Dictionary<Type, ISaveData> Data) {
+		Dictionary<string, ISaveData> Data) {
 			this.CommonNameHashTag = commonNameHashTag;
 			this.Category = category;
 			this.UniqueID = uniqueID;

@@ -20,8 +20,9 @@ namespace Kope.Component.Health {
 	/// health when we load from save data, and we will not change the current health in the save data after that,
 	/// so it is effectively immutable.
 	/// </summary>
+	[SaveId("health_data")]
 	public class HealthComponentSaveData : ISaveData {
-		[JsonProperty("currentHp")]
+		[JsonProperty("chp")]
 		public float CurrentHealth { get; private set; }
 
 		public HealthComponentSaveData(float currentHealth) {
@@ -29,6 +30,7 @@ namespace Kope.Component.Health {
 		}
 	}
 
+	[SaveId("health")]
 	public class HealthComponentBase : InitializableBase, IHealthComponent, ISaveable {
 		[SerializeField] EntityComponentsRegistry ecr;
 

@@ -12,7 +12,7 @@ namespace Kope.Core.Identity {
 	public class EntitySaveSystem : InitializableBase, IEntitySavePacketProvider {
 		[SerializeField] private EntityInstance identity;
 		private readonly Dictionary<Type, ISaveable> _saveableComponents = new();
-		private GlobalSaveSystem _globalSaveSystem;
+
 
 		private SavableEntityRegistry _savableEntityRegistry;
 
@@ -20,10 +20,6 @@ namespace Kope.Core.Identity {
 
 		protected void Awake() {
 			if (identity == null) this.identity = GetComponent<EntityInstance>();
-			if (!GlobalServiceLocator.Instance.TryGetService(out this._globalSaveSystem)) {
-				Debug.LogError("GlobalSaveSystem not found in the scene. Please ensure it is present for saving functionality to work.");
-				return;
-			}
 
 			var registry = this.identity.ComponentsRegistryForSaveSystemOnly;
 			registry.Register(this);
@@ -81,10 +77,15 @@ namespace Kope.Core.Identity {
 		}
 
 		public EntitySavePacket GetEntitySavePacket() {
-			var dataChunks = new Dictionary<Type, ISaveData>();
+			var dataChunks = new Dictionary<string, ISaveData>();
 
 			foreach (var kvp in this._saveableComponents) {
-				dataChunks[kvp.Key] = kvp.Value.GetSaveData();
+				if (!SaveTypeRegistry.TryGetId(kvp.Key, out var saveId)) {
+					Debug.LogWarning($"[EntitySaveSystem] No SaveId registered for component type '{kvp.Key.FullName}'. Skipping save data.");
+					continue;
+				}
+
+				dataChunks[saveId] = kvp.Value.GetSaveData();
 			}
 			var ed = this.identity.EntityDetail;
 			return new EntitySavePacket(
@@ -99,8 +100,13 @@ namespace Kope.Core.Identity {
 			var registry = this.identity.ComponentsRegistryForSaveSystemOnly;
 
 			foreach (var kvp in packet.Data) {
-				Type componentType = kvp.Key;
+				string saveId = kvp.Key;
 				ISaveData dataStruct = kvp.Value;
+
+				if (!SaveTypeRegistry.TryResolve(saveId, out Type componentType)) {
+					Debug.LogWarning($"[EntitySaveSystem] No component type registered for SaveId '{saveId}'. Skipping load.");
+					continue;
+				}
 
 				if (registry.Components.TryGetValue(componentType, out var component)) {
 					if (component is ISaveable targetSaveable) {

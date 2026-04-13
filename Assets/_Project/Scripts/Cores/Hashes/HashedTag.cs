@@ -14,6 +14,7 @@ public interface IHashTagProvider {
 /// </summary>
 
 [Serializable]
+
 [TypeConverter(typeof(HashedTagTypeConverter))]
 public readonly struct HashedTag : IEquatable<HashedTag> {
 

@@ -13,6 +13,7 @@ using ThirdParty;
 namespace Kope.Component.Movement {
 
 	[Serializable]
+	[SaveId("player_movement_data")]
 	public class MovementComponentSaveData : ISaveData {
 		[JsonProperty("pos")]
 		public Vec3 Position { get; set; }

@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67aedcce235c9fe96b01251df1612d12, type: 3}
+  m_Name: SaveTypeDatabase
+  m_EditorClassIdentifier: Kope.SaveSystem.Runtime::Kope.SaveSystem.SaveTypeDatabase
+  entries:
+  - Id: health
+    AssemblyQualifiedTypeName: Kope.Component.Health.HealthComponentBase, Kope.Components,
+      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    DisplayName: Kope.Component.Health.HealthComponentBase
+  - Id: health_data
+    AssemblyQualifiedTypeName: Kope.Component.Health.HealthComponentSaveData, Kope.Components,
+      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    DisplayName: Kope.Component.Health.HealthComponentSaveData
+  - Id: player_movement
+    AssemblyQualifiedTypeName: PlayerMovementComponent, Kope.Components, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+    DisplayName: PlayerMovementComponent
+  - Id: player_movement_data
+    AssemblyQualifiedTypeName: Kope.Component.Movement.MovementComponentSaveData,
+      Kope.Components, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    DisplayName: Kope.Component.Movement.MovementComponentSaveData

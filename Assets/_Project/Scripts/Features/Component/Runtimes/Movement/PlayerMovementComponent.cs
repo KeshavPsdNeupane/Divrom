@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 using ServiceLocatorPattern;
 using Kope.Core.CompilerServices;
 using Kope.Component.Movement;
+using Kope.SaveSystem;
 /// <summary>
 /// PlayerMovementComponent.cs<br/>
 /// This component handles player movement input and translates it into movement intents for the movement system to process.
@@ -14,6 +15,7 @@ using Kope.Component.Movement;
 /// <br/>
 /// <inheritdoc cref="MovementComponentBase"/>      
 /// </summary>
+[SaveId("player_movement")]
 public class PlayerMovementComponent : MovementComponentBase {
 	private InputManager inputManager;
 
