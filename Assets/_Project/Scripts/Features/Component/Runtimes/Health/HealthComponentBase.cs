@@ -81,7 +81,10 @@ namespace Kope.Component.Health {
 			currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
 			OnCurrentHealthChanged?.Invoke(currentHealth);
 		}
-
+		public void Heal(float flatAmount, float percentage) {
+			float healAmount = flatAmount + maxHealth * percentage;
+			Heal(healAmount);
+		}
 		/// <summary>
 		/// Simple entry point for pre-calculated damage.
 		/// </summary>

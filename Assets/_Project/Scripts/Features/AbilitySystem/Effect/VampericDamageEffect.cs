@@ -1,25 +1,26 @@
-using Kope.Component.HurtBox.Interface;
-using Kope.Component.HurtBox;
 using System;
+using Kope.Component.Combat.Interface;
 using UnityEngine;
 using Kope.Component.Health.Interface;
+using Kope.Component.Combat;
+
 namespace Kope.AbilitySystem.Effect {
 	[Serializable]
-	public class VampiricDamageEffectFactory : IEffectFactory<IDamageable> {
+	public class VampiricDamageEffectFactory : IEffectFactory<ICombatable> {
 		[Range(0f, 1f)] public float lifeStealRatio = 0.25f;
 
-		public IEffect<IDamageable> Create(EffectContext context = default) =>
+		public IEffect<ICombatable> Create(EffectContext context = default) =>
 			new VampiricDamageEffect(context.DamageDetail, lifeStealRatio, context.CasterHealth);
 	}
 
 	[Serializable]
-	public struct VampiricDamageEffect : IEffect<IDamageable> {
+	public struct VampiricDamageEffect : IEffect<ICombatable> {
 		public DamageDetail detail;
 		[Range(0f, 1f)] public float lifeStealRatio;
 		// even the stuct is a value type, the IHealthComponent it holds is a reference, 
 		// so we can still modify the caster's health through it and heal them for the life steal portion.
 		public IHealthComponent casterHealth;
-		public event Action<IEffect<IDamageable>> OnCompleted;
+		public event Action<IEffect<ICombatable>> OnCompleted;
 
 		public VampiricDamageEffect(DamageDetail detail, float lifeStealRatio, IHealthComponent casterHealth) {
 			this.detail = detail;
@@ -28,7 +29,7 @@ namespace Kope.AbilitySystem.Effect {
 			this.OnCompleted = null;
 		}
 
-		public readonly float Apply(IDamageable target) {
+		public readonly float Apply(ICombatable target) {
 			float finalDamage = target.TakeHit(detail);
 			if (this.casterHealth != null && finalDamage > 0f && this.lifeStealRatio > 0f) {
 				this.casterHealth.Heal(finalDamage * this.lifeStealRatio);

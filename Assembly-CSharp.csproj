@@ -67,6 +67,7 @@
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Ability/AbilityBase.cs" />
     <Compile Include="Assets/_Project/FOVGizmo.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AnimationCurve/CurveAsset.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/HealEffect.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Component/UI/Health/HealthBar.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/DamageOverTimeEffect.cs" />
     <Compile Include="Assets/_Project/UI/UIState/InGameUI/InGameUIInitCaller.cs" />

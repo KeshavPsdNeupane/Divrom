@@ -8,6 +8,7 @@ namespace Kope.Component.Health.Interface {
 		event Action<float> OnMaxHealthChanged;
 		event Action<float> OnCurrentHealthChanged;
 		void Heal(float amount);
+		void Heal(float flatAmount, float percentage);
 		void ApplyDamage(float amount);
 	}
 }

@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Kope.Component.HurtBox.Interface;
+using Kope.Component.Combat.Interface;
 using Kope.Core.Attributes;
 using UnityEngine;
 
@@ -14,11 +14,11 @@ public abstract class AbilityBase : ScriptableObject {
 	protected GameObject runningVfx;
 
 	[Header("Effects")]
-	[SerializeReference, SubclassSelector] public List<IEffectFactory<IDamageable>> effects = new();
+	[SerializeReference, SubclassSelector] public List<IEffectFactory<ICombatable>> effects = new();
 
-	public abstract void Execute(IDamageable target, EffectContext context);
-	protected abstract void HandleCastVFX(IDamageable target);
-	protected abstract void HandleRunningVFX(IDamageable target);
-	protected abstract void HandleSFX(IDamageable target);
+	public abstract void Execute(ICombatable target, EffectContext context);
+	protected abstract void HandleCastVFX(ICombatable target);
+	protected abstract void HandleRunningVFX(ICombatable target);
+	protected abstract void HandleSFX(ICombatable target);
 
 }

@@ -1,27 +1,27 @@
 using System;
-using Kope.Component.HurtBox;
-using Kope.Component.HurtBox.Interface;
+using Kope.Component.Combat;
+using Kope.Component.Combat.Interface;
 using ThirdParty;
 
 namespace Kope.AbilitySystem.Effect {
 	[Serializable]
-	public class DamageOverTimeEffectFactory : IEffectFactory<IDamageable> {
+	public class DamageOverTimeEffectFactory : IEffectFactory<ICombatable> {
 		public float duration = 3f;
 		public float tickInterval = 1f;
 
-		public IEffect<IDamageable> Create(EffectContext context = default) =>
+		public IEffect<ICombatable> Create(EffectContext context = default) =>
 			new DamageOverTimeEffect(context.DamageDetail, duration, tickInterval);
 	}
 
 	[Serializable]
-	public struct DamageOverTimeEffect : IEffect<IDamageable>, ITickableEffect {
+	public struct DamageOverTimeEffect : IEffect<ICombatable>, ITickableEffect {
 		public DamageDetail detail;
 		public float duration;
 		public float tickInterval;
-		public event Action<IEffect<IDamageable>> OnCompleted;
+		public event Action<IEffect<ICombatable>> OnCompleted;
 
 		private IntervalTimer timer;
-		private IDamageable currentTarget;
+		private ICombatable currentTarget;
 
 		public DamageOverTimeEffect(DamageDetail detail, float duration, float tickInterval) {
 			this.detail = detail;
@@ -32,7 +32,7 @@ namespace Kope.AbilitySystem.Effect {
 			this.currentTarget = null;
 		}
 
-		public float Apply(IDamageable target) {
+		public float Apply(ICombatable target) {
 			this.currentTarget = target;
 			this.timer = new IntervalTimer(duration, tickInterval) {
 				OnInterval = OnInterval,
