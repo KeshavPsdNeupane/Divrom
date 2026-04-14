@@ -1,31 +1,38 @@
 using System;
-using Kope.Component.Combat;
 using Kope.Component.Combat.Interface;
 using ThirdParty;
+using UnityEngine;
 
 namespace Kope.AbilitySystem.Effect {
+	// the target selection is handled by the ability and the effect factory just creates the effect based on 
+	// the context passed in, so the effect itself doesn't need to know/it doesn't care about the context of who the caster is
+	// or who the target
 	[Serializable]
-	public class DamageOverTimeEffectFactory : IEffectFactory<ICombatable> {
-		public float duration = 3f;
-		public float tickInterval = 1f;
+	public class HealOverTimeEffectFactory : IEffectFactory<ICombatable> {
+		public float healPerInterval = 10f;
+		public float duration;
+		[Range(0.1f, 5f)] public float tickInterval = 1f;
 
-		public IEffect<ICombatable> Create(EffectContext context = default) =>
-			new DamageOverTimeEffect(context.DamageDetail, duration, tickInterval);
+		public IEffect<ICombatable> Create(EffectContext context = default)
+			=> new HealOverTimeEffect(this.healPerInterval, this.duration, this.tickInterval);
 	}
 
 	[Serializable]
-	public struct DamageOverTimeEffect : IEffect<ICombatable>, ITickableEffect {
-		public DamageDetail detail;
+	public struct HealOverTimeEffect : IEffect<ICombatable>, ITickableEffect {
+		public float flathealAmountPerInterval;
 		public float duration;
 		public float tickInterval;
 		public event Action<ITickableEffect> OnCompletedOrCancell;
 		private IntervalTimer timer;
 		private ICombatable currentTarget;
 
-		public DamageOverTimeEffect(DamageDetail detail, float duration, float tickInterval) {
-			this.detail = detail;
+
+		public HealOverTimeEffect(float healAmountPerInterval, float duration, float tickInterval) {
+
+			this.flathealAmountPerInterval = healAmountPerInterval;
 			this.duration = duration;
 			this.tickInterval = tickInterval;
+
 			this.OnCompletedOrCancell = null;
 			this.timer = null;
 			this.currentTarget = null;
@@ -44,7 +51,9 @@ namespace Kope.AbilitySystem.Effect {
 
 		public readonly void Tick(float deltaTime) => this.timer?.Tick(deltaTime);
 
-		private readonly void OnInterval() => this.currentTarget?.TakeHit(this.detail);
+		private readonly void OnInterval() {
+			this.currentTarget?.Heal(this.flathealAmountPerInterval, 0f);
+		}
 		private void OnStop() => Cleanup();
 
 		public void Cancel() {
@@ -58,4 +67,5 @@ namespace Kope.AbilitySystem.Effect {
 			this.OnCompletedOrCancell?.Invoke(this);
 		}
 	}
+
 }

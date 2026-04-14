@@ -20,13 +20,11 @@ namespace Kope.AbilitySystem.Effect {
 		// even the stuct is a value type, the IHealthComponent it holds is a reference, 
 		// so we can still modify the caster's health through it and heal them for the life steal portion.
 		public IHealthComponent casterHealth;
-		public event Action<IEffect<ICombatable>> OnCompleted;
 
 		public VampiricDamageEffect(DamageDetail detail, float lifeStealRatio, IHealthComponent casterHealth) {
 			this.detail = detail;
 			this.lifeStealRatio = lifeStealRatio;
 			this.casterHealth = casterHealth;
-			this.OnCompleted = null;
 		}
 
 		public readonly float Apply(ICombatable target) {
@@ -34,12 +32,7 @@ namespace Kope.AbilitySystem.Effect {
 			if (this.casterHealth != null && finalDamage > 0f && this.lifeStealRatio > 0f) {
 				this.casterHealth.Heal(finalDamage * this.lifeStealRatio);
 			}
-			this.OnCompleted?.Invoke(this);
 			return finalDamage;
 		}
-
-		public readonly void Cancel() => this.OnCompleted?.Invoke(this);
 	}
-
-
 }

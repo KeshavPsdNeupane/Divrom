@@ -66,6 +66,7 @@
     <Compile Include="Assets/_Project/UI/Common/PanelFader.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Ability/AbilityBase.cs" />
     <Compile Include="Assets/_Project/FOVGizmo.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/HealOverTimeEffect.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AnimationCurve/CurveAsset.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/HealEffect.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Component/UI/Health/HealthBar.cs" />
@@ -81,6 +82,7 @@
     <Compile Include="Assets/_Project/Scripts/Managers/ItemDatabase/HashUtility.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/VampericDamageEffect.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/UI/ItemSlotUI/ItemSlotUI.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Ability/HurtBoxHitAbility.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets/TextMesh Pro/Shaders/TMPro.cginc" />

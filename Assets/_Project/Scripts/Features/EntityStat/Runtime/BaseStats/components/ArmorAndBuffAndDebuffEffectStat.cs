@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Kope.Character.Stats {
 	public class ArmorAndBuffAndDeBuffEffectStat : IBaseStatProvider {
@@ -17,25 +18,15 @@ namespace Kope.Character.Stats {
 			this.OnDirtyEventAction?.Invoke();
 		}
 
-		private void CanRemoveModifier(BuffDebuffArmorStatusModifier csm)
-		=> csm.canRemove = true;
-
 		public void RemoveModifier(BuffDebuffArmorStatusModifier csm) {
 			this.modifiers.Remove(csm);
 			MarkDirty();
 		}
 
 		public void Update() {
-			foreach (var mod in this.modifiers) {
-				mod.durationCountDownTimer?.Tick(UnityEngine.Time.deltaTime);
+			for (int i = modifiers.Count - 1; i >= 0; i--) {
+				this.modifiers[i].durationCountDownTimer.Tick(Time.deltaTime);
 			}
-			for (int i = this.modifiers.Count - 1; i >= 0; i--) {
-				var mod = this.modifiers[i];
-				if (mod.canRemove) {
-					RemoveModifier(mod);
-				}
-			}
-
 		}
 
 		public bool AddModifier(StatModifier effect) {
@@ -77,7 +68,10 @@ namespace Kope.Character.Stats {
 			// Subscribe to timer stop if temporary
 			if (!mod.IsPermanentBuff) {
 				mod.InitializeTimer();
-				mod.durationCountDownTimer.OnTimerStop += () => CanRemoveModifier(mod);
+				// the mod is going be in closed over in the lambda, so we need to capture it here
+				// might make a timer that will take a genetic type on completion callback in the future 
+				// to avoid this  
+				mod.durationCountDownTimer.OnTimerStop += () => RemoveModifier(mod);
 				mod.StartTimer();
 			}
 			this.modifiers.Add(mod);

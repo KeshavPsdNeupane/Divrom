@@ -407,9 +407,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b62b74094c783332803b71d6245b2ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StatDescription
-  characterStats: {fileID: 0}
-  canShowState: 1
-  scale: 2
+  statDescriptionUIPanel: {fileID: 76764293}
+  ecr: {fileID: 630533316}
+  fontAsset: {fileID: 11400000, guid: 33c0b08db866f2849b4c3e0c23717907, type: 2}
 --- !u!114 &76764299
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7850,22 +7850,43 @@ MonoBehaviour:
     gameObjectName: SceneServiceLocator
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: Hpstore (1)
+    gameObjectName: Hpstore
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Addhp (2)
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Addhp (1)
   - typeName: EntityInitCaller
     order: -40
     gameObjectName: PlayerNew
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: EnemyNew
+    gameObjectName: AddDef (1)
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: AddSpd (1)
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Addhp
   - typeName: EntityInitCaller
     order: -40
     gameObjectName: InitCaller
   - typeName: EntityInitCaller
     order: -40
+    gameObjectName: AddSpd
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: EnemyNew
+  - typeName: EntityInitCaller
+    order: -40
     gameObjectName: Hpstore (2)
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: Hpstore
+    gameObjectName: Hpstore (1)
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: AddDef
   - typeName: InGameUIInitCaller
     order: -30
     gameObjectName: UI
@@ -8222,8 +8243,8 @@ MonoBehaviour:
   x: 0.726
   result: 0.33709687
   unityResult: 0.18408638
-  customEvalTime: 0.1517
-  unityEvalTime: 0.0693
+  customEvalTime: 0.1487
+  unityEvalTime: 0.0707
 --- !u!1001 &1031836800
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8431,7 +8452,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1067244225
 Transform:
   m_ObjectHideFlags: 0
@@ -10418,6 +10439,95 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8207a5ac3ea0de14fbfcccff522cc2db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AnimationComponent
+--- !u!1001 &1562017648
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 188623322283249771, guid: 23970c0ab16dfaaba83fcdb983d16fb7, type: 3}
+      propertyPath: absoluteHierarchyPath
+      value: SampleScene-->Buffs->AddMoveCollection->AddSpd
+      objectReference: {fileID: 0}
+    - target: {fileID: 949834273440677730, guid: 23970c0ab16dfaaba83fcdb983d16fb7, type: 3}
+      propertyPath: m_Name
+      value: Buffs
+      objectReference: {fileID: 0}
+    - target: {fileID: 949834273440677730, guid: 23970c0ab16dfaaba83fcdb983d16fb7, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1951864918855207819, guid: 23970c0ab16dfaaba83fcdb983d16fb7, type: 3}
+      propertyPath: absoluteHierarchyPath
+      value: SampleScene-->Buffs->AddMoveCollection->AddSpd (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3641461807115669659, guid: 23970c0ab16dfaaba83fcdb983d16fb7, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.49281
+      objectReference: {fileID: 0}
+    - target: {fileID: 3641461807115669659, guid: 23970c0ab16dfaaba83fcdb983d16fb7, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -2.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3641461807115669659, guid: 23970c0ab16dfaaba83fcdb983d16fb7, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3641461807115669659, guid: 23970c0ab16dfaaba83fcdb983d16fb7, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3641461807115669659, guid: 23970c0ab16dfaaba83fcdb983d16fb7, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3641461807115669659, guid: 23970c0ab16dfaaba83fcdb983d16fb7, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3641461807115669659, guid: 23970c0ab16dfaaba83fcdb983d16fb7, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3641461807115669659, guid: 23970c0ab16dfaaba83fcdb983d16fb7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3641461807115669659, guid: 23970c0ab16dfaaba83fcdb983d16fb7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3641461807115669659, guid: 23970c0ab16dfaaba83fcdb983d16fb7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4050554562851639622, guid: 23970c0ab16dfaaba83fcdb983d16fb7, type: 3}
+      propertyPath: absoluteHierarchyPath
+      value: SampleScene-->Buffs->AddHpCollction->Addhp (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4154965771084270563, guid: 23970c0ab16dfaaba83fcdb983d16fb7, type: 3}
+      propertyPath: absoluteHierarchyPath
+      value: SampleScene-->Buffs->def->AddDef (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5069068059667772042, guid: 23970c0ab16dfaaba83fcdb983d16fb7, type: 3}
+      propertyPath: absoluteHierarchyPath
+      value: SampleScene-->Buffs->def->AddDef
+      objectReference: {fileID: 0}
+    - target: {fileID: 6976223545776199980, guid: 23970c0ab16dfaaba83fcdb983d16fb7, type: 3}
+      propertyPath: absoluteHierarchyPath
+      value: SampleScene-->Buffs->AddHpCollction->Addhp
+      objectReference: {fileID: 0}
+    - target: {fileID: 8595621163281444643, guid: 23970c0ab16dfaaba83fcdb983d16fb7, type: 3}
+      propertyPath: absoluteHierarchyPath
+      value: SampleScene-->Buffs->AddHpCollction->Addhp (1)
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 23970c0ab16dfaaba83fcdb983d16fb7, type: 3}
 --- !u!4 &1615758779
 Transform:
   m_ObjectHideFlags: 0
@@ -11504,7 +11614,7 @@ MonoBehaviour:
   - {fileID: 1650404415}
   - {fileID: 2128690284}
   - {fileID: 576055918}
-  - {fileID: 0}
+  - {fileID: 76764298}
   - {fileID: 1987017559}
   - {fileID: 1788062144}
   canCallInAwake: 1
@@ -14396,3 +14506,4 @@ SceneRoots:
   - {fileID: 2088695440}
   - {fileID: 1067244225}
   - {fileID: 947394590}
+  - {fileID: 1562017648}

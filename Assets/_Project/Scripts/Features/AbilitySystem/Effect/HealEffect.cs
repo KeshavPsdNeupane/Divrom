@@ -4,6 +4,9 @@ using UnityEngine;
 
 
 namespace Kope.AbilitySystem.Effect {
+	// the target selection is handled by the ability and the effect factory just creates the effect based on 
+	// the context passed in, so the effect itself doesn't need to know/it doesn't care
+	// about the context of who the caster is or who the target
 	[Serializable]
 	public class HealEffectFactory : IEffectFactory<ICombatable> {
 		public float flatHealAmount;
@@ -21,16 +24,11 @@ namespace Kope.AbilitySystem.Effect {
 		public HealEffect(float flatHealAmount, float healPercentage) {
 			this.flatHealAmount = flatHealAmount;
 			this.healPercentage = healPercentage;
-			this.OnCompleted = null;
 		}
-		public event Action<IEffect<ICombatable>> OnCompleted;
 		public readonly float Apply(ICombatable target) {
 			target.Heal(flatHealAmount, healPercentage);
-			this.OnCompleted?.Invoke(this);
-			return 0; // Heal effect does not deal damage, so we return 0 here.
+			return 0;
 		}
-
-		public readonly void Cancel() => this.OnCompleted?.Invoke(this);
 	}
 
 }
