@@ -8,14 +8,14 @@ public class TestAbility : AbilityBase {
 	}
 
 	protected override void HandleCastVFX(IDamageable target) {
-		// no op --- IGNORE ---
+		// no op read above --- IGNORE ---
 	}
 
 	protected override void HandleRunningVFX(IDamageable target) {
-		// no op --- IGNORE ---
+		// no op read above --- IGNORE ---
 	}
 
 	protected override void HandleSFX(IDamageable target) {
-		// no op --- IGNORE ---
+		// no op read above --- IGNORE ---
 	}
 }
