@@ -15,14 +15,7 @@ MonoBehaviour:
   castSfx: {fileID: 0}
   castVfx: {fileID: 0}
   runningVfx: {fileID: 0}
-  effects:
-  - rid: 7477298372104683656
+  effects: []
   references:
     version: 2
-    RefIds:
-    - rid: 7477298372104683656
-      type: {class: KnockbackEffectFactory, ns: Kope.Component.HurtBox.Interface, asm: Kope.Components}
-      data:
-        direction: {x: 0, y: 0, z: 0}
-        duration: 0.2
-        impulse: 2.5
+    RefIds: []

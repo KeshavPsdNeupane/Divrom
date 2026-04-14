@@ -55,7 +55,7 @@ namespace Kope.Core.Identity {
 		/// Called during initialization by the identity or global system.
 		/// </summary>
 		public void RegisterSaveDataChunk() {
-			Debug.Log($"[EntitySaveSystem] Registering save data chunk for entity with ID {this.UniqueID}. Scanning components for ISaveable implementations.");
+			//			Debug.Log($"[EntitySaveSystem] Registering save data chunk for entity with ID {this.UniqueID}. Scanning components for ISaveable implementations.");
 			var registry = this.identity.ComponentsRegistryForSaveSystemOnly;
 			if (registry == null) return;
 

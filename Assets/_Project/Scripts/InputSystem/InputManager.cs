@@ -1,4 +1,3 @@
-using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
 using System;
@@ -41,11 +40,9 @@ public class InputManager : GlobalServiceBase {
 	public PlayerInput PlayerInputs => this.playerInput;
 
 
-	public override void Initialize(string callerInfo, bool isWarn = false, GameObject gameObject = null) {
-		if (!this.IsInitialized) {
-			base.Initialize(callerInfo, isWarn, gameObject);
-			InitializeActionMaps();
-		}
+	protected override bool OnInitializeService() {
+		InitializeActionMaps();
+		return true;
 	}
 
 	private void InitializeActionMaps() {

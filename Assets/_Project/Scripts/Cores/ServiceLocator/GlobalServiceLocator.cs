@@ -58,8 +58,9 @@ namespace ServiceLocatorPattern {
 
 			service.name = $"[Global] {type.Name}_{tag}";
 			service.transform.SetParent(transform);
+			MyLogger.Log($"[Service] Initialized {type.Name}: {service.name} via {source}", service.gameObject);
 
-			service.Initialize(service.name + " via " + source, false, service.gameObject);
+			service.InitializeService();
 			services[type] = service;
 		}
 

@@ -27,13 +27,14 @@ namespace Kope.EntityComponentSystem {
 		public SceneDataProviderTypeEnum ProviderType => this.providerType;
 
 
-		public override void Awake() {
+		protected override bool OnInitializeService() {
 			base.Awake();
 			if (!SceneServiceLocator.Instance.TryGetService(out this._sceneSaveSystem)) {
 				Debug.LogError("SceneSaveSystem is not registered in SceneServiceLocator. Please check your SceneBootStrap!");
-				return;
+				return false;
 			}
 			this._sceneSaveSystem.RegisterProvider(this);
+			return true;
 		}
 
 
@@ -62,7 +63,7 @@ namespace Kope.EntityComponentSystem {
 
 		void Update() {
 			if (this._saveAbleEntityes.Count != tempCounter) {
-				Debug.Log($"[EntityRegistrySaveDataManager] Current registered savable entities count: {this._saveAbleEntityes.Count}");
+				//				Debug.Log($"[EntityRegistrySaveDataManager] Current registered savable entities count: {this._saveAbleEntityes.Count}");
 				tempCounter = this._saveAbleEntityes.Count;
 			}
 			foreach (var kvp in this._saveAbleEntityes) {

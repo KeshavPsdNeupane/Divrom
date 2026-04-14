@@ -6,6 +6,10 @@ using Kope.Character.Stats;
 using Kope.Core.EntityComponentRegistry;
 using Kope.Component.Animation;
 
+// this will be refactored and will be made to work with the new ability system, 
+// so it can be used for both player and enemy attacks, and also for different types 
+// of attacks like melee, ranged, magic, etc.
+
 namespace Kope.Component.Attack {
 
 

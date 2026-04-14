@@ -52,8 +52,6 @@ namespace Kope.Component.HurtBox {
 		private float LevelScalingFactor => config.LevelScalingFactor;
 		private float InverseResistanceDiminishingReturnsThreshold => config.ReciprocalOfResistanceDiminishingReturnsThreshold;
 
-		public Vector3 Position => this.movement != null ? this.movement.Position : Vector3.zero;
-
 		protected override bool OnInit() {
 			if (this.ecr == null) {
 				Debug.LogError($"HurtBoxComponent on {gameObject.name} has no EntityComponentsRegistry assigned."
@@ -92,8 +90,8 @@ namespace Kope.Component.HurtBox {
 			}
 		}
 
-		public void TakeHit(DamageDetail damageDetail) {
-			if (!this.IsInitialized) return;
+		public float TakeHit(DamageDetail damageDetail) {
+			if (!this.IsInitialized) return 0f;
 
 			float defMult = GetDefenceMultiplier(damageDetail.DefencePierceRatio);
 			float resMult = GetResistanceMultiplier(damageDetail.DamageType, damageDetail.IgnoreResistance);
@@ -101,6 +99,7 @@ namespace Kope.Component.HurtBox {
 
 			float finalDamage = damageDetail.DamageAmount * defMult * resMult * levelMult;
 			this.healthComponent.ApplyDamage(finalDamage);
+			return finalDamage;
 		}
 
 		public void ApplyKnockback(Vector3 direction, float duration, float impulse) {
@@ -154,8 +153,13 @@ namespace Kope.Component.HurtBox {
 
 		#region IDamageable Implementation
 		// for debug only 
-		public void TakeDamage(int amount) {
+		public void TakeDamageDebugOnly(int amount) {
 			TakeHit(new DamageDetail(amount, null, DamageType.Physical));
+		}
+
+		public bool ApplyStatModifier(StatModifier effect) {
+			if (!this.IsInitialized || effect == null || this.characterStatsSystem == null) return false;
+			return this.characterStatsSystem.AddStatModifier(effect);
 		}
 
 		public void ApplyEffect(IEffect<IDamageable> effect) {

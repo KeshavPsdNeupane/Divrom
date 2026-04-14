@@ -86,7 +86,8 @@ namespace ServiceLocatorPattern {
 			if (services.ContainsKey(type)) return;
 
 			services[type] = service;
-			service.Initialize($"[Scene] {type.FullName} - {message}", isWarn, service.gameObject);
+			//	Debug.Log($"{(isWarn ? "[ServiceLocator][Warning]" : "[ServiceLocator]")} Registered {type.Name}: {service.gameObject.name} via {message}", service.gameObject);
+			service.InitializeService();
 		}
 	}
 }

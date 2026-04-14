@@ -20,13 +20,15 @@ namespace Kope.SaveSystem {
 		private readonly Dictionary<SceneDataProviderTypeEnum, ISceneSaveProvider> _saveProviders = new();
 
 
-		public override void Awake() {
-			base.Awake();
+		protected override bool OnInitializeService() {
+			// base. is not strictly necessary here since the base implementation does nothing, 
+			// but it's good practice to call it in case the base class implementation changes in the future.
+			base.OnInitializeService();
 			if (!GlobalServiceLocator.Instance.TryGetService(out _globalSaveSystem)) {
 				Debug.LogError("GlobalSaveSystem missing from GlobalBootStrap!");
-				return;
+				return false;
 			}
-
+			return true;
 		}
 
 		public void RegisterProvider(ISceneSaveProvider provider) {

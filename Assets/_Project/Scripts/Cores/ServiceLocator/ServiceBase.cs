@@ -5,22 +5,19 @@ namespace ServiceLocatorPattern {
 	public class ServiceBase : MonoBehaviour {
 		private bool isInitialized = false;
 		public bool IsInitialized => isInitialized;
-
-		public virtual void Initialize(string info, bool isWarn = false, GameObject gameObject = null) {
-			if (isWarn) {
-				MyLogger.Warn($"[Service] Initialized {GetType().Name}: {info}", gameObject);
-			} else {
-				MyLogger.Log($"[Service] Initialized {GetType().Name}: {info}", gameObject);
-			}
-			this.isInitialized = true;
+		public void InitializeService() {
+			if (this.isInitialized) return;
+			this.isInitialized = OnInitializeService();
 		}
-
+		protected virtual bool OnInitializeService() {
+			return true;
+		}
 	}
 
 	public class GlobalServiceBase : ServiceBase { }
 	public class SceneServiceBase : ServiceBase {
 
-		public virtual void Awake() {
+		public void Awake() {
 			CheckForDuplicates();
 		}
 		private void CheckForDuplicates() {
