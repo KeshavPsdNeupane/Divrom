@@ -15,7 +15,8 @@ MonoBehaviour:
   castSfx: {fileID: 0}
   castVfx: {fileID: 0}
   runningVfx: {fileID: 0}
-  effects: []
+  damageEffects: []
+  healEffects: []
   references:
     version: 2
     RefIds: []

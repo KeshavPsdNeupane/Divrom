@@ -7,10 +7,10 @@ namespace Kope.Component.Combat {
 	/// and level scaling data.
 	/// </summary>
 	public struct DamageDetail {
+		public float DamageAmount;
 		public GameObject Source;
 		public DamageType DamageType;
 		public int LevelDifference;
-		public float DamageAmount;
 		public float DefencePierceRatio;
 		public float IgnoreResistance;
 

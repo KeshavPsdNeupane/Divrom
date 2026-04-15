@@ -276674,7 +276674,7 @@ MonoBehaviour:
     m_DynamicPanelBehavior: 0
   m_LockTracker:
     m_IsLocked: 0
-  m_LastSelectedObjectID: 0
+  m_LastSelectedObjectID: 53454
 --- !u!114 &22
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -276720,10 +276720,7 @@ MonoBehaviour:
       m_LastClickedID:
         m_Data: 0
       m_ExpandedIDs:
-      - m_Data: -1316
-      - m_Data: 53782
-      - m_Data: 53958
-      - m_Data: 54116
+      - m_Data: -1324
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -277847,7 +277844,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/_Project/Scripts/Features/AbilitySystem/Effect
+    - Assets/_Project/Scripts/Features/AbilitySystem/Ability
     m_Globs: []
     m_ProductIds: 
     m_AnyWithAssetOrigin: 0
@@ -277857,7 +277854,7 @@ MonoBehaviour:
   m_ViewMode: 1
   m_StartGridSize: 74
   m_LastFolders:
-  - Assets/_Project/Scripts/Features/AbilitySystem/Effect
+  - Assets/_Project/Scripts/Features/AbilitySystem/Ability
   m_LastFoldersGridSize: 74
   m_LastProjectPath: /mnt/Development/GameDevelopment/Unity/projects/example/Divrom
   m_LockTracker:
@@ -277866,26 +277863,26 @@ MonoBehaviour:
   m_FolderTreeState:
     scrollPos: {x: 0, y: 288}
     m_SelectedIDs:
-    - m_Data: 60668
+    - m_Data: 61148
     m_LastClickedID:
-      m_Data: 60668
+      m_Data: 61148
     m_ExpandedIDs:
     - m_Data: 0
-    - m_Data: 60436
-    - m_Data: 60438
-    - m_Data: 60440
-    - m_Data: 60442
-    - m_Data: 60444
-    - m_Data: 60446
-    - m_Data: 60448
-    - m_Data: 60450
-    - m_Data: 60452
-    - m_Data: 60454
-    - m_Data: 60456
-    - m_Data: 60458
-    - m_Data: 60460
-    - m_Data: 60462
+    - m_Data: 60648
+    - m_Data: 60650
+    - m_Data: 60652
+    - m_Data: 60654
+    - m_Data: 60656
+    - m_Data: 60658
+    - m_Data: 60660
+    - m_Data: 60662
+    - m_Data: 60664
     - m_Data: 60666
+    - m_Data: 60668
+    - m_Data: 60670
+    - m_Data: 60672
+    - m_Data: 60674
+    - m_Data: 61112
     - m_Data: 1000000000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -277919,20 +277916,20 @@ MonoBehaviour:
       m_Data: 0
     m_ExpandedIDs:
     - m_Data: 0
-    - m_Data: 60436
-    - m_Data: 60438
-    - m_Data: 60440
-    - m_Data: 60442
-    - m_Data: 60444
-    - m_Data: 60446
-    - m_Data: 60448
-    - m_Data: 60450
-    - m_Data: 60452
-    - m_Data: 60454
-    - m_Data: 60456
-    - m_Data: 60458
-    - m_Data: 60460
-    - m_Data: 60462
+    - m_Data: 60648
+    - m_Data: 60650
+    - m_Data: 60652
+    - m_Data: 60654
+    - m_Data: 60656
+    - m_Data: 60658
+    - m_Data: 60660
+    - m_Data: 60662
+    - m_Data: 60664
+    - m_Data: 60666
+    - m_Data: 60668
+    - m_Data: 60670
+    - m_Data: 60672
+    - m_Data: 60674
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -277960,8 +277957,8 @@ MonoBehaviour:
       m_ResourceFile: 
   m_ListAreaState:
     m_SelectedInstanceIDs:
-    - m_Data: 74412
-    m_LastClickedInstanceID: 74412
+    - m_Data: 53454
+    m_LastClickedInstanceID: 53454
     m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: []
     m_RenameOverlay:

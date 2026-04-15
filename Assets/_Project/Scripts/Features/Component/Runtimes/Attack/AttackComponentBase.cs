@@ -15,6 +15,8 @@ namespace Kope.Component.Attack {
 
 	public interface IAttackComponent {
 		float GetAttackDamage();
+		float GetDamage(CharacterStatType damageType);
+		event UnityAction OnAttackPerformed;
 	}
 
 	/// <summary>
@@ -102,6 +104,19 @@ namespace Kope.Component.Attack {
 		protected virtual float CalculateDamage() {
 			return CalculateDamage(this._attack);
 		}
+
+		public float GetDamage(CharacterStatType statType) {
+			// we could make this more flexible by allowing for multiple scaling stats, 
+			// but for now we will just use one base scaling stat for simplicity.
+			// and we could also cache the baseStat using same system we are using in StatGUI to 
+			// avoid fetching it multiple times, but for now we will just fetch it directly from
+			// the stats system for simplicity.
+			float baseStat = this._statsSystem.GetStatValue(statType);
+			var damage = CalculateDamage(baseStat);
+			return damage;
+		}
+
+
 		/// <summary>
 		/// Calculates the final damage based on the provided base scaling stat (usually the attack stat).
 		/// But some character can scale from Hp, or Def, or whatever. So we make it flexible to allow
@@ -138,6 +153,8 @@ namespace Kope.Component.Attack {
 		protected void RaiseOnAttackPerformedEvent() {
 			this.OnAttackPerformed?.Invoke();
 		}
+
+
 	}
 
 }

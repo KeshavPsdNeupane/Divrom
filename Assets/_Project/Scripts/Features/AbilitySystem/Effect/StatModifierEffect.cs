@@ -11,14 +11,14 @@ namespace Kope.AbilitySystem.Effect {
 	}
 
 	[Serializable]
-	public struct StatModifierEffect : IEffect<ICombatable> {
+	public class StatModifierEffect : IEffect<ICombatable> {
 		public StatModifier modifier;
 
 		public StatModifierEffect(StatModifier modifier) {
 			this.modifier = modifier;
 		}
 
-		public readonly float Apply(ICombatable target) {
+		public float Apply(ICombatable target) {
 			target.ApplyStatModifier(modifier);
 			return 0f;
 		}

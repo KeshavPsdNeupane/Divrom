@@ -4,7 +4,6 @@ using Kope.Component.Health;
 using Kope.Component.Health.Interface;
 using Kope.Component.Combat.Interface;
 using Kope.Component.Movement;
-using Kope.Component.HurtBox;
 using Kope.Component.HurtBox.Interface;
 using Kope.Core.EntityComponentRegistry;
 using Kope.Core.Init;

@@ -12,14 +12,14 @@ namespace Kope.AbilitySystem.Effect {
 	}
 
 	[Serializable]
-	public struct KnockbackEffect : IEffect<ICombatable> {
+	public class KnockbackEffect : IEffect<ICombatable> {
 
 		public readonly KnockbackDetail Detail;
 
 		public KnockbackEffect(KnockbackDetail detail) {
 			this.Detail = detail;
 		}
-		public readonly float Apply(ICombatable target) {
+		public float Apply(ICombatable target) {
 			var dir = this.Detail.IsPulling ? -this.Detail.KnockbackDirection.normalized : this.Detail.KnockbackDirection.normalized;
 			target.ApplyKnockback(dir, this.Detail.Duration, this.Detail.KnockbackStrength);
 			return 0f;

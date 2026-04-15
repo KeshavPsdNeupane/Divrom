@@ -1,4 +1,5 @@
 using System;
+using Kope.Component.Attack;
 using Kope.Component.Health.Interface;
 using Kope.Component.HurtBox.Interface;
 using UnityEngine;
@@ -8,8 +9,10 @@ namespace Kope.Component.Combat.Interface {
 	/// Context passed from abilities into effect factories.
 	/// </summary>
 	public struct EffectContext {
+		// snapshot. 
+		public int levelDifference;
 		public GameObject Caster;
-		public DamageDetail DamageDetail;
+		public IAttackComponent CasterAttack;
 		public Vector3 KnockbackDirection;
 		public IHealthComponent CasterHealth;
 	}
@@ -20,10 +23,7 @@ namespace Kope.Component.Combat.Interface {
 		void TakeDamageDebugOnly(int amount);
 		bool ApplyStatModifier(StatModifier effect);
 		void ApplyKnockback(Vector3 direction, float duration, float impulse);
-		void Heal(float flatHealAmount, float healPercentage);
 	}
-
-
 
 	public interface ICombatComponent : ICombatable {
 	}

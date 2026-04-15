@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Kope.Component.Combat.Interface;
+using Kope.Component.Health.Interface;
 using Kope.Core.Attributes;
 using UnityEngine;
 
@@ -14,7 +15,8 @@ public abstract class AbilityBase : ScriptableObject {
 	protected GameObject runningVfx;
 
 	[Header("Effects")]
-	[SerializeReference, SubclassSelector] public List<IEffectFactory<ICombatable>> effects = new();
+	[SerializeReference, SubclassSelector] public List<IEffectFactory<ICombatable>> damageEffects = new();
+	[SerializeReference, SubclassSelector] public List<IEffectFactory<IHealable>> healEffects = new();
 
 	public abstract void Execute(ICombatable target, EffectContext context);
 	protected abstract void HandleCastVFX(ICombatable target);

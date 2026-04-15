@@ -1,5 +1,4 @@
 using Kope.Component.Combat.Interface;
-using Kope.Component.HurtBox;
 using Kope.Component.HurtBox.Interface;
 using UnityEngine;
 
@@ -9,14 +8,13 @@ public class HurtBoxHitAbility : AbilityBase {
 
 	public override void Execute(ICombatable target, EffectContext context) {
 		if (target is not Component) return;
-		if (context.DamageDetail.Source == null) return;
 
 		IHurtBoxComponent hurtBox = target.HurtBox;
 		if (hurtBox == null) return;
 
 		if (context.Caster == null) return;
 
-		hurtBox.HitEntity(context.Caster, this.combatType, context, this.effects);
+		hurtBox.HitEntity(context.Caster, this.combatType, context, this.damageEffects);
 	}
 
 	protected override void HandleCastVFX(ICombatable target) {

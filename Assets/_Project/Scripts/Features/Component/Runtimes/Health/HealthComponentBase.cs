@@ -31,7 +31,7 @@ namespace Kope.Component.Health {
 	}
 
 	[SaveId("health")]
-	public class HealthComponentBase : InitializableBase, IHealthComponent, ISaveable {
+	public class HealthComponentBase : InitializableBase, IHealthComponent, ISaveable, IHealable {
 		[SerializeField] EntityComponentsRegistry ecr;
 
 		[SerializeField, ReadOnly] protected float maxHealth = 10;

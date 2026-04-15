@@ -1,36 +1,43 @@
 using System;
 using Kope.Component.Combat.Interface;
 using UnityEngine;
-using Kope.Component.Health.Interface;
 using Kope.Component.Combat;
 
 namespace Kope.AbilitySystem.Effect {
 	[Serializable]
 	public class VampiricDamageEffectFactory : IEffectFactory<ICombatable> {
 		[Range(0f, 1f)] public float lifeStealRatio = 0.25f;
-
+		public DamageEffectData DamageEffectData;
 		public IEffect<ICombatable> Create(EffectContext context = default) =>
-			new VampiricDamageEffect(context.DamageDetail, lifeStealRatio, context.CasterHealth);
+			new VampiricDamageEffect(context, lifeStealRatio, DamageEffectData);
 	}
 
 	[Serializable]
-	public struct VampiricDamageEffect : IEffect<ICombatable> {
-		public DamageDetail detail;
-		[Range(0f, 1f)] public float lifeStealRatio;
-		// even the stuct is a value type, the IHealthComponent it holds is a reference, 
-		// so we can still modify the caster's health through it and heal them for the life steal portion.
-		public IHealthComponent casterHealth;
+	public class VampiricDamageEffect : IEffect<ICombatable> {
+		private EffectContext _context;
+		private DamageEffectData _data;
+		[Range(0f, 1f)] public float _lifeStealRatio;
 
-		public VampiricDamageEffect(DamageDetail detail, float lifeStealRatio, IHealthComponent casterHealth) {
-			this.detail = detail;
-			this.lifeStealRatio = lifeStealRatio;
-			this.casterHealth = casterHealth;
+		public VampiricDamageEffect(EffectContext context, float lifeStealRatio, DamageEffectData ded) {
+			this._context = context;
+			this._lifeStealRatio = lifeStealRatio;
+			this._data = ded;
 		}
 
-		public readonly float Apply(ICombatable target) {
-			float finalDamage = target.TakeHit(detail);
-			if (this.casterHealth != null && finalDamage > 0f && this.lifeStealRatio > 0f) {
-				this.casterHealth.Heal(finalDamage * this.lifeStealRatio);
+		public float Apply(ICombatable target) {
+			float dmg = _context.CasterAttack != null
+				? _context.CasterAttack.GetDamage(this._data.ScalingStat) : this._data.pityDamage;
+			var dmgDetail = new DamageDetail(
+				dmg * this._data.DamageMultiplier,
+				_context.Caster,
+				this._data.DamageType,
+				this._data.pierceRatio,
+				this._data.ignoreResistance,
+				this._context.levelDifference
+			);
+			float finalDamage = target.TakeHit(dmgDetail);
+			if (this._context.CasterHealth != null && finalDamage > 0f && this._lifeStealRatio > 0f) {
+				this._context.CasterHealth.Heal(finalDamage * this._lifeStealRatio);
 			}
 			return finalDamage;
 		}
