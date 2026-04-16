@@ -15,10 +15,19 @@ namespace Kope.Character.Stats {
 		CRATE, // Critical Hit Rate
 		CDMG, // Critical Hit Damage
 	}
+	// these are hidden stat that are not directly shown to the player but 
+	// can affect gameplay in various ways, such as increasing healing received, 
+	// improving resource gathering speed, or providing a luck bonus that can influence random events.
+	public enum UtilityStatType {
+		HEAL_RATE,    // Incoming Multiplier
+		REGEN_RATE,   // Passive HP recovery
+		GATHER_SPEED, // Resource speed
+		LUCK,         // RNG Modifier
+	}
 
 	public enum DamageType { Physical, Fire, Ice, Lightning, Poison, }
 
-	public class CharacterStatsSystem : InitializableBase {
+	public class CharacterStatsSystem : InitializableBase, IStatSystem {
 
 		/*
 		No need to save the base stat values because they are already defined in the ScriptableObject 
@@ -162,6 +171,14 @@ namespace Kope.Character.Stats {
 			} else {
 				MyLogger.Warn($"Stat {type} not found for adding points!");
 			}
+		}
+
+		public void RemoveAllModifiersFromSource(string sourceName) {
+			foreach (var stat in this.currentStats.Values)
+				stat.RemoveAllModifiersFromSource(sourceName);
+
+			foreach (var stat in this.resistanceStats.Values)
+				stat.RemoveAllModifiersFromSource(sourceName);
 		}
 	}
 }

@@ -28,7 +28,7 @@ namespace Kope.EntityComponentSystem {
 
 
 		protected override bool OnInitializeService() {
-			base.Awake();
+			Awake();
 			if (!SceneServiceLocator.Instance.TryGetService(out this._sceneSaveSystem)) {
 				Debug.LogError("SceneSaveSystem is not registered in SceneServiceLocator. Please check your SceneBootStrap!");
 				return false;

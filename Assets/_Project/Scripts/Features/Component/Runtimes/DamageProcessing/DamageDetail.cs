@@ -10,7 +10,7 @@ namespace Kope.Component.Combat {
 		public float DamageAmount;
 		public GameObject Source;
 		public DamageType DamageType;
-		public int LevelDifference;
+		public int CasterLevel;
 		public float DefencePierceRatio;
 		public float IgnoreResistance;
 
@@ -20,13 +20,13 @@ namespace Kope.Component.Combat {
 			DamageType damageType,
 			float defencePierceRatio = 0,
 			float ignoreResistance = 0,
-			int levelDifference = 0) {
+			int casterLevel = 0) {
 			this.DamageAmount = damageAmount;
 			this.Source = source;
 			this.DamageType = damageType;
 			this.DefencePierceRatio = defencePierceRatio;
 			this.IgnoreResistance = ignoreResistance;
-			this.LevelDifference = levelDifference;
+			this.CasterLevel = casterLevel;
 		}
 	}
 
@@ -37,11 +37,10 @@ namespace Kope.Component.Combat {
 		"If false, the target will be pushed away from the point of origin like a traditional knockback.")]
 		public bool IsPulling;
 		public float Duration;
-		public Vector3 KnockbackDirection;
+
 		public float KnockbackStrength;
-		public KnockbackDetail(Vector3 direction, float strength, float duration, bool isPulling) {
+		public KnockbackDetail(float strength, float duration, bool isPulling) {
 			this.IsPulling = isPulling;
-			this.KnockbackDirection = direction;
 			this.KnockbackStrength = strength;
 			this.Duration = duration;
 		}

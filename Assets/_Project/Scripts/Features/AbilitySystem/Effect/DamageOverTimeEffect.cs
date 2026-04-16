@@ -57,7 +57,7 @@ namespace Kope.AbilitySystem.Effect {
 				this._data.DamageType,
 				this._data.PierceRatio,
 				this._data.IgnoreResistance,
-				this._context.levelDifference
+				this._context.CasterLevel
 			);
 		}
 

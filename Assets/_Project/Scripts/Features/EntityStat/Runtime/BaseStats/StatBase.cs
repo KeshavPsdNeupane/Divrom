@@ -35,5 +35,8 @@ namespace Kope.Character.Stats {
 		public void Update() {
 			this.currentStat.Update();
 		}
+		public void RemoveAllModifiersFromSource(string sourceName) {
+			this.currentStat.RemoveAllModifiersFromSource(sourceName);
+		}
 	}
 }

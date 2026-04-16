@@ -20,13 +20,7 @@ namespace Kope.Component.Movement {
 		[JsonProperty("dim")]
 		public Dimension Dimension { get; set; }
 
-		public MovementComponentSaveData() {
-		}
-
-		public MovementComponentSaveData(Dimension dimension, Vec3 position) {
-			this.Dimension = dimension;
-			this.Position = position;
-		}
+		public MovementComponentSaveData() { }
 
 		public MovementComponentSaveData(Dimension dimension, Vector3 position) {
 			this.Dimension = dimension;
@@ -34,10 +28,6 @@ namespace Kope.Component.Movement {
 		}
 	}
 
-	/// <summary>
-	/// Represents a single external force acting on the entity.
-	/// Manages its own lifecycle via CountdownTimer.
-	/// </summary>
 	public class ForceInstance {
 		public readonly Vector3 Force;
 		public readonly CountdownTimer Timer;
@@ -49,8 +39,6 @@ namespace Kope.Component.Movement {
 			this.Force = force;
 			this._onExpired = onExpiredCallback;
 			this.Timer = new CountdownTimer(duration);
-
-			// Hook to the timer stop to trigger removal from the component list
 			this.Timer.OnTimerStop += HandleTimerStop;
 			this.Timer.Start();
 		}
@@ -67,8 +55,22 @@ namespace Kope.Component.Movement {
 			this.Timer.Stop();
 		}
 	}
-
-	public class MovementComponentBase : InitializableBase, IMovementComponent, ISaveable {
+	/// <summary>
+	/// MovementComponentBase is a comprehensive movement system designed to handle both player input and 
+	/// external forces in a flexible way.
+	/// The amount of interfact might be scary at first but it is designed to 
+	/// be modular and extensible, allowing for a wide range of movement behaviors 
+	/// and interactions while maintaining a clear separation of concerns between different layers 
+	/// of movement logic.
+	/// And all the complexity of this implementation is kinda expected this this component is responsible ]
+	/// for handling not only the movement intent from player input but also the physics interactions
+	/// from external forces, stuns, and knockbacks, which can all interact in complex ways.
+	/// And these 2 kind of interaction need to be here so that we can have a consistent and unified movement 
+	/// system that can handle all these cases without needing to scatter the logic across multiple 
+	/// components or systems, which would make it harder to maintain and extend in the long run.
+	/// </summary>
+	public class MovementComponentBase : InitializableBase,
+	IMovementComponent, ISaveable, IStunnable, IKnockbackable {
 		[Header("References")]
 		[SerializeField] protected Dimension dimension = Dimension.TwoD;
 		[SerializeField] protected Rigidbody2D rb;
@@ -85,6 +87,8 @@ namespace Kope.Component.Movement {
 		// Movement Intent State
 		private CharacterStatsSystem _readOnlycharacterStatsSystem;
 		private Vector3 _lastDirection = Vector3.right;
+		private Vector3 _dimMask;
+		private BasicCountDownTimer _stunTimer;
 		protected MovementIntent _currentIntent;
 
 		public float Mass => this.rb.mass;
@@ -93,6 +97,8 @@ namespace Kope.Component.Movement {
 		public Dimension Dimension => this.dimension;
 		public Rigidbody2D Rigidbody => this.rb;
 
+		public bool IsStunned => this._stunTimer != null && this._stunTimer.IsRunning;
+
 		#region Initialization & Stats
 
 		protected override bool OnInit() {
@@ -100,10 +106,12 @@ namespace Kope.Component.Movement {
 				MyLogger.Error($"MovementComponentBase ({gameObject.name}): Missing required references.");
 				return false;
 			}
-
 			if (this.ecr.ComponentRegistry.TryGetReadOnlyComponent(out CharacterStatsSystem statsSystem)) {
 				this._readOnlycharacterStatsSystem = statsSystem;
 			}
+
+			this._stunTimer = new BasicCountDownTimer(0f);
+			this._dimMask = (dimension == Dimension.TwoD) ? new Vector3(1, 1, 0) : Vector3.one;
 			return true;
 		}
 
@@ -126,13 +134,16 @@ namespace Kope.Component.Movement {
 			}
 		}
 
-		public virtual void SetDefaultMovementSpeed(float speed) => this.defaultMovementSpeed = speed;
+		protected virtual void SetDefaultMovementSpeed(float speed) => this.defaultMovementSpeed = speed;
 
 		#endregion
 
 		#region Movement Logic
 
 		public virtual void SetMovementIntent(MovementIntent intent) {
+			// Ignore new intents while stunned
+			if (this._stunTimer.IsRunning) return;
+
 			if (intent.Direction.sqrMagnitude > MOVEMENT_EPSILON) {
 				intent.Direction.Normalize();
 				this._lastDirection = intent.Direction;
@@ -144,19 +155,24 @@ namespace Kope.Component.Movement {
 
 		protected override void OnUpdate() {
 			TickForceInstances(Time.deltaTime);
+			if (this._stunTimer.IsRunning) {
+				this._stunTimer.Tick(Time.deltaTime);
+			}
 		}
 
-		public virtual void ApplyKnockback(Vector3 direction, float duration, float impulse = 1f) {
+		public virtual void ApplyKnockback(Vector3 hitPoint, float duration, float impulse = 1f, bool isPulling = false) {
+			// to convert the Vector3 hitPoint to Vector2 for 2D calculations, ignoring the z-axis, at once than casting
+			// it multiple times later on.
+			// for 3d just remove the Vector2 conversion and use the hitPoint directly.
+			Vector2 vector2 = hitPoint;
+			Vector3 direction = isPulling ? (this.rb.position - vector2) : (vector2 - this.rb.position);
 			Vector3 forceVector = direction.normalized * impulse;
-
 			ForceInstance instance = new(forceVector, duration, HandleForceExpiration);
 			this._activeForces.Add(instance);
-
 			RecalculateNetForce();
 		}
 
 		private void TickForceInstances(float deltaTime) {
-			// Iterate backwards to safely handle removals within the same frame
 			for (int i = this._activeForces.Count - 1; i >= 0; i--) {
 				this._activeForces[i].Tick(deltaTime);
 			}
@@ -171,39 +187,38 @@ namespace Kope.Component.Movement {
 
 		private void RecalculateNetForce() {
 			_cachedNetForce = Vector3.zero;
-			// Using for-loop instead of foreach to avoid allocation
 			for (int i = 0; i < this._activeForces.Count; i++) {
 				this._cachedNetForce += this._activeForces[i].Force;
 			}
-
-			if (this.dimension == Dimension.TwoD) {
-				_cachedNetForce.z = 0;
-			}
+			// Apply dimension mask to the cached force
+			_cachedNetForce = Vector3.Scale(_cachedNetForce, this._dimMask);
 		}
 
+		/// <summary>
+		/// Applies the integrated Physics and Intent layers.
+		/// Should be called from FixedUpdate via a Physics Controller or directly if this component manages its own ticks.
+		/// </summary>
 		public virtual void ApplyPhysics(float stateSpeedMultiplier = 1f) {
-			Vector3 moveVelocity = Vector3.zero;
+			// 1. Physics Layer (Always active, pre-masked in RecalculateNetForce)
+			Vector3 physicsPart = this._cachedNetForce;
 
-			// 1. Base Input/AI Velocity
-			if (this._currentIntent.IntentType != MovementIntentType.Stop) {
-				moveVelocity = this.defaultMovementSpeed * stateSpeedMultiplier * this._currentIntent.Direction;
-			}
+			// 2. Intent Layer (Evaluates to zero if stunned or stopping)
+			bool canMove = !this.IsStunned && this._currentIntent.IntentType != MovementIntentType.Stop;
 
-			// 2. Additive Physics Velocity (Net Force)
-			Vector3 targetVelocity = moveVelocity + this._cachedNetForce;
+			Vector3 intentPart = canMove
+				? this._currentIntent.Direction * (this.defaultMovementSpeed * stateSpeedMultiplier)
+				: Vector3.zero;
 
-			if (this.dimension == Dimension.TwoD) {
-				targetVelocity.z = 0;
-			}
+			// 3. Blend Logic (Consistent weighting for smooth feel)
+			Vector3 targetVelocity = intentPart + physicsPart;
 
-			// 3. 30/70 Velocity Blending logic
-			Vector3 physicsInfluence = this.rb.linearVelocity * 0.3f;
-			Vector3 intentInfluence = targetVelocity * 0.7f;
-			this.rb.linearVelocity = physicsInfluence + intentInfluence;
+			// 4. The Final Cast for Rigidbody2D
+			// (0.3 * current) allows for momentum conservation
+			// (0.7 * target) ensures snappy response to input or new forces
+			this.rb.linearVelocity = (this.rb.linearVelocity * 0.3f) + (Vector2)(targetVelocity * 0.7f);
 		}
 
 		public void StopMovementIntent() {
-			// our intent is stopping not the physics forces, so we clear the intent but keep forces intact
 			this._currentIntent = new MovementIntent(
 				Vector3.zero,
 				MovementIntentType.Stop,
@@ -219,9 +234,9 @@ namespace Kope.Component.Movement {
 
 		#endregion
 
-		#region Persistence
+		#region Persistence & Stun
 
-		public ISaveData GetSaveData() => new MovementComponentSaveData(this.dimension, new Vec3(this.rb.position));
+		public ISaveData GetSaveData() => new MovementComponentSaveData(this.dimension, this.rb.position);
 
 		public void LoadFromSaveData(ISaveData data) {
 			if (data is MovementComponentSaveData saveData) {
@@ -229,6 +244,32 @@ namespace Kope.Component.Movement {
 				this.dimension = saveData.Dimension;
 			}
 		}
+
+		public void Stun(float duration) {
+			this._stunTimer.Reset(duration);
+			this._stunTimer.Start();
+		}
+		/// <summary>
+		/// A more severe form of stun that not only applies the stun duration but also immediately clears 
+		/// all active forces and prevents new movement intents from taking effect during the stun. 
+		/// This can be used for things like heavy crowd control effects, environmental hazards, or 
+		/// powerful enemy attacks that should feel more impactful than a regular stun.
+		/// </summary>
+		public void SuperStun(float duration) {
+			//1. Clear all active forces immediately
+			for (int i = 0; i < this._activeForces.Count; i++) {
+				this._activeForces[i].Dispose();
+			}
+			this._activeForces.Clear();
+			RecalculateNetForce();
+			// "force" a stop intent to ensure no movement from 
+			// input during the stun duration, even if the intent is still technically active.
+			StopMovementIntent();
+			// 2. Apply the stun duration (can be longer than a regular stun to reflect the harsher effect)
+			this._stunTimer.Reset(duration * 1.5f);
+			this._stunTimer.Start();
+		}
+		public void ForceCancellStun() => this._stunTimer?.Stop();
 
 		#endregion
 	}

@@ -43,7 +43,7 @@ namespace Kope.AbilitySystem.Effect {
 				 this._data.DamageType,
 				 this._data.pierceRatio,
 				 this._data.ignoreResistance,
-				 this.context.levelDifference
+				 this.context.CasterLevel
 				);
 			float finalDamage = target.TakeHit(dmgDetail);
 			return finalDamage;

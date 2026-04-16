@@ -82,7 +82,7 @@ namespace Kope.Core.Init {
 				var item = this.ordered[i];
 				try { item.Shutdown(); } catch (System.Exception ex) { MyLogger.Error($"InitCallerManager: Exception in Shutdown of {item.GetType().Name}: {ex}"); }
 			}
-			base.Shutdown();
+			Shutdown();
 		}
 
 		[ContextMenu("Populate Initializables")]

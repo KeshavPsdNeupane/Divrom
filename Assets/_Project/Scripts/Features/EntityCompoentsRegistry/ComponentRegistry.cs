@@ -29,7 +29,7 @@ namespace Kope.Core.EntityComponentRegistry {
 	{
 		typeof(MonoBehaviour),
 		typeof(Behaviour),
-		typeof(UnityEngine.Component),
+		typeof(Component),
 		typeof(ScriptableObject)
 	};
 

@@ -9,23 +9,23 @@ namespace Kope.AbilitySystem.Effect {
 	// the context passed in, so the effect itself doesn't need to know/it doesn't care about the context of who the caster is
 	// or who the target
 	[Serializable]
-	public class HealOverTimeEffectFactory : IEffectFactory<IHealable> {
+	public class HealOverTimeEffectFactory : IEffectFactory<IVitalityManager> {
 		public float healPerInterval = 10f;
 		public float duration;
 		[Range(0.1f, 5f)] public float tickInterval = 1f;
 
-		public IEffect<IHealable> Create(EffectContext context = default)
+		public IEffect<IVitalityManager> Create(EffectContext context = default)
 			=> new HealOverTimeEffect(this.healPerInterval, this.duration, this.tickInterval);
 	}
 
 	[Serializable]
-	public class HealOverTimeEffect : IEffect<IHealable>, ITickableEffect {
+	public class HealOverTimeEffect : IEffect<IVitalityManager>, ITickableEffect {
 		public float flathealAmountPerInterval;
 		public float duration;
 		public float tickInterval;
 		public event Action<ITickableEffect> OnCompletedOrCancell;
 		private IntervalTimer timer;
-		private IHealable currentTarget;
+		private IVitalityManager currentTarget;
 
 
 		public HealOverTimeEffect(float healAmountPerInterval, float duration, float tickInterval) {
@@ -40,7 +40,7 @@ namespace Kope.AbilitySystem.Effect {
 
 		}
 
-		public float Apply(IHealable target) {
+		public float Apply(IVitalityManager target) {
 			this.currentTarget = target;
 			this.timer = new IntervalTimer(duration, tickInterval) {
 				OnInterval = OnInterval,

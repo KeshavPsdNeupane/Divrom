@@ -106,5 +106,35 @@ namespace ThirdParty {
 			if (this.Time <= 0) Stop();
 		}
 	}
+	/// <summary>
+	/// Timer with out the event callbacks, just a simple countdown timer that can be used for things 
+	/// like stun duration, etc.
+	/// </summary>
+	public class BasicCountDownTimer {
+		private float Time;
+		private readonly float initialTime;
+		public bool IsRunning { get; private set; }
+		public BasicCountDownTimer(float time) {
+			this.initialTime = time;
+			this.Time = time;
+		}
+		public void Tick(float deltaTime) {
+			if (!this.IsRunning) return;
+			Time -= deltaTime;
+			if (Time <= 0) {
+				Time = 0;
+				IsRunning = false;
+			}
+		}
+		public void Start() {
+			Time = initialTime;
+			IsRunning = true;
+		}
+		public void Reset(float newTime) {
+			this.Time = newTime;
+		}
+		public void Stop() => IsRunning = false;
 
+
+	}
 }

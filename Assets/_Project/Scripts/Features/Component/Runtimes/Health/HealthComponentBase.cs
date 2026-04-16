@@ -51,6 +51,7 @@ namespace Kope.Component.Health {
 			if (ecr.ComponentRegistry.TryGetMutatableComponent(out characterStatsSystem)) {
 				return true;
 			}
+
 			return false;
 		}
 
@@ -58,16 +59,18 @@ namespace Kope.Component.Health {
 		private void OnDisable() => UnsubscribeToStats();
 
 		private void SubscribeToStats() {
-			if (characterStatsSystem?.CurrentStats != null) {
-				characterStatsSystem.StatsSubscribe(CharacterStatType.HP, SetMaxHealth);
-				SetMaxHealth(characterStatsSystem.CurrentStats[CharacterStatType.HP].GetValue());
+			// now IsInitialized garuntte the characterStatSyste internal is fully configured, so we 
+			// can safely subscribe to the stat change event and get the initial max health value.
+			if (this.characterStatsSystem != null && this.characterStatsSystem.IsInitialized) {
+				this.characterStatsSystem.StatsSubscribe(CharacterStatType.HP, SetMaxHealth);
+				SetMaxHealth(this.characterStatsSystem.CurrentStats[CharacterStatType.HP].GetValue());
 				this.currentHealth = this.maxHealth;
 			}
 		}
 
 		private void UnsubscribeToStats() {
-			if (characterStatsSystem?.CurrentStats != null) {
-				characterStatsSystem.StatsUnsubscribe(CharacterStatType.HP, SetMaxHealth);
+			if (this.characterStatsSystem != null && this.characterStatsSystem.IsInitialized) {
+				this.characterStatsSystem.StatsUnsubscribe(CharacterStatType.HP, SetMaxHealth);
 			}
 		}
 

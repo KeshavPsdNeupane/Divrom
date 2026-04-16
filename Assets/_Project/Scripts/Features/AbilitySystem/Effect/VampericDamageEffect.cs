@@ -25,15 +25,15 @@ namespace Kope.AbilitySystem.Effect {
 		}
 
 		public float Apply(ICombatable target) {
-			float dmg = _context.CasterAttack != null
-				? _context.CasterAttack.GetDamage(this._data.ScalingStat) : this._data.pityDamage;
+			float dmg = this._context.CasterAttack != null
+				? this._context.CasterAttack.GetDamage(this._data.ScalingStat) : this._data.pityDamage;
 			var dmgDetail = new DamageDetail(
 				dmg * this._data.DamageMultiplier,
-				_context.Caster,
+				this._context.Caster,
 				this._data.DamageType,
 				this._data.pierceRatio,
 				this._data.ignoreResistance,
-				this._context.levelDifference
+				this._context.CasterLevel
 			);
 			float finalDamage = target.TakeHit(dmgDetail);
 			if (this._context.CasterHealth != null && finalDamage > 0f && this._lifeStealRatio > 0f) {

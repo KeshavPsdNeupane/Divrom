@@ -42,10 +42,9 @@ namespace Kope.Component.Movement {
 		Dimension Dimension { get; }
 		void SetMovementIntent(MovementIntent intent);
 		Vector3 GetLookingAtDirection();
-
-		// This remains in the interface but the IMPLEMENTATION uses ForceInstance internally
-		void ApplyKnockback(Vector3 direction, float duration, float impulse = 2.5f);
-
 		void StopMovementIntent();
+	}
+	public interface IKnockbackable {
+		void ApplyKnockback(Vector3 direction, float duration, float impulse = 2.5f, bool isPulling = false);
 	}
 }
