@@ -1,24 +1,16 @@
 using System;
 using Kope.Component.Combat.Interface;
 using Kope.Component.Health.Interface;
+using Kope.Component.HitBox.Interface;
 using Kope.Component.Movement;
 using Kope.Core.EntityComponentRegistry;
 using UnityEngine;
 
 public readonly struct TargetContext : IEquatable<TargetContext> {
-	public readonly ICombatable DamageTarger;
-	public readonly IHealable HealableTarget;
-	public readonly IStunnable StunnableTarget;
-	public readonly IKnockbackable KnockbackableTarget;
+	public readonly IHurtBoxComponent HitBox;
 
-	public TargetContext(ICombatable target,
-	IHealable healableTarget = null, IStunnable stunnableTarget = null,
-	IKnockbackable knockbackableTarget = null) {
-
-		this.DamageTarger = target;
-		this.HealableTarget = healableTarget;
-		this.StunnableTarget = stunnableTarget;
-		this.KnockbackableTarget = knockbackableTarget;
+	public TargetContext(IHurtBoxComponent target) {
+		this.HitBox = target;
 	}
 
 	public static TargetContext Create(Collider collider) {
@@ -37,42 +29,35 @@ public readonly struct TargetContext : IEquatable<TargetContext> {
 
 	public static TargetContext Create(EntityComponentsRegistry registry) {
 		if (registry == null || registry.ComponentRegistry == null) return default;
+		// these can be null, and that's fine - the TargetContext can represent a target 
+		// that isn't healable, stunnable, or knockbackable without issue.
+		// # dispose the return bool using _ since we don't actually need to know if 
+		// the component was found or not - the resulting TargetContext will
+		// just have null for any missing components, which is fine.
+		// and it is abiility responsibility to check if the target is valid for its purposes,
+		// not the responsibility of this TargetContext struct.
+		_ = registry.ComponentRegistry.TryGetReadOnlyComponent(out IHurtBoxComponent combatTarget, false);
+		if (combatTarget == null) return default;
 
-		registry.ComponentRegistry.TryGetReadOnlyComponent<IDamageProcessor>(out var target, false);
-		return Create(registry, target);
+		return new TargetContext(combatTarget);
 	}
 
-	private static TargetContext Create(EntityComponentsRegistry registry, IDamageProcessor target) {
-		if (registry == null || registry.ComponentRegistry == null || target == null) return default;
 
-		IHealable healableTarget;
-		IStunnable stunnableTarget;
-		IKnockbackable knockbackableTarget;
-		// ignore the return values since we're using TryGetReadOnlyComponent to avoid 
-		// unnecessary logging of missing components
-		_ = registry.ComponentRegistry.TryGetReadOnlyComponent(out healableTarget, false);
-		_ = registry.ComponentRegistry.TryGetReadOnlyComponent(out stunnableTarget, false);
-		_ = registry.ComponentRegistry.TryGetReadOnlyComponent(out knockbackableTarget, false);
-		return new TargetContext(target, healableTarget, stunnableTarget, knockbackableTarget);
-	}
 
 	public static TargetContext Create(IHealable healableTarget, IStunnable stunnableTarget = null) {
-		if (healableTarget is not ICombatable combatTarget) return default;
-		return new TargetContext(combatTarget, healableTarget, stunnableTarget);
+		if (healableTarget is not IHurtBoxComponent combatTarget) return default;
+		return new TargetContext(combatTarget);
 	}
 	public bool Equals(TargetContext other) {
 		// Two contexts are equal if their primary targets are the same object.
 		// We use ReferenceEquals because these are interface references on the same GameObject.
-		return ReferenceEquals(DamageTarger, other.DamageTarger) &&
-			   ReferenceEquals(HealableTarget, other.HealableTarget) &&
-			   ReferenceEquals(StunnableTarget, other.StunnableTarget) &&
-			   ReferenceEquals(KnockbackableTarget, other.KnockbackableTarget);
+		return ReferenceEquals(HitBox, other.HitBox);
 	}
 
 	public override bool Equals(object obj) => obj is TargetContext other && Equals(other);
 
 	public override int GetHashCode() {
-		return HashCode.Combine(DamageTarger, HealableTarget, StunnableTarget, KnockbackableTarget);
+		return HitBox != null ? HitBox.GetHashCode() : 0;
 	}
 
 	public static bool operator ==(TargetContext left, TargetContext right) => left.Equals(right);

@@ -30,12 +30,12 @@ namespace Kope.Component.HitBox {
 		public readonly GameObject Caster;
 		public readonly CombatType CombatType;
 		public readonly EffectContext EffectContext;
-		public readonly IReadOnlyList<IEffectFactory<IVitalityManager>> Effects;
+		public readonly IReadOnlyList<IEffectFactory<IHealable>> Effects;
 		public HealableHitInfo(
 			GameObject caster,
 			CombatType combatType = CombatType.Entity,
 			EffectContext effectContext = default,
-			IReadOnlyList<IEffectFactory<IVitalityManager>> effects = null) {
+			IReadOnlyList<IEffectFactory<IHealable>> effects = null) {
 
 			this.Caster = caster;
 			this.CombatType = combatType;
@@ -77,6 +77,7 @@ namespace Kope.Component.HitBox {
 
 
 		public class HitBoxComponent : InitializableBase, IHurtBoxComponent {
+			[SerializeField] private CombatType combatType = CombatType.Entity;
 			[SerializeField] private Collider hurtBoxCollider;
 			[SerializeField] private bool isInvulnerable;
 
@@ -85,7 +86,7 @@ namespace Kope.Component.HitBox {
 			public event Action<StunnableHitInfo> OnHitStunnable;
 			public event Action<KnockableHitInfo> OnHitKnockable;
 			public Collider HurtBoxCollider => hurtBoxCollider;
-
+			public CombatType CombatType => combatType;
 
 
 			protected override bool OnInit() {
@@ -110,7 +111,7 @@ namespace Kope.Component.HitBox {
 				GameObject caster,
 				CombatType combatType = CombatType.Entity,
 				in EffectContext effectContext = default,
-				IReadOnlyList<IEffectFactory<IVitalityManager>> effects = null) {
+				IReadOnlyList<IEffectFactory<IHealable>> effects = null) {
 				if (caster == null) return;
 				this.OnHitHealable?.Invoke(new HealableHitInfo(caster, combatType, effectContext, effects));
 			}

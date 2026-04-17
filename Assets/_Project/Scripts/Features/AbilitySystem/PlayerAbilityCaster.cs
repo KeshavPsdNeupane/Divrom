@@ -11,6 +11,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
 using Kope.Component.Movement;
+using Kope.Component.HitBox.Interface;
 
 namespace Kope.Component.Ability {
 
@@ -31,6 +32,7 @@ namespace Kope.Component.Ability {
 		[SerializeField] private EntityComponentsRegistry ecr;
 		private InputManager _inputManager;
 		private TargetingManager _targetingManager;
+		private IHealthComponent _casterHealth;
 		private IAttackComponent _casterAttack;
 
 		private TargetContext _casterContext;
@@ -54,30 +56,39 @@ namespace Kope.Component.Ability {
 				MyLogger.Error($"PlayerAbilityCaster on {gameObject.name} could not resolve InputManager.");
 				return false;
 			}
-			this.ecr.ComponentRegistry.TryGetReadOnlyComponent(out this._casterAttack, false);
+			if (!this.ecr.ComponentRegistry.TryGetReadOnlyComponent(out this._casterAttack, false)) {
+				Debug.LogError($"PlayerAbilityCaster on {gameObject.name} could not find an IAttackComponent " +
+				"in the EntityComponentsRegistry.");
+				return false;
+			}
+			if (!this.ecr.ComponentRegistry.TryGetReadOnlyComponent(out this._casterHealth, false)) {
+				Debug.LogError($"PlayerAbilityCaster on {gameObject.name} could not find an IHealthComponent" +
+				" in the EntityComponentsRegistry.");
+				return false;
+			}
 
-			if (!this.ecr.ComponentRegistry.TryGetReadOnlyComponent(out ICombatable _casterCombat, false)) {
-				MyLogger.Error($"PlayerAbilityCaster on {gameObject.name} could not resolve its own ICombatComponent.");
+			// we are passing the Ihurtbox component as the "combat target" in the caster context, s
+			// since hurtbox can be placed on any entity that should be hittable, but combatable is a component that will
+			// be only on entity that can actually engage in combat, and there might be some entities in 
+			// the game that have hurtboxes but aren't combatable (like a training dummy or something), 
+			// so it makes more sense to use the hurtbox as the reference point for the caster's combat-related properties,
+			// since if an entity has a combatable component it should also have a hurtbox, but not necessarily the 
+			// other way around. so with this distinction we can have a entity like a Pot that give currency but it doesnt need to
+			//  have fulldependencies of a combatable entity, but it can still be targeted by abilities
+			//  that look for a hurtbox,for that instance the hurtbox will redirect the hit with event to pot other component 
+			// that will handle pot specific logic like giving currency and playing break animation, 
+			// without needing to have a full combatable component with health, attack, etc.
+			//  that would be irrelevant for a pot.
+
+			if (!this.ecr.ComponentRegistry.TryGetReadOnlyComponent(out IHurtBoxComponent _casterHitBox, false)) {
+				MyLogger.Error($"PlayerAbilityCaster on {gameObject.name} could not resolve its own IHurtBoxComponent.");
 				return false;
 			}
-			if (!this.ecr.ComponentRegistry.TryGetReadOnlyComponent(out IHealable _casterHealth, false)) {
-				MyLogger.Error($"PlayerAbilityCaster on {gameObject.name} could not resolve its own IHealthComponent.");
-				return false;
-			}
-			if (!this.ecr.ComponentRegistry.TryGetReadOnlyComponent(out IStunnable _casterStun, false)) {
-				MyLogger.Error($"PlayerAbilityCaster on {gameObject.name} could not resolve its own IStunnableComponent.");
-				return false;
-			}
-			if (!this.ecr.ComponentRegistry.TryGetReadOnlyComponent(out IKnockbackable _casterKnockback, false)) {
-				MyLogger.Error($"PlayerAbilityCaster on {gameObject.name} could not resolve its own IKnockbackableComponent.");
-				return false;
-			}
+
 			// just store the relevant components in the caster context for use
 			// by targeting strategies and effects, since some abilities might want to 
 			// reference the caster's stats or apply effects to the caster as well.
-			this._casterContext = new TargetContext(
-				_casterCombat, _casterHealth, _casterStun, _casterKnockback
-			);
+			this._casterContext = new TargetContext(_casterHitBox);
 			SubscribeToInput();
 			return true;
 		}
@@ -179,7 +190,7 @@ namespace Kope.Component.Ability {
 
 			context.Caster = this.gameObject;
 			context.CasterAttack = this._casterAttack;
-			context.CasterHealth = this._casterContext.HealableTarget;
+			context.CasterHealth = this._casterHealth;
 			// init the caster level from the Level Component if implemented, 
 			// otherwise default to 0, since some abilities might want to use 
 			// the caster's level for scaling purposes, and it's better to have a

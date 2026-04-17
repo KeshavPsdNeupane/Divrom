@@ -14,17 +14,19 @@ public class HurtBoxHitAbility : AbilityBase {
 	[SerializeReference, SubclassSelector] private List<IEffectFactory<IStunnable>> stunEffects = new();
 
 	public override void Execute(TargetContext target, EffectContext casterEffectContext) {
-		if (target.DamageTarger == null || target.DamageTarger.HurtBox == null) return;
-		if (casterEffectContext.Caster == null) return;
-		var type = combatType;
-		// target.Target.HurtBox.HitEntity(casterEffectContext.Caster, this.combatType, casterEffectContext, this.damageEffects, this.stunEffects);
 
-		// if (target.HealableTarget != null && this.healEffects.Count > 0) {
-		// 	for (int i = 0; i < this.healEffects.Count; i++) {
-		// 		var effect = this.healEffects[i]?.Create(casterEffectContext);
-		// 		effect?.Apply(target.HealableTarget);
-		// 	}
-		// }
+		if (target.HitBox == null || casterEffectContext.Caster == null) return;
+		var type = combatType;
+		if (target.HitBox != null && target.HitBox.CombatType == CombatType.Entity) {
+			var hitbox = target.HitBox;
+			hitbox.HitCombatible(casterEffectContext.Caster, type, casterEffectContext, damageEffects);
+			hitbox.HitHealable(casterEffectContext.Caster, type, casterEffectContext, healEffects);
+			hitbox.HitStunnable(casterEffectContext.Caster, type, casterEffectContext, stunEffects);
+			// if the ability has any knockback effects, we would also call hitbox.HitKnockable here,
+			// but this ability doesn't have any knockback effects so we don't need to.
+			// below is the example for the routing.
+			//hitbox.HitKnockable(casterEffectContext.Caster, type, casterEffectContext, knockEffects);
+		}
 
 	}
 

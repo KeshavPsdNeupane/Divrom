@@ -40,14 +40,14 @@ namespace Kope.Component.Ability.Targeting {
 		}
 
 		protected void ExecuteOnTarget(in TargetContext target, Vector3? HitPoint = null) {
-			if (this.ability == null || target.DamageTarger == null) return;
+			if (this.ability == null || target.HitBox == null) return;
 
 			var context = this.effectContext;
 			if (HitPoint.HasValue) {
 				context.HitPoint = HitPoint.Value;
 			}
 
-			var targetPosition = target.DamageTarger is UnityComponent targetComponent
+			var targetPosition = target.HitBox is UnityComponent targetComponent
 				? targetComponent.transform.position
 				: this.targetingManager != null ? this.targetingManager.transform.position : Vector3.zero;
 

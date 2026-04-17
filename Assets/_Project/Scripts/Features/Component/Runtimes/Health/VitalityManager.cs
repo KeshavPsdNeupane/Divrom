@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Kope.Character.Stats;
-using Kope.Component.Health.Interface;
 using Kope.Component.Combat.Interface;
 using Kope.Component.HitBox.Interface;
 using Kope.Core.EntityComponentRegistry;
@@ -13,21 +12,36 @@ namespace Kope.Component.Health.Interface {
 	public interface IVitalityManager {
 		void Heal(float flat, float percent);
 
-		void ApplyEffect(IEffect<IVitalityManager> effect);
+		void ApplyEffect(IEffect<IHealable> effect);
 	}
+
 	public class VitalityManager : InitializableBase, IVitalityManager {
 		[SerializeField] private EntityComponentsRegistry ecr;
 
 		private IHurtBoxComponent _hurtBox;
-		private IHealthComponent _health;
+
 		private IStatSystem _statSystem;
+		private IHealable _health;
 
 		private readonly List<ITickableEffect> _activeHealEffects = new();
 
 		protected override bool OnInit() {
-			if (!ecr.ComponentRegistry.TryGetMutatableComponent(out _health)) return false;
-			if (!ecr.ComponentRegistry.TryGetReadOnlyComponent(out _statSystem)) return false;
-			if (!ecr.ComponentRegistry.TryGetMutatableComponent(out _hurtBox)) return false;
+			if (ecr == null || ecr.ComponentRegistry == null) {
+				Debug.LogError($"VitalityManager on {gameObject.name} is missing an EntityComponentsRegistry.");
+				return false;
+			}
+			if (!ecr.ComponentRegistry.TryGetReadOnlyComponent(out _health)) {
+				Debug.LogError($"VitalityManager on {gameObject.name} could not find an IHealable component in the EntityComponentsRegistry.");
+				return false;
+			}
+			if (!ecr.ComponentRegistry.TryGetReadOnlyComponent(out _statSystem)) {
+				Debug.LogError($"VitalityManager on {gameObject.name} could not find an IStatSystem component in the EntityComponentsRegistry.");
+				return false;
+			}
+			if (!ecr.ComponentRegistry.TryGetMutatableComponent(out _hurtBox)) {
+				Debug.LogError($"VitalityManager on {gameObject.name} could not find an IHurtBoxComponent component in the EntityComponentsRegistry.");
+				return false;
+			}
 
 			return true;
 		}
@@ -60,12 +74,12 @@ namespace Kope.Component.Health.Interface {
 			_health.Heal(flat * bonusMult, percent);
 		}
 
-		public void ApplyEffect(IEffect<IVitalityManager> effect) {
+		public void ApplyEffect(IEffect<IHealable> effect) {
 			if (effect is ITickableEffect tickable) {
 				_activeHealEffects.Add(tickable);
 				tickable.OnCompletedOrCancell += (e) => _activeHealEffects.Remove(e);
 			}
-			effect.Apply(this);
+			effect.Apply(this._health);
 		}
 
 		private void HandleHurtBoxHeal(HealableHitInfo info) {

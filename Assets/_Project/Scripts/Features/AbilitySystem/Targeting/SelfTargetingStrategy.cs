@@ -11,7 +11,7 @@ namespace Kope.Component.Ability.Targeting {
 		public override void Start(AbilityBase ability, TargetingManager targetingManager,
 		in TargetContext casterContext, EffectContext effectContext) {
 			Begin(ability, targetingManager, casterContext, effectContext);
-			if (this.casterContext != null && this.casterContext.DamageTarger != null) {
+			if (this.casterContext != null && this.casterContext.HitBox != null) {
 				ExecuteOnTarget(this.casterContext);
 			}
 			Cancel();

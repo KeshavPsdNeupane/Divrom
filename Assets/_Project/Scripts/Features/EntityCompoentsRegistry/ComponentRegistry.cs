@@ -136,7 +136,7 @@ namespace Kope.Core.EntityComponentRegistry {
 
 		}
 
-		public bool TryGetReadOnlyComponent<Tcomponent>([MaybeNullWhen(false)] out Tcomponent component, bool logWarning = true) {
+		public bool TryGetReadOnlyComponent<Tcomponent>([MaybeNullWhen(false)] out Tcomponent component, bool logInternalWarning = true) {
 			var type = typeof(Tcomponent);
 			// Try to get the component by type
 			if (components.TryGetValue(type, out var comp) && comp is Tcomponent typedComp) {
@@ -144,7 +144,7 @@ namespace Kope.Core.EntityComponentRegistry {
 				return true;
 			}
 
-			if (logWarning) {
+			if (logInternalWarning) {
 				Debug.LogWarning(
 					$"[ECS Warning] Component of type {type.Name} requested but not yet registered. Error Found in {entityTransform.name}.\n" +
 					"Possible reasons:\n" +

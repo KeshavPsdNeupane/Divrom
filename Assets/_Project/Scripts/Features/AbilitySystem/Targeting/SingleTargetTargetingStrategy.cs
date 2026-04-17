@@ -64,9 +64,9 @@ namespace Kope.Component.Ability.Targeting {
 
 			if (!this.targetingManager.TryGetMouseRaycast(out var hit, this.targetingManager.TargetLayerMask)) return;
 			var targetContext = TargetContext.Create(hit.collider);
-			if (targetContext.DamageTarger == null) return;
+			if (targetContext.HitBox == null) return;
 
-			var direction = targetContext.DamageTarger is UnityComponent targetComponent
+			var direction = targetContext.HitBox is UnityComponent targetComponent
 				? (targetComponent.transform.position - this.targetingManager.transform.position).normalized
 				: this.targetingManager.transform.forward;
 

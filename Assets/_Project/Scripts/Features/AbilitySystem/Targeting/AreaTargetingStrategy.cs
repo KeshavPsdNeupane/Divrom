@@ -4,6 +4,7 @@ using Kope.Component.Combat.Interface;
 using UnityComponent = UnityEngine.Component;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Kope.Component.HitBox.Interface;
 
 namespace Kope.Component.Ability.Targeting {
 
@@ -74,9 +75,9 @@ namespace Kope.Component.Ability.Targeting {
 
 			for (int i = 0; i < this.resolvedTargets.Count; i++) {
 				var target = this.resolvedTargets[i];
-				if (target.DamageTarger == null) continue;
+				if (target.HitBox == null) continue;
 
-				var direction = target.DamageTarger is UnityComponent targetComponent
+				var direction = target.HitBox is UnityComponent targetComponent
 					? (targetComponent.transform.position - this.targetingManager.transform.position).normalized
 					: this.targetingManager.transform.forward;
 
@@ -90,13 +91,14 @@ namespace Kope.Component.Ability.Targeting {
 			this.resolvedTargets.Clear();
 			// 2D-centric overlap. If you need a 3D version, swap this for Physics.OverlapSphere(point, radius, mask)
 			// and make the target colliders/sensors use SphereCollider instead of Collider2D.
+
 			var colliders = Physics2D.OverlapCircleAll(point, this.radius, this.targetingManager.TargetLayerMask);
-			var uniqueTargets = new HashSet<ICombatable>();
+			var uniqueTargets = new HashSet<IHurtBoxComponent>();
 
 			for (int i = 0; i < colliders.Length; i++) {
 				var targetContext = TargetContext.Create(colliders[i]);
-				if (targetContext.DamageTarger == null) continue;
-				if (!uniqueTargets.Add(targetContext.DamageTarger)) continue;
+				if (targetContext.HitBox == null) continue;
+				if (!uniqueTargets.Add(targetContext.HitBox)) continue;
 				this.resolvedTargets.Add(targetContext);
 			}
 		}

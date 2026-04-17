@@ -43,6 +43,7 @@ namespace Kope.Component.HitBox.Interface {
 	}
 
 	public interface IHurtBoxComponent {
+		public CombatType CombatType { get; }
 		public event Action<CombatibleHitInfo> OnHitCombatible;
 		public event Action<HealableHitInfo> OnHitHealable;
 		public event Action<StunnableHitInfo> OnHitStunnable;
@@ -55,7 +56,7 @@ namespace Kope.Component.HitBox.Interface {
 				GameObject caster,
 				CombatType combatType = CombatType.Entity,
 				in EffectContext effectContext = default,
-				IReadOnlyList<IEffectFactory<IVitalityManager>> effects = null);
+				IReadOnlyList<IEffectFactory<IHealable>> effects = null);
 		public void HitStunnable(
 			GameObject caster,
 			CombatType combatType = CombatType.Entity,

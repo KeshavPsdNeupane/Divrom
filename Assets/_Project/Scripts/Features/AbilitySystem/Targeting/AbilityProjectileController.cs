@@ -41,7 +41,7 @@ namespace Kope.Component.Ability.Targeting {
 			if (this.caster != null && other.transform.root.gameObject == this.caster.transform.root.gameObject) return;
 
 			var targetContext = TargetContext.Create(other);
-			if (targetContext.DamageTarger != null) {
+			if (targetContext.HitBox != null) {
 				this.ability.Execute(targetContext, this.effectContext);
 			}
 			if (this.destroyOnAnyHit) {
