@@ -277844,7 +277844,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/_Project/Scripts/Features/AbilitySystem
+    - Assets/_Project/Scripts/Features/AbilitySystem/Targeting
     m_Globs: []
     m_ProductIds: 
     m_AnyWithAssetOrigin: 0
@@ -277854,7 +277854,7 @@ MonoBehaviour:
   m_ViewMode: 1
   m_StartGridSize: 74
   m_LastFolders:
-  - Assets/_Project/Scripts/Features/AbilitySystem
+  - Assets/_Project/Scripts/Features/AbilitySystem/Targeting
   m_LastFoldersGridSize: 74
   m_LastProjectPath: /mnt/Development/GameDevelopment/Unity/projects/example/Divrom
   m_LockTracker:
@@ -277863,19 +277863,19 @@ MonoBehaviour:
   m_FolderTreeState:
     scrollPos: {x: 0, y: 271}
     m_SelectedIDs:
-    - m_Data: 60692
+    - m_Data: 60942
     m_LastClickedID:
-      m_Data: 60692
+      m_Data: 60942
     m_ExpandedIDs:
     - m_Data: 0
-    - m_Data: 60700
-    - m_Data: 60702
     - m_Data: 60704
     - m_Data: 60706
     - m_Data: 60708
     - m_Data: 60710
     - m_Data: 60712
     - m_Data: 60714
+    - m_Data: 60716
+    - m_Data: 60718
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -277908,14 +277908,14 @@ MonoBehaviour:
       m_Data: 0
     m_ExpandedIDs:
     - m_Data: 0
-    - m_Data: 60700
-    - m_Data: 60702
     - m_Data: 60704
     - m_Data: 60706
     - m_Data: 60708
     - m_Data: 60710
     - m_Data: 60712
     - m_Data: 60714
+    - m_Data: 60716
+    - m_Data: 60718
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -277943,8 +277943,8 @@ MonoBehaviour:
       m_ResourceFile: 
   m_ListAreaState:
     m_SelectedInstanceIDs:
-    - m_Data: 61398
-    m_LastClickedInstanceID: 61398
+    - m_Data: 37476
+    m_LastClickedInstanceID: 37476
     m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: []
     m_RenameOverlay:

@@ -1,3 +1,4 @@
+// PlayerAbilityCaster.cs
 using System;
 using Kope.Component.Ability.Targeting;
 using Kope.Component.Combat.Interface;
@@ -10,33 +11,31 @@ using ServiceLocatorPattern;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
-using Kope.Component.Movement;
 using Kope.Component.HitBox.Interface;
 
 namespace Kope.Component.Ability {
-
 	[Serializable]
 	public class AbilityCastSlot {
 		public string displayName;
 		public AbilityBase ability;
-		[SerializeReference, Core.Attributes.SubclassSelector]
-		public ITargetingFactory targetingFactory;
 	}
+
 
 	[RequireComponent(typeof(TargetingManager))]
 	[RequireComponent(typeof(EntityComponentsRegistry))]
 	public class PlayerAbilityCaster : InitializableBase {
+		[SerializeField] private GameObject baseGameObject;
 		[SerializeField] private AbilityCastSlot[] hotbar = Array.Empty<AbilityCastSlot>();
 		[SerializeField] private int selectedSlotIndex;
-
 		[SerializeField] private EntityComponentsRegistry ecr;
+
 		private InputManager _inputManager;
 		private TargetingManager _targetingManager;
 		private IHealthComponent _casterHealth;
 		private IAttackComponent _casterAttack;
-
 		private TargetContext _casterContext;
-		private bool isSubscribed;
+		private EffectContext _effectContext;
+		private bool _isSubscribed;
 
 		protected override bool OnInit() {
 			this._targetingManager = GetComponent<TargetingManager>();
@@ -56,39 +55,31 @@ namespace Kope.Component.Ability {
 				MyLogger.Error($"PlayerAbilityCaster on {gameObject.name} could not resolve InputManager.");
 				return false;
 			}
+
 			if (!this.ecr.ComponentRegistry.TryGetReadOnlyComponent(out this._casterAttack, false)) {
-				Debug.LogError($"PlayerAbilityCaster on {gameObject.name} could not find an IAttackComponent " +
-				"in the EntityComponentsRegistry.");
+				MyLogger.Error($"PlayerAbilityCaster on {gameObject.name} could not find an IAttackComponent.");
 				return false;
 			}
+
 			if (!this.ecr.ComponentRegistry.TryGetReadOnlyComponent(out this._casterHealth, false)) {
-				Debug.LogError($"PlayerAbilityCaster on {gameObject.name} could not find an IHealthComponent" +
-				" in the EntityComponentsRegistry.");
+				MyLogger.Error($"PlayerAbilityCaster on {gameObject.name} could not find an IHealthComponent.");
 				return false;
 			}
 
-			// we are passing the Ihurtbox component as the "combat target" in the caster context, s
-			// since hurtbox can be placed on any entity that should be hittable, but combatable is a component that will
-			// be only on entity that can actually engage in combat, and there might be some entities in 
-			// the game that have hurtboxes but aren't combatable (like a training dummy or something), 
-			// so it makes more sense to use the hurtbox as the reference point for the caster's combat-related properties,
-			// since if an entity has a combatable component it should also have a hurtbox, but not necessarily the 
-			// other way around. so with this distinction we can have a entity like a Pot that give currency but it doesnt need to
-			//  have fulldependencies of a combatable entity, but it can still be targeted by abilities
-			//  that look for a hurtbox,for that instance the hurtbox will redirect the hit with event to pot other component 
-			// that will handle pot specific logic like giving currency and playing break animation, 
-			// without needing to have a full combatable component with health, attack, etc.
-			//  that would be irrelevant for a pot.
-
-			if (!this.ecr.ComponentRegistry.TryGetReadOnlyComponent(out IHurtBoxComponent _casterHitBox, false)) {
+			if (!this.ecr.ComponentRegistry.TryGetReadOnlyComponent(out IHurtBoxComponent casterHurtBox, false)) {
 				MyLogger.Error($"PlayerAbilityCaster on {gameObject.name} could not resolve its own IHurtBoxComponent.");
 				return false;
 			}
 
-			// just store the relevant components in the caster context for use
-			// by targeting strategies and effects, since some abilities might want to 
-			// reference the caster's stats or apply effects to the caster as well.
-			this._casterContext = new TargetContext(_casterHitBox);
+			this._casterContext = new TargetContext(casterHurtBox);
+			// just creating once here and reusing since the caster context info won't change and 
+			// it's more efficient to reuse than create new ones every cast
+			this._effectContext = new EffectContext {
+				Caster = this.baseGameObject != null ? this.baseGameObject : this.gameObject,
+				CasterAttack = this._casterAttack,
+				CasterHealth = this._casterHealth,
+				CasterLevel = 0
+			};
 			SubscribeToInput();
 			return true;
 		}
@@ -101,9 +92,7 @@ namespace Kope.Component.Ability {
 		}
 
 		private void OnEnable() {
-			if (this.IsInitialized) {
-				SubscribeToInput();
-			}
+			if (this.IsInitialized) SubscribeToInput();
 		}
 
 		private void OnDisable() {
@@ -118,15 +107,21 @@ namespace Kope.Component.Ability {
 		}
 
 		private void SubscribeToInput() {
-			if (this._inputManager == null || this.isSubscribed) return;
-			this._inputManager.SubscribeToInputAction(PlayerInputActionMap.Player, PlayerInputActionKey.Fire.ToString(), HandleFire);
-			this.isSubscribed = true;
+			if (this._inputManager == null || this._isSubscribed) return;
+			this._inputManager.SubscribeToInputAction(
+				PlayerInputActionMap.Player,
+				PlayerInputActionKey.Fire.ToString(),
+				HandleFire);
+			this._isSubscribed = true;
 		}
 
 		private void UnsubscribeFromInput() {
-			if (this._inputManager == null || !this.isSubscribed) return;
-			this._inputManager.UnsubscribeFromInputAction(PlayerInputActionMap.Player, PlayerInputActionKey.Fire.ToString(), HandleFire);
-			this.isSubscribed = false;
+			if (this._inputManager == null || !this._isSubscribed) return;
+			this._inputManager.UnsubscribeFromInputAction(
+				PlayerInputActionMap.Player,
+				PlayerInputActionKey.Fire.ToString(),
+				HandleFire);
+			this._isSubscribed = false;
 		}
 
 		private void HandleHotbarSelectionInput() {
@@ -158,13 +153,11 @@ namespace Kope.Component.Ability {
 		private void HandleFire(InputAction.CallbackContext context) {
 			if (!context.performed) return;
 			if (this._targetingManager != null && this._targetingManager.IsTargeting) return;
-
 			CastSelectedAbility();
 		}
 
 		public void SelectSlot(int index) {
 			if (this.hotbar == null || index < 0 || index >= this.hotbar.Length) return;
-
 			this.selectedSlotIndex = index;
 			this._targetingManager?.CancelCurrentTargeting();
 		}
@@ -175,32 +168,7 @@ namespace Kope.Component.Ability {
 
 			var slot = this.hotbar[this.selectedSlotIndex];
 			if (slot == null || slot.ability == null) return;
-
-			if (!TryBuildEffectContext(out var effectContext)) return;
-
-			// The prebuilt effect-style infra works well here: the caster only asks for a factory,
-			// gets a fresh runtime strategy, and stays decoupled from the actual targeting behavior.
-			var targetingStrategy = slot.targetingFactory?.Create() ?? new SelfTargetingStrategy();
-			targetingStrategy.Start(slot.ability, this._targetingManager, this._casterContext, effectContext);
-		}
-
-		private bool TryBuildEffectContext(out EffectContext context) {
-			context = default;
-			if (this._casterContext == null) return false;
-
-			context.Caster = this.gameObject;
-			context.CasterAttack = this._casterAttack;
-			context.CasterHealth = this._casterHealth;
-			// init the caster level from the Level Component if implemented, 
-			// otherwise default to 0, since some abilities might want to use 
-			// the caster's level for scaling purposes, and it's better to have a
-			// default value than to have it be uninitialized.
-			context.CasterLevel = 0;
-			// the hit point will be set by the targeting strategy if needed,
-			// since for some abilities (like self-targeted ones) it might not be relevant 
-			// or available at the time of casting, so we can just leave it as default and let
-			// the targeting strategy handle it.
-			return true;
+			slot.ability.Cast(this._targetingManager, this._casterContext, this._effectContext);
 		}
 	}
 }

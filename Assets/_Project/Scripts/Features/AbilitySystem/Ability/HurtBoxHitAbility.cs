@@ -1,41 +1,47 @@
+// ExampleAbility.cs
 using System.Collections.Generic;
+using Kope.Component.Ability.Targeting;
 using Kope.Component.Combat.Interface;
-using Kope.Component.HitBox.Interface;
 using Kope.Component.Health.Interface;
+using Kope.Component.HitBox.Interface;
 using Kope.Component.Movement;
-using UnityEngine;
 using Kope.Core.Attributes;
+using UnityEngine;
 
-[CreateAssetMenu(menuName = "Scriptable Object/Abilities/HurtBox Hit Ability", fileName = "HurtBoxHitAbility")]
-public class HurtBoxHitAbility : AbilityBase {
-	[SerializeField] private CombatType combatType = CombatType.Entity;
-	[SerializeReference, SubclassSelector] private List<IEffectFactory<ICombatable>> damageEffects = new();
-	[SerializeReference, SubclassSelector] private List<IEffectFactory<IHealable>> healEffects = new();
-	[SerializeReference, SubclassSelector] private List<IEffectFactory<IStunnable>> stunEffects = new();
+[CreateAssetMenu(menuName = "Scriptable Object/Abilities/Example Ability", fileName = "ExampleAbility")]
+public class ExampleAbility : AbilityBase {
+	[SerializeField, Tooltip("The type of hit targets this ability can affect.")]
+	private HitTargetType applicableHitTargetType = HitTargetType.Entity;
 
-	public override void Execute(TargetContext target, EffectContext casterEffectContext) {
+	// Targeting is owned by the ability, assignable from inspector
+	[SerializeReference, SubclassSelector]
+	private ITargetingFactory targetingFactory;
 
-		if (target.HitBox == null || casterEffectContext.Caster == null) return;
-		var type = combatType;
-		if (target.HitBox != null && target.HitBox.CombatType == CombatType.Entity) {
-			var hitbox = target.HitBox;
-			hitbox.HitCombatible(casterEffectContext.Caster, type, casterEffectContext, damageEffects);
-			hitbox.HitHealable(casterEffectContext.Caster, type, casterEffectContext, healEffects);
-			hitbox.HitStunnable(casterEffectContext.Caster, type, casterEffectContext, stunEffects);
-			// if the ability has any knockback effects, we would also call hitbox.HitKnockable here,
-			// but this ability doesn't have any knockback effects so we don't need to.
-			// below is the example for the routing.
-			//hitbox.HitKnockable(casterEffectContext.Caster, type, casterEffectContext, knockEffects);
-		}
+	public override ITargetingFactory TargetingFactory => this.targetingFactory;
 
-	}
+	[SerializeReference, SubclassSelector]
+	private List<IEffectFactory<ICombatable>> damageEffects = new();
+	[SerializeReference, SubclassSelector]
+	private List<IEffectFactory<IHealable>> healEffects = new();
+	[SerializeReference, SubclassSelector]
+	private List<IEffectFactory<IStunnable>> stunEffects = new();
+	[SerializeReference, SubclassSelector]
+	private List<IEffectFactory<IKnockbackable>> knockEffects = new();
 
-	protected override void HandleCastVFX(TargetContext target) {
-	}
+	public override void Execute(TargetContext target, EffectContext context) {
+		if (target.HitBox == null || context.Caster == null) return;
+		if (target.HitBox.CombatType != this.applicableHitTargetType) return;
 
-	protected override void HandleRunningVFX(TargetContext target) {
-	}
+		var position = GetTargetPosition(target);
+		// running mean vfx that will be applied when hit to certain area or target, position is
+		// where the vfx will be spawned, can be used by abilities that want to spawn a vfx on the 
+		// ground at the target location, or a vfx that follows the target around while the ability is active
+		SpawnRunningVfx(position);
 
-	protected override void HandleSFX(TargetContext target) {
+		var hitbox = target.HitBox;
+		hitbox.HitCombatible(context, target.HitBox.CombatType, this.damageEffects);
+		hitbox.HitHealable(context, target.HitBox.CombatType, this.healEffects);
+		hitbox.HitStunnable(context, target.HitBox.CombatType, this.stunEffects);
+		hitbox.HitKnockable(context, target.HitBox.CombatType, this.knockEffects);
 	}
 }

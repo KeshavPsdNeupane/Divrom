@@ -36,7 +36,7 @@ namespace Kope.AbilitySystem.Effect {
 		private readonly DOTEffectData _data;
 		private readonly DamageDetail _calculatedTickDetail;
 
-		public event Action<ITickableEffect> OnCompletedOrCancell;
+		public event Action<ITickableEffect> OnCompletedOrCancelled;
 
 		private IntervalTimer _timer;
 		private ICombatable _currentTarget;
@@ -88,7 +88,7 @@ namespace Kope.AbilitySystem.Effect {
 		private void Cleanup() {
 			this._timer = null;
 			this._currentTarget = null;
-			this.OnCompletedOrCancell?.Invoke(this);
+			this.OnCompletedOrCancelled?.Invoke(this);
 		}
 	}
 }

@@ -23,7 +23,7 @@ namespace Kope.AbilitySystem.Effect {
 		public float flathealAmountPerInterval;
 		public float duration;
 		public float tickInterval;
-		public event Action<ITickableEffect> OnCompletedOrCancell;
+		public event Action<ITickableEffect> OnCompletedOrCancelled;
 		private IntervalTimer timer;
 		private IVitalityManager currentTarget;
 
@@ -34,7 +34,7 @@ namespace Kope.AbilitySystem.Effect {
 			this.duration = duration;
 			this.tickInterval = tickInterval;
 
-			this.OnCompletedOrCancell = null;
+			this.OnCompletedOrCancelled = null;
 			this.timer = null;
 			this.currentTarget = null;
 
@@ -65,7 +65,7 @@ namespace Kope.AbilitySystem.Effect {
 		private void Cleanup() {
 			this.timer = null;
 			this.currentTarget = null;
-			this.OnCompletedOrCancell?.Invoke(this);
+			this.OnCompletedOrCancelled?.Invoke(this);
 		}
 	}
 

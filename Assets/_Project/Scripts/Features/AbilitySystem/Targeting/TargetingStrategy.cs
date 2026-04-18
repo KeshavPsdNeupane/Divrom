@@ -1,65 +1,64 @@
+// TargetingStrategy.cs
+using System;
 using Kope.Component.Combat.Interface;
 using UnityEngine;
-using UnityComponent = UnityEngine.Component;
 
 namespace Kope.Component.Ability.Targeting {
+
 	public interface ITargetingFactory {
 		TargetingStrategy Create();
 	}
 
-	[System.Serializable]
+	[Serializable]
 	public abstract class TargetingStrategy {
-		protected AbilityBase ability;
 		protected TargetingManager targetingManager;
-		// since caster context can also be used as target context for self-targeting strategies, 
-		// we store it as a TargetContext instead of just an ICombatComponent
 		protected TargetContext casterContext;
 		protected EffectContext effectContext;
 		protected bool isTargeting;
+		private Action<TargetContext, EffectContext> _onTargetResolved;
 
 		public bool IsTargeting => this.isTargeting;
 
-		public abstract void Start(AbilityBase ability, TargetingManager targetingManager, in TargetContext casterContext, EffectContext effectContext);
+		public abstract void Start(
+			TargetingManager targetingManager,
+			in TargetContext casterContext,
+			EffectContext effectContext,
+			Action<TargetContext, EffectContext> onTargetResolved);
+
 		public virtual void Update() { }
+
 		public virtual void Cancel() {
 			this.isTargeting = false;
+			this._onTargetResolved = null;
 			if (this.targetingManager != null) {
 				this.targetingManager.ClearCurrentStrategy(this);
 			}
 		}
 
-		protected void Begin(AbilityBase ability, TargetingManager targetingManager, in TargetContext casterContext, EffectContext effectContext) {
-			this.ability = ability;
+		protected void Begin(
+			TargetingManager targetingManager,
+			in TargetContext casterContext,
+			EffectContext effectContext,
+			Action<TargetContext, EffectContext> onTargetResolved) {
 			this.targetingManager = targetingManager;
 			this.casterContext = casterContext;
 			this.effectContext = effectContext;
+			this._onTargetResolved = onTargetResolved;
 			this.isTargeting = true;
 			if (this.targetingManager != null) {
 				this.targetingManager.SetCurrentStrategy(this);
 			}
 		}
 
-		protected void ExecuteOnTarget(in TargetContext target, Vector3? HitPoint = null) {
-			if (this.ability == null || target.HitBox == null) return;
+		protected void ResolveTarget(in TargetContext target, Vector3? hitPoint = null) {
+			if (target.HitBox == null) return;
 
 			var context = this.effectContext;
-			if (HitPoint.HasValue) {
-				context.HitPoint = HitPoint.Value;
+			if (hitPoint.HasValue) {
+				context.HitPoint = hitPoint.Value;
 			}
 
-			var targetPosition = target.HitBox is UnityComponent targetComponent
-				? targetComponent.transform.position
-				: this.targetingManager != null ? this.targetingManager.transform.position : Vector3.zero;
-
-			if (this.ability.CastSfx != null) {
-				AudioSource.PlayClipAtPoint(this.ability.CastSfx, targetPosition);
-			}
-
-			if (this.ability.CastVfx != null) {
-				Object.Instantiate(this.ability.CastVfx, targetPosition, Quaternion.identity);
-			}
-
-			this.ability.Execute(target, context);
+			this._onTargetResolved?.Invoke(target, context);
 		}
 	}
 }

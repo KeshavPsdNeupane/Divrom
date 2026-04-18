@@ -7,7 +7,7 @@ using UnityEngine;
 using static Kope.Component.HitBox.StunnableHitInfo;
 
 namespace Kope.Component.HitBox.Interface {
-	public enum CombatType {
+	public enum HitTargetType {
 		Entity,
 		Destructible,
 		Projectile,
@@ -17,7 +17,7 @@ namespace Kope.Component.HitBox.Interface {
 	public readonly struct HurtBoxHitInfo {
 		public readonly HitBoxComponent HurtBox;
 		public readonly GameObject Caster;
-		public readonly CombatType CombatType;
+		public readonly HitTargetType CombatType;
 		public readonly EffectContext EffectContext;
 		public readonly IReadOnlyList<IEffectFactory<ICombatable>> Effects;
 		public readonly IReadOnlyList<IEffectFactory<IStunnable>> StunEffects;
@@ -27,7 +27,7 @@ namespace Kope.Component.HitBox.Interface {
 		public HurtBoxHitInfo(
 			HitBoxComponent hurtBox,
 			GameObject caster,
-			CombatType combatType = CombatType.Entity,
+			HitTargetType combatType = HitTargetType.Entity,
 			EffectContext effectContext = default,
 			IReadOnlyList<IEffectFactory<ICombatable>> effects = null,
 			IReadOnlyList<IEffectFactory<IStunnable>> stunEffects = null) {
@@ -43,29 +43,26 @@ namespace Kope.Component.HitBox.Interface {
 	}
 
 	public interface IHurtBoxComponent {
-		public CombatType CombatType { get; }
+		public HitTargetType CombatType { get; }
 		public event Action<CombatibleHitInfo> OnHitCombatible;
 		public event Action<HealableHitInfo> OnHitHealable;
 		public event Action<StunnableHitInfo> OnHitStunnable;
+		public event Action<KnockableHitInfo> OnHitKnockable;
 		public void HitCombatible(
-			GameObject caster,
-			CombatType combatType = CombatType.Entity,
 			in EffectContext effectContext = default,
+			HitTargetType combatType = HitTargetType.Entity,
 			IReadOnlyList<IEffectFactory<ICombatable>> effects = null);
 		public void HitHealable(
-				GameObject caster,
-				CombatType combatType = CombatType.Entity,
 				in EffectContext effectContext = default,
+				HitTargetType combatType = HitTargetType.Entity,
 				IReadOnlyList<IEffectFactory<IHealable>> effects = null);
 		public void HitStunnable(
-			GameObject caster,
-			CombatType combatType = CombatType.Entity,
 			in EffectContext effectContext = default,
+			HitTargetType combatType = HitTargetType.Entity,
 			IReadOnlyList<IEffectFactory<IStunnable>> stunEffects = null);
 		public void HitKnockable(
-		GameObject caster,
-		CombatType combatType = CombatType.Entity,
 		in EffectContext effectContext = default,
+		HitTargetType combatType = HitTargetType.Entity,
 		IReadOnlyList<IEffectFactory<IKnockbackable>> knockEffects = null);
 	}
 

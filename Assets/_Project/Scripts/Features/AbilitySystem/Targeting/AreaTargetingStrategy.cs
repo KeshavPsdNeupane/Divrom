@@ -1,3 +1,4 @@
+// AreaTargetingStrategy.cs
 using System;
 using System.Collections.Generic;
 using Kope.Component.Combat.Interface;
@@ -26,11 +27,16 @@ namespace Kope.Component.Ability.Targeting {
 			};
 		}
 
-		public override void Start(AbilityBase ability, TargetingManager targetingManager,
-		in TargetContext casterContext, EffectContext effectContext) {
-			Begin(ability, targetingManager, casterContext, effectContext);
+		public override void Start(
+			TargetingManager targetingManager,
+			in TargetContext casterContext,
+			EffectContext effectContext,
+			Action<TargetContext, EffectContext> onTargetResolved) {
+			Begin(targetingManager, casterContext, effectContext, onTargetResolved);
+
 			if (this.previewPrefab != null && this.targetingManager != null) {
-				this.previewInstance = UnityEngine.Object.Instantiate(this.previewPrefab, Vector3.zero, Quaternion.identity);
+				this.previewInstance = UnityEngine.Object.Instantiate(
+					this.previewPrefab, Vector3.zero, Quaternion.identity);
 			}
 
 			this.targetingManager.InputManager?.SubscribeToInputAction(
@@ -42,7 +48,6 @@ namespace Kope.Component.Ability.Targeting {
 
 		public override void Update() {
 			if (!this.isTargeting || this.targetingManager == null) return;
-
 			if (!this.targetingManager.TryGetMouseGroundPoint(out this.currentPoint)) return;
 
 			if (this.previewInstance != null) {
@@ -73,31 +78,28 @@ namespace Kope.Component.Ability.Targeting {
 			ResolveTargets(hitPoint);
 			if (this.resolvedTargets.Count == 0) return;
 
+			// Area targeting resolves multiple targets — invoke callback for each
 			for (int i = 0; i < this.resolvedTargets.Count; i++) {
 				var target = this.resolvedTargets[i];
 				if (target.HitBox == null) continue;
 
-				var direction = target.HitBox is UnityComponent targetComponent
-					? (targetComponent.transform.position - this.targetingManager.transform.position).normalized
-					: this.targetingManager.transform.forward;
+				var targetPosition = target.HitBox is UnityComponent c
+					? c.transform.position
+					: Vector3.zero;
 
-				ExecuteOnTarget(target, direction);
+				ResolveTarget(target, targetPosition);
 			}
-
 			Cancel();
 		}
 
 		private void ResolveTargets(Vector3 point) {
 			this.resolvedTargets.Clear();
-			// 2D-centric overlap. If you need a 3D version, swap this for Physics.OverlapSphere(point, radius, mask)
-			// and make the target colliders/sensors use SphereCollider instead of Collider2D.
-
 			var colliders = Physics2D.OverlapCircleAll(point, this.radius, this.targetingManager.TargetLayerMask);
 			var uniqueTargets = new HashSet<IHurtBoxComponent>();
 
 			for (int i = 0; i < colliders.Length; i++) {
 				var targetContext = TargetContext.Create(colliders[i]);
-				if (targetContext.HitBox == null) continue;
+				if (targetContext == null || targetContext.HitBox == null) continue;
 				if (!uniqueTargets.Add(targetContext.HitBox)) continue;
 				this.resolvedTargets.Add(targetContext);
 			}

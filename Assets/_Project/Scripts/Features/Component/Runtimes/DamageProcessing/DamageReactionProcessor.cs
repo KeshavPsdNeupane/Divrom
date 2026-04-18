@@ -11,10 +11,19 @@ using Kope.Component.Health;
 
 namespace Kope.Component.Combat {
 	/// <summary>
-	/// Processes incoming damage through defense/resistance formulas and manages 
-	/// the lifecycle of Damage-over-Time (DOT) effects.
+	/// This component is responsible for processing incoming damage and effects on an entity. 
+	/// It listens for hits on the attached HurtBox and applies damage and effects accordingly.
+	/// If a entity his this component, then that entity is expected fight back to player, so be careful where you put this.<br/>
+	/// <b> Important: </b><br/>
+	/// - This component assumes that the entity has a HealthComponent and an IStatSystem for it to function properly. <br/>
+	/// - The main reason of seperation of this component from the HealthComponent is to allow for more flexible and 
+	/// modular damage processing logic, as well as to keep the HealthComponent focused solely on managing
+	/// health values and related mechanics. <br/>
+	/// - and not all entity needs below whole complex damage processing, for example,
+	///  a destructible environment might just need to get destroyed on a single hit, we can just create 1HitEntityComponent.
+	/// 	which will handle that event rather than this bloat of component. <br/>
 	/// </summary>
-	public class DamageProcessor : InitializableBase, IDamageProcessor {
+	public class DamageReactionProcessor : InitializableBase, IDamageProcessor {
 		[SerializeField] private EntityComponentsRegistry ecr;
 		[SerializeField] private HealthComponentConfig config;
 
@@ -126,13 +135,13 @@ namespace Kope.Component.Combat {
 
 			if (effect is ITickableEffect tickable) {
 				this._activeTickableEffects.Add(tickable);
-				tickable.OnCompletedOrCancell += OnEffectExpired;
+				tickable.OnCompletedOrCancelled += OnEffectExpired;
 			}
 			effect.Apply(this);
 		}
 
 		private void OnEffectExpired(ITickableEffect effect) {
-			effect.OnCompletedOrCancell -= OnEffectExpired;
+			effect.OnCompletedOrCancelled -= OnEffectExpired;
 			this._activeTickableEffects.Remove(effect);
 		}
 

@@ -1,8 +1,10 @@
+// ProjectileTargetingStrategy.cs
 using System;
 using Kope.Component.Combat.Interface;
 using UnityEngine;
 
 namespace Kope.Component.Ability.Targeting {
+
 	[Serializable]
 	public sealed class ProjectileTargetingStrategy : TargetingStrategy, ITargetingFactory {
 		[SerializeField] private GameObject projectilePrefab;
@@ -19,9 +21,13 @@ namespace Kope.Component.Ability.Targeting {
 			};
 		}
 
-		public override void Start(AbilityBase ability, TargetingManager targetingManager,
-		in TargetContext casterContext, EffectContext effectContext) {
-			Begin(ability, targetingManager, casterContext, effectContext);
+		public override void Start(
+			TargetingManager targetingManager,
+			in TargetContext casterContext,
+			EffectContext effectContext,
+			Action<TargetContext, EffectContext> onTargetResolved) {
+			Begin(targetingManager, casterContext, effectContext, onTargetResolved);
+
 			if (this.projectilePrefab == null || this.targetingManager == null || this.targetingManager.Cam == null) {
 				Cancel();
 				return;
@@ -29,12 +35,23 @@ namespace Kope.Component.Ability.Targeting {
 
 			var spawnPosition = this.targetingManager.transform.position + this.spawnOffset;
 			var direction = ResolveLaunchDirection();
-			var rotation = direction.sqrMagnitude > 0.0001f ? Quaternion.LookRotation(direction.normalized) : Quaternion.identity;
-			var projectileObject = UnityEngine.Object.Instantiate(this.projectilePrefab, spawnPosition, rotation);
+			var rotation = direction.sqrMagnitude > 0.0001f
+				? Quaternion.LookRotation(direction.normalized)
+				: Quaternion.identity;
+
+			var projectileObject = UnityEngine.Object.Instantiate(
+				this.projectilePrefab, spawnPosition, rotation);
 
 			if (projectileObject.TryGetComponent<AbilityProjectileController>(out var controller)) {
-				controller.Initialize(this.ability, this.effectContext, direction, this.projectileSpeed, this.projectileLifetime);
-				Cancel();
+				// Projectile strategy hands off the callback to the controller —
+				// the controller resolves the target on hit, then signals completion so the strategy can cancel.
+				controller.Initialize(
+					onTargetResolved,
+					Cancel,
+					this.effectContext,
+					direction,
+					this.projectileSpeed,
+					this.projectileLifetime);
 				return;
 			}
 
@@ -43,9 +60,7 @@ namespace Kope.Component.Ability.Targeting {
 		}
 
 		private Vector3 ResolveLaunchDirection() {
-			if (this.targetingManager == null || this.targetingManager.Cam == null) {
-				return Vector3.forward;
-			}
+			if (this.targetingManager == null || this.targetingManager.Cam == null) return Vector3.forward;
 
 			if (this.targetingManager.TryGetMouseRaycast(out var hit, this.targetingManager.TargetLayerMask)) {
 				var direction = hit.point - this.targetingManager.transform.position;

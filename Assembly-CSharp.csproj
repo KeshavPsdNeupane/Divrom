@@ -82,7 +82,6 @@
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/KnockBackEffect.cs" />
     <Compile Include="Assets/_Project/UI/UIState/UIStateManager.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/TargetingStrategy.cs" />
-    <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Ability/TestAbility.cs" />
     <Compile Include="Assets/_Project/UI/UIState/InGameUI/GameplayUIController.cs" />
     <Compile Include="Assets/_Project/Scripts/Managers/ItemDragDropManager.cs" />
     <Compile Include="Assets/_Project/Scripts/Managers/ItemDatabase/HashUtility.cs" />

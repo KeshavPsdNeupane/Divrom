@@ -5,14 +5,36 @@ using Kope.Component.HitBox.Interface;
 using UnityEngine;
 
 namespace Kope.Component.Combat.Interface {
-	public struct EffectContext {
+	public struct EffectContext : IEquatable<EffectContext> {
+		public GameObject Caster;     // For attribution (who killed who)
 		public Vector3 HitPoint;      // For Knockback calculation
 		public int CasterLevel;       // For Level Scaling math
-		public GameObject Caster;     // For attribution (who killed who)
 		public IAttackComponent CasterAttack; // For scaling damage (ATK/SP)
 		public IHealable CasterHealth; // For "Vampire" or "Thorn" effects
+		private int hashcode;
+		public readonly bool Equals(EffectContext other) {
+			return this.Caster == other.Caster
+				&& this.HitPoint == other.HitPoint
+				&& this.CasterLevel == other.CasterLevel
+				&& this.CasterAttack == other.CasterAttack
+				&& this.CasterHealth == other.CasterHealth;
+		}
+		public override readonly bool Equals(object obj) {
+			return obj is EffectContext other && Equals(other);
+		}
+		public override int GetHashCode() {
+			if (this.hashcode == 0) {
+				this.hashcode = HashCode.Combine(this.Caster, this.HitPoint, this.CasterLevel, this.CasterAttack, this.CasterHealth);
+			}
+			return this.hashcode;
+		}
+		public static bool operator ==(EffectContext left, EffectContext right) {
+			return left.Equals(right);
+		}
+		public static bool operator !=(EffectContext left, EffectContext right) {
+			return !left.Equals(right);
+		}
 	}
-
 	public interface ICombatable {
 		IHurtBoxComponent HurtBox { get; }
 		float TakeHit(DamageDetail damageDetail);
@@ -30,7 +52,7 @@ namespace Kope.Component.Combat.Interface {
 	}
 
 	public interface ITickableEffect {
-		event Action<ITickableEffect> OnCompletedOrCancell;
+		event Action<ITickableEffect> OnCompletedOrCancelled;
 		void Tick(float deltaTime);
 		void Cancel();
 	}
