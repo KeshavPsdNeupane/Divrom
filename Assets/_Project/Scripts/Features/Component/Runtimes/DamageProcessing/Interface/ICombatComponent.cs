@@ -6,25 +6,33 @@ using UnityEngine;
 
 namespace Kope.Component.Combat.Interface {
 	public struct EffectContext : IEquatable<EffectContext> {
+		public int CasterLevel;       // For Level Scaling math
 		public GameObject Caster;     // For attribution (who killed who)
 		public Vector3 HitPoint;      // For Knockback calculation
-		public int CasterLevel;       // For Level Scaling math
 		public IAttackComponent CasterAttack; // For scaling damage (ATK/SP)
 		public IHealable CasterHealth; // For "Vampire" or "Thorn" effects
+
+		// this will be inited by the ability themself.
+		public int AbilityUsedCount; // For "Next Level Scaling" effects
 		private int hashcode;
 		public readonly bool Equals(EffectContext other) {
 			return this.Caster == other.Caster
 				&& this.HitPoint == other.HitPoint
 				&& this.CasterLevel == other.CasterLevel
 				&& this.CasterAttack == other.CasterAttack
-				&& this.CasterHealth == other.CasterHealth;
+				&& this.CasterHealth == other.CasterHealth
+				&& this.AbilityUsedCount == other.AbilityUsedCount;
 		}
 		public override readonly bool Equals(object obj) {
 			return obj is EffectContext other && Equals(other);
 		}
 		public override int GetHashCode() {
 			if (this.hashcode == 0) {
-				this.hashcode = HashCode.Combine(this.Caster, this.HitPoint, this.CasterLevel, this.CasterAttack, this.CasterHealth);
+				this.hashcode = HashCode.Combine(
+					this.Caster, this.HitPoint,
+					this.CasterLevel, this.CasterAttack,
+					this.CasterHealth, this.AbilityUsedCount
+					);
 			}
 			return this.hashcode;
 		}

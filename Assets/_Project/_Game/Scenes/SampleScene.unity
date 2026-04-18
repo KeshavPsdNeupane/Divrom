@@ -7850,25 +7850,34 @@ MonoBehaviour:
     gameObjectName: SceneServiceLocator
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: Hpstore
-  - typeName: EntityInitCaller
-    order: -40
     gameObjectName: Addhp (2)
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: Addhp (1)
+    gameObjectName: Hpstore
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: PlayerNew
+    gameObjectName: Hpstore (1)
   - typeName: EntityInitCaller
     order: -40
     gameObjectName: AddDef (1)
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: AddSpd (1)
+    gameObjectName: EnemyNew
   - typeName: EntityInitCaller
     order: -40
     gameObjectName: Addhp
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: AddSpd (1)
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: AddDef
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: PlayerNew
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Hpstore (2)
   - typeName: EntityInitCaller
     order: -40
     gameObjectName: InitCaller
@@ -7877,16 +7886,7 @@ MonoBehaviour:
     gameObjectName: AddSpd
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: EnemyNew
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: Hpstore (2)
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: Hpstore (1)
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: AddDef
+    gameObjectName: Addhp (1)
   - typeName: InGameUIInitCaller
     order: -30
     gameObjectName: UI
@@ -8243,8 +8243,8 @@ MonoBehaviour:
   x: 0.726
   result: 0.33709687
   unityResult: 0.18408638
-  customEvalTime: 0.1487
-  unityEvalTime: 0.0707
+  customEvalTime: 0.15810000000000002
+  unityEvalTime: 0.0755
 --- !u!1001 &1031836800
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -8,31 +8,67 @@ namespace Kope.AbilitySystem.Effect {
 	// the target selection is handled by the ability and the effect factory just creates the effect based on 
 	// the context passed in, so the effect itself doesn't need to know/it doesn't care about the context of who the caster is
 	// or who the target
-	[Serializable]
-	public class HealOverTimeEffectFactory : IEffectFactory<IVitalityManager> {
-		public float healPerInterval = 10f;
-		public float duration;
-		[Range(0.1f, 5f)] public float tickInterval = 1f;
 
-		public IEffect<IVitalityManager> Create(EffectContext context = default)
-			=> new HealOverTimeEffect(this.healPerInterval, this.duration, this.tickInterval);
+	[Serializable]
+	public struct HealOverTimeEffectData {
+		public float healPerInterval;
+		public float duration;
+		[Range(0.1f, 5f)] public float tickInterval;
+	}
+	[Serializable]
+	public struct HealOverTimeEffectLevelScaling {
+		public int abilityUsedThreshold;
+		public float healPerInterval;
+		public float duration;
+		[Range(0.1f, 5f)] public float tickInterval;
 	}
 
 	[Serializable]
-	public class HealOverTimeEffect : IEffect<IVitalityManager>, ITickableEffect {
+	public class HealOverTimeEffectFactory : IEffectFactory<IHealable> {
+		public HealOverTimeEffectData BaseData;
+		[Tooltip("Level scaling for the healOverTime effect,Will override base data when threshold is met")]
+		public HealOverTimeEffectLevelScaling[] LevelScaling = new HealOverTimeEffectLevelScaling[3];
+		private HealOverTimeEffectData _cachedData;
+		private int _cachedNewLevelThreshold = 0;
+
+		public IEffect<IHealable> Create(EffectContext context = default) {
+			if (context.AbilityUsedCount >= this._cachedNewLevelThreshold) {
+				this._cachedData = this.ResolveData(context.AbilityUsedCount, out this._cachedNewLevelThreshold);
+			}
+			return new HealOverTimeEffect(this._cachedData);
+		}
+
+		private HealOverTimeEffectData ResolveData(int useCount, out int newLevelThreshold) {
+			newLevelThreshold = 0;
+			for (int i = this.LevelScaling.Length - 1; i >= 0; i--) {
+				if (useCount >= this.LevelScaling[i].abilityUsedThreshold) {
+					newLevelThreshold = this.LevelScaling[i].abilityUsedThreshold;
+					return new HealOverTimeEffectData {
+						healPerInterval = this.LevelScaling[i].healPerInterval,
+						duration = this.LevelScaling[i].duration,
+						tickInterval = this.LevelScaling[i].tickInterval
+					};
+				}
+			}
+			return this.BaseData;
+		}
+	}
+
+	[Serializable]
+	public class HealOverTimeEffect : IEffect<IHealable>, ITickableEffect {
 		public float flathealAmountPerInterval;
 		public float duration;
 		public float tickInterval;
 		public event Action<ITickableEffect> OnCompletedOrCancelled;
 		private IntervalTimer timer;
-		private IVitalityManager currentTarget;
+		private IHealable currentTarget;
 
 
-		public HealOverTimeEffect(float healAmountPerInterval, float duration, float tickInterval) {
+		public HealOverTimeEffect(HealOverTimeEffectData data) {
 
-			this.flathealAmountPerInterval = healAmountPerInterval;
-			this.duration = duration;
-			this.tickInterval = tickInterval;
+			this.flathealAmountPerInterval = data.healPerInterval;
+			this.duration = data.duration;
+			this.tickInterval = data.tickInterval;
 
 			this.OnCompletedOrCancelled = null;
 			this.timer = null;
@@ -40,7 +76,7 @@ namespace Kope.AbilitySystem.Effect {
 
 		}
 
-		public float Apply(IVitalityManager target) {
+		public float Apply(IHealable target) {
 			this.currentTarget = target;
 			this.timer = new IntervalTimer(duration, tickInterval) {
 				OnInterval = OnInterval,

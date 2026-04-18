@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 178ca660ced21a0f6ab1fe7b9a5a07ae, type: 3}
+  m_Name: ExampleAbility
+  m_EditorClassIdentifier: Assembly-CSharp::ExampleAbility
+  abilityID: cde790912a66b29a4831790431f42fa8
+  castSfx: {fileID: 0}
+  castVfx: {fileID: 0}
+  runningVfx: {fileID: 0}
+  applicableHitTargetType: 0
+  targetingFactory:
+    rid: 7477298512563011688
+  damageEffects: []
+  healEffects:
+  - rid: 7477298512563011691
+  stunEffects: []
+  knockEffects: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 7477298512563011688
+      type: {class: SelfTargetingStrategy, ns: Kope.Component.Ability.Targeting, asm: Assembly-CSharp}
+      data: 
+    - rid: 7477298512563011691
+      type: {class: HealOverTimeEffectFactory, ns: Kope.AbilitySystem.Effect, asm: Assembly-CSharp}
+      data:
+        BaseData:
+          healPerInterval: 0
+          duration: 0
+          tickInterval: 0.1
+        LevelScaling:
+        - abilityUsedThreshold: 0
+          healPerInterval: 0
+          duration: 0
+          tickInterval: 0
+        - abilityUsedThreshold: 0
+          healPerInterval: 0
+          duration: 0
+          tickInterval: 0
+        - abilityUsedThreshold: 0
+          healPerInterval: 0
+          duration: 0
+          tickInterval: 0

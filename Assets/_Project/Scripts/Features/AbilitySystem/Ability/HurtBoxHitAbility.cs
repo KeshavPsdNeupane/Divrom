@@ -8,7 +8,7 @@ using Kope.Component.Movement;
 using Kope.Core.Attributes;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Scriptable Object/Abilities/Example Ability", fileName = "ExampleAbility")]
+[CreateAssetMenu(menuName = "Scriptable Objects/Abilities/Example Ability", fileName = "ExampleAbility")]
 public class ExampleAbility : AbilityBase {
 	[SerializeField, Tooltip("The type of hit targets this ability can affect.")]
 	private HitTargetType applicableHitTargetType = HitTargetType.Entity;

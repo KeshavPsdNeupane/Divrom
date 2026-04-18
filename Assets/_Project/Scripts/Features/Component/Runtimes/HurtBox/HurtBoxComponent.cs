@@ -88,7 +88,10 @@ namespace Kope.Component.HitBox {
 				in EffectContext effectContext = default,
 				HitTargetType combatType = HitTargetType.Entity,
 				IReadOnlyList<IEffectFactory<ICombatable>> effects = null) {
-				if (effectContext == null || effectContext.Caster == null || effects == null) return;
+				// using default since the effectContext is a struct, so it won't be null, 
+				// but we can check if the Caster is null to determine if it's a valid context.
+				// and also using "in" to avoid copying the struct since it might be large.
+				if (effectContext == default || effectContext.Caster == null || effects == null) return;
 				this.OnHitCombatible?.Invoke(new CombatibleHitInfo(effectContext, combatType, effects));
 			}
 
@@ -96,21 +99,21 @@ namespace Kope.Component.HitBox {
 				in EffectContext effectContext = default,
 				HitTargetType combatType = HitTargetType.Entity,
 				IReadOnlyList<IEffectFactory<IHealable>> effects = null) {
-				if (effectContext == null || effectContext.Caster == null || effects == null) return;
+				if (effectContext == default || effectContext.Caster == null || effects == null) return;
 				this.OnHitHealable?.Invoke(new HealableHitInfo(effectContext, combatType, effects));
 			}
 			public void HitStunnable(
 				in EffectContext effectContext = default,
 				HitTargetType combatType = HitTargetType.Entity,
 				IReadOnlyList<IEffectFactory<IStunnable>> stunEffects = null) {
-				if (effectContext == null || effectContext.Caster == null || stunEffects == null) return;
+				if (effectContext == default || effectContext.Caster == null || stunEffects == null) return;
 				this.OnHitStunnable?.Invoke(new StunnableHitInfo(effectContext, combatType, stunEffects));
 			}
 			public void HitKnockable(
 				in EffectContext effectContext = default,
 				HitTargetType combatType = HitTargetType.Entity,
 				IReadOnlyList<IEffectFactory<IKnockbackable>> knockEffects = null) {
-				if (effectContext == null || effectContext.Caster == null || knockEffects == null) return;
+				if (effectContext == default || effectContext.Caster == null || knockEffects == null) return;
 				this.OnHitKnockable?.Invoke(new KnockableHitInfo(effectContext, combatType, knockEffects));
 			}
 		}
