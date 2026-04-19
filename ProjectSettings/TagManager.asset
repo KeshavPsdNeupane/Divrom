@@ -64,5 +64,8 @@ TagManager:
   - name: Decoration
     uniqueID: 402978871
     locked: 0
+  - name: UILayer
+    uniqueID: 1799050983
+    locked: 0
   m_RenderingLayers:
   - Default

@@ -11,14 +11,22 @@ namespace Kope.AbilitySystem.Effect {
 
 	[Serializable]
 	public struct HealOverTimeEffectData {
+		[Header("Healing")]
+		[Min(0f)]
 		public float healPerInterval;
+		[Header("Timing")]
+		[Min(0f)]
 		public float duration;
 		[Range(0.1f, 5f)] public float tickInterval;
 	}
 	[Serializable]
 	public struct HealOverTimeEffectLevelScaling {
+		[Header("Scaling")]
+		[Min(0f)]
 		public int abilityUsedThreshold;
+		[Min(0f)]
 		public float healPerInterval;
+		[Min(0f)]
 		public float duration;
 		[Range(0.1f, 5f)] public float tickInterval;
 	}
@@ -26,27 +34,42 @@ namespace Kope.AbilitySystem.Effect {
 	[Serializable]
 	public class HealOverTimeEffectFactory : IEffectFactory<IHealable> {
 		public HealOverTimeEffectData BaseData;
-		[Tooltip("Level scaling for the healOverTime effect,Will override base data when threshold is met")]
+		[Tooltip("Scaling data for the heal-over-time effect. Overrides the base data when the ability use count meets a threshold. Must be in ascending order by abilityUsedThreshold.")]
 		public HealOverTimeEffectLevelScaling[] LevelScaling = new HealOverTimeEffectLevelScaling[3];
 		private HealOverTimeEffectData _cachedData;
-		private int _cachedNewLevelThreshold = 0;
+		private int _nextRecomputeThreshold = 0;
 
 		public IEffect<IHealable> Create(EffectContext context = default) {
-			if (context.AbilityUsedCount >= this._cachedNewLevelThreshold) {
-				this._cachedData = this.ResolveData(context.AbilityUsedCount, out this._cachedNewLevelThreshold);
+			// The lookup only advances a few times per ability lifetime, so caching avoids rescanning the array on every create.
+			if (this._nextRecomputeThreshold < int.MaxValue
+			&& context.AbilityUsedCount >= this._nextRecomputeThreshold) {
+				this._cachedData = this.ResolveData(context.AbilityUsedCount, out this._nextRecomputeThreshold);
 			}
 			return new HealOverTimeEffect(this._cachedData);
 		}
 
 		private HealOverTimeEffectData ResolveData(int useCount, out int newLevelThreshold) {
-			newLevelThreshold = 0;
+			if (this.LevelScaling == null || this.LevelScaling.Length == 0) {
+				newLevelThreshold = int.MaxValue;
+				return this.BaseData;
+			}
+
+			newLevelThreshold = this.LevelScaling[0].abilityUsedThreshold;
 			for (int i = this.LevelScaling.Length - 1; i >= 0; i--) {
 				if (useCount >= this.LevelScaling[i].abilityUsedThreshold) {
-					newLevelThreshold = this.LevelScaling[i].abilityUsedThreshold;
+					newLevelThreshold = (i + 1 < this.LevelScaling.Length)
+						? this.LevelScaling[i + 1].abilityUsedThreshold
+						: int.MaxValue;
+
+					// If a field in the scaling data is set to 0 or less, fall back to the base value.
+					// This allows partial overrides without repeating every field for each level.
 					return new HealOverTimeEffectData {
-						healPerInterval = this.LevelScaling[i].healPerInterval,
-						duration = this.LevelScaling[i].duration,
-						tickInterval = this.LevelScaling[i].tickInterval
+						healPerInterval = this.LevelScaling[i].healPerInterval <= 0
+							? this.BaseData.healPerInterval : this.LevelScaling[i].healPerInterval,
+						duration = this.LevelScaling[i].duration <= 0
+							? this.BaseData.duration : this.LevelScaling[i].duration,
+						tickInterval = this.LevelScaling[i].tickInterval <= 0
+							? this.BaseData.tickInterval : this.LevelScaling[i].tickInterval
 					};
 				}
 			}
@@ -89,6 +112,7 @@ namespace Kope.AbilitySystem.Effect {
 		public void Tick(float deltaTime) => this.timer?.Tick(deltaTime);
 
 		private void OnInterval() {
+			Debug.Log($"Applying HoT tick to {this.currentTarget}. Heal Amount: {this.flathealAmountPerInterval}");
 			this.currentTarget?.Heal(this.flathealAmountPerInterval, 0f);
 		}
 		private void OnStop() => Cleanup();

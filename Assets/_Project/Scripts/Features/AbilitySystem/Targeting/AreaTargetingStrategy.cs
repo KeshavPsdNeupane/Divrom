@@ -95,7 +95,7 @@ namespace Kope.Component.Ability.Targeting {
 		private void ResolveTargets(Vector3 point) {
 			this.resolvedTargets.Clear();
 			var colliders = Physics2D.OverlapCircleAll(point, this.radius, this.targetingManager.TargetLayerMask);
-			var uniqueTargets = new HashSet<IHurtBoxComponent>();
+			var uniqueTargets = new HashSet<IHitBoxComponent>();
 
 			for (int i = 0; i < colliders.Length; i++) {
 				var targetContext = TargetContext.Create(colliders[i]);

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0f21cddf88472cfd9805c89c4f21446, type: 3}
   m_Name: HealthComponentConfig
   m_EditorClassIdentifier: Assembly-CSharp::HealthComponentConfig
-  defenceScalingFactor: 0.5
+  defenceScalingFactor: 100
   resistanceDiminishingReturnsThreshold: 0.8
   levelScalingFactor: 0.02
-  reciprocalOfResistanceDiminishingReturnsThreshold: 1.25
+  inverseResistanceDiminishingReturnsThreshold: 5.0000005

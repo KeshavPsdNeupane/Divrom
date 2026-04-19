@@ -49,12 +49,16 @@ namespace Kope.Core.Init {
 		public void SetInitBoolean(bool value = true) => this.IsInitialized = value;
 
 		public void Init() {
-			if (this.IsInitialized) return;
-			this.parentGameObjectStackTrace = this.GetGameObjectHierarchyPath();
-			this.hasLoggedNotInitializedWarning = false;
-			// call the virtual OnInit for actual initialization logic, and 
-			// set IsInitialized based on its return value.
-			this.IsInitialized = OnInit();
+			try {
+				if (this.IsInitialized) return;
+				this.parentGameObjectStackTrace = this.GetGameObjectHierarchyPath();
+				this.hasLoggedNotInitializedWarning = false;
+
+				this.IsInitialized = OnInit();
+			} catch (System.Exception ex) {
+				Debug.LogError($"Exception during Init of {this.GetType().Name} on GameObject {gameObject.name}: {ex}");
+				this.IsInitialized = false;
+			}
 		}
 
 		/// <summary>
@@ -92,10 +96,11 @@ namespace Kope.Core.Init {
 		protected void Update() {
 			if (!this.IsInitialized) {
 				if (!this.hasLoggedNotInitializedWarning) {
-					// calling FindAllParentStackString every frame is expensive, so we only do it once when we log the warning for the first time.
-					// for now calling it again in this if so that we can get the correct stack trace even if the hierarchy changes after initialization. since we only log once, it should be fine.
 					this.parentGameObjectStackTrace = this.GetGameObjectHierarchyPath();
 					this.hasLoggedNotInitializedWarning = true;
+					Debug.LogWarning($"[{this.GetType().Name}] Update called " +
+					"before Init() on {this.parentGameObjectStackTrace}. Is " +
+					"it registered in InitLifecycleManager?", this);
 				}
 				return;
 			}
@@ -103,8 +108,6 @@ namespace Kope.Core.Init {
 		}
 
 		protected void FixedUpdate() {
-			// just return the Update gives the error log, no need to also log in FixedUpdate. 
-			// since usually if Update is not initialized, FixedUpdate will also not be initialized.
 			if (!this.IsInitialized) return;
 
 			OnFixedUpdate();

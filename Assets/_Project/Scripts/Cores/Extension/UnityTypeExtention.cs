@@ -1,12 +1,10 @@
 
 using UnityEngine;
 
-namespace Kope.Core.Extensions
-{
+namespace Kope.Core.Extensions {
 
 
-	public static class UnityTypeExtension
-	{
+	public static class UnityTypeExtension {
 		/// <summary>
 		/// This extension method generates a string that represents the full hierarchy 
 		/// path of a GameObject in the Unity scene.
@@ -17,8 +15,7 @@ namespace Kope.Core.Extensions
 		/// </summary>
 		/// <param name="obj"></param>
 		/// <returns></returns>
-		public static string GetFullHierarchyPath(this MonoBehaviour behaviour)
-		{
+		public static string GetFullHierarchyPath(this MonoBehaviour behaviour) {
 			return $"(GameObjectPath: {behaviour.GetGameObjectHierarchyPath()})";
 		}
 
@@ -33,13 +30,11 @@ namespace Kope.Core.Extensions
 		/// </summary>
 		/// <param name="gameObject"></param>
 		/// <returns></returns>
-		public static string GetGameObjectHierarchyPath(this MonoBehaviour behaviour)
-		{
+		public static string GetGameObjectHierarchyPath(this MonoBehaviour behaviour) {
 			System.Text.StringBuilder sb = new();
 			Transform cursor = behaviour.gameObject.transform;
 
-			while (cursor != null)
-			{
+			while (cursor != null) {
 				if (sb.Length > 0) sb.Insert(0, "->");
 				sb.Insert(0, cursor.name);
 				cursor = cursor.parent;

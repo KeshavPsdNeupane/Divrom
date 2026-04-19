@@ -19,37 +19,38 @@ public class StatDescription : InitializableBase {
 	private CharacterStatsSystem _characterStats;
 	private IHealthComponent _healthComponent;
 
-	private readonly Dictionary<CharacterStatType, float> _statsValues = new();
+
 	private readonly Dictionary<CharacterStatType, UnityAction<float>> _statsCallbacksDict = new();
 	private readonly Dictionary<CharacterStatType, TextMeshProUGUI> _statTextObjects = new();
-	private float _currentHealth;
-
 	private RectTransform _panelRect; // cache panelRect to avoid fetching multiple times
 
 	protected override bool OnInit() {
 		return Validate();
 	}
-	private void SetCurrentHp(float hp) {
-		this._currentHealth = hp;
-		if (_statTextObjects.TryGetValue(CharacterStatType.HP, out var tmp)) {
-			float maxHp = _statsValues.ContainsKey(CharacterStatType.HP) ? _statsValues[CharacterStatType.HP] : 0;
-			tmp.text = $"{CharacterStatType.HP}: {hp:0}/{maxHp:0}";
+	private void ResolveHpDisplay(float currentHp, float maxHp) {
+		if (this._statTextObjects.TryGetValue(CharacterStatType.HP, out var tmp)) {
+			tmp.text = $"{CharacterStatType.HP}: {currentHp:0}/{maxHp:0}";
 		}
+	}
+	private void SetCurrentHp(HealthChangeInfo healthChangeInfo) {
+		ResolveHpDisplay(healthChangeInfo.CurrentHealth, healthChangeInfo.MaxHealth);
 	}
 
 	void OnEnable() {
-		if (this._characterStats != null &&
-			this._characterStats.CurrentStats != null &&
-			this.statDescriptionUIPanel != null &&
-			this._healthComponent != null) { // with Init , no need to Validate again here since OnEnable will only be called after successful Init, but we do need to check for nulls to avoid errors in case of unexpected issues.
+		if (this.IsInitialized) {
+			// with Init , no need to Validate again here since OnEnable will only be 
+			// called after successful Init, but we do need to check for nulls to avoid errors 
+			// in case of unexpected issues.
 			CreateTMPObjects();
 			SubscribeToStats();
 		}
 	}
 
 	void OnDisable() {
-		if (this._characterStats == null || this._healthComponent == null) return;
+		if (!this.IsInitialized) return;
 		this._healthComponent.OnCurrentHealthChanged -= SetCurrentHp;
+		this._healthComponent.OnMaxHealthChanged -= SetCurrentHp;
+
 		foreach (var kvp in this._statsCallbacksDict)
 			this._characterStats.StatsUnsubscribe(kvp.Key, kvp.Value);
 
@@ -129,18 +130,27 @@ public class StatDescription : InitializableBase {
 	private void SubscribeToStats() {
 		if (this._characterStats == null || this._characterStats.CurrentStats == null
 		|| this._healthComponent == null) return;
-		// initial fetch of current health to display in UI immediately, and subscribe to changes for future updates.
-		this._currentHealth = this._healthComponent.CurrentHealth;
-		this._healthComponent.OnCurrentHealthChanged += SetCurrentHp;
 
+		// initial setup and fetching current/max health to display on UI, and subscribe to 
+		// changes to update the display when health changes.
+		var currentHealth = this._healthComponent.CurrentHealth;
+		this._healthComponent.OnCurrentHealthChanged += SetCurrentHp;
+		var maxHealth = this._healthComponent.MaxHealth;
+		this._healthComponent.OnMaxHealthChanged += SetCurrentHp;
+		ResolveHpDisplay(currentHealth, maxHealth);
+
+
+
+		// subscribe to all stat changes to update the UI when any stat changes. 
+		// we use a dictionary to keep track of the callbacks for each stat so
+		// we can unsubscribe them later.
 		foreach (CharacterStatType type in Enum.GetValues(typeof(CharacterStatType))) {
 			// check if the stat exists to avoid errors
-			if (!this._characterStats.CurrentStats.ContainsKey(type)) continue;
+			if (type == CharacterStatType.HP || !this._characterStats.CurrentStats.ContainsKey(type)) continue;
 
-			this._statsValues[type] = this._characterStats.GetStatValue(type);
+			float initialValue = this._characterStats.CurrentStats[type].GetValue();
 
 			void callback(float val) {
-				this._statsValues[type] = val;
 				if (this._statTextObjects.TryGetValue(type, out var tmp))
 					tmp.text = $"{type}: {val:0}";
 			}
@@ -153,18 +163,11 @@ public class StatDescription : InitializableBase {
 			this._characterStats.StatsSubscribe(type, callback);
 
 			// Immediately update TMP text
-			if (_statTextObjects.TryGetValue(type, out var text)) {
-				string display;
-				if (type == CharacterStatType.HP) {
-					display = $"{type}: {this._currentHealth:0}/{this._statsValues[type]:0}";
-				} else {
-					display = $"{type}: {this._statsValues[type]:0}";
-				}
-				text.text = display;
+			if (this._statTextObjects.TryGetValue(type, out var text)) {
+				text.text = $"{type}: {initialValue:0}";
 			}
-
-
 		}
-	}
 
+	}
 }
+

@@ -44,7 +44,7 @@ namespace Kope.Component.Combat.Interface {
 		}
 	}
 	public interface ICombatable {
-		IHurtBoxComponent HurtBox { get; }
+		IHitBoxComponent HurtBox { get; }
 		float TakeHit(DamageDetail damageDetail);
 		void TakeDamageDebugOnly(int amount);
 	}

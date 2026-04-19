@@ -1,10 +1,8 @@
-using Kope.Component.HitBox;
 using Kope.Component.HitBox.Interface;
 using Kope.Component.Movement;
 using Kope.Core.EntityComponentRegistry;
 using Kope.Core.Init;
 using UnityEngine;
-using static Kope.Component.HitBox.StunnableHitInfo;
 
 namespace Kope.Component.HitReaction {
 
@@ -22,7 +20,7 @@ namespace Kope.Component.HitReaction {
 	public class HitReactionProcessor : InitializableBase {
 		[SerializeField] private EntityComponentsRegistry ecr;
 
-		private IHurtBoxComponent hurtBox;
+		private IHitBoxComponent hurtBox;
 		private IStunnable stunnable;
 		private IKnockbackable knockbackable;
 

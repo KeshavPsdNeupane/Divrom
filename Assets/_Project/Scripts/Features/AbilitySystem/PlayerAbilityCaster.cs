@@ -12,23 +12,25 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
 using Kope.Component.HitBox.Interface;
+using System.Collections.Generic;
 
 namespace Kope.Component.Ability {
-	[Serializable]
-	public class AbilityCastSlot {
-		public string displayName;
-		public AbilityBase ability;
-	}
 
 
-	[RequireComponent(typeof(TargetingManager))]
-	[RequireComponent(typeof(EntityComponentsRegistry))]
 	public class PlayerAbilityCaster : InitializableBase {
-		[SerializeField] private GameObject baseGameObject;
-		[SerializeField] private AbilityCastSlot[] hotbar = Array.Empty<AbilityCastSlot>();
-		[SerializeField] private int selectedSlotIndex;
+		[SerializeField] private int abilityCount = 4;
+		/// <summary>
+		/// Never use this use _hotbar instead, this is just for serialization and editor assignment.
+		///  The hotbar array is resized to match the ability count and populated with the assigned abilities 
+		/// from this array on init.
+		/// </summaty>
+		[SerializeField] private AbilityBase[] abilityScriptableObjects = Array.Empty<AbilityBase>();
 		[SerializeField] private EntityComponentsRegistry ecr;
 
+		// -1 means no slot selected, valid indices are 0 to hotbar.Length - 1
+		private readonly List<AbilityBase> _hotbar = new();
+		private int _selectedSlotIndex = -1;
+		private GameObject _baseGameObject;
 		private InputManager _inputManager;
 		private TargetingManager _targetingManager;
 		private IHealthComponent _casterHealth;
@@ -38,11 +40,9 @@ namespace Kope.Component.Ability {
 		private bool _isSubscribed;
 
 		protected override bool OnInit() {
-			this._targetingManager = GetComponent<TargetingManager>();
-			this.ecr = GetComponent<EntityComponentsRegistry>();
 
-			if (this._targetingManager == null) {
-				MyLogger.Error($"PlayerAbilityCaster on {gameObject.name} is missing a TargetingManager.");
+			if (!GlobalServiceLocator.Instance.TryGetService(out this._inputManager)) {
+				MyLogger.Error($"PlayerAbilityCaster on {gameObject.name} could not resolve InputManager.");
 				return false;
 			}
 
@@ -50,23 +50,25 @@ namespace Kope.Component.Ability {
 				MyLogger.Error($"PlayerAbilityCaster on {gameObject.name} is missing an EntityComponentsRegistry.");
 				return false;
 			}
+			var registry = this.ecr.ComponentRegistry;
+			this._baseGameObject = registry.EntityTransform.gameObject;
 
-			if (!GlobalServiceLocator.Instance.TryGetService(out this._inputManager)) {
-				MyLogger.Error($"PlayerAbilityCaster on {gameObject.name} could not resolve InputManager.");
+			if (!registry.TryGetReadOnlyComponent(out this._targetingManager, false)) {
+				MyLogger.Error($"PlayerAbilityCaster on {gameObject.name} is missing a TargetingManager.");
 				return false;
 			}
 
-			if (!this.ecr.ComponentRegistry.TryGetReadOnlyComponent(out this._casterAttack, false)) {
+			if (!registry.TryGetReadOnlyComponent(out this._casterAttack, false)) {
 				MyLogger.Error($"PlayerAbilityCaster on {gameObject.name} could not find an IAttackComponent.");
 				return false;
 			}
 
-			if (!this.ecr.ComponentRegistry.TryGetReadOnlyComponent(out this._casterHealth, false)) {
+			if (!registry.TryGetReadOnlyComponent(out this._casterHealth, false)) {
 				MyLogger.Error($"PlayerAbilityCaster on {gameObject.name} could not find an IHealthComponent.");
 				return false;
 			}
 
-			if (!this.ecr.ComponentRegistry.TryGetReadOnlyComponent(out IHurtBoxComponent casterHurtBox, false)) {
+			if (!registry.TryGetReadOnlyComponent(out IHitBoxComponent casterHurtBox, false)) {
 				MyLogger.Error($"PlayerAbilityCaster on {gameObject.name} could not resolve its own IHurtBoxComponent.");
 				return false;
 			}
@@ -75,14 +77,34 @@ namespace Kope.Component.Ability {
 			// just creating once here and reusing since the caster context info won't change and 
 			// it's more efficient to reuse than create new ones every cast
 			this._effectContext = new EffectContext {
-				Caster = this.baseGameObject != null ? this.baseGameObject : this.gameObject,
+				Caster = this._baseGameObject != null ? this._baseGameObject : this.gameObject,
 				CasterAttack = this._casterAttack,
 				CasterHealth = this._casterHealth,
 				CasterLevel = 0
 			};
+
+			for (int i = 0; i < this.abilityScriptableObjects.Length; i++) {
+				if (this.abilityScriptableObjects[i] != null) {
+					var ability = Instantiate(this.abilityScriptableObjects[i]);
+					ability.InjectAbilityUsedCount(0);
+					this._hotbar.Add(ability);
+				} else {
+					this._hotbar.Add(null);
+				}
+			}
 			SubscribeToInput();
 			return true;
 		}
+		void OnValidate() {
+			if (this.abilityScriptableObjects == null || this.abilityScriptableObjects.Length == 0) return;
+			// forcing the hotbar array to always match the ability count for simplicity,
+			if (this.abilityScriptableObjects.Length != this.abilityCount) {
+				Array.Resize(ref this.abilityScriptableObjects, this.abilityCount);
+			}
+
+		}
+
+
 
 		protected override void OnShutdown() {
 			UnsubscribeFromInput();
@@ -125,10 +147,10 @@ namespace Kope.Component.Ability {
 		}
 
 		private void HandleHotbarSelectionInput() {
-			if (Keyboard.current == null || this.hotbar == null || this.hotbar.Length == 0) return;
+			if (Keyboard.current == null || this._hotbar == null || this._hotbar.Count == 0) return;
 
-			for (int i = 0; i < this.hotbar.Length && i < 9; i++) {
-				var key = GetSelectionKey(i);
+			for (int i = 0; i < this._hotbar.Count && i < 9; i++) {
+				var key = GetSelectionKey(i + 1);
 				if (key == null || !key.wasPressedThisFrame) continue;
 				SelectSlot(i);
 				break;
@@ -136,16 +158,15 @@ namespace Kope.Component.Ability {
 		}
 
 		private static KeyControl GetSelectionKey(int index) {
+			// later will make  this to be configurable via the input system,
+			//  but for now just hardcoding to number keys 1-5 
+			// (0 is usually reserved for something else like "no selection")
+			// 
 			return index switch {
-				0 => Keyboard.current.digit1Key,
-				1 => Keyboard.current.digit2Key,
-				2 => Keyboard.current.digit3Key,
-				3 => Keyboard.current.digit4Key,
-				4 => Keyboard.current.digit5Key,
-				5 => Keyboard.current.digit6Key,
-				6 => Keyboard.current.digit7Key,
-				7 => Keyboard.current.digit8Key,
-				8 => Keyboard.current.digit9Key,
+				1 => Keyboard.current.digit1Key,
+				2 => Keyboard.current.digit2Key,
+				3 => Keyboard.current.digit3Key,
+				4 => Keyboard.current.digit4Key,
 				_ => null
 			};
 		}
@@ -157,18 +178,26 @@ namespace Kope.Component.Ability {
 		}
 
 		public void SelectSlot(int index) {
-			if (this.hotbar == null || index < 0 || index >= this.hotbar.Length) return;
-			this.selectedSlotIndex = index;
-			this._targetingManager?.CancelCurrentTargeting();
+			if (this._hotbar == null || index < 0 || index >= this._hotbar.Count) return;
+			this._selectedSlotIndex = index;
+			if (this._targetingManager != null && this._targetingManager.IsTargeting)
+				this._targetingManager.CancelCurrentTargeting();
 		}
 
 		public void CastSelectedAbility() {
-			if (this.hotbar == null || this.hotbar.Length == 0) return;
-			if (this.selectedSlotIndex < 0 || this.selectedSlotIndex >= this.hotbar.Length) return;
+			if (this._hotbar == null || this._hotbar.Count == 0) return;
+			if (this._selectedSlotIndex < 0 || this._selectedSlotIndex >= this._hotbar.Count) return;
+			var slot = this._hotbar[this._selectedSlotIndex];
+			if (slot == null) return;
 
-			var slot = this.hotbar[this.selectedSlotIndex];
-			if (slot == null || slot.ability == null) return;
-			slot.ability.Cast(this._targetingManager, this._casterContext, this._effectContext);
+			// here no need to add the ability count in context,
+			// ability themself add that internall on the context
+			slot.Cast(this._targetingManager, this._casterContext, this._effectContext);
+
+			// after casting, we reset the selected slot index to prevent accidental multiple 
+			// casts and to require the player to intentionally select an ability 
+			// slot for each cast, which can help prevent miscasts in the heat of combat.
+			this._selectedSlotIndex = -1;
 		}
 	}
 }

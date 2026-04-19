@@ -6,10 +6,10 @@ using ServiceLocatorPattern;
 using Kope.Core.Init;
 using Kope.Core.EntityComponentRegistry;
 using Kope.EntityComponentSystem;
+using Kope.Core.Extensions;
 
 namespace Kope.Core.Identity {
-	[RequireComponent(typeof(EntityInstance))]
-	public class EntitySaveSystem : InitializableBase, IEntitySavePacketProvider {
+	public class EntitySaveSystem : MonoBehaviour, IEntitySavePacketProvider {
 		[SerializeField] private EntityInstance identity;
 		private readonly Dictionary<Type, ISaveable> _saveableComponents = new();
 
@@ -18,14 +18,18 @@ namespace Kope.Core.Identity {
 
 		public HashedTag UniqueID => identity.EntityDetail.UniqueID.HashedTag;
 
-		protected void Awake() {
+		private void Awake() {
 			if (identity == null) this.identity = GetComponent<EntityInstance>();
 
 			var registry = this.identity.ComponentsRegistryForSaveSystemOnly;
+
 			registry.Register(this);
 
 			if (!SceneServiceLocator.Instance.TryGetService<SavableEntityRegistry>(out var savableEntityRegistry)) {
-				Debug.LogError($"[EntitySaveSystem] No SavableEntityRegistry found in the scene. Please ensure that a SavableEntityRegistry is present and properly initialized in the scene for EntitySaveSystem to function correctly.{GetParentGameObjectHeirarchyMessage()}", this.gameObject);
+				Debug.LogError($"[EntitySaveSystem] No SavableEntityRegistry found in the scene." +
+				" Please ensure that a SavableEntityRegistry is present and properly initialized " +
+				$"in the scene for EntitySaveSystem to function correctly.{this.GetFullHierarchyPath()}"
+				, this.gameObject);
 				return;
 			}
 			RegisterSaveDataChunk();

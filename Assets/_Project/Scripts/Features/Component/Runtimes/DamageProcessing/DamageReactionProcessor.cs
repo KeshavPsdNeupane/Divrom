@@ -6,7 +6,6 @@ using Kope.Component.HitBox.Interface;
 using Kope.Core.EntityComponentRegistry;
 using Kope.Core.Init;
 using UnityEngine;
-using Kope.Component.HitBox;
 using Kope.Component.Health;
 
 namespace Kope.Component.Combat {
@@ -27,11 +26,11 @@ namespace Kope.Component.Combat {
 		[SerializeField] private EntityComponentsRegistry ecr;
 		[SerializeField] private HealthComponentConfig config;
 
-		private IHurtBoxComponent hurtBox;
+		private IHitBoxComponent hurtBox;
 		private IHealthComponent healthComponent;
 		private IStatSystem statSystem;
 
-		public IHurtBoxComponent HurtBox => this.hurtBox;
+		public IHitBoxComponent HurtBox => this.hurtBox;
 
 		private readonly List<ITickableEffect> _activeTickableEffects = new();
 		// replace this with the actual LevelUp component when we have it, this is just for

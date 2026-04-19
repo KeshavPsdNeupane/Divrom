@@ -12,13 +12,6 @@ using UnityEngine;
 public class ExampleAbility : AbilityBase {
 	[SerializeField, Tooltip("The type of hit targets this ability can affect.")]
 	private HitTargetType applicableHitTargetType = HitTargetType.Entity;
-
-	// Targeting is owned by the ability, assignable from inspector
-	[SerializeReference, SubclassSelector]
-	private ITargetingFactory targetingFactory;
-
-	public override ITargetingFactory TargetingFactory => this.targetingFactory;
-
 	[SerializeReference, SubclassSelector]
 	private List<IEffectFactory<ICombatable>> damageEffects = new();
 	[SerializeReference, SubclassSelector]

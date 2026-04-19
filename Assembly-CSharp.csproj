@@ -70,9 +70,11 @@
     <Compile Include="Assets/_Project/Scripts/Features/AnimationCurve/CurveAsset.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/PlayerAbilityCaster.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/HealEffect.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Ability/DamageAbility.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/AbilityProjectileController.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Component/UI/Health/HealthBar.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/DamageOverTimeEffect.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Ability/HealAbility.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/TargetingManager.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/AreaTargetingStrategy.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/StunEffect.cs" />

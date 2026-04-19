@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47e64f2ae2c698fa1a071cc72754693d, type: 3}
+  m_Name: HealOverTime
+  m_EditorClassIdentifier: Assembly-CSharp::HealAbility
+  abilityName: 
+  abilityID: e12d0a49b3930ac8fb1b3b413f25691a
+  castSfx: {fileID: 0}
+  castVfx: {fileID: 0}
+  runningVfx: {fileID: 0}
+  targetingFactory:
+    rid: -2
+  applicableHitTargetType: 0
+  healEffects:
+  - rid: 7477298528001196295
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 7477298528001196295
+      type: {class: HealOverTimeEffectFactory, ns: Kope.AbilitySystem.Effect, asm: Assembly-CSharp}
+      data:
+        BaseData:
+          healPerInterval: 5
+          duration: 4
+          tickInterval: 0.5
+        LevelScaling:
+        - abilityUsedThreshold: 3
+          healPerInterval: 6
+          duration: 0
+          tickInterval: 0
+        - abilityUsedThreshold: 5
+          healPerInterval: 7
+          duration: 0
+          tickInterval: 0
+        - abilityUsedThreshold: 7
+          healPerInterval: 8
+          duration: 0
+          tickInterval: 0

@@ -5,12 +5,14 @@ namespace Kope.Character.Stats {
 	public class CharacterStatsSO : ScriptableObject {
 		[SerializeField] private SerializableDictionary<CharacterStatType, float> Basestats = new();
 
-		[SerializeField]
+		[Header("Resistance Stats, Must be between in 0.0f and 1.0f"), SerializeField]
 		private SerializableDictionary<DamageType, float> resistanceStats = new();
 
 		[SerializeField] private SerializableDictionary<CharacterStatType, float> levelIncreasingStatWithLevelingValue = new();
 
 		public SerializableDictionary<CharacterStatType, float> BasestatsDict => Basestats;
+
+
 		public SerializableDictionary<DamageType, float> ResistanceStatsDict => resistanceStats;
 
 		private void Awake() {
@@ -24,11 +26,11 @@ namespace Kope.Character.Stats {
 			AddIfMissing(Basestats, CharacterStatType.CDMG, 100f);
 
 			// Resistance stats (auto-adds missing ones)
-			AddIfMissing(resistanceStats, DamageType.Physical, 5f);
-			AddIfMissing(resistanceStats, DamageType.Fire, 5f);
-			AddIfMissing(resistanceStats, DamageType.Ice, 5f);
-			AddIfMissing(resistanceStats, DamageType.Lightning, 5f);
-			AddIfMissing(resistanceStats, DamageType.Poison, 5f);
+			AddIfMissing(resistanceStats, DamageType.Physical, 0.05f);
+			AddIfMissing(resistanceStats, DamageType.Fire, 0.05f);
+			AddIfMissing(resistanceStats, DamageType.Ice, 0.05f);
+			AddIfMissing(resistanceStats, DamageType.Lightning, 0.05f);
+			AddIfMissing(resistanceStats, DamageType.Poison, 0.05f);
 
 			// Leveling stats
 			AddIfMissing(levelIncreasingStatWithLevelingValue, CharacterStatType.HP, 10f);

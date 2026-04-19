@@ -1,5 +1,6 @@
 using Kope.Component.Health;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 
 /// <summary>
@@ -17,6 +18,12 @@ public class ReduceHp : MonoBehaviour {
 	private void Start() {
 		if (this.healthComponent == null) {
 			Debug.LogError("HealthComponent reference is not set on ReduceHp script.");
+		}
+	}
+
+	void Update() {
+		if (Mouse.current.rightButton.wasPressedThisFrame) {
+			ReduceHealth();
 		}
 	}
 

@@ -3,13 +3,14 @@ using Kope.Component.Ability.Targeting;
 using Kope.Component.Combat.Interface;
 using Kope.Component.HitBox.Interface;
 using Kope.Core.Attribute;
+using Kope.Core.Attributes;
 using Kope.Core.EntityComponentRegistry;
 using UnityEngine;
 
 public class TargetContext {
-	public readonly IHurtBoxComponent HitBox;
+	public readonly IHitBoxComponent HitBox;
 
-	public TargetContext(IHurtBoxComponent target) {
+	public TargetContext(IHitBoxComponent target) {
 		this.HitBox = target;
 	}
 
@@ -37,7 +38,7 @@ public class TargetContext {
 		// just have null for any missing components, which is fine.
 		// and it is abiility responsibility to check if the target is valid for its purposes,
 		// not the responsibility of this TargetContext struct.
-		_ = registry.ComponentRegistry.TryGetReadOnlyComponent(out IHurtBoxComponent combatTarget, false);
+		_ = registry.ComponentRegistry.TryGetReadOnlyComponent(out IHitBoxComponent combatTarget, false);
 		if (combatTarget == null) return default;
 
 		return new TargetContext(combatTarget);
@@ -46,6 +47,7 @@ public class TargetContext {
 
 [Serializable]
 public abstract class AbilityBase : ScriptableObject {
+	[SerializeField] string abilityName;
 	[SerializeField, ReadOnly] string abilityID;
 	[SerializeField, Tooltip("Audio clip to play when the ability is cast.")]
 	protected AudioClip castSfx;
@@ -53,15 +55,17 @@ public abstract class AbilityBase : ScriptableObject {
 	protected GameObject castVfx;
 	[SerializeField, Tooltip("Visual effect to play while the ability is active.")]
 	protected GameObject runningVfx;
+	[SerializeReference, SubclassSelector] protected ITargetingFactory targetingFactory;
 	private int _abilityUsedCount = 0;
 	public int AbilityUsedCount => this._abilityUsedCount;
 
+	public string AbilityName => this.abilityName;
 	public string AbilityID => this.abilityID;
 	public AudioClip CastSfx => this.castSfx;
 	public GameObject CastVfx => this.castVfx;
 	public GameObject RunningVfx => this.runningVfx;
 
-	public abstract ITargetingFactory TargetingFactory { get; }
+
 
 
 	public string GetSaveData() {
@@ -77,7 +81,7 @@ public abstract class AbilityBase : ScriptableObject {
 		   TargetingManager targetingManager,
 		   in TargetContext casterContext,
 		   EffectContext effectContext) {
-		var strategy = TargetingFactory?.Create() ?? new SelfTargetingStrategy();
+		var strategy = targetingFactory?.Create() ?? new SelfTargetingStrategy();
 		// here we can play the casting sfx and vfx immediately upon casting
 		// # cast vfx/sfx that will be played when the ability is cast, before the targeting is resolved. 
 		// this is for things like a fireball that shoots out immediately when you cast, even if it doesn't 

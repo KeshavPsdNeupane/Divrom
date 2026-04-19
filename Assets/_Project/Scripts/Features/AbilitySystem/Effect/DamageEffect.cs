@@ -7,12 +7,17 @@ using UnityEngine;
 namespace Kope.AbilitySystem.Effect {
 	[Serializable]
 	public struct DamageEffectData {
+		[Header("Damage")]
 		[Tooltip("IF the caster attack component is null, this pity damage is delt")]
+		[Min(0f)]
 		public float pityDamage;
+		[Min(0f)]
 		public float DamageMultiplier;
 		public DamageType DamageType;
 		public CharacterStatType ScalingStat;
+		[Min(0f)]
 		public float pierceRatio;
+		[Min(0f)]
 		public float ignoreResistance;
 	}
 
@@ -20,51 +25,69 @@ namespace Kope.AbilitySystem.Effect {
 	public class DamageEffectFactory : IEffectFactory<ICombatable> {
 		[Tooltip("The base damage effect data")]
 		public DamageEffectData BaseData;
-		[Tooltip("The scaling data for each level, will override the base data if the " +
-		"ability used count meets the threshold")]
+		[Tooltip("Scaling data for each level. Overrides the base data when the ability use count meets a threshold. Must be in ascending order by abilityUsedThreshold.")]
 		public DamageEffectLevelScaling[] nextLevelScalings = new DamageEffectLevelScaling[3];
 
 		private DamageEffectData _cachedData;
-		private int _cachedNewLevelThreshold = 0;
+		private int _nextRecomputeThreshold = 0;
 
 		public IEffect<ICombatable> Create(EffectContext context = default) {
-			if (context.AbilityUsedCount >= this._cachedNewLevelThreshold) {
-				// resolve new data if the ability used count meets the threshold, otherwise use the cached data
-				// and also update the cached threshold to avoid unnecessary checks in the future.
-				// for 1 time it is O(n), but after that it will be O(1) since the data is cached
-				// and the threshold is updated. until the count is reset, then it will be O(n) again 
-				// for the first time.
-				this._cachedData = ResolveData(context.AbilityUsedCount, out this._cachedNewLevelThreshold);
+			// The lookup only advances a few times per ability lifetime, so caching avoids rescanning the array on every create.
+
+
+			if (this._nextRecomputeThreshold < int.MaxValue
+			&& context.AbilityUsedCount >= this._nextRecomputeThreshold) {
+				this._cachedData = ResolveData(context.AbilityUsedCount, out this._nextRecomputeThreshold);
+				Debug.Log($"DamageEffectFactory: Recomputing damage effect data for" +
+				$" ability used count {context.AbilityUsedCount}/{this._nextRecomputeThreshold}.");
 			}
 			return new DamageEffect(context, this._cachedData);
 		}
 
-		private DamageEffectData ResolveData(int useCount, out int newLevelThreshold) {
-			newLevelThreshold = 0;
-			for (int i = this.nextLevelScalings.Length - 1; i >= 0; i--) {
-				if (useCount >= this.nextLevelScalings[i].abilityUsedThreshold) {
-					newLevelThreshold = this.nextLevelScalings[i].abilityUsedThreshold;
+		private DamageEffectData ResolveData(int useCount, out int nextLevelThreshold) {
+			if (this.nextLevelScalings == null || this.nextLevelScalings.Length == 0) {
+				nextLevelThreshold = int.MaxValue;
+				return this.BaseData;
+			}
+
+			nextLevelThreshold = this.nextLevelScalings[0].abilityUsedThreshold;
+			for (int i = nextLevelScalings.Length - 1; i >= 0; i--) {
+
+				if (useCount >= nextLevelScalings[i].abilityUsedThreshold) {
+					nextLevelThreshold = (i + 1 < nextLevelScalings.Length)
+						? nextLevelScalings[i + 1].abilityUsedThreshold
+						: int.MaxValue;
+
+					// If a field in the scaling data is set to 0 or less, fall back to the base value.
+					// This allows partial overrides without repeating every field for each level.
 					return new DamageEffectData {
-						pityDamage = this.BaseData.pityDamage,
-						DamageMultiplier = this.nextLevelScalings[i].Multiplier,
-						DamageType = this.BaseData.DamageType,
-						ScalingStat = this.BaseData.ScalingStat,
-						pierceRatio = this.nextLevelScalings[i].pierceRatio,
-						ignoreResistance = this.nextLevelScalings[i].ignoreResistance
+						pityDamage = BaseData.pityDamage,
+						DamageMultiplier = nextLevelScalings[i].Multiplier <= 0
+							? BaseData.DamageMultiplier : nextLevelScalings[i].Multiplier,
+						DamageType = BaseData.DamageType,
+						ScalingStat = BaseData.ScalingStat,
+						pierceRatio = nextLevelScalings[i].pierceRatio <= 0
+							? BaseData.pierceRatio : nextLevelScalings[i].pierceRatio,
+						ignoreResistance = nextLevelScalings[i].ignoreResistance <= 0
+							? BaseData.ignoreResistance : nextLevelScalings[i].ignoreResistance
 					};
 				}
 			}
-
 			return this.BaseData;
 		}
 	}
 
 	[Serializable]
 	public struct DamageEffectLevelScaling {
+		[Header("Scaling")]
 		[Tooltip("The number of times the ability must be used to trigger this scaling")]
+		[Min(0f)]
 		public int abilityUsedThreshold;
+		[Min(0f)]
 		public float Multiplier;
+		[Min(0f)]
 		public float pierceRatio;
+		[Min(0f)]
 		public float ignoreResistance;
 	}
 

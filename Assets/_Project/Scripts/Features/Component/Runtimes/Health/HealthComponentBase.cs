@@ -39,11 +39,11 @@ namespace Kope.Component.Health {
 
 		private CharacterStatsSystem characterStatsSystem;
 
-		public float CurrentHealth => currentHealth;
-		public float MaxHealth => maxHealth;
+		public float CurrentHealth => this.currentHealth;
+		public float MaxHealth => this.maxHealth;
 
-		public event Action<float> OnMaxHealthChanged;
-		public event Action<float> OnCurrentHealthChanged;
+		public event Action<HealthChangeInfo> OnMaxHealthChanged;
+		public event Action<HealthChangeInfo> OnCurrentHealthChanged;
 
 		protected override bool OnInit() {
 			if (ecr == null) return false;
@@ -51,7 +51,6 @@ namespace Kope.Component.Health {
 			if (ecr.ComponentRegistry.TryGetMutatableComponent(out characterStatsSystem)) {
 				return true;
 			}
-
 			return false;
 		}
 
@@ -75,35 +74,57 @@ namespace Kope.Component.Health {
 		}
 
 		private void SetMaxHealth(float newHealth) {
-			maxHealth = newHealth;
-			currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
-			OnMaxHealthChanged?.Invoke(maxHealth);
+			this.maxHealth = newHealth;
+			this.currentHealth = Mathf.Clamp(this.currentHealth, 0, this.maxHealth);
+			this.OnMaxHealthChanged?.Invoke(
+				new HealthChangeInfo(this.currentHealth,
+				this.currentHealth, this.maxHealth,
+				HealthChangeType.MaxHealthChanged));
 		}
 
 		public void Heal(float amount) {
-			currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
-			OnCurrentHealthChanged?.Invoke(currentHealth);
+			if (!this.IsInitialized) return;
+			float previousHealth = this.currentHealth;
+			this.currentHealth = Mathf.Clamp(this.currentHealth + amount, 0, this.maxHealth);
+			// Debug.Log($"HealthComponentBase: Applied heal {amount}, health changed from {previousHealth} " +
+			// $"to {this.currentHealth}.");
+			this.OnCurrentHealthChanged?.Invoke(
+				new HealthChangeInfo(previousHealth, this.currentHealth, this.maxHealth,
+				HealthChangeType.Heal
+				)
+			);
 		}
+
 		public void Heal(float flatAmount, float percentage) {
-			float healAmount = flatAmount + maxHealth * percentage;
+			if (!this.IsInitialized) return;
+			float healAmount = flatAmount + this.maxHealth * percentage;
 			Heal(healAmount);
 		}
 		/// <summary>
 		/// Simple entry point for pre-calculated damage.
 		/// </summary>
 		public void ApplyDamage(float amount) {
-			if (!IsInitialized) return;
+			if (!this.IsInitialized) return;
 
-			currentHealth = Mathf.Clamp(currentHealth - amount, 0, maxHealth);
-			OnCurrentHealthChanged?.Invoke(currentHealth);
+			float previousHealth = this.currentHealth;
+			this.currentHealth = Mathf.Clamp(this.currentHealth - amount, 0, this.maxHealth);
+			// Debug.Log($"HealthComponentBase: Applied damage {amount}, health changed from {previousHealth} " +
+			// "to {this.currentHealth}.");
+			this.OnCurrentHealthChanged?.Invoke(
+				new HealthChangeInfo(previousHealth, this.currentHealth, this.maxHealth,
+				HealthChangeType.Damage
+				)
+			);
 		}
 
-		public ISaveData GetSaveData() => new HealthComponentSaveData(currentHealth);
+		public ISaveData GetSaveData() => new HealthComponentSaveData(this.currentHealth);
 
 		public void LoadFromSaveData(ISaveData data) {
 			if (data is HealthComponentSaveData healthData) {
-				currentHealth = healthData.CurrentHealth;
-				OnCurrentHealthChanged?.Invoke(currentHealth);
+				this.currentHealth = healthData.CurrentHealth;
+				this.OnCurrentHealthChanged?.Invoke(
+					new HealthChangeInfo(0, this.currentHealth, this.maxHealth, HealthChangeType.LoadFromSave)
+				);
 			}
 		}
 	}

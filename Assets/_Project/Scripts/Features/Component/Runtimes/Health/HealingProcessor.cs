@@ -5,7 +5,6 @@ using Kope.Component.HitBox.Interface;
 using Kope.Core.EntityComponentRegistry;
 using Kope.Core.Init;
 using UnityEngine;
-using Kope.Component.HitBox;
 
 
 namespace Kope.Component.Health.Interface {
@@ -30,7 +29,7 @@ namespace Kope.Component.Health.Interface {
 	public class HealingProcessor : InitializableBase, IVitalityManager {
 		[SerializeField] private EntityComponentsRegistry ecr;
 
-		private IHurtBoxComponent _hurtBox;
+		private IHitBoxComponent _hurtBox;
 
 		private IStatSystem _statSystem;
 		private IHealable _health;

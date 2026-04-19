@@ -936,10 +936,7 @@ MonoBehaviour:
   config: {fileID: 0}
   useConfig: 0
   algorithmName: Utility AI
-  actionSOs:
-  - {fileID: 11400000, guid: 7c787eb33a405e4a985289541d12a8e5, type: 2}
-  - {fileID: 11400000, guid: 55f0fced5ba3438c0ab41b97654eae60, type: 2}
-  - {fileID: 11400000, guid: 7166fdc7671e454d280b9f1362b63ba1, type: 2}
+  actionSOs: []
   shortTermMemorySize: 5
   minActionWeight: 0.1
   timeElapsedMult: 2

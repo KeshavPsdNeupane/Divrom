@@ -14,52 +14,70 @@ namespace Kope.AbilitySystem.Effect {
 
 		[Header("Scaling & Combat")]
 		[Tooltip("If the caster attack component is null, this pity damage is dealt per tick")]
-		public float PityDamagePerTick;
-		public float DamageMultiplier;
+		[Min(1f)] public float PityDamagePerTick;
+		[Min(0.01f)] public float DamageMultiplier;
 		public DamageType DamageType;
 		public CharacterStatType ScalingStat;
-		public float PierceRatio;
-		public float IgnoreResistance;
+		[Min(0f)] public float PierceRatio;
+		[Min(0f)] public float IgnoreResistance;
 	}
 	[Serializable]
 	public struct DOTEffectLevelScaling {
-		public int abilityUsedThreshold;
-		public float duration;
-		public float tickInterval;
-		public float Multiplier;
-		public float pierceRatio;
-		public float ignoreResistance;
+		[Min(0f)] public int abilityUsedThreshold;
+		[Min(0f)] public float duration;
+		[Min(0f)] public float tickInterval;
+		[Min(0f)] public float Multiplier;
+		[Min(0f)] public float pierceRatio;
+		[Min(0f)] public float ignoreResistance;
 	}
 
 	[Serializable]
 	public class DamageOverTimeEffectFactory : IEffectFactory<ICombatable> {
 		public DOTEffectData BaseData;
 		[Tooltip("Level scaling data for the damage over time effect" +
-		"Will override base data at specified usage thresholds")]
+		" Overrides base data when the ability use count meets a threshold. Must be in ascending order by abilityUsedThreshold.")]
 		public DOTEffectLevelScaling[] LevelScaling = new DOTEffectLevelScaling[3];
 		private DOTEffectData _cachedData;
-		private int _cachedNewLevelThreshold = 0;
+		private int _nextRecomputeThreshold = 0;
 
 		public IEffect<ICombatable> Create(EffectContext context = default) {
-			if (context.AbilityUsedCount >= this._cachedNewLevelThreshold) {
-				this._cachedData = ResolveData(context.AbilityUsedCount, out this._cachedNewLevelThreshold);
+			// The lookup only advances a few times per ability lifetime, so caching avoids rescanning the array on every create.
+			if (this._nextRecomputeThreshold < int.MaxValue
+			&& context.AbilityUsedCount >= this._nextRecomputeThreshold) {
+				this._cachedData = ResolveData(context.AbilityUsedCount, out this._nextRecomputeThreshold);
 			}
 			return new DamageOverTimeEffect(context, this._cachedData);
 		}
 		private DOTEffectData ResolveData(int useCount, out int newLevelThreshold) {
-			newLevelThreshold = 0;
+			if (this.LevelScaling == null || this.LevelScaling.Length == 0) {
+				newLevelThreshold = int.MaxValue;
+				return this.BaseData;
+			}
+
+			newLevelThreshold = this.LevelScaling[0].abilityUsedThreshold;
 			for (int i = this.LevelScaling.Length - 1; i >= 0; i--) {
 				if (useCount >= this.LevelScaling[i].abilityUsedThreshold) {
-					newLevelThreshold = this.LevelScaling[i].abilityUsedThreshold;
+					newLevelThreshold = (i + 1 < this.LevelScaling.Length)
+						? this.LevelScaling[i + 1].abilityUsedThreshold
+						: int.MaxValue;
+
+					// if the vars in the level scaling struct are set to 0 or less, 
+					// it will fallback to the base data for that var, allowing for partial 
+					// overrides instead of needing to specify all vars for each level
 					return new DOTEffectData {
-						Duration = this.LevelScaling[i].duration,
-						TickInterval = this.LevelScaling[i].tickInterval,
+						Duration = this.LevelScaling[i].duration <= 0
+						? this.BaseData.Duration : this.LevelScaling[i].duration,
+						TickInterval = this.LevelScaling[i].tickInterval <= 0
+						? this.BaseData.TickInterval : this.LevelScaling[i].tickInterval,
 						PityDamagePerTick = this.BaseData.PityDamagePerTick,
-						DamageMultiplier = this.LevelScaling[i].Multiplier,
+						DamageMultiplier = this.LevelScaling[i].Multiplier <= 0
+						? this.BaseData.DamageMultiplier : this.LevelScaling[i].Multiplier,
 						DamageType = this.BaseData.DamageType,
 						ScalingStat = this.BaseData.ScalingStat,
-						PierceRatio = this.LevelScaling[i].pierceRatio,
-						IgnoreResistance = this.LevelScaling[i].ignoreResistance
+						PierceRatio = this.LevelScaling[i].pierceRatio <= 0
+						? this.BaseData.PierceRatio : this.LevelScaling[i].pierceRatio,
+						IgnoreResistance = this.LevelScaling[i].ignoreResistance <= 0
+						? this.BaseData.IgnoreResistance : this.LevelScaling[i].ignoreResistance
 					};
 				}
 			}
@@ -112,6 +130,7 @@ namespace Kope.AbilitySystem.Effect {
 
 			private void OnInterval() {
 				// Target takes the pre-calculated hit each interval
+				Debug.Log($"Applying DOT tick to {this._currentTarget}. Damage: {this._calculatedTickDetail.DamageAmount}");
 				this._currentTarget?.TakeHit(this._calculatedTickDetail);
 			}
 

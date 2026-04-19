@@ -57,7 +57,6 @@ namespace Kope.Component.Ability.Targeting {
 			if (hitPoint.HasValue) {
 				context.HitPoint = hitPoint.Value;
 			}
-
 			this._onTargetResolved?.Invoke(target, context);
 		}
 	}
