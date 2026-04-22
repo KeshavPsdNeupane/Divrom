@@ -1,7 +1,6 @@
 using Kope.Core;
 using Kope.Component.Movement;
 using UnityEngine;
-
 public class FOVGizmo : MonoBehaviour {
 	[SerializeField] private EntitySensor sensor;
 	[SerializeField] Color outerLineColor = Color.yellow;

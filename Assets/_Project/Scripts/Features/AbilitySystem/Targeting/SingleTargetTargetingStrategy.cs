@@ -31,12 +31,16 @@ namespace Kope.Component.Ability.Targeting {
 				this.previewInstance = UnityEngine.Object.Instantiate(
 					this.previewPrefab, Vector3.zero, Quaternion.identity);
 			}
+			if (this.targetingManager != null && this.targetingManager.InputManager != null) {
 
-			this.targetingManager.InputManager?.SubscribeToInputAction(
-				PlayerInputActionMap.Player,
-				PlayerInputActionKey.Fire.ToString(),
-				OnConfirm
-			);
+				this.targetingManager.InputManager.Subscribe(
+					new InputActionSubscriptionLifetime<PlayerInputActionKey>(
+						PlayerInputActionCollection.Player,
+						PlayerInputActionKey.Fire,
+						OnConfirm
+					)
+				);
+			}
 		}
 
 		public override void Update() {
@@ -47,11 +51,15 @@ namespace Kope.Component.Ability.Targeting {
 		}
 
 		public override void Cancel() {
-			this.targetingManager?.InputManager?.UnsubscribeFromInputAction(
-				PlayerInputActionMap.Player,
-				PlayerInputActionKey.Fire.ToString(),
-				OnConfirm
-			);
+			if (this.targetingManager != null && this.targetingManager.InputManager != null) {
+				this.targetingManager.InputManager.UnSubscribe(
+					new InputActionSubscriptionLifetime<PlayerInputActionKey>(
+						PlayerInputActionCollection.Player,
+						PlayerInputActionKey.Fire,
+						OnConfirm
+					)
+				);
+			}
 
 			if (this.previewInstance != null) {
 				UnityEngine.Object.Destroy(this.previewInstance);

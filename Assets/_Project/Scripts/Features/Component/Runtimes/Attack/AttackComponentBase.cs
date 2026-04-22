@@ -14,7 +14,8 @@ namespace Kope.Component.Attack {
 
 
 	public interface IAttackComponent {
-		float GetAttackDamage();
+		bool AlreadySubscribedToAttackEvent { get; }
+		float PerformAttack();
 		float GetDamage(CharacterStatType damageType);
 		event UnityAction OnAttackPerformed;
 	}
@@ -33,7 +34,7 @@ namespace Kope.Component.Attack {
 		protected float _normalizedCriticalDamage;
 
 		public WeaponData EquippedWeaponData => this.equippedWeaponDataSO.CurrentWeaponData;
-
+		public bool AlreadySubscribedToAttackEvent { get; protected set; }
 		public event UnityAction OnAttackPerformed;
 
 		protected override bool OnInit() {
@@ -132,7 +133,7 @@ namespace Kope.Component.Attack {
 			return damage;
 		}
 
-		public float GetAttackDamage() {
+		public float PerformAttack() {
 			if (!CanPerformAttack()) return 0f;
 			float dmg = PerformAttackInternal();
 			RaiseOnAttackPerformedEvent();

@@ -18,8 +18,8 @@ using Kope.SaveSystem;
 [SaveId("player_movement")]
 public class PlayerMovementComponent : MovementComponentBase {
 	private InputManager inputManager;
-
-
+	bool _isEventSystemSubscribed = false;
+	private InputActionSubscriptionLifetime<PlayerInputActionKey> _moveInputSubscription;
 	protected override bool OnInit() {
 		// we need to check if we already sub to the stats
 		// since base is not InitializableBase, we need to call it to make sure
@@ -31,6 +31,12 @@ public class PlayerMovementComponent : MovementComponentBase {
 			MyLogger.Error($"{this.gameObject.name}Controller: InputManager service not found!" + GetParentGameObjectHeirarchyMessage());
 			return false;
 		}
+		this._moveInputSubscription = new InputActionSubscriptionLifetime<PlayerInputActionKey>(
+			PlayerInputActionCollection.Player,
+			PlayerInputActionKey.Move,
+			MoveForInputSystem,
+			true
+		);
 		return true;
 	}
 	protected override void OnEnable() {
@@ -45,19 +51,16 @@ public class PlayerMovementComponent : MovementComponentBase {
 	}
 
 	private void Subscribe() {
-		if (this.inputManager == null) return;
-		this.inputManager.SubscribeToInputAction(
-			PlayerInputActionMap.Player,
-			PlayerInputActionKey.Move.ToString(),
-			MoveForInputSystem);
+		if (!this.IsInitialized || this._isEventSystemSubscribed) return;
+		this.inputManager.Subscribe(this._moveInputSubscription);
+		this._isEventSystemSubscribed = true;
+
 	}
 
 	private void Unsubscribe() {
-		if (this.inputManager == null) return;
-		this.inputManager.UnsubscribeFromInputAction(
-			PlayerInputActionMap.Player,
-			PlayerInputActionKey.Move.ToString(),
-			MoveForInputSystem);
+		if (!this.IsInitialized || !this._isEventSystemSubscribed) return;
+		this.inputManager.UnSubscribe(this._moveInputSubscription);
+		this._isEventSystemSubscribed = false;
 	}
 
 

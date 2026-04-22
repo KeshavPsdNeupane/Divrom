@@ -1500,6 +1500,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAttackComponent
   ecr: {fileID: 6037248722059709900}
   equippedWeaponDataSO: {fileID: 11400000, guid: 4108109141f9b5663a6dbf1c537616eb, type: 2}
+  subscribeToInput: 1
 --- !u!1 &7729364741673237887
 GameObject:
   m_ObjectHideFlags: 0
@@ -1635,7 +1636,6 @@ GameObject:
   - component: {fileID: 9132898216058479435}
   - component: {fileID: 3968986674516492649}
   - component: {fileID: 5948632665680109739}
-  - component: {fileID: 4170972831955260421}
   m_Layer: 0
   m_Name: HealthComponent
   m_TagString: Untagged
@@ -1692,21 +1692,6 @@ MonoBehaviour:
   spawnOffset: {x: 0, y: 2, z: 0}
   damageColor: {r: 1, g: 0, b: 0, a: 1}
   healColor: {r: 0, g: 1, b: 0, a: 1}
---- !u!114 &4170972831955260421
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8996877740221044493}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0c3637ae7f34894dbb1fe3d2c8dcaf65, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ReduceHp
-  healthComponent: {fileID: 3968986674516492649}
-  hpReductionAmount: 30
-  minHpRatio: 0.1
 --- !u!1001 &8456934485472912313
 PrefabInstance:
   m_ObjectHideFlags: 0

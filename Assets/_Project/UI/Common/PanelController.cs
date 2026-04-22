@@ -1,11 +1,11 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 using ServiceLocatorPattern;
 using Kope.Core.CompilerServices;
+
 public class PanelController : UIState {
 	[SerializeField] private string panelName = "Menu";
 	[SerializeField] private GameObject currentPanel;
-	[SerializeField] private PlayerInputActionMap inputActionMap = PlayerInputActionMap.Menu;
+	[SerializeField] private PlayerInputActionCollection inputActionMap = PlayerInputActionCollection.Menu;
 	private InputManager inputManager;
 	public string PanelName => this.panelName;
 	protected override bool OnInit() {
@@ -13,6 +13,10 @@ public class PanelController : UIState {
 			if (this.currentPanel == null) {
 				MyLogger.Error($"{this.panelName}Controller: {this.panelName} "
 				  + "Panel reference is missing!");
+				return false;
+			}
+			if (this.inputActionMap == PlayerInputActionCollection.None) {
+				MyLogger.Error($"{this.panelName}Controller: Input Action Map is not set!");
 				return false;
 			}
 			this.currentPanel.SetActive(false);
@@ -23,27 +27,28 @@ public class PanelController : UIState {
 				return false;
 			}
 			return true;
+
 		} catch (System.Exception ex) {
-			MyLogger.Error($"{this.panelName}Controller: Initialization failed with exception: {ex}" + GetParentGameObjectHeirarchyMessage());
+			MyLogger.Error($"{this.panelName}Controller: Initialization failed with exception: {ex}" + this.GetParentGameObjectHeirarchyMessage());
 			return false;
 
 		}
 	}
-	public override void EnterState() => OpenMenu();
-	public override void ExitState() => ClosePanel();
 
-	public void ToggleMenuUi(InputAction.CallbackContext ctx) {
-		if (ctx.performed) {
-			this.currentPanel.SetActive(!this.currentPanel.activeSelf);
-			this.inputManager.SwitchActionMap(
-				this.currentPanel.activeSelf ?
-				this.inputActionMap :
-				PlayerInputActionMap.Player);
-
+#if UNITY_EDITOR
+	private void OnValidate() {
+		// This ensures the developer sees the error in the inspector immediately
+		if (!System.Enum.IsDefined(typeof(PlayerInputActionCollection), this.inputActionMap)) {
+			Debug.LogError($"<color=red>CRITICAL:</color> {gameObject.name} has an invalid Enum index for InputMap! " +
+						   $"Please reset it in the inspector. {this.GetParentGameObjectHeirarchyMessage()}", this);
 		}
 	}
+#endif
 
-	public void OpenMenu() {
+	public override void EnterState() => OpenPanel();
+	public override void ExitState() => ClosePanel();
+
+	public void OpenPanel() {
 		if (!this.currentPanel.activeSelf) {
 			this.currentPanel.SetActive(true);
 			this.inputManager.SwitchActionMap(this.inputActionMap);
@@ -53,7 +58,14 @@ public class PanelController : UIState {
 	public void ClosePanel() {
 		if (this.currentPanel.activeSelf) {
 			this.currentPanel.SetActive(false);
-			this.inputManager.SwitchActionMap(PlayerInputActionMap.Player);
+			this.inputManager.SetDefaultActionMap();
+		}
+	}
+	private void TogglePanel() {
+		if (this.currentPanel.activeSelf) {
+			ClosePanel();
+		} else {
+			OpenPanel();
 		}
 	}
 

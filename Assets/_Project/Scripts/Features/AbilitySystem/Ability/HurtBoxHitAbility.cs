@@ -1,6 +1,5 @@
 // ExampleAbility.cs
 using System.Collections.Generic;
-using Kope.Component.Ability.Targeting;
 using Kope.Component.Combat.Interface;
 using Kope.Component.Health.Interface;
 using Kope.Component.HitBox.Interface;

@@ -7,6 +7,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Scriptable Objects/Abilities/Damage Ability", fileName = "DamageAbility")]
 public class DamageAbility : AbilityBase {
 	[SerializeField] private HitTargetType applicableHitTargetType = HitTargetType.Entity;
+
 	[SerializeReference, SubclassSelector] private List<IEffectFactory<ICombatable>> damageEffects = new();
 
 	public override void Execute(TargetContext target, EffectContext context) {

@@ -129,8 +129,6 @@ namespace Kope.AbilitySystem.Effect {
 			public void Tick(float deltaTime) => this._timer?.Tick(deltaTime);
 
 			private void OnInterval() {
-				// Target takes the pre-calculated hit each interval
-				Debug.Log($"Applying DOT tick to {this._currentTarget}. Damage: {this._calculatedTickDetail.DamageAmount}");
 				this._currentTarget?.TakeHit(this._calculatedTickDetail);
 			}
 

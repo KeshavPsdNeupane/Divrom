@@ -112,7 +112,6 @@ namespace Kope.AbilitySystem.Effect {
 		public void Tick(float deltaTime) => this.timer?.Tick(deltaTime);
 
 		private void OnInterval() {
-			Debug.Log($"Applying HoT tick to {this.currentTarget}. Heal Amount: {this.flathealAmountPerInterval}");
 			this.currentTarget?.Heal(this.flathealAmountPerInterval, 0f);
 		}
 		private void OnStop() => Cleanup();

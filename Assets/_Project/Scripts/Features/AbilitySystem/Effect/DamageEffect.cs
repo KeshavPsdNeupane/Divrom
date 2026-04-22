@@ -38,8 +38,8 @@ namespace Kope.AbilitySystem.Effect {
 			if (this._nextRecomputeThreshold < int.MaxValue
 			&& context.AbilityUsedCount >= this._nextRecomputeThreshold) {
 				this._cachedData = ResolveData(context.AbilityUsedCount, out this._nextRecomputeThreshold);
-				Debug.Log($"DamageEffectFactory: Recomputing damage effect data for" +
-				$" ability used count {context.AbilityUsedCount}/{this._nextRecomputeThreshold}.");
+				// Debug.Log($"DamageEffectFactory: Recomputing damage effect data for" +
+				// $" ability used count {context.AbilityUsedCount}/{this._nextRecomputeThreshold}.");
 			}
 			return new DamageEffect(context, this._cachedData);
 		}

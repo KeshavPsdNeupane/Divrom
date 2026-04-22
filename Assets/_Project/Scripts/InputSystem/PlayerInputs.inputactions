@@ -34,7 +34,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "InventoryToggle",
+                    "name": "OpenInventory",
                     "type": "Button",
                     "id": "d617b2c2-3910-43be-8825-d4d20f363ad0",
                     "expectedControlType": "",
@@ -43,9 +43,45 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "ToggleMenu",
+                    "name": "OpenMenu",
                     "type": "Button",
                     "id": "ac885c76-fc44-4376-9e0e-bd9ca14e861c",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Ability1",
+                    "type": "Button",
+                    "id": "c2c1fb73-e2ee-4c66-b4c4-fae7f071961f",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Ability2",
+                    "type": "Button",
+                    "id": "930757bb-7921-4bd7-b78c-08a3f2488714",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Ability3",
+                    "type": "Button",
+                    "id": "700e213d-9ef2-4ef0-a551-25ebddaba1a2",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Ability4",
+                    "type": "Button",
+                    "id": "e0ec0505-26d8-4a49-bd38-ed3e15a85a87",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -280,7 +316,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "InventoryToggle",
+                    "action": "OpenInventory",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -291,7 +327,51 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "ToggleMenu",
+                    "action": "OpenMenu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7812fff4-674e-4ffa-aa15-4784252f0fb0",
+                    "path": "<Keyboard>/1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Ability1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "047f6c52-47e6-4b82-9d61-65d518684a32",
+                    "path": "<Keyboard>/2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Ability2",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "133ac157-99d9-4774-a2c0-f53a678cf44a",
+                    "path": "<Keyboard>/3",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Ability3",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8bfda748-f9f8-46ae-95a9-2e0f8910b094",
+                    "path": "<Keyboard>/4",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Ability4",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -818,9 +898,9 @@
             "id": "5d839027-d6b5-4e37-92f4-63013da8a772",
             "actions": [
                 {
-                    "name": "ToggleMenu",
+                    "name": "RemoveTopUIStack",
                     "type": "Button",
-                    "id": "9b9885bc-05bb-43f8-ae47-2d86fc421e6a",
+                    "id": "419c0d5c-2d0a-48ea-a1f6-32cd81112207",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -830,12 +910,12 @@
             "bindings": [
                 {
                     "name": "",
-                    "id": "344f7990-8b90-4a05-8b70-f27bd48f0e4c",
+                    "id": "07fcd399-c9a2-4c27-8e1b-f8223620c4a7",
                     "path": "<Keyboard>/escape",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
-                    "action": "ToggleMenu",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "RemoveTopUIStack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -846,9 +926,9 @@
             "id": "9c367ead-c1eb-4723-ab8f-b47201d49fd6",
             "actions": [
                 {
-                    "name": "InventoryToggle",
+                    "name": "RemoveTopUIStack",
                     "type": "Button",
-                    "id": "bcecc745-318e-4f41-86a6-f458c603dc73",
+                    "id": "e2b644e7-ad35-494d-8c1b-ba1be3d4ff3c",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -858,23 +938,12 @@
             "bindings": [
                 {
                     "name": "",
-                    "id": "7cdd1248-f1aa-4b75-b8ca-eb9763140f1d",
+                    "id": "dbfdb7a1-79fc-4451-a8af-6dcabc87e1e7",
                     "path": "<Keyboard>/escape",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
-                    "action": "InventoryToggle",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "0563fcd0-8ac8-48fc-85ce-f25e2c8944f5",
-                    "path": "<Keyboard>/tab",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "InventoryToggle",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "RemoveTopUIStack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

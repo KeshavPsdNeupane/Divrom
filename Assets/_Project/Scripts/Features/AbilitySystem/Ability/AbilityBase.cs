@@ -56,6 +56,7 @@ public abstract class AbilityBase : ScriptableObject {
 	[SerializeField, Tooltip("Visual effect to play while the ability is active.")]
 	protected GameObject runningVfx;
 	[SerializeReference, SubclassSelector] protected ITargetingFactory targetingFactory;
+
 	private int _abilityUsedCount = 0;
 	public int AbilityUsedCount => this._abilityUsedCount;
 
@@ -65,9 +66,18 @@ public abstract class AbilityBase : ScriptableObject {
 	public GameObject CastVfx => this.castVfx;
 	public GameObject RunningVfx => this.runningVfx;
 
-
-
-
+	/// <summary>
+	/// Whether this ability requires explicit input to be cast, or if it can be triggered 
+	/// automatically by the system when the ability is selected. 
+	/// For example, a passive ability that triggers automatically when certain conditions 
+	/// are met would return false here, while an active ability that the player needs
+	/// to manually trigger would return true.
+	/// Or any ability that apply to the caster itself and doesn't require targeting, 
+	/// such as a self heal or a buff, could return false here since it can
+	/// just be triggered immediately upon selection without needing additional 
+	/// input for targeting.
+	/// </summary>
+	public bool IsAutoCast => this.targetingFactory == null || this.targetingFactory is SelfTargetingStrategy;
 	public string GetSaveData() {
 		return $"{this.abilityID}:{this._abilityUsedCount}";
 	}

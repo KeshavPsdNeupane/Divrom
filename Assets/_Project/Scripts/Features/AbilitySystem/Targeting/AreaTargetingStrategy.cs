@@ -18,6 +18,7 @@ namespace Kope.Component.Ability.Targeting {
 		private readonly List<TargetContext> resolvedTargets = new();
 		private GameObject previewInstance;
 		private Vector3 currentPoint;
+		private InputActionSubscriptionLifetime<PlayerInputActionKey> inputSubscription;
 
 		public TargetingStrategy Create() {
 			return new AreaTargetingStrategy {
@@ -39,11 +40,14 @@ namespace Kope.Component.Ability.Targeting {
 					this.previewPrefab, Vector3.zero, Quaternion.identity);
 			}
 
-			this.targetingManager.InputManager?.SubscribeToInputAction(
-				PlayerInputActionMap.Player,
-				PlayerInputActionKey.Fire.ToString(),
-				OnConfirm
-			);
+			if (this.targetingManager != null && this.targetingManager.InputManager != null) {
+				this.inputSubscription = new InputActionSubscriptionLifetime<PlayerInputActionKey>(
+					PlayerInputActionCollection.Player,
+					PlayerInputActionKey.Fire,
+					OnConfirm
+				);
+				this.targetingManager.InputManager.Subscribe(this.inputSubscription);
+			}
 		}
 
 		public override void Update() {
@@ -56,12 +60,9 @@ namespace Kope.Component.Ability.Targeting {
 		}
 
 		public override void Cancel() {
-			this.targetingManager?.InputManager?.UnsubscribeFromInputAction(
-				PlayerInputActionMap.Player,
-				PlayerInputActionKey.Fire.ToString(),
-				OnConfirm
-			);
-
+			if (this.targetingManager != null && this.targetingManager.InputManager != null) {
+				this.targetingManager.InputManager.UnSubscribe(this.inputSubscription);
+			}
 			if (this.previewInstance != null) {
 				UnityEngine.Object.Destroy(this.previewInstance);
 				this.previewInstance = null;

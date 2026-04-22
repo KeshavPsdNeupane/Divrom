@@ -6259,7 +6259,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MenuController
   panelName: Inventory
   currentPanel: {fileID: 1335616151}
-  inputActionMap: 3
+  inputActionMap: 21
 --- !u!1001 &602870894
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7621,7 +7621,34 @@ MonoBehaviour:
     gameObjectName: SceneServiceLocator
   - typeName: EntityInitCaller
     order: -40
+    gameObjectName: AddDef
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: EnemyNew
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: AddDef (1)
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: AddSpd
+  - typeName: EntityInitCaller
+    order: -40
     gameObjectName: Hpstore
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: PlayerNew
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Hpstore (1)
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: InitCaller
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Addhp (2)
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Addhp (1)
   - typeName: EntityInitCaller
     order: -40
     gameObjectName: Hpstore (2)
@@ -7630,34 +7657,7 @@ MonoBehaviour:
     gameObjectName: Addhp
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: PlayerNew
-  - typeName: EntityInitCaller
-    order: -40
     gameObjectName: AddSpd (1)
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: InitCaller
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: AddSpd
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: Addhp (1)
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: Addhp (2)
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: AddDef
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: Hpstore (1)
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: EnemyNew
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: AddDef (1)
   - typeName: InGameUIInitCaller
     order: -30
     gameObjectName: UI
@@ -8014,8 +8014,8 @@ MonoBehaviour:
   x: 0.726
   result: 0.33709687
   unityResult: 0.18408638
-  customEvalTime: 0.0004
-  unityEvalTime: 0.0007
+  customEvalTime: 0.19490000000000002
+  unityEvalTime: 0.08600000000000001
 --- !u!1001 &1031836800
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13978,7 +13978,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MenuController
   panelName: Menu
   currentPanel: {fileID: 1761344700}
-  inputActionMap: 2
+  inputActionMap: 21
 --- !u!1001 &6493343167458118863
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14047,6 +14047,14 @@ PrefabInstance:
     - target: {fileID: 2033154260760698069, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
       propertyPath: m_Name
       value: PlayerNew
+      objectReference: {fileID: 0}
+    - target: {fileID: 2247624721500832756, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: SubScribeToInput
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2247624721500832756, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: subscribeToInput
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2741082705423238104, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
       propertyPath: m_AnchorMax.x
