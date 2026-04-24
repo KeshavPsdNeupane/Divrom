@@ -77,7 +77,7 @@ public abstract class AbilityBase : ScriptableObject {
 	/// just be triggered immediately upon selection without needing additional 
 	/// input for targeting.
 	/// </summary>
-	public bool IsAutoCast => this.targetingFactory == null || this.targetingFactory is SelfTargetingStrategy;
+	public bool IsInstantCast => this.targetingFactory == null || this.targetingFactory is SelfTargetingStrategy;
 	public string GetSaveData() {
 		return $"{this.abilityID}:{this._abilityUsedCount}";
 	}
@@ -133,7 +133,7 @@ public abstract class AbilityBase : ScriptableObject {
 		}
 	}
 
-	protected static Vector3 GetTargetPosition(in TargetContext target) {
+	protected static Vector3 GetTargetPosition(TargetContext target) {
 		if (target.HitBox is Component c) {
 			return c.transform.position;
 		}

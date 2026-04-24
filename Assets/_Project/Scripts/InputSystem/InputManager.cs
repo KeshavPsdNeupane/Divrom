@@ -70,6 +70,7 @@ public enum PlayerInputActionKey {
 	Ability2 = 22,
 	Ability3 = 23,
 	Ability4 = 24,
+	Dodge = 31,
 }
 
 public enum UIInputActionKey {

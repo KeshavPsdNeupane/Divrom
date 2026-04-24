@@ -23,13 +23,13 @@ namespace Kope.Component.Ability.Targeting {
 
 		public override void Start(
 			TargetingManager targetingManager,
-			in TargetContext casterContext,
+			TargetContext casterContext,
 			EffectContext effectContext,
 			Action<TargetContext, EffectContext> onTargetResolved) {
 			Begin(targetingManager, casterContext, effectContext, onTargetResolved);
 
-			if (this.projectilePrefab == null || this.targetingManager == null || this.targetingManager.Cam == null) {
-				Cancel();
+			if (this.projectilePrefab == null || this.targetingManager == null || this.targetingManager.Camera == null) {
+				FinishTheStratrgy();
 				return;
 			}
 
@@ -47,7 +47,7 @@ namespace Kope.Component.Ability.Targeting {
 				// the controller resolves the target on hit, then signals completion so the strategy can cancel.
 				controller.Initialize(
 					onTargetResolved,
-					Cancel,
+					FinishTheStratrgy,
 					this.effectContext,
 					direction,
 					this.projectileSpeed,
@@ -56,18 +56,23 @@ namespace Kope.Component.Ability.Targeting {
 			}
 
 			UnityEngine.Object.Destroy(projectileObject);
-			Cancel();
+			FinishTheStratrgy();
 		}
 
 		private Vector3 ResolveLaunchDirection() {
-			if (this.targetingManager == null || this.targetingManager.Cam == null) return Vector3.forward;
+			if (this.targetingManager == null || this.targetingManager.Camera == null) return Vector3.forward;
 
-			if (this.targetingManager.TryGetMouseRaycast(out var hit, this.targetingManager.TargetLayerMask)) {
-				var direction = hit.point - this.targetingManager.transform.position;
-				return direction.sqrMagnitude > 0.0001f ? direction.normalized : this.targetingManager.Cam.transform.forward;
+			if (this.targetingManager.TryGetMouseGroundPoint(out var hitPoint)) {
+				var direction = hitPoint - this.targetingManager.transform.position;
+				return direction.sqrMagnitude > 0.0001f ? direction.normalized : this.targetingManager.Camera.transform.forward;
 			}
 
-			return this.targetingManager.Cam.transform.forward;
+			return this.targetingManager.Camera.transform.forward;
+		}
+		protected override void ExecuteResolution(Vector3 clickPoint) {
+			// no op for now.
+			// but later this stragity will manage resolutution of target by using mouse click position.
+			// by itself.
 		}
 	}
 }

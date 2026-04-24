@@ -2,7 +2,6 @@
 using System;
 using Kope.Component.Combat.Interface;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace Kope.Component.Ability.Targeting {
 
@@ -22,7 +21,7 @@ namespace Kope.Component.Ability.Targeting {
 
 		public override void Start(
 			TargetingManager targetingManager,
-			in TargetContext casterContext,
+			TargetContext casterContext,
 			EffectContext effectContext,
 			Action<TargetContext, EffectContext> onTargetResolved) {
 			Begin(targetingManager, casterContext, effectContext, onTargetResolved);
@@ -31,53 +30,48 @@ namespace Kope.Component.Ability.Targeting {
 				this.previewInstance = UnityEngine.Object.Instantiate(
 					this.previewPrefab, Vector3.zero, Quaternion.identity);
 			}
-			if (this.targetingManager != null && this.targetingManager.InputManager != null) {
+			// if (this.targetingManager != null && this.targetingManager.InputManager != null) {
 
-				this.targetingManager.InputManager.Subscribe(
-					new InputActionSubscriptionLifetime<PlayerInputActionKey>(
-						PlayerInputActionCollection.Player,
-						PlayerInputActionKey.Fire,
-						OnConfirm
-					)
-				);
-			}
+			// 	this.targetingManager.InputManager.Subscribe(
+			// 		new InputActionSubscriptionLifetime<PlayerInputActionKey>(
+			// 			PlayerInputActionCollection.Player,
+			// 			PlayerInputActionKey.Fire,
+			// 			OnConfirm
+			// 		)
+			// 	);
+			// }
 		}
 
 		public override void Update() {
-			if (!this.isTargeting || this.previewInstance == null || this.targetingManager == null) return;
-			if (!this.targetingManager.TryGetMouseRaycast(out var hit, this.targetingManager.TargetLayerMask)) return;
+			if (!this._isTargeting || this.previewInstance == null || this.targetingManager == null) return;
+			if (!this.targetingManager.TryGetMouseGroundPoint(out var point)) return;
 
-			this.previewInstance.transform.position = hit.point + Vector3.up * this.previewHeightOffset;
+			this.previewInstance.transform.position = point + Vector3.up * this.previewHeightOffset;
 		}
 
-		public override void Cancel() {
-			if (this.targetingManager != null && this.targetingManager.InputManager != null) {
-				this.targetingManager.InputManager.UnSubscribe(
-					new InputActionSubscriptionLifetime<PlayerInputActionKey>(
-						PlayerInputActionCollection.Player,
-						PlayerInputActionKey.Fire,
-						OnConfirm
-					)
-				);
-			}
+		public override void FinishTheStratrgy() {
+			// if (this.targetingManager != null && this.targetingManager.InputManager != null) {
+			// 	this.targetingManager.InputManager.UnSubscribe(
+			// 		new InputActionSubscriptionLifetime<PlayerInputActionKey>(
+			// 			PlayerInputActionCollection.Player,
+			// 			PlayerInputActionKey.Fire,
+			// 			OnConfirm
+			// 		)
+			// 	);
+			// }
 
 			if (this.previewInstance != null) {
 				UnityEngine.Object.Destroy(this.previewInstance);
 				this.previewInstance = null;
 			}
 
-			base.Cancel();
+			base.FinishTheStratrgy();
 		}
 
-		private void OnConfirm(InputAction.CallbackContext context) {
-			if (!context.performed || !this.isTargeting || this.targetingManager == null) return;
-			if (!this.targetingManager.TryGetMouseRaycast(out var hit, this.targetingManager.TargetLayerMask)) return;
-
-			var targetContext = TargetContext.Create(hit.collider);
-			if (targetContext == null || targetContext.HitBox == null) return;
-
-			ResolveTarget(targetContext, hit.point);
-			Cancel();
+		protected override void ExecuteResolution(Vector3 clickPoint) {
+			// no op for now.
+			// but later this stragity will manage resolutution of target by using mouse click position.
+			// by itself.
 		}
 	}
 }

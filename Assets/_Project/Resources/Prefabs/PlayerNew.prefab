@@ -45,9 +45,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Kope.Component.Ability.Targeting.TargetingManager
   cam: {fileID: 0}
-  targetLayerMask:
-    serializedVersion: 2
-    m_Bits: 192
   groundLayerMask:
     serializedVersion: 2
     m_Bits: 1
@@ -1500,7 +1497,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAttackComponent
   ecr: {fileID: 6037248722059709900}
   equippedWeaponDataSO: {fileID: 11400000, guid: 4108109141f9b5663a6dbf1c537616eb, type: 2}
-  subscribeToInput: 1
 --- !u!1 &7729364741673237887
 GameObject:
   m_ObjectHideFlags: 0

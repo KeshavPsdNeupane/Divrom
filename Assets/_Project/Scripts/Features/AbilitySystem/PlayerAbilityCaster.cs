@@ -14,233 +14,169 @@ using Kope.Component.HitBox.Interface;
 namespace Kope.Component.Ability {
 
 	public class PlayerAbilityCaster : InitializableBase {
-
-		const int MAX_HOT_BAR_SLOT = 9;
-
-		[SerializeField] private int abilityCount = 4;
-
-		/// <summary>
-		/// Editor-only source. Runtime uses _hotbar.
-		/// </summary>
+		private const int MAX_HOTBAR_SLOT = 9;
+		[Header("Settings")]
+		[SerializeField, Range(1, 9)] private int abilityCount = 4;
 		[SerializeField] private AbilityBase[] abilityScriptableObjects = Array.Empty<AbilityBase>();
-
 		[SerializeField] private EntityComponentsRegistry ecr;
 
 		private readonly List<AbilityBase> _hotbar = new();
-		private readonly List<Action<InputAction.CallbackContext>> _abilityInputCallbacks = new();
+		private readonly List<Action<InputAction.CallbackContext>> _inputCallbacks = new();
 
 		private int _selectedSlotIndex = -1;
 
+		// Dependencies
 		private InputManager _inputManager;
 		private TargetingManager _targetingManager;
-		private IHealthComponent _casterHealth;
-		private IAttackComponent _casterAttack;
+		private ILockablePlayerAttack _attackLock;
 
+		// Contexts
 		private TargetContext _casterContext;
-		private EffectContext _effectContext;
+		private EffectContext _masterEffectContext;
 
 		private bool _isSubscribed;
 
 		protected override bool OnInit() {
+			this.abilityCount = Mathf.Min(this.abilityCount, MAX_HOTBAR_SLOT);
 
-			// enforce hard limit
-			this.abilityCount = Mathf.Min(this.abilityCount, MAX_HOT_BAR_SLOT);
+			if (!GlobalServiceLocator.Instance.TryGetService(out this._inputManager)) return false;
 
-			if (!GlobalServiceLocator.Instance.TryGetService(out this._inputManager)) {
-				Debug.LogError($"PlayerAbilityCaster on {gameObject.name} could not resolve InputManager.");
+			var registry = ecr.ComponentRegistry;
+			if (registry == null) return false;
+
+			// Resolve required components from the entity registry
+			if (!registry.TryGetReadOnlyComponent(out _targetingManager, false) ||
+				!registry.TryGetReadOnlyComponent(out IAttackComponent casterAttack, false) ||
+				!registry.TryGetReadOnlyComponent(out IHealthComponent casterHealth, false) ||
+				!registry.TryGetReadOnlyComponent(out IHitBoxComponent casterHitBox, false) ||
+				!registry.TryGetReadOnlyComponent(out _attackLock, false)) {
+				Debug.LogError("PlayerAbilityCaster failed to initialize due to missing components in the" +
+				$" EntityComponentsRegistry.{GetParentGameObjectHeirarchyMessage()}", this);
 				return false;
 			}
 
-			if (this.ecr == null || this.ecr.ComponentRegistry == null) {
-				Debug.LogError($"PlayerAbilityCaster on {gameObject.name} missing EntityComponentsRegistry.");
-				return false;
-			}
-
-			var registry = this.ecr.ComponentRegistry;
-			var baseGO = registry.EntityTransform.gameObject;
-
-			if (!registry.TryGetReadOnlyComponent(out this._targetingManager, false) ||
-				!registry.TryGetReadOnlyComponent(out this._casterAttack, false) ||
-				!registry.TryGetReadOnlyComponent(out this._casterHealth, false) ||
-				!registry.TryGetReadOnlyComponent(out IHitBoxComponent casterHurtBox, false)) {
-
-				Debug.LogError($"PlayerAbilityCaster on {gameObject.name} missing required components.{GetParentGameObjectHeirarchyMessage()}");
-				return false;
-			}
-
-			this._casterContext = new TargetContext(casterHurtBox);
-
-			this._effectContext = new EffectContext {
-				Caster = baseGO,
-				CasterAttack = this._casterAttack,
-				CasterHealth = this._casterHealth,
+			this._casterContext = new TargetContext(casterHitBox);
+			this._masterEffectContext = new EffectContext {
+				Caster = registry.EntityTransform.gameObject,
+				CasterAttack = casterAttack,
+				CasterHealth = casterHealth,
 				CasterLevel = 0
 			};
 
-			BuildHotbar();
-			SubscribeToInput();
-
+			InitializeHotbar();
+			SubscribeEvents();
 			return true;
 		}
 
-		private void BuildHotbar() {
-			this._hotbar.Clear();
-
-			int count = Mathf.Min(this.abilityCount, this.abilityScriptableObjects.Length);
-
-			for (int i = 0; i < count; i++) {
-				var so = this.abilityScriptableObjects[i];
-
-				if (so == null) {
-					this._hotbar.Add(null);
-					continue;
-				}
-
-				var ability = Instantiate(so);
-				ability.InjectAbilityUsedCount(0);
-				this._hotbar.Add(ability);
-			}
-		}
-
-		void OnValidate() {
-			if (this.abilityScriptableObjects == null) return;
-
-			this.abilityCount = Mathf.Min(this.abilityCount, MAX_HOT_BAR_SLOT);
+		private void OnValidate() {
+			this.abilityCount = Mathf.Clamp(this.abilityCount, 1, MAX_HOTBAR_SLOT);
 
 			if (this.abilityScriptableObjects.Length != this.abilityCount) {
 				Array.Resize(ref this.abilityScriptableObjects, this.abilityCount);
 			}
 		}
 
-		protected override void OnShutdown() {
-			if (!this.IsInitialized) return;
-			UnsubscribeFromInput();
-			this._targetingManager.CancelCurrentTargeting();
+		private void InitializeHotbar() {
+			this._hotbar.Clear();
+			int count = Mathf.Min(this.abilityCount, this.abilityScriptableObjects.Length);
+
+			for (int i = 0; i < count; i++) {
+				if (this.abilityScriptableObjects[i] == null) {
+					this._hotbar.Add(null);
+					continue;
+				}
+				var instance = Instantiate(abilityScriptableObjects[i]);
+				instance.InjectAbilityUsedCount(0);
+				this._hotbar.Add(instance);
+			}
 		}
 
-		private void OnEnable() {
-			if (this.IsInitialized) SubscribeToInput();
-		}
-
-		private void OnDisable() {
-			if (!this.IsInitialized) return;
-			UnsubscribeFromInput();
-			this._targetingManager.CancelCurrentTargeting();
-		}
-
-		private void SubscribeToInput() {
+		private void SubscribeEvents() {
 			if (this._inputManager == null || this._isSubscribed) return;
 
-			this._inputManager.Subscribe(
-				new InputActionSubscriptionLifetime<PlayerInputActionKey>(
-					PlayerInputActionCollection.Player,
-					PlayerInputActionKey.Fire,
-					HandleFire));
-
-
-			this._abilityInputCallbacks.Clear();
-
-			int usableSlots = Mathf.Min(this._hotbar.Count, MAX_HOT_BAR_SLOT);
-
-			for (int i = 0; i < usableSlots; i++) {
+			for (int i = 0; i < this._hotbar.Count; i++) {
 				int index = i;
+				void callback(InputAction.CallbackContext ctx) => OnAbilityKeyPressed(index, ctx);
+				this._inputCallbacks.Add(callback);
 
-				void callback(InputAction.CallbackContext ctx) => AbilityCallback(index, ctx);
-
-				this._abilityInputCallbacks.Add(callback);
-
-				this._inputManager.Subscribe(
-					new InputActionSubscriptionLifetime<PlayerInputActionKey>(
-						PlayerInputActionCollection.Player,
-						PlayerInputActionKey.Ability1 + i,
-						callback)
-					);
+				this._inputManager.Subscribe(new InputActionSubscriptionLifetime<PlayerInputActionKey>(
+					PlayerInputActionCollection.Player,
+					PlayerInputActionKey.Ability1 + i,
+					callback)
+				);
 			}
 
+			// Listen for the manager to signal that targeting has ended (Fire, Dodge, or Auto-Finish)
+			this._targetingManager.OnTargetingCleanupRequested += this.ClearSelectionAndUnlockInput;
 			this._isSubscribed = true;
 		}
 
-		private void UnsubscribeFromInput() {
+		private void UnsubscribeEvents() {
 			if (this._inputManager == null || !this._isSubscribed) return;
 
-			this._inputManager.UnSubscribe(
-				new InputActionSubscriptionLifetime<PlayerInputActionKey>(
+			for (int i = 0; i < this._inputCallbacks.Count; i++) {
+				this._inputManager.UnSubscribe(new InputActionSubscriptionLifetime<PlayerInputActionKey>(
 					PlayerInputActionCollection.Player,
-					PlayerInputActionKey.Fire,
-					HandleFire));
-
-			for (int i = 0; i < this._abilityInputCallbacks.Count; i++) {
-				this._inputManager.UnSubscribe(
-					new InputActionSubscriptionLifetime<PlayerInputActionKey>(
-						PlayerInputActionCollection.Player,
-						PlayerInputActionKey.Ability1 + i,
-						this._abilityInputCallbacks[i]));
+					PlayerInputActionKey.Ability1 + i,
+					this._inputCallbacks[i]));
 			}
 
-			this._abilityInputCallbacks.Clear();
+			if (this._targetingManager != null) {
+				this._targetingManager.OnTargetingCleanupRequested -= this.ClearSelectionAndUnlockInput;
+			}
+
+			this._inputCallbacks.Clear();
 			this._isSubscribed = false;
 		}
 
-		private void AbilityCallback(int index, InputAction.CallbackContext context) {
+		private void OnAbilityKeyPressed(int index, InputAction.CallbackContext context) {
 			if (!context.performed) return;
 
-			if (this._targetingManager.IsTargeting &&
-				this._selectedSlotIndex != index) return;
+			// If already targeting a different ability, ignore new input
+			if (this._targetingManager.IsTargeting && this._selectedSlotIndex != index) return;
 
-			SelectSlot(index);
+			HandleAbilityActivation(index);
 		}
 
-		// will remove and put this in the ability class itself later, but for now it's here
-		// for testing purposes 
-		private void HandleFire(InputAction.CallbackContext context) {
-			if (!context.performed || !this.IsInitialized) return;
-
-			if (this._targetingManager.IsTargeting) return;
-
-			if (this._selectedSlotIndex >= 0) {
-				CastSelectedAbility();
-				return;
-			}
-
-			if (!this._casterAttack.AlreadySubscribedToAttackEvent) {
-				this._casterAttack.PerformAttack();
-			}
-		}
-
-		public void SelectSlot(int index) {
+		/// <summary>
+		/// Selects a slot and initiates the ability's casting/targeting sequence.
+		/// </summary>
+		public void HandleAbilityActivation(int index) {
 			if (index < 0 || index >= this._hotbar.Count) return;
-			bool isTargetingManagerAvailable = this._targetingManager != null;
 
-			if (this._selectedSlotIndex == index) {
-				this._selectedSlotIndex = -1;
-				if (isTargetingManagerAvailable) {
-					this._targetingManager.CancelCurrentTargeting();
-				}
-				return;
-			}
-
-			if (isTargetingManagerAvailable && this._targetingManager.IsTargeting) return;
-
-			this._selectedSlotIndex = index;
+			// If re-pressing the same active ability, we do nothing (Dodge is for cancelling)
+			if (this._selectedSlotIndex == index && this._targetingManager.IsTargeting) return;
 
 			var ability = this._hotbar[index];
-			if (ability == null) return;
+			if (ability == null) {
+				ClearSelectionAndUnlockInput();
+				return;
+			}
 
-			if (ability.IsAutoCast) {
-				CastSelectedAbility();
+			// Lock basic attacks and mark selection
+			this._attackLock.SetEventLock(true);
+			this._selectedSlotIndex = index;
+
+			// Execute ability cast
+			ability.Cast(this._targetingManager, this._casterContext, this._masterEffectContext);
+
+			// If the ability finished instantly (e.g. Self-Cast), clean up immediately.
+			// Otherwise, we stay locked until TargetingManager triggers OnTargetingCleanupRequested.
+			// here instant cast abilities are those that don't require any additional input after pressing the key,
+			// so if the manager is not in targeting mode after casting, we can assume the ability resolved immediately
+			// and we can clean up right away.
+			if (!this._targetingManager.IsTargeting || ability.IsInstantCast) {
+				ClearSelectionAndUnlockInput();
 			}
 		}
 
-		public void CastSelectedAbility() {
-			if (this._selectedSlotIndex < 0 ||
-				this._selectedSlotIndex >= this._hotbar.Count) return;
-
-			var ability = this._hotbar[this._selectedSlotIndex];
-			if (ability == null) return;
-
-			ability.Cast(this._targetingManager, this._casterContext, this._effectContext);
-
+		private void ClearSelectionAndUnlockInput() {
 			this._selectedSlotIndex = -1;
+			this._attackLock.SetEventLock(false);
 		}
+
+		protected override void OnShutdown() => UnsubscribeEvents();
+		private void OnEnable() { if (IsInitialized) SubscribeEvents(); }
+		private void OnDisable() { if (IsInitialized) UnsubscribeEvents(); }
 	}
 }

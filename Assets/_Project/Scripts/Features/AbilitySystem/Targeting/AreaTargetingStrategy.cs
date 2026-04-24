@@ -6,6 +6,7 @@ using UnityComponent = UnityEngine.Component;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Kope.Component.HitBox.Interface;
+using System.Linq;
 
 namespace Kope.Component.Ability.Targeting {
 
@@ -15,7 +16,6 @@ namespace Kope.Component.Ability.Targeting {
 		[SerializeField] private float radius = 5f;
 		[SerializeField] private float previewHeightOffset = 0.1f;
 
-		private readonly List<TargetContext> resolvedTargets = new();
 		private GameObject previewInstance;
 		private Vector3 currentPoint;
 		private InputActionSubscriptionLifetime<PlayerInputActionKey> inputSubscription;
@@ -30,28 +30,28 @@ namespace Kope.Component.Ability.Targeting {
 
 		public override void Start(
 			TargetingManager targetingManager,
-			in TargetContext casterContext,
+			TargetContext casterContext,
 			EffectContext effectContext,
 			Action<TargetContext, EffectContext> onTargetResolved) {
-			Begin(targetingManager, casterContext, effectContext, onTargetResolved);
+			// Begin(targetingManager, casterContext, effectContext, onTargetResolved);
 
-			if (this.previewPrefab != null && this.targetingManager != null) {
-				this.previewInstance = UnityEngine.Object.Instantiate(
-					this.previewPrefab, Vector3.zero, Quaternion.identity);
-			}
+			// if (this.previewPrefab != null && this.targetingManager != null) {
+			// 	this.previewInstance = UnityEngine.Object.Instantiate(
+			// 		this.previewPrefab, Vector3.zero, Quaternion.identity);
+			// }
 
-			if (this.targetingManager != null && this.targetingManager.InputManager != null) {
-				this.inputSubscription = new InputActionSubscriptionLifetime<PlayerInputActionKey>(
-					PlayerInputActionCollection.Player,
-					PlayerInputActionKey.Fire,
-					OnConfirm
-				);
-				this.targetingManager.InputManager.Subscribe(this.inputSubscription);
-			}
+			// if (this.targetingManager != null && this.targetingManager.InputManager != null) {
+			// 	this.inputSubscription = new InputActionSubscriptionLifetime<PlayerInputActionKey>(
+			// 		PlayerInputActionCollection.Player,
+			// 		PlayerInputActionKey.Fire,
+			// 		OnConfirm
+			// 	);
+			// 	this.targetingManager.InputManager.Subscribe(this.inputSubscription);
+			// }
 		}
 
 		public override void Update() {
-			if (!this.isTargeting || this.targetingManager == null) return;
+			if (!this._isTargeting || this.targetingManager == null) return;
 			if (!this.targetingManager.TryGetMouseGroundPoint(out this.currentPoint)) return;
 
 			if (this.previewInstance != null) {
@@ -59,51 +59,32 @@ namespace Kope.Component.Ability.Targeting {
 			}
 		}
 
-		public override void Cancel() {
-			if (this.targetingManager != null && this.targetingManager.InputManager != null) {
-				this.targetingManager.InputManager.UnSubscribe(this.inputSubscription);
-			}
+		public override void FinishTheStratrgy() {
+			base.FinishTheStratrgy();
+
 			if (this.previewInstance != null) {
 				UnityEngine.Object.Destroy(this.previewInstance);
 				this.previewInstance = null;
 			}
-
-			this.resolvedTargets.Clear();
-			base.Cancel();
 		}
 
-		private void OnConfirm(InputAction.CallbackContext context) {
-			if (!context.performed || !this.isTargeting || this.targetingManager == null) return;
-			if (!this.targetingManager.TryGetMouseGroundPoint(out var hitPoint)) return;
 
-			ResolveTargets(hitPoint);
-			if (this.resolvedTargets.Count == 0) return;
-
-			// Area targeting resolves multiple targets — invoke callback for each
-			for (int i = 0; i < this.resolvedTargets.Count; i++) {
-				var target = this.resolvedTargets[i];
-				if (target.HitBox == null) continue;
-
-				var targetPosition = target.HitBox is UnityComponent c
-					? c.transform.position
-					: Vector3.zero;
-
-				ResolveTarget(target, targetPosition);
-			}
-			Cancel();
+		protected override void ExecuteResolution(Vector3 clickPoint) {
+			var targets = GetTargetsInArea(clickPoint);
+			ResolveGroupOfTargets(targets);
 		}
-
-		private void ResolveTargets(Vector3 point) {
-			this.resolvedTargets.Clear();
+		private TargetContext[] GetTargetsInArea(Vector3 point) {
 			var colliders = Physics2D.OverlapCircleAll(point, this.radius, this.targetingManager.TargetLayerMask);
 			var uniqueTargets = new HashSet<IHitBoxComponent>();
+			var resolvedTargets = new TargetContext[colliders.Length];
 
 			for (int i = 0; i < colliders.Length; i++) {
 				var targetContext = TargetContext.Create(colliders[i]);
 				if (targetContext == null || targetContext.HitBox == null) continue;
 				if (!uniqueTargets.Add(targetContext.HitBox)) continue;
-				this.resolvedTargets.Add(targetContext);
+				resolvedTargets[i] = targetContext;
 			}
+			return resolvedTargets;
 		}
 	}
 }
