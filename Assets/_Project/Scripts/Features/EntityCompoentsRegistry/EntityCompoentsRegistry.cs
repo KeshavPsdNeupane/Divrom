@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Kope.Core.Init;
+using ServiceLocatorPattern;
 using UnityEngine;
 
 namespace Kope.Core.EntityComponentRegistry {
@@ -20,7 +21,6 @@ namespace Kope.Core.EntityComponentRegistry {
 	/// <inheritdoc cref="InitializableBase"/>
 	/// </summary>
 	public class EntityComponentsRegistry : InitializableBase {
-
 		[SerializeField] private Transform entityTransform;
 		[SerializeField] private string registryName = "DefaultRegistryName";
 		[SerializeField, Tooltip("Indicates whether this EntityComponentStore contains state/AI/sensor components." +
@@ -42,29 +42,28 @@ namespace Kope.Core.EntityComponentRegistry {
 		public ComponentRegistry ComponentRegistry => componentRegistry;
 
 		protected override bool OnInit() {
-			try {
-				this.componentRegistry = new ComponentRegistry(
+
+			var dimension = GlobalServiceLocator.Dimension;
+			this.componentRegistry = new ComponentRegistry(
+				dimension,
 				this.registryName,
 				this.entityTransform,
 				this.hasBehavioralComponents,
 				this.config.ExcludedTypeSet
 			);
 
-				// First register all components
-				foreach (var c in components) {
-					if (c != null) componentRegistry.Register(c);
-				}
-				// Then init all components, this will ensure that dependencies are resolved during Init
-				// since all components are already registered. and no runtime race conditions occur.
-				// but still order of components in the list matters anyway 
-				foreach (var c in components) {
-					if (c != null) c.Init();
-				}
-				return true;
-			} catch (System.Exception ex) {
-				Debug.LogError($"Exception during EntityComponentsRegistry initialization: {ex.Message}\n{ex.StackTrace}" + GetParentGameObjectHeirarchyMessage());
-				return false;
+			// First register all components
+			foreach (var c in components) {
+				if (c != null) componentRegistry.Register(c);
 			}
+			// Then init all components, this will ensure that dependencies are resolved during Init
+			// since all components are already registered. and no runtime race conditions occur.
+			// but still order of components in the list matters anyway 
+			foreach (var c in components) {
+				if (c != null) c.Init();
+			}
+			return true;
+
 		}
 	}
 

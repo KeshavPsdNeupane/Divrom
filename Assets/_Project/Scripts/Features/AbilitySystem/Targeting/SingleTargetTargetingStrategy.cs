@@ -49,7 +49,7 @@ namespace Kope.Component.Ability.Targeting {
 			this.previewInstance.transform.position = point + Vector3.up * this.previewHeightOffset;
 		}
 
-		public override void FinishTheStratrgy() {
+		public override void FinishTheStratrgy(bool clearOnTargetResolved = true) {
 			// if (this.targetingManager != null && this.targetingManager.InputManager != null) {
 			// 	this.targetingManager.InputManager.UnSubscribe(
 			// 		new InputActionSubscriptionLifetime<PlayerInputActionKey>(
@@ -68,10 +68,11 @@ namespace Kope.Component.Ability.Targeting {
 			base.FinishTheStratrgy();
 		}
 
-		protected override void ExecuteResolution(Vector3 clickPoint) {
+		protected override bool ExecuteResolution(Vector3 clickPoint) {
 			// no op for now.
 			// but later this stragity will manage resolutution of target by using mouse click position.
 			// by itself.
+			return true;
 		}
 	}
 }

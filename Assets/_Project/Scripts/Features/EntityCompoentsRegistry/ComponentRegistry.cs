@@ -21,6 +21,7 @@ namespace Kope.Core.EntityComponentRegistry {
 		/// and we can reuse this context for entities without state machines.
 		/// like static objects, pickups, decorations etc.
 		/// </summary>
+		private readonly AxisMode dimension = AxisMode.TwoD;
 		private readonly bool hasBehavioralComponents = false;
 		private readonly Transform entityTransform;
 		private readonly Dictionary<Type, object> components = new();
@@ -36,6 +37,7 @@ namespace Kope.Core.EntityComponentRegistry {
 		//<inheritdoc/>
 		public Transform EntityTransform => this.entityTransform;
 		public string RegistryName => this.registryName;
+		public AxisMode Dimension => this.dimension;
 
 		public Dictionary<Type, object> Components => this.components;
 
@@ -85,7 +87,8 @@ namespace Kope.Core.EntityComponentRegistry {
 		/// </summary>
 		/// <param name="entityTransform"></param>
 		/// <param name="excludedTypes"></param>
-		public ComponentRegistry(string registryName, Transform entityTransform, bool hasBehavioralComponents, HashSet<Type> excludedTypes = null) {
+		public ComponentRegistry(AxisMode dimension, string registryName, Transform entityTransform, bool hasBehavioralComponents, HashSet<Type> excludedTypes = null) {
+			this.dimension = dimension;
 			this.registryName = registryName;
 			this.entityTransform = entityTransform;
 			this.hasBehavioralComponents = hasBehavioralComponents;

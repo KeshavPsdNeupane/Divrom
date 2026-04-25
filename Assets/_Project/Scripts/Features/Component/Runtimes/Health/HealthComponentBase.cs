@@ -108,8 +108,6 @@ namespace Kope.Component.Health {
 
 			float previousHealth = this.currentHealth;
 			this.currentHealth = Mathf.Clamp(this.currentHealth - amount, 0, this.maxHealth);
-			// Debug.Log($"HealthComponentBase: Applied damage {amount}, health changed from {previousHealth} " +
-			// "to {this.currentHealth}.");
 			this.OnCurrentHealthChanged?.Invoke(
 				new HealthChangeInfo(previousHealth, this.currentHealth, this.maxHealth,
 				HealthChangeType.Damage

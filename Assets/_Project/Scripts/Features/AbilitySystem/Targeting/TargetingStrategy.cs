@@ -1,6 +1,4 @@
-// TargetingStrategy.cs
 using System;
-using System.Collections.Generic;
 using Kope.Component.Combat.Interface;
 using UnityEngine;
 
@@ -16,7 +14,7 @@ namespace Kope.Component.Ability.Targeting {
 		protected TargetContext casterContext;
 		protected EffectContext effectContext;
 		protected bool _isTargeting;
-		private Action<TargetContext, EffectContext> _onTargetResolved;
+		protected Action<TargetContext, EffectContext> _onTargetResolved;
 
 		public bool IsTargeting => this._isTargeting;
 
@@ -28,10 +26,12 @@ namespace Kope.Component.Ability.Targeting {
 
 		public virtual void Update() { }
 
-		public virtual void FinishTheStratrgy() {
+		public virtual void FinishTheStratrgy(bool clearOnTargetResolved = true) {
 			if (!this._isTargeting) return;
 			this._isTargeting = false;
-			this._onTargetResolved = null;
+			if (clearOnTargetResolved) {
+				this._onTargetResolved = null;
+			}
 			var manager = this.targetingManager;
 			this.targetingManager = null;
 			if (manager != null) manager.NotifyStrategyFinished(this);
@@ -40,22 +40,19 @@ namespace Kope.Component.Ability.Targeting {
 		/// <summary>
 		/// Must be called on Start Method of the dervived class to properly initialize the
 		/// strategy and set it in the manager.
+		/// setStrategyInManager is provided for self targeting strategies that don't need to be
+		///  registered with the manager for target resolution.
 		/// </summary>
-		/// <param name="targetingManager"></param>
-		/// <param name="casterContext"></param>
-		/// <param name="effectContext"></param>
-		/// <param name="onTargetResolved"></param>
-		/// <param name="setStraegyInManager"></param>
 		protected void Begin(
-			TargetingManager targetingManager,
-			TargetContext casterContext,
-			EffectContext effectContext,
-			Action<TargetContext, EffectContext> onTargetResolved,
-			// this is so that self targeting strategies can choose to not
-			// set themselves in the manager, since they won't be using the manager 
-			// for target resolution and thus don't need to be registered with it.
-			bool setStraegyInManager = true
-			) {
+		TargetingManager targetingManager,
+		TargetContext casterContext,
+		EffectContext effectContext,
+		Action<TargetContext, EffectContext> onTargetResolved,
+		// this is so that self targeting strategies can choose to not
+		// set themselves in the manager, since they won't be using the manager 
+		// for target resolution and thus don't need to be registered with it.
+		bool setStraegyInManager = true
+		) {
 
 			this.targetingManager = targetingManager;
 			this.casterContext = casterContext;
@@ -70,16 +67,24 @@ namespace Kope.Component.Ability.Targeting {
 
 		public void ProcessInput(Vector3 clickPoint) {
 			if (!this._isTargeting) return;
-			ExecuteResolution(clickPoint);
-			FinishTheStratrgy();
+			// ExecuteResolution returns false if the callback must stay alive past this call
+			// (e.g. projectile strategies defer resolution until hit or expiry).
+			// FinishTheStrategy is always called here so derived classes can't leave the strategy lingering.
+			bool shouldClearCallback = ExecuteResolution(clickPoint);
+			FinishTheStratrgy(shouldClearCallback);
 		}
 
 		/// <summary>
-		/// Implemented by derived classes to perform the actual targeting logic (e.g., Raycasting or AOE checks).
-		/// This method must call Resolve() or ResolveGroup() to report results before the strategy automatically closes.
+		/// Performs the actual targeting logic (e.g. raycast, AOE check, projectile spawn).
+		/// Must call <see cref="ResolveSingleTarget"/> or <see cref="ResolveGroupOfTargets"/> before returning.
 		/// </summary>
-		/// <param name="clickPoint">The world-space position provided by the TargetingManager.</param>
-		protected abstract void ExecuteResolution(Vector3 clickPoint);
+		/// <returns>
+		/// <c>true</c> if the callback can be cleared immediately after resolution (instant strategies).
+		/// <c>false</c> if the callback must stay alive past this call — used by strategies that resolve
+		/// asynchronously (e.g. <see cref="ProjectileTargetingStrategy"/>, which fires the callback on hit or expiry).
+		/// </returns>
+		/// <param name="clickPoint">World-space position provided by the TargetingManager.</param>
+		protected abstract bool ExecuteResolution(Vector3 clickPoint);
 
 
 		protected virtual void ResolveSingleTarget(TargetContext target, Vector3? hitPoint = null) {

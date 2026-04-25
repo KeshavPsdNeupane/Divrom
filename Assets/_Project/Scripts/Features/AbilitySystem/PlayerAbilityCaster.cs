@@ -56,7 +56,9 @@ namespace Kope.Component.Ability {
 			}
 
 			this._casterContext = new TargetContext(casterHitBox);
+
 			this._masterEffectContext = new EffectContext {
+				Dimension = registry.Dimension,
 				Caster = registry.EntityTransform.gameObject,
 				CasterAttack = casterAttack,
 				CasterHealth = casterHealth,

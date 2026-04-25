@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Kope.Component.Combat.Interface;
 using Kope.Component.Health.Interface;
 using Kope.Component.Movement;
-
+using UnityEngine;
 namespace Kope.Component.HitBox.Interface {
 	public enum HitTargetType {
 		Entity,
@@ -68,6 +68,7 @@ namespace Kope.Component.HitBox.Interface {
 	}
 
 	public interface IHitBoxComponent {
+		Transform Transform { get; }
 		public HitTargetType CombatType { get; }
 		public event Action<CombatibleHitInfo> OnHitCombatible;
 		public event Action<HealableHitInfo> OnHitHealable;

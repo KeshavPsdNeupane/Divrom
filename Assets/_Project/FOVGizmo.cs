@@ -32,7 +32,7 @@ public class FOVGizmo : MonoBehaviour {
 		Vector3 lookDir = mover.GetLookingAtDirection();
 		Vector3 origin = transform.position;
 
-		bool is2D = mover.Dimension == Dimension.TwoD;
+		bool is2D = mover.Dimension == AxisMode.TwoD;
 		Vector3 axis = is2D ? Vector3.forward : Vector3.up;
 
 		Vector3 leftDir = Quaternion.AngleAxis(-halfAngle, axis) * lookDir;

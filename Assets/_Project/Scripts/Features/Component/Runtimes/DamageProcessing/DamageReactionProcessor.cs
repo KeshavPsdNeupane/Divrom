@@ -67,6 +67,7 @@ namespace Kope.Component.Combat {
 			return true;
 		}
 
+
 		private void OnEnable() {
 			if (this.hurtBox == null) return;
 			this.hurtBox.OnHitCombatible += HandleHurtBoxHit;

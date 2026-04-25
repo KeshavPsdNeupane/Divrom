@@ -2,10 +2,12 @@ using System;
 using Kope.Component.Attack;
 using Kope.Component.Health.Interface;
 using Kope.Component.HitBox.Interface;
+using Kope.Core;
 using UnityEngine;
 
 namespace Kope.Component.Combat.Interface {
 	public struct EffectContext : IEquatable<EffectContext> {
+		public AxisMode Dimension; // whether it is 2d or 3d, for proper physics calculations and effect application.
 		public int CasterLevel;       // For Level Scaling math
 		public GameObject Caster;     // For attribution (who killed who)
 		public Vector3 HitPoint;      // For Knockback calculation

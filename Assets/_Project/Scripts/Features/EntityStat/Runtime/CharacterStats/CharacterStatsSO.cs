@@ -1,73 +1,77 @@
 using UnityEngine;
 using ThirdParty.SerializableDictionary;
+using System;
+using System.Collections.Generic;
+
 namespace Kope.Character.Stats {
 	[CreateAssetMenu(fileName = "CharacterStateSO", menuName = "Scriptable Character/CharacterStateSO")]
 	public class CharacterStatsSO : ScriptableObject {
 		[SerializeField] private SerializableDictionary<CharacterStatType, float> Basestats = new();
 
-		[Header("Resistance Stats, Must be between in 0.0f and 1.0f"), SerializeField]
-		private SerializableDictionary<DamageType, float> resistanceStats = new();
+		[Header("Resistance Stats (-0.5 to 2.0)")]
+		[SerializeField] private SerializableDictionary<DamageType, float> resistanceStats = new();
 
 		[SerializeField] private SerializableDictionary<CharacterStatType, float> levelIncreasingStatWithLevelingValue = new();
 
 		public SerializableDictionary<CharacterStatType, float> BasestatsDict => Basestats;
-
-
 		public SerializableDictionary<DamageType, float> ResistanceStatsDict => resistanceStats;
 
-		private void Awake() {
-			// Base stats
-			AddIfMissing(Basestats, CharacterStatType.HP, 100f);
-			AddIfMissing(Basestats, CharacterStatType.DEF, 10f);
-			AddIfMissing(Basestats, CharacterStatType.ATK, 15f);
-			AddIfMissing(Basestats, CharacterStatType.SP, 12f);
-			AddIfMissing(Basestats, CharacterStatType.AGI, 5f);
-			AddIfMissing(Basestats, CharacterStatType.CRATE, 5f);
-			AddIfMissing(Basestats, CharacterStatType.CDMG, 100f);
+		private void OnValidate() {
+			// 1. Auto-fill missing keys with specific defaults
+			FillStatsWithDefaults();
 
-			// Resistance stats (auto-adds missing ones)
-			AddIfMissing(resistanceStats, DamageType.Physical, 0.05f);
-			AddIfMissing(resistanceStats, DamageType.Fire, 0.05f);
-			AddIfMissing(resistanceStats, DamageType.Ice, 0.05f);
-			AddIfMissing(resistanceStats, DamageType.Lightning, 0.05f);
-			AddIfMissing(resistanceStats, DamageType.Poison, 0.05f);
-
-			// Leveling stats
-			AddIfMissing(levelIncreasingStatWithLevelingValue, CharacterStatType.HP, 10f);
-			AddIfMissing(levelIncreasingStatWithLevelingValue, CharacterStatType.DEF, 1f);
-			AddIfMissing(levelIncreasingStatWithLevelingValue, CharacterStatType.ATK, 2f);
-			AddIfMissing(levelIncreasingStatWithLevelingValue, CharacterStatType.SP, 0f);
-			AddIfMissing(levelIncreasingStatWithLevelingValue, CharacterStatType.AGI, 0f);
-			AddIfMissing(levelIncreasingStatWithLevelingValue, CharacterStatType.CRATE, 0f);
-			AddIfMissing(levelIncreasingStatWithLevelingValue, CharacterStatType.CDMG, 0f);
-
-
-			FillMissingEnumKeys(Basestats);
-			FillMissingEnumKeys(resistanceStats);
-			FillMissingEnumKeys(levelIncreasingStatWithLevelingValue);
+			// 2. Clamp Resistance values
+			if (resistanceStats != null) {
+				var keys = new List<DamageType>(resistanceStats.Keys);
+				foreach (var key in keys) {
+					resistanceStats[key] = Mathf.Clamp(resistanceStats[key], -0.5f, 2.0f);
+				}
+			}
 		}
 
+		private void FillStatsWithDefaults() {
+			// Fill Base Stats
+			FillMissingEnumKeys(Basestats, (stat) => stat switch {
+				CharacterStatType.HP => 100f,
+				CharacterStatType.DEF => 10f,
+				CharacterStatType.ATK => 15f,
+				CharacterStatType.SP => 12f,
+				CharacterStatType.AGI => 5f,
+				CharacterStatType.CRATE => 5f,
+				CharacterStatType.CDMG => 100f,
+				_ => 0f
+			});
+
+			// Fill Resistance (0.05f default)
+			FillMissingEnumKeys(resistanceStats, (type) => 0.05f);
+
+			// Fill Leveling Stats
+			FillMissingEnumKeys(levelIncreasingStatWithLevelingValue, (stat) => stat switch {
+				CharacterStatType.HP => 10f,
+				CharacterStatType.DEF => 1f,
+				CharacterStatType.ATK => 2f,
+				_ => 0f
+			});
+		}
+
+		/// <summary>
+		/// Iterates through the Enum and fills missing keys using a provider function for values.
+		/// </summary>
+		private void FillMissingEnumKeys<T>(SerializableDictionary<T, float> dict, Func<T, float> defaultValueProvider) where T : Enum {
+			foreach (T key in Enum.GetValues(typeof(T))) {
+				if (!dict.ContainsKey(key)) {
+					dict.Add(key, defaultValueProvider(key));
+				}
+			}
+		}
 
 		public SerializableDictionary<CharacterStatType, float> GetLevelingStatsWithoutZero() {
 			var filtered = new SerializableDictionary<CharacterStatType, float>();
 			foreach (var kvp in this.levelIncreasingStatWithLevelingValue) {
 				if (kvp.Value > 0f)
-					filtered?.Add(kvp.Key, kvp.Value);
+					filtered.Add(kvp.Key, kvp.Value);
 			}
 			return filtered;
 		}
-
-		private void AddIfMissing<T>(SerializableDictionary<T, float> dict, T key, float value) {
-			if (!dict.ContainsKey(key))
-				dict.Add(key, value);
-		}
-
-		private void FillMissingEnumKeys<T>(SerializableDictionary<T, float> dict, float defaultValue = 0f) where T : System.Enum {
-			foreach (T key in System.Enum.GetValues(typeof(T))) {
-				if (!dict.ContainsKey(key))
-					dict[key] = defaultValue;
-			}
-		}
 	}
-
 }

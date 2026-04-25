@@ -1,6 +1,6 @@
-// ProjectileTargetingStrategy.cs
 using System;
 using Kope.Component.Combat.Interface;
+using Kope.Core;
 using UnityEngine;
 
 namespace Kope.Component.Ability.Targeting {
@@ -9,15 +9,17 @@ namespace Kope.Component.Ability.Targeting {
 	public sealed class ProjectileTargetingStrategy : TargetingStrategy, ITargetingFactory {
 		[SerializeField] private GameObject projectilePrefab;
 		[SerializeField] private float projectileSpeed = 18f;
-		[SerializeField] private float projectileLifetime = 5f;
+		[SerializeField] private float projectileLifetime = 2f;
 		[SerializeField] private Vector3 spawnOffset = new(0f, 1f, 0f);
-
+		[SerializeField, Tooltip("Number of enemies the projectile can pierce through.")]
+		private int pierceCount = 0;
 		public TargetingStrategy Create() {
 			return new ProjectileTargetingStrategy {
 				projectilePrefab = this.projectilePrefab,
 				projectileSpeed = this.projectileSpeed,
 				projectileLifetime = this.projectileLifetime,
-				spawnOffset = this.spawnOffset
+				spawnOffset = this.spawnOffset,
+				pierceCount = this.pierceCount
 			};
 		}
 
@@ -27,52 +29,60 @@ namespace Kope.Component.Ability.Targeting {
 			EffectContext effectContext,
 			Action<TargetContext, EffectContext> onTargetResolved) {
 			Begin(targetingManager, casterContext, effectContext, onTargetResolved);
-
 			if (this.projectilePrefab == null || this.targetingManager == null || this.targetingManager.Camera == null) {
 				FinishTheStratrgy();
 				return;
 			}
+		}
 
-			var spawnPosition = this.targetingManager.transform.position + this.spawnOffset;
-			var direction = ResolveLaunchDirection();
-			var rotation = direction.sqrMagnitude > 0.0001f
-				? Quaternion.LookRotation(direction.normalized)
-				: Quaternion.identity;
 
-			var projectileObject = UnityEngine.Object.Instantiate(
-				this.projectilePrefab, spawnPosition, rotation);
+		protected override bool ExecuteResolution(Vector3 clickPoint) {
+			Vector3 origin = this.casterContext.HitBox.Transform.position;
+
+			Vector3 direction = GetDirectionToClickPoint(clickPoint, origin);
+
+			var rotation = CalculateSpawnRotation(direction, this.effectContext.Dimension);
+			var spawnPosition = CalculateSpawnPosition(origin, direction, this.spawnOffset, this.effectContext.Dimension);
+
+			var projectileObject = UnityEngine.Object.Instantiate(this.projectilePrefab, spawnPosition, rotation);
 
 			if (projectileObject.TryGetComponent<AbilityProjectileController>(out var controller)) {
-				// Projectile strategy hands off the callback to the controller —
-				// the controller resolves the target on hit, then signals completion so the strategy can cancel.
-				controller.Initialize(
-					onTargetResolved,
-					FinishTheStratrgy,
-					this.effectContext,
-					direction,
-					this.projectileSpeed,
-					this.projectileLifetime);
-				return;
+				controller.Initialize(this._onTargetResolved, () => FinishTheStratrgy(), this.effectContext,
+									  direction, this.projectileSpeed, this.projectileLifetime, this.pierceCount);
+				return false;
 			}
 
 			UnityEngine.Object.Destroy(projectileObject);
-			FinishTheStratrgy();
+			return true;
+		}
+		private Vector3 GetDirectionToClickPoint(Vector3 clickPoint, Vector3 origin) {
+			Vector3 direction = clickPoint - origin;
+			if (this.effectContext.Dimension == AxisMode.TwoD) direction.z = 0;
+			return direction.normalized;
 		}
 
-		private Vector3 ResolveLaunchDirection() {
-			if (this.targetingManager == null || this.targetingManager.Camera == null) return Vector3.forward;
+		private Quaternion CalculateSpawnRotation(Vector3 direction, AxisMode dimension) {
+			// direction is already normalized and flattened
+			return dimension == AxisMode.TwoD
+				? Quaternion.LookRotation(Vector3.forward, direction)
+				: Quaternion.LookRotation(direction);
+		}
 
-			if (this.targetingManager.TryGetMouseGroundPoint(out var hitPoint)) {
-				var direction = hitPoint - this.targetingManager.transform.position;
-				return direction.sqrMagnitude > 0.0001f ? direction.normalized : this.targetingManager.Camera.transform.forward;
+		private Vector3 CalculateSpawnPosition(Vector3 position, Vector3 fwd, Vector3 offset, AxisMode dimension) {
+			if (dimension == AxisMode.TwoD) {
+				// Pre-calculate shifted offsets to save a few operations
+				// offset.y is "Forward" distance, offset.x is "Side" distance
+				float offsetX = (fwd.x * offset.y) + (fwd.y * offset.x);
+				float offsetY = (fwd.y * offset.y) - (fwd.x * offset.x);
+
+				return new Vector3(position.x + offsetX, position.y + offsetY, 0f);
 			}
 
-			return this.targetingManager.Camera.transform.forward;
-		}
-		protected override void ExecuteResolution(Vector3 clickPoint) {
-			// no op for now.
-			// but later this stragity will manage resolutution of target by using mouse click position.
-			// by itself.
+			// 3D logic remains efficient
+			Vector3 side = Vector3.Cross(Mathf.Abs(fwd.y) > 0.9f ? Vector3.right : Vector3.up, fwd).normalized;
+			Vector3 up = Vector3.Cross(fwd, side);
+
+			return position + (fwd * offset.z) + (side * offset.x) + (up * offset.y);
 		}
 	}
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
+using Kope.Core;
 using Kope.Core.CompilerServices;
 namespace ServiceLocatorPattern {
 	/// <summary>
@@ -10,11 +11,15 @@ namespace ServiceLocatorPattern {
 	/// </summary>
 	public class GlobalServiceLocator : ServiceLocator<GlobalServiceLocator, GlobalServiceBase> {
 		private bool _canRegister = true;
+		private static AxisMode _dimension = AxisMode.TwoD;
 		protected override void Awake() {
 			this.isPersistent = true;
 			base.Awake();
 		}
 		public void Lock() => this._canRegister = false;
+		public static void InjectDimension(AxisMode dimension) => _dimension = dimension;
+		public static AxisMode Dimension => _dimension;
+
 
 		public bool TryGetService<TService>([MaybeNullWhen(false)] out TService service) where TService : GlobalServiceBase {
 			var type = typeof(TService);

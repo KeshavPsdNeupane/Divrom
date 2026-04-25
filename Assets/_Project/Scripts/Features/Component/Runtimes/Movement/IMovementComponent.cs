@@ -39,7 +39,7 @@ namespace Kope.Component.Movement {
 	public interface IMovementComponent {
 		Vector3 Direction { get; }
 		Vector3 Position { get; }
-		Dimension Dimension { get; }
+		AxisMode Dimension { get; }
 		void SetMovementIntent(MovementIntent intent);
 		Vector3 GetLookingAtDirection();
 		void StopMovementIntent();

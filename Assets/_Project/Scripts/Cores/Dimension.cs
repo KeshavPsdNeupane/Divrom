@@ -1,5 +1,5 @@
 namespace Kope.Core {
-	public enum Dimension {
+	public enum AxisMode {
 		TwoD,
 		ThreeD,
 	}

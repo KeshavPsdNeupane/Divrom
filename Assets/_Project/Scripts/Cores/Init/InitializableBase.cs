@@ -99,7 +99,7 @@ namespace Kope.Core.Init {
 					this.parentGameObjectStackTrace = this.GetGameObjectHierarchyPath();
 					this.hasLoggedNotInitializedWarning = true;
 					Debug.LogWarning($"[{this.GetType().Name}] Update called " +
-					"before Init() on {this.parentGameObjectStackTrace}. Is " +
+					$"before Init() on {this.parentGameObjectStackTrace}. Is " +
 					"it registered in InitLifecycleManager?", this);
 				}
 				return;

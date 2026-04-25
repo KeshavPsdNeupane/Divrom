@@ -8,6 +8,7 @@ using Kope.Core.Init;
 using UnityEngine;
 
 namespace Kope.Component.HitBox {
+	[RequireComponent(typeof(Collider2D))]
 	public class HitBoxComponent : InitializableBase, IHitBoxComponent {
 		[SerializeField] private HitTargetType combatType = HitTargetType.Entity;
 		[SerializeField] private Collider2D hurtBoxCollider;
@@ -19,7 +20,7 @@ namespace Kope.Component.HitBox {
 		public event Action<KnockableHitInfo> OnHitKnockable;
 		public Collider2D HurtBoxCollider => hurtBoxCollider;
 		public HitTargetType CombatType => combatType;
-
+		public Transform Transform => this.gameObject.transform;
 
 		protected override bool OnInit() {
 			if (this.hurtBoxCollider == null) {
@@ -28,6 +29,7 @@ namespace Kope.Component.HitBox {
 				return false;
 			}
 			this.hurtBoxCollider.isTrigger = true;
+
 			return true;
 		}
 

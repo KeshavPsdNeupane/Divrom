@@ -17,13 +17,8 @@ namespace Kope.Component.Movement {
 	public class MovementComponentSaveData : ISaveData {
 		[JsonProperty("pos")]
 		public Vec3 Position { get; set; }
-		[JsonProperty("dim")]
-		public Dimension Dimension { get; set; }
-
 		public MovementComponentSaveData() { }
-
-		public MovementComponentSaveData(Dimension dimension, Vector3 position) {
-			this.Dimension = dimension;
+		public MovementComponentSaveData(Vector3 position) {
 			this.Position = new Vec3(position);
 		}
 	}
@@ -72,7 +67,6 @@ namespace Kope.Component.Movement {
 	public class MovementComponentBase : InitializableBase,
 	IMovementComponent, ISaveable, IStunnable, IKnockbackable {
 		[Header("References")]
-		[SerializeField] protected Dimension dimension = Dimension.TwoD;
 		[SerializeField] protected Rigidbody2D rb;
 		[SerializeField] protected EntityComponentsRegistry ecr;
 
@@ -86,7 +80,8 @@ namespace Kope.Component.Movement {
 
 		// Movement Intent State
 		private CharacterStatsSystem _readOnlycharacterStatsSystem;
-		private Vector3 _lastDirection = Vector3.right;
+		private Vector3 _lastDirection = new(0f, -1f, 0f);
+		private AxisMode _dimension;
 		private Vector3 _dimMask;
 		private BasicCountDownTimer _stunTimer;
 		protected MovementIntent _currentIntent;
@@ -94,7 +89,7 @@ namespace Kope.Component.Movement {
 		public float Mass => this.rb.mass;
 		public Vector3 Direction => this._currentIntent.Direction;
 		public Vector3 Position => this.rb.position;
-		public Dimension Dimension => this.dimension;
+		public AxisMode Dimension => this._dimension;
 		public Rigidbody2D Rigidbody => this.rb;
 
 		public bool IsStunned => this._stunTimer != null && this._stunTimer.IsRunning;
@@ -109,9 +104,11 @@ namespace Kope.Component.Movement {
 			if (this.ecr.ComponentRegistry.TryGetReadOnlyComponent(out CharacterStatsSystem statsSystem)) {
 				this._readOnlycharacterStatsSystem = statsSystem;
 			}
+			this._dimension = this.ecr.ComponentRegistry.Dimension;
 
 			this._stunTimer = new BasicCountDownTimer(0f);
-			this._dimMask = (dimension == Dimension.TwoD) ? new Vector3(1, 1, 0) : Vector3.one;
+			this._dimMask = (this._dimension == AxisMode.TwoD) ? new Vector3(1, 1, 0) : Vector3.one;
+			this._lastDirection = (this._dimension == AxisMode.TwoD) ? new Vector3(0f, -1f, 0f) : Vector3.forward;
 			return true;
 		}
 
@@ -227,7 +224,7 @@ namespace Kope.Component.Movement {
 		}
 
 		public virtual Vector3 GetLookingAtDirection() {
-			return this.dimension == Dimension.TwoD
+			return this._dimension == AxisMode.TwoD
 				? new Vector3(this._lastDirection.x, this._lastDirection.y, 0f)
 				: this.rb.transform.forward;
 		}
@@ -236,12 +233,11 @@ namespace Kope.Component.Movement {
 
 		#region Persistence & Stun
 
-		public ISaveData GetSaveData() => new MovementComponentSaveData(this.dimension, this.rb.position);
+		public ISaveData GetSaveData() => new MovementComponentSaveData(this.rb.position);
 
 		public void LoadFromSaveData(ISaveData data) {
 			if (data is MovementComponentSaveData saveData) {
 				this.rb.position = saveData.Position.ToVector3();
-				this.dimension = saveData.Dimension;
 			}
 		}
 

@@ -48,6 +48,7 @@ MonoBehaviour:
   groundLayerMask:
     serializedVersion: 2
     m_Bits: 1
+  maxFrameDelayBeforeCleanup: 2
 --- !u!1 &312338941039084587
 GameObject:
   m_ObjectHideFlags: 0
@@ -363,7 +364,7 @@ GameObject:
   - component: {fileID: 5346917504542330858}
   - component: {fileID: 8698070850850616}
   - component: {fileID: 6069060705174550741}
-  m_Layer: 6
+  m_Layer: 3
   m_Name: PlayerNew
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -390,6 +391,7 @@ Transform:
   - {fileID: 636012089227929340}
   - {fileID: 4677141467483066024}
   - {fileID: 6608268893706211379}
+  - {fileID: 1676905652862699601}
   - {fileID: 2071568165099061355}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -449,7 +451,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
@@ -693,7 +695,7 @@ GameObject:
   - component: {fileID: 1676905652862699601}
   - component: {fileID: 2715053819161219042}
   - component: {fileID: 9138969578043445410}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: HurtBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -713,7 +715,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2071568165099061355}
+  m_Father: {fileID: 6671984905160279280}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &2715053819161219042
 BoxCollider2D:
@@ -868,7 +870,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6608268893706211379}
-  m_Layer: 3
+  m_Layer: 10
   m_Name: collectors
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -937,7 +939,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 267923a9716b04b4088ffa3a650266e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovementComponent
-  dimension: 0
   rb: {fileID: 5028322666046906755}
   ecr: {fileID: 6037248722059709900}
   defaultMovementSpeed: 2
@@ -998,7 +999,7 @@ GameObject:
   - component: {fileID: 5278300828148743300}
   - component: {fileID: 2553193555243041833}
   - component: {fileID: 2074568686396004027}
-  m_Layer: 3
+  m_Layer: 10
   m_Name: StatusEffectCollector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1090,7 +1091,7 @@ GameObject:
   - component: {fileID: 8439675471344690138}
   - component: {fileID: 1528198142297516788}
   - component: {fileID: 1232850870542060447}
-  m_Layer: 3
+  m_Layer: 10
   m_Name: HpRestoreCollector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1337,7 +1338,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7244436524625443050}
-  - {fileID: 1676905652862699601}
   - {fileID: 81592177661688737}
   m_Father: {fileID: 6671984905160279280}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1371,7 +1371,7 @@ GameObject:
   - component: {fileID: 2622145661708167649}
   - component: {fileID: 7730815850288028167}
   - component: {fileID: 6766132971903874346}
-  m_Layer: 3
+  m_Layer: 10
   m_Name: ItemCollector
   m_TagString: Untagged
   m_Icon: {fileID: 0}

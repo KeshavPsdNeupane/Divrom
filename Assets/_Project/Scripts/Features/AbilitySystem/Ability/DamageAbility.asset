@@ -18,16 +18,13 @@ MonoBehaviour:
   castVfx: {fileID: 0}
   runningVfx: {fileID: 0}
   targetingFactory:
-    rid: 7477298528001196267
+    rid: 7477298664218820847
   applicableHitTargetType: 0
   damageEffects:
   - rid: 7477298528001196268
   references:
     version: 2
     RefIds:
-    - rid: 7477298528001196267
-      type: {class: SelfTargetingStrategy, ns: Kope.Component.Ability.Targeting, asm: Assembly-CSharp}
-      data: 
     - rid: 7477298528001196268
       type: {class: DamageEffectFactory, ns: Kope.AbilitySystem.Effect, asm: Assembly-CSharp}
       data:
@@ -51,3 +48,14 @@ MonoBehaviour:
           Multiplier: 2.1
           pierceRatio: 0.4
           ignoreResistance: 0.5
+    - rid: 7477298664218820847
+      type: {class: AreaTargetingStrategy, ns: Kope.Component.Ability.Targeting, asm: Assembly-CSharp}
+      data:
+        includeCaster: 0
+        previewPrefab: {fileID: 7065779095218578133, guid: 70e92c67214799c5082ec13689d5b7f1, type: 3}
+        radius: 3
+        layerMask:
+          serializedVersion: 2
+          m_Bits: 192
+        previewHeightOffset: 0.1
+        maxTargets: 16

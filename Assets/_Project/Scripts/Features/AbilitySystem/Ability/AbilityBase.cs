@@ -1,10 +1,10 @@
 using System;
 using Kope.Component.Ability.Targeting;
 using Kope.Component.Combat.Interface;
+using Kope.Component.HitBox;
 using Kope.Component.HitBox.Interface;
 using Kope.Core.Attribute;
 using Kope.Core.Attributes;
-using Kope.Core.EntityComponentRegistry;
 using UnityEngine;
 
 public class TargetContext {
@@ -13,38 +13,17 @@ public class TargetContext {
 	public TargetContext(IHitBoxComponent target) {
 		this.HitBox = target;
 	}
-
-	public static TargetContext Create(Collider collider) {
-		if (collider == null) return default;
-
-		var registry = collider.GetComponentInParent<EntityComponentsRegistry>();
-		return Create(registry);
-	}
-
-	public static TargetContext Create(Collider2D collider) {
-		if (collider == null) return default;
-
-		var registry = collider.GetComponentInParent<EntityComponentsRegistry>();
-		return Create(registry);
-	}
+	public static TargetContext Create(Component component) {
+		if (component == null) return null;
 
 
-	public static TargetContext Create(EntityComponentsRegistry registry) {
-		if (registry == null || registry.ComponentRegistry == null) return default;
-		// these can be null, and that's fine - the TargetContext can represent a target 
-		// that isn't healable, stunnable, or knockbackable without issue.
-		// # dispose the return bool using _ since we don't actually need to know if 
-		// the component was found or not - the resulting TargetContext will
-		// just have null for any missing components, which is fine.
-		// and it is abiility responsibility to check if the target is valid for its purposes,
-		// not the responsibility of this TargetContext struct.
-		_ = registry.ComponentRegistry.TryGetReadOnlyComponent(out IHitBoxComponent combatTarget, false);
-		if (combatTarget == null) return default;
+		if (component.TryGetComponent<IHitBoxComponent>(out var hitBox)) {
+			return new TargetContext(hitBox);
+		}
 
-		return new TargetContext(combatTarget);
+		return null;
 	}
 }
-
 [Serializable]
 public abstract class AbilityBase : ScriptableObject {
 	[SerializeField] string abilityName;
