@@ -23,18 +23,30 @@ namespace Kope.Core.Attributes.Editor {
 			// Draw the Type Picker Dropdown
 			Rect buttonRect = EditorGUI.PrefixLabel(labelRect, label);
 
-			// Get clean type name for display
 			string fullTypeName = property.managedReferenceFullTypename;
-			string displayTypeName = string.IsNullOrEmpty(fullTypeName)
-				? "Null (Empty)"
-				: fullTypeName.Split(' ').Last().Split('.').Last();
 
-			if (EditorGUI.DropdownButton(buttonRect, new GUIContent(displayTypeName), FocusType.Keyboard)) {
-				ShowTypeMenu(property, fieldType);
+			// --- Missing Type Validation Logic ---
+			bool isMissing = !string.IsNullOrEmpty(fullTypeName) && GetTypeFromManagedReference(fullTypeName) == null;
+
+			if (isMissing) {
+				Color previousColor = GUI.color;
+				GUI.color = new Color(1f, 0.4f, 0.4f); // Noticeable soft red
+				if (EditorGUI.DropdownButton(buttonRect, new GUIContent($"MISSING: {ExtractTypeName(fullTypeName)}"), FocusType.Keyboard)) {
+					ShowTypeMenu(property, fieldType);
+				}
+				GUI.color = previousColor;
+			} else {
+				string displayTypeName = string.IsNullOrEmpty(fullTypeName)
+					? "Null (Empty)"
+					: ExtractTypeName(fullTypeName);
+
+				if (EditorGUI.DropdownButton(buttonRect, new GUIContent(displayTypeName), FocusType.Keyboard)) {
+					ShowTypeMenu(property, fieldType);
+				}
 			}
 
 			// Draw children if expanded
-			if (property.isExpanded && !string.IsNullOrEmpty(fullTypeName)) {
+			if (property.isExpanded && !string.IsNullOrEmpty(fullTypeName) && !isMissing) {
 				EditorGUI.indentLevel++;
 				float yOffset = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
 
@@ -58,7 +70,12 @@ namespace Kope.Core.Attributes.Editor {
 		}
 
 		public override float GetPropertyHeight(SerializedProperty property, GUIContent label) {
+			// If missing or null, just show the header
 			if (!property.isExpanded || string.IsNullOrEmpty(property.managedReferenceFullTypename))
+				return EditorGUIUtility.singleLineHeight;
+
+			// If type is missing, we can't draw children anyway
+			if (GetTypeFromManagedReference(property.managedReferenceFullTypename) == null)
 				return EditorGUIUtility.singleLineHeight;
 
 			float height = EditorGUIUtility.singleLineHeight;
@@ -81,7 +98,6 @@ namespace Kope.Core.Attributes.Editor {
 				property.serializedObject.ApplyModifiedProperties();
 			});
 
-			// Using TypeCache is much faster than Manual Assembly Scanning
 			var types = TypeCache.GetTypesDerivedFrom(targetType)
 				.Where(t => !t.IsAbstract && !t.IsInterface && t.IsSerializable);
 
@@ -96,19 +112,32 @@ namespace Kope.Core.Attributes.Editor {
 		}
 
 		private Type GetTargetType(SerializedProperty property) {
-			// This handles the "List<T>" case by looking at the fieldInfo directly
-			// which Unity provides via the PropertyDrawer
 			Type type = fieldInfo.FieldType;
-
-			// If the field is a List or Array, we want the element type
 			if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>)) {
 				return type.GetGenericArguments()[0];
 			}
 			if (type.IsArray) {
 				return type.GetElementType();
 			}
-
 			return type;
+		}
+
+		private string ExtractTypeName(string fullTypeName) {
+			if (string.IsNullOrEmpty(fullTypeName)) return "Null";
+			return fullTypeName.Split(' ').Last().Split('.').Last();
+		}
+
+		private Type GetTypeFromManagedReference(string fullTypeName) {
+			if (string.IsNullOrEmpty(fullTypeName)) return null;
+
+			var parts = fullTypeName.Split(' ');
+			if (parts.Length < 2) return Type.GetType(fullTypeName);
+
+			var assemblyName = parts[0];
+			var className = parts[1];
+
+			// Combines class and assembly so Type.GetType can find it
+			return Type.GetType($"{className}, {assemblyName}");
 		}
 	}
 }

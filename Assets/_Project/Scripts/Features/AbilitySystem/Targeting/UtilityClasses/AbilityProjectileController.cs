@@ -17,7 +17,7 @@ namespace Kope.Component.Ability.Targeting {
 
 		private int _piercesRemaining;
 		ITargetingReceiver _onTargetResolved;
-		private Action _onProjectileFinished;
+		private Action<bool> _onProjectileFinished;
 		private EffectContext _effectContext;
 		private Rigidbody2D _body;
 		private bool _isInitialized;
@@ -36,7 +36,7 @@ namespace Kope.Component.Ability.Targeting {
 
 		public void Initialize(
 			ITargetingReceiver onTargetResolved,
-			Action onProjectileFinished,
+			Action<bool> onProjectileFinished,
 			EffectContext effectContext,
 			Vector3 direction,
 			float speed,
@@ -63,7 +63,7 @@ namespace Kope.Component.Ability.Targeting {
 			// so we wont try to call the callback on a destroyed projectile if it hits something 
 			// at the same frame it's destroyed, which can happen with fast projectiles.
 			if (gameObject.scene.isLoaded) {
-				this._onProjectileFinished?.Invoke();
+				this._onProjectileFinished?.Invoke(true);
 			}
 			this._onProjectileFinished = null;
 		}

@@ -33,6 +33,12 @@ public abstract class AbilityBase : ScriptableObject, ITargetingReceiver {
 	protected GameObject castVfx;
 	[SerializeField, Tooltip("Visual effect to play while the ability is active.")]
 	protected GameObject runningVfx;
+	// the serialized reference is highly fragile and can easily break if the assembly definitions
+	// or namespaces are changed, so we need to be careful with it.
+	// we use it here to allow for flexible targeting strategies that can be defined in the editor
+	// without needing to create a new script for each one, and without needing to hardcode them in the ability class.
+	// the targeting strategy can be anything that implements the ITargetingFactory interface,
+	// which allows for a wide range of targeting behaviors to be defined and used by abilities, such as single target,
 	[SerializeReference, SubclassSelector] protected ITargetingFactory targetingFactory;
 
 	private int _abilityUsedCount = 0;

@@ -18,7 +18,7 @@ MonoBehaviour:
   castVfx: {fileID: 0}
   runningVfx: {fileID: 0}
   targetingFactory:
-    rid: 7477298685294149726
+    rid: 7477298685294149737
   applicableHitTargetType: 0
   damageEffects:
   - rid: 7477298528001196292
@@ -56,8 +56,8 @@ MonoBehaviour:
           Multiplier: 0
           pierceRatio: 0
           ignoreResistance: 0
-    - rid: 7477298685294149726
-      type: {class: ProjectileTargetingStrategy, ns: Kope.Component.Ability.Targeting, asm: Assembly-CSharp}
+    - rid: 7477298685294149737
+      type: {class: ProjectileTargetingStrategyFactory, ns: Kope.Component.Ability.Targeting, asm: Assembly-CSharp}
       data:
         projectilePrefab: {fileID: 8495600968883564274, guid: d2977a74a15034ba7b3162b4b8159c4a, type: 3}
         projectileSpeed: 18

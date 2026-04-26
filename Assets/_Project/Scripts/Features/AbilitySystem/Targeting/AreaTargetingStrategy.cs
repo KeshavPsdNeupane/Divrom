@@ -12,6 +12,9 @@ namespace Kope.Component.Ability.Targeting {
 		[SerializeField] private GameObject previewPrefab;
 		[SerializeField, Min(0.001f)] private float radius = 5f;
 		[SerializeField] private LayerMask layerMask = 1;
+		[SerializeField, Min(-10), Tooltip("Minimum search depth for overlap checks." +
+		"Only for 2D physics. Ignored for 3D physics.")]
+		private int minSearchDepth = -1;
 		[SerializeField] private float previewHeightOffset = 0.1f;
 		[SerializeField, Range(1, 64)] private int maxTargets = 16;
 
@@ -22,7 +25,8 @@ namespace Kope.Component.Ability.Targeting {
 				this.radius,
 				this.layerMask,
 				this.previewHeightOffset,
-				this.maxTargets
+				this.maxTargets,
+				this.minSearchDepth
 			);
 		}
 	}
@@ -41,6 +45,7 @@ namespace Kope.Component.Ability.Targeting {
 		private readonly GameObject _previewPrefab;
 		private readonly float _radius = 5f;
 		private readonly LayerMask _layerMask = 1;
+		private readonly int _minSearchDepth = -1;
 		private readonly float _previewHeightOffset = 0.1f;
 		private readonly int _maxTargets = 16;
 
@@ -56,7 +61,7 @@ namespace Kope.Component.Ability.Targeting {
 
 		public AreaTargetingStrategy(bool includeCaster,
 		 GameObject previewPrefab, float radius, LayerMask layerMask,
-		 float previewHeightOffset, int maxTargets) {
+		 float previewHeightOffset, int maxTargets, int minSearchDepth) {
 
 			this._includeCaster = includeCaster;
 			this._previewPrefab = previewPrefab;
@@ -64,6 +69,7 @@ namespace Kope.Component.Ability.Targeting {
 			this._layerMask = layerMask;
 			this._previewHeightOffset = previewHeightOffset;
 			this._maxTargets = maxTargets;
+			this._minSearchDepth = minSearchDepth;
 			// Init buffers
 			this._results3d = new Collider[this._maxTargets];
 			this._results2d = new Collider2D[this._maxTargets];
@@ -139,9 +145,8 @@ namespace Kope.Component.Ability.Targeting {
 			int count;
 
 			if (this.effectContext.Dimension == AxisMode.TwoD) {
-				this._results2d = Physics2D.OverlapCircleAll(point, this._radius, this._layerMask);
+				this._results2d = Physics2D.OverlapCircleAll(point, this._radius, this._layerMask, this._minSearchDepth, this._maxTargets);
 				count = this._results2d.Length;
-				Debug.Log($"Found {count} hits in 2D area targeting.");
 				for (int i = 0; i < count; i++) {
 					ProcessHit(this._results2d[i], uniqueHits, resolvedList);
 				}
