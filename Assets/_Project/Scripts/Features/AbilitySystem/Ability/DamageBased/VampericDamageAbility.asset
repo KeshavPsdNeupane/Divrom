@@ -89,7 +89,7 @@ MonoBehaviour:
         PierceRatio: 0
         IgnoreResistance: 0
     vampiricDamage:
-      lifeStealRatio: 0.25
+      lifeStealRatio: 0.2
       DamageEffectData:
         PityDamage: 4
         DamageMultiplier: 2
@@ -98,9 +98,9 @@ MonoBehaviour:
         PierceRatio: 0
         IgnoreResistance: 0
       levelScalingValues:
-      - AbilityUsedThreshold: 0
-        LifeStealRatioScale: 0
-      - AbilityUsedThreshold: 0
-        LifeStealRatioScale: 0
-      - AbilityUsedThreshold: 0
-        LifeStealRatioScale: 0
+      - AbilityUsedThreshold: 3
+        LifeStealRatioScale: 0.25
+      - AbilityUsedThreshold: 6
+        LifeStealRatioScale: 0.3
+      - AbilityUsedThreshold: 9
+        LifeStealRatioScale: 0.4

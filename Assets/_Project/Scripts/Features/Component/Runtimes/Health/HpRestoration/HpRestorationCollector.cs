@@ -3,6 +3,7 @@ using Kope.Component.Health.Temp;
 using Kope.Core.Sensor;
 using UnityEngine;
 using Kope.Core.Identity;
+using Kope.Core.Extensions;
 
 namespace Kope.Component {
 	public class HpRestorationCollector : SensorBase {
@@ -11,7 +12,7 @@ namespace Kope.Component {
 		public override void OnStart() {
 			base.OnStart();
 			if (this.healthComponent == null) {
-				Debug.LogWarning($"[HpRestorationCollector] No IHealthComponent assigned on {gameObject.name}.");
+				Debug.LogWarning($"[HpRestorationCollector] No IHealthComponent assigned on {gameObject.name}.{this.GetFullHierarchyPath()}", this);
 			}
 		}
 

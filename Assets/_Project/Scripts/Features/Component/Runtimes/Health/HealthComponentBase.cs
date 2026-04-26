@@ -45,6 +45,10 @@ namespace Kope.Component.Health {
 		public event Action<HealthChangeInfo> OnMaxHealthChanged;
 		public event Action<HealthChangeInfo> OnCurrentHealthChanged;
 
+		protected void InvokeHpChange(HealthChangeInfo info) {
+			this.OnCurrentHealthChanged?.Invoke(info);
+		}
+
 		protected override bool OnInit() {
 			if (ecr == null) return false;
 
@@ -54,8 +58,8 @@ namespace Kope.Component.Health {
 			return false;
 		}
 
-		private void OnEnable() => SubscribeToStats();
-		private void OnDisable() => UnsubscribeToStats();
+		protected virtual void OnEnable() => SubscribeToStats();
+		protected virtual void OnDisable() => UnsubscribeToStats();
 
 		private void SubscribeToStats() {
 			// now IsInitialized garuntte the characterStatSyste internal is fully configured, so we 

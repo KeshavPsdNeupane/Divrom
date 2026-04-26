@@ -39,7 +39,8 @@ namespace Kope.Component.Health {
 
 		private void HandleHealthChange(HealthChangeInfo info) {
 			// 1. Combine checks for early exit
-			if (info.ChangeType != HealthChangeType.Damage && info.ChangeType != HealthChangeType.Heal) return;
+			if (!info.ShowFloatingText ||
+			(info.ChangeType != HealthChangeType.Damage && info.ChangeType != HealthChangeType.Heal)) return;
 
 			// 2. Determine if it's damage or heal and get the absolute value
 			bool isDamage = info.ChangeType == HealthChangeType.Damage;

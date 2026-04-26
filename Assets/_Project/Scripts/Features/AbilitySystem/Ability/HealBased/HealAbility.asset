@@ -40,18 +40,18 @@ MonoBehaviour:
   - selectedType: 0
     instantHeal:
       BaseData:
-        FlatHealAmount: 10
+        FlatHealAmount: 5
         PercentageHealAmount: 0.003
       nextLevelScaling:
-      - AbilityUsedThreshold: 0
-        FlatHealAmount: 0
-        PercentageHealAmount: 0
-      - AbilityUsedThreshold: 0
-        FlatHealAmount: 0
-        PercentageHealAmount: 0
-      - AbilityUsedThreshold: 0
-        FlatHealAmount: 0
-        PercentageHealAmount: 0
+      - AbilityUsedThreshold: 3
+        FlatHealAmount: 7
+        PercentageHealAmount: 0.04
+      - AbilityUsedThreshold: 6
+        FlatHealAmount: 9
+        PercentageHealAmount: 0.05
+      - AbilityUsedThreshold: 9
+        FlatHealAmount: 9
+        PercentageHealAmount: 0.06
     overTimeHeal:
       BaseData:
         FlathealPerInterval: 0

@@ -18,7 +18,7 @@ MonoBehaviour:
   castVfx: {fileID: 0}
   runningVfx: {fileID: 0}
   targetingSettings:
-    selectedType: 0
+    selectedType: 2
     area:
       includeCaster: 0
       previewPrefab: {fileID: 0}
@@ -30,7 +30,7 @@ MonoBehaviour:
       previewHeightOffset: 0.1
       maxTargets: 16
     projectile:
-      projectilePrefab: {fileID: 0}
+      projectilePrefab: {fileID: 8495600968883564274, guid: d2977a74a15034ba7b3162b4b8159c4a, type: 3}
       projectileSpeed: 18
       projectileLifetime: 2
       spawnOffset: {x: 0, y: 1, z: 0}
@@ -40,60 +40,67 @@ MonoBehaviour:
   - selectedType: 1
     instantDamage:
       BaseData:
-        pityDamage: 0
+        PityDamage: 0
         DamageMultiplier: 0
         DamageType: 0
         ScalingStat: 0
-        pierceRatio: 0
-        ignoreResistance: 0
+        PierceRatio: 0
+        IgnoreResistance: 0
       nextLevelScalings:
-      - abilityUsedThreshold: 0
+      - AbilityUsedThreshold: 0
         Multiplier: 0
-        pierceRatio: 0
-        ignoreResistance: 0
-      - abilityUsedThreshold: 0
+        PierceRatio: 0
+        IgnoreResistance: 0
+      - AbilityUsedThreshold: 0
         Multiplier: 0
-        pierceRatio: 0
-        ignoreResistance: 0
-      - abilityUsedThreshold: 0
+        PierceRatio: 0
+        IgnoreResistance: 0
+      - AbilityUsedThreshold: 0
         Multiplier: 0
-        pierceRatio: 0
-        ignoreResistance: 0
+        PierceRatio: 0
+        IgnoreResistance: 0
     overTimeDamage:
       BaseData:
         Duration: 4
         TickInterval: 0.5
         PityDamagePerTick: 3
-        DamageMultiplier: 0.8
+        DamageMultiplier: 0.5
         DamageType: 0
         ScalingStat: 1
         PierceRatio: 0
         IgnoreResistance: 0
       nextLevelScaling:
-      - abilityUsedThreshold: 0
-        duration: 0
-        tickInterval: 0
-        Multiplier: 0
-        pierceRatio: 0
-        ignoreResistance: 0
-      - abilityUsedThreshold: 0
-        duration: 0
-        tickInterval: 0
-        Multiplier: 0
-        pierceRatio: 0
-        ignoreResistance: 0
-      - abilityUsedThreshold: 0
-        duration: 0
-        tickInterval: 0
-        Multiplier: 0
-        pierceRatio: 0
-        ignoreResistance: 0
+      - AbilityUsedThreshold: 3
+        Duration: 0
+        TickInterval: 0
+        Multiplier: 0.6
+        PierceRatio: 0
+        IgnoreResistance: 0
+      - AbilityUsedThreshold: 6
+        Duration: 0
+        TickInterval: 0
+        Multiplier: 0.8
+        PierceRatio: 0
+        IgnoreResistance: 0
+      - AbilityUsedThreshold: 9
+        Duration: 0
+        TickInterval: 0
+        Multiplier: 1
+        PierceRatio: 0
+        IgnoreResistance: 0
     vampiricDamage:
       lifeStealRatio: 0
       DamageEffectData:
-        pityDamage: 0
+        PityDamage: 0
         DamageMultiplier: 0
         DamageType: 0
         ScalingStat: 0
-        pierceRatio: 0
-        ignoreResistance: 0
+        PierceRatio: 0
+        IgnoreResistance: 0
+      levelScalingValues:
+      - AbilityUsedThreshold: 0
+        LifeStealRatioScale: 0
+      - AbilityUsedThreshold: 0
+        LifeStealRatioScale: 0
+      - AbilityUsedThreshold: 0
+        LifeStealRatioScale: 0

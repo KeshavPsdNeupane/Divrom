@@ -12,12 +12,16 @@ namespace Kope.Component.Health.Interface {
 		public float CurrentHealth { get; }
 		public float MaxHealth { get; }
 		public HealthChangeType ChangeType { get; }
+		public readonly bool ShowFloatingText;
 
-		public HealthChangeInfo(float previousHealth, float currentHealth, float maxHealth, HealthChangeType changeType) {
+		public HealthChangeInfo(float previousHealth,
+		float currentHealth, float maxHealth,
+		HealthChangeType changeType, bool showFloatingText = true) {
 			PreviousHealth = previousHealth;
 			CurrentHealth = currentHealth;
 			MaxHealth = maxHealth;
 			ChangeType = changeType;
+			this.ShowFloatingText = showFloatingText;
 		}
 	}
 	public interface IHealthComponent : IHealable {

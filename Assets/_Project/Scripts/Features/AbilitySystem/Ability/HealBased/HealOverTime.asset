@@ -59,18 +59,18 @@ MonoBehaviour:
         Duration: 4
         DickInterval: 0.5
       nextLevelScaling:
-      - AbilityUsedThreshold: 0
-        FlathealPerInterval: 0
-        PercentHealPerInterval: 0
+      - AbilityUsedThreshold: 3
+        FlathealPerInterval: 6
+        PercentHealPerInterval: 0.01
         Duration: 0
         TickInterval: 0
-      - AbilityUsedThreshold: 0
-        FlathealPerInterval: 0
-        PercentHealPerInterval: 0
+      - AbilityUsedThreshold: 6
+        FlathealPerInterval: 6
+        PercentHealPerInterval: 0.02
         Duration: 0
         TickInterval: 0
-      - AbilityUsedThreshold: 0
-        FlathealPerInterval: 0
-        PercentHealPerInterval: 0
+      - AbilityUsedThreshold: 9
+        FlathealPerInterval: 8
+        PercentHealPerInterval: 0.05
         Duration: 0
         TickInterval: 0

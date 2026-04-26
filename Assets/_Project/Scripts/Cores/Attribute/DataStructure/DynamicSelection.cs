@@ -2,6 +2,7 @@ namespace Kope.Core.Attribute.DataStructure {
 	using System;
 	using System.Collections.Generic;
 	using System.Reflection;
+	using UnityEngine;
 
 	/// <summary>
 	/// Provides a polymorphic container that dynamically binds an enum selection to a specific data field.<br/>
@@ -28,13 +29,16 @@ namespace Kope.Core.Attribute.DataStructure {
 			var key = (this.GetType(), (object)this.selectedType);
 
 			if (!_fieldCache.TryGetValue(key, out var cached)) {
-				cached = FindBoundField(this.GetType(), this.selectedType);
+				cached = FindBoundField(GetType(), this.selectedType);
 				_fieldCache[key] = cached;
 			}
 
 			if (cached.field == null) {
 #if UNITY_EDITOR
-				UnityEngine.Debug.LogError(
+				// this null will never happen since all field is bound to a enum otherwise they will
+				// fallback to the default value which is index 0, and index 0 must be bound to a field,
+				// so if this happen it means the developer forget to bind a field to the default enum value
+				Debug.LogError(
 					$"[DynamicSelection] No field bound to enum value '{this.selectedType}' " +
 					$"on type '{this.GetType().Name}'. Did you forget [BindToEnum]?"
 				);
@@ -43,9 +47,24 @@ namespace Kope.Core.Attribute.DataStructure {
 			}
 
 			var value = cached.field.GetValue(this);
-
+			if (cached.targetType.IsAbstract || cached.targetType.IsInterface) {
+#if UNITY_EDITOR
+				Debug.LogError(
+					$"[DynamicSelection] Cannot auto-instantiate abstract/interface type '{cached.targetType.Name}' " +
+					$"for enum value '{this.selectedType}' on type '{this.GetType().Name}'."
+				);
+#endif
+				return default;
+			}
+			// this should handle both ScriptableObject and regular class types, since 
+			// some of the data is better represented as SO (e.g., damage formula) while
+			// some is better as plain class (e.g., targeting logic)
 			if (value == null && cached.targetType != null) {
-				value = Activator.CreateInstance(cached.targetType);
+				if (typeof(ScriptableObject).IsAssignableFrom(cached.targetType)) {
+					value = ScriptableObject.CreateInstance(cached.targetType);
+				} else {
+					value = Activator.CreateInstance(cached.targetType);
+				}
 				cached.field.SetValue(this, value);
 			}
 

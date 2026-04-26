@@ -40,25 +40,25 @@ MonoBehaviour:
   - selectedType: 0
     instantDamage:
       BaseData:
-        pityDamage: 4
-        DamageMultiplier: 3
+        PityDamage: 5
+        DamageMultiplier: 1.2
         DamageType: 0
         ScalingStat: 1
-        pierceRatio: 0
-        ignoreResistance: 0
+        PierceRatio: 0
+        IgnoreResistance: 0
       nextLevelScalings:
-      - abilityUsedThreshold: 0
-        Multiplier: 0
-        pierceRatio: 0
-        ignoreResistance: 0
-      - abilityUsedThreshold: 0
-        Multiplier: 0
-        pierceRatio: 0
-        ignoreResistance: 0
-      - abilityUsedThreshold: 0
-        Multiplier: 0
-        pierceRatio: 0
-        ignoreResistance: 0
+      - AbilityUsedThreshold: 3
+        Multiplier: 1.3
+        PierceRatio: 0
+        IgnoreResistance: 0
+      - AbilityUsedThreshold: 6
+        Multiplier: 1.3
+        PierceRatio: 0.2
+        IgnoreResistance: 0
+      - AbilityUsedThreshold: 9
+        Multiplier: 1.5
+        PierceRatio: 0.2
+        IgnoreResistance: 0.2
     overTimeDamage:
       BaseData:
         Duration: 0
@@ -70,30 +70,37 @@ MonoBehaviour:
         PierceRatio: 0
         IgnoreResistance: 0
       nextLevelScaling:
-      - abilityUsedThreshold: 0
-        duration: 0
-        tickInterval: 0
+      - AbilityUsedThreshold: 0
+        Duration: 0
+        TickInterval: 0
         Multiplier: 0
-        pierceRatio: 0
-        ignoreResistance: 0
-      - abilityUsedThreshold: 0
-        duration: 0
-        tickInterval: 0
+        PierceRatio: 0
+        IgnoreResistance: 0
+      - AbilityUsedThreshold: 0
+        Duration: 0
+        TickInterval: 0
         Multiplier: 0
-        pierceRatio: 0
-        ignoreResistance: 0
-      - abilityUsedThreshold: 0
-        duration: 0
-        tickInterval: 0
+        PierceRatio: 0
+        IgnoreResistance: 0
+      - AbilityUsedThreshold: 0
+        Duration: 0
+        TickInterval: 0
         Multiplier: 0
-        pierceRatio: 0
-        ignoreResistance: 0
+        PierceRatio: 0
+        IgnoreResistance: 0
     vampiricDamage:
       lifeStealRatio: 0
       DamageEffectData:
-        pityDamage: 0
+        PityDamage: 0
         DamageMultiplier: 0
         DamageType: 0
         ScalingStat: 0
-        pierceRatio: 0
-        ignoreResistance: 0
+        PierceRatio: 0
+        IgnoreResistance: 0
+      levelScalingValues:
+      - AbilityUsedThreshold: 0
+        LifeStealRatioScale: 0
+      - AbilityUsedThreshold: 0
+        LifeStealRatioScale: 0
+      - AbilityUsedThreshold: 0
+        LifeStealRatioScale: 0
