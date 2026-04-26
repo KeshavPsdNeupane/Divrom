@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using ZLinq;
 using UnityEditor;
 using UnityEngine;
 
@@ -98,7 +98,7 @@ namespace Kope.Core.Attributes.Editor {
 				property.serializedObject.ApplyModifiedProperties();
 			});
 
-			var types = TypeCache.GetTypesDerivedFrom(targetType)
+			var types = TypeCache.GetTypesDerivedFrom(targetType).AsValueEnumerable()
 				.Where(t => !t.IsAbstract && !t.IsInterface && t.IsSerializable);
 
 			foreach (var type in types) {
@@ -124,7 +124,8 @@ namespace Kope.Core.Attributes.Editor {
 
 		private string ExtractTypeName(string fullTypeName) {
 			if (string.IsNullOrEmpty(fullTypeName)) return "Null";
-			return fullTypeName.Split(' ').Last().Split('.').Last();
+			return fullTypeName.Split(' ').AsValueEnumerable().Last()
+			.Split('.').AsValueEnumerable().Last();
 		}
 
 		private Type GetTypeFromManagedReference(string fullTypeName) {

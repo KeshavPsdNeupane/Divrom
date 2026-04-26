@@ -3,7 +3,7 @@ using ServiceLocatorPattern;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+using ZLinq;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -110,7 +110,7 @@ namespace Kope.SaveSystem {
 			// We lock just long enough to copy the references. 
 			// This is O(N) but very fast since it's just memory pointers.
 			lock (this._dataLock) {
-				snapshot = this._sceneSaveDataBySceneIndex.Values.ToList();
+				snapshot = this._sceneSaveDataBySceneIndex.Values.AsValueEnumerable().ToList();
 			}
 
 			InternalWriteToDisk(snapshot);
@@ -124,7 +124,7 @@ namespace Kope.SaveSystem {
 			lock (this._dataLock) {
 				// Because SceneSaveDataAggregate is a STRUCT, 
 				// snapshot now holds a completely independent copy of the scene metadata.
-				snapshot = this._sceneSaveDataBySceneIndex.Values.ToList();
+				snapshot = this._sceneSaveDataBySceneIndex.Values.AsValueEnumerable().ToList();
 			}
 
 			this._isSavingAsync = true;

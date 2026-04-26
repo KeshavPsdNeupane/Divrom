@@ -36,7 +36,7 @@ namespace Kope.Component.HitBox {
 		public void HitCombatible(
 			in EffectContext effectContext = default,
 			HitTargetType combatType = HitTargetType.Entity,
-			IReadOnlyList<IEffectFactory<ICombatable>> effects = null) {
+			IReadOnlyList<IEffectFactory<IDamagable>> effects = null) {
 			// using default since the effectContext is a struct, so it won't be null, 
 			// but we can check if the Caster is null to determine if it's a valid context.
 			// and also using "in" to avoid copying the struct since it might be large.

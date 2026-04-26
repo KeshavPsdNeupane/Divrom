@@ -668,8 +668,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5f2a7e09a5e7f4dfaad5c673c86dc7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Kope.Core.Runtime::Kope.Core.UniqueID
-  guid: 4311db0b-d799-439c-8e5e-6a3b564c88cf
-  absoluteHierarchyPath: SampleScene-->EnemyNew
+  guid: 2e384518-028c-40ca-b908-4f9724302afa
+  absoluteHierarchyPath: SampleScene-->EnemyNew (1)
 --- !u!114 &1814066906529279447
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -45,20 +45,20 @@ namespace Kope.Component.Combat.Interface {
 			return !left.Equals(right);
 		}
 	}
-	public interface ICombatable {
+	public interface IDamagable {
 		IHitBoxComponent HurtBox { get; }
 		float TakeHit(DamageDetail damageDetail);
 		void TakeDamageDebugOnly(int amount);
 	}
 
-	public interface IDamageProcessor : ICombatable { }
+	public interface IDamageProcessor : IDamagable { }
 
-	public interface IEffectFactory<TTarget> {
+	public interface IEffectFactory<TTarget> : ISerializationCallbackReceiver {
 		IEffect<TTarget> Create(EffectContext context = default);
 	}
 
 	public interface IEffect<TTarget> {
-		float Apply(TTarget target);
+		void Apply(TTarget target);
 	}
 
 	public interface ITickableEffect {

@@ -18,10 +18,10 @@ namespace Kope.AbilitySystem.Effect {
 	[Serializable]
 	public class StatModifierEffectFactory : IEffectFactory<IStatSystem> {
 		[Header("Stat Modifier")]
-		public StatModifier BaseModifier;
+		[SerializeField] private StatModifier BaseModifier;
 		[Tooltip("Scaling values for the stat modifier based on ability usage." +
 		"Overrides base modifier when the ability use count meets a threshold. Must be in ascending order by abilityUsedThreshold.")]
-		public StatMofifierEffectLevelingScale[] levelScalingValues = new StatMofifierEffectLevelingScale[3];
+		[SerializeField] private StatMofifierEffectLevelingScale[] nextlevelScaling = new StatMofifierEffectLevelingScale[3];
 		private StatModifier _cachedModifier;
 		private int _nextRecomputeThreshold = 0;
 
@@ -37,16 +37,16 @@ namespace Kope.AbilitySystem.Effect {
 		}
 
 		private StatModifier ResolveModifier(int useCount, out int newLevelThreshold) {
-			if (this.levelScalingValues == null || this.levelScalingValues.Length == 0) {
+			if (this.nextlevelScaling == null || this.nextlevelScaling.Length == 0) {
 				newLevelThreshold = int.MaxValue;
 				return this.BaseModifier;
 			}
 
-			newLevelThreshold = this.levelScalingValues[0].abilityUsedThreshold;
-			for (int i = this.levelScalingValues.Length - 1; i >= 0; i--) {
-				if (useCount >= this.levelScalingValues[i].abilityUsedThreshold) {
-					newLevelThreshold = (i + 1 < this.levelScalingValues.Length)
-						? this.levelScalingValues[i + 1].abilityUsedThreshold
+			newLevelThreshold = this.nextlevelScaling[0].abilityUsedThreshold;
+			for (int i = this.nextlevelScaling.Length - 1; i >= 0; i--) {
+				if (useCount >= this.nextlevelScaling[i].abilityUsedThreshold) {
+					newLevelThreshold = (i + 1 < this.nextlevelScaling.Length)
+						? this.nextlevelScaling[i + 1].abilityUsedThreshold
 						: int.MaxValue;
 
 					// If a field in the scaling data is set to 0 or less, fall back to the base value.
@@ -55,10 +55,10 @@ namespace Kope.AbilitySystem.Effect {
 						this.BaseModifier.source,
 						this.BaseModifier.effectName,
 						this.BaseModifier.statType,
-						this.levelScalingValues[i].modifierAmount <= 0
-							? this.BaseModifier.modifierAmount : this.levelScalingValues[i].modifierAmount,
-						this.levelScalingValues[i].duration <= 0
-							? this.BaseModifier.totalDuration : this.levelScalingValues[i].duration,
+						this.nextlevelScaling[i].modifierAmount <= 0
+							? this.BaseModifier.modifierAmount : this.nextlevelScaling[i].modifierAmount,
+						this.nextlevelScaling[i].duration <= 0
+							? this.BaseModifier.totalDuration : this.nextlevelScaling[i].duration,
 						this.BaseModifier.isPercentage,
 						this.BaseModifier.isDebuffFromArmor,
 						this.BaseModifier.isDebuffFromEnemy,
@@ -67,6 +67,13 @@ namespace Kope.AbilitySystem.Effect {
 				}
 			}
 			return this.BaseModifier;
+		}
+		public void OnBeforeSerialize() { }
+
+		public void OnAfterDeserialize() {
+			if (this.nextlevelScaling == null || this.nextlevelScaling.Length == 0) {
+				this.nextlevelScaling = new StatMofifierEffectLevelingScale[3];
+			}
 		}
 	}
 
@@ -78,10 +85,9 @@ namespace Kope.AbilitySystem.Effect {
 		public StatModifierEffect(StatModifier modifier) {
 			this.modifier = modifier;
 		}
-
-		public float Apply(IStatSystem target) {
+		public void Apply(IStatSystem target) {
 			target.AddStatModifier(modifier);
-			return 0f;
+
 		}
 	}
 

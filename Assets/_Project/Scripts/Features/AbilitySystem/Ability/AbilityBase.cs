@@ -3,9 +3,7 @@ using Kope.Component.Ability.Targeting;
 using Kope.Component.Combat.Interface;
 using Kope.Component.HitBox.Interface;
 using Kope.Core.Attribute;
-using Kope.Core.Attributes;
 using UnityEngine;
-using Kope.Core.Extensions;
 public class TargetContext {
 	public readonly IHitBoxComponent HitBox;
 
@@ -33,13 +31,8 @@ public abstract class AbilityBase : ScriptableObject, ITargetingReceiver {
 	protected GameObject castVfx;
 	[SerializeField, Tooltip("Visual effect to play while the ability is active.")]
 	protected GameObject runningVfx;
-	// the serialized reference is highly fragile and can easily break if the assembly definitions
-	// or namespaces are changed, so we need to be careful with it.
-	// we use it here to allow for flexible targeting strategies that can be defined in the editor
-	// without needing to create a new script for each one, and without needing to hardcode them in the ability class.
-	// the targeting strategy can be anything that implements the ITargetingFactory interface,
-	// which allows for a wide range of targeting behaviors to be defined and used by abilities, such as single target,
-	[SerializeReference, SubclassSelector] protected ITargetingFactory targetingFactory;
+
+	[SerializeField] protected TargetingSettings targetingSettings;
 
 	private int _abilityUsedCount = 0;
 	public int AbilityUsedCount => this._abilityUsedCount;
@@ -49,18 +42,14 @@ public abstract class AbilityBase : ScriptableObject, ITargetingReceiver {
 	public GameObject CastVfx => this.castVfx;
 	public GameObject RunningVfx => this.runningVfx;
 
-	/// <summary>
-	/// Whether this ability requires explicit input to be cast, or if it can be triggered 
-	/// automatically by the system when the ability is selected. 
-	/// For example, a passive ability that triggers automatically when certain conditions 
-	/// are met would return false here, while an active ability that the player needs
-	/// to manually trigger would return true.
-	/// Or any ability that apply to the caster itself and doesn't require targeting, 
-	/// such as a self heal or a buff, could return false here since it can
-	/// just be triggered immediately upon selection without needing additional 
-	/// input for targeting.
-	/// </summary>
-	public bool IsInstantCast => this.targetingFactory == null || this.targetingFactory is SelfTargetingStrategy;
+	public bool IsInstantCast {
+		get {
+			// if the targeting strategy is self targeting, then we can consider it an instant cast ability
+			// since it doesn't require any additional input for targeting, and can just be triggered immediately upon selection.
+			return this.targetingSettings.selectedType == TargetingType.SelfTargeting;
+		}
+	}
+
 	public string GetSaveData() {
 		return $"{this.abilityID}:{this._abilityUsedCount}";
 	}
@@ -72,7 +61,16 @@ public abstract class AbilityBase : ScriptableObject, ITargetingReceiver {
 		   TargetingManager targetingManager,
 			TargetContext casterContext,
 		   EffectContext effectContext) {
-		var strategy = targetingFactory?.Create() ?? new SelfTargetingStrategy();
+		//var strategy = targetingFactory?.Create() ?? new SelfTargetingStrategy();
+
+
+		// lets see if the new enum based binding system works correctly, this should be able to
+		// get the correct targeting strategy based on the selected enum value in the editor, 
+		// without needing to hardcode any logic for each specific strategy in the ability class,
+		// and it should also automatically instantiate the strategy if it hasn't been created yet, 
+		// which is a nice bonus feature that reduces boilerplate and makes it easier to manage the 
+		// targeting strategies for each ability.
+		var strategy = this.targetingSettings.GetFactory()?.Create() ?? new SelfTargetingStrategy();
 
 		// here we can play the casting sfx and vfx immediately upon casting
 		// # cast vfx/sfx that will be played when the ability is cast, before the targeting is resolved. 
@@ -148,22 +146,27 @@ public abstract class AbilityBase : ScriptableObject, ITargetingReceiver {
 	/// ability asset for use and ensure that it is in a valid state before it is used in the game
 	/// </summary>
 	private void OnEnable() {
-#if UNITY_EDITOR
+
 		// only run on editor since this is for maintaining the 
 		// unique ID for each ability asset, which is used for saving and loading the ability state,
 		// and we don't want this code running in a build since it relies on UnityEditor APIs 
 		// that aren't available in a build.
+#if UNITY_EDITOR
 		var path = UnityEditor.AssetDatabase.GetAssetPath(this);
-		if (string.IsNullOrEmpty(path)) return; // not yet saved to disk, skip
-
-		var existingGuid = UnityEditor.AssetDatabase.AssetPathToGUID(path);
-		if (existingGuid != this.abilityID) {
-			this.abilityID = existingGuid;
-			UnityEditor.EditorUtility.SetDirty(this);
+		// no early exit allowed since we will miss the Enable call to initialize
+		// child class variables.
+		if (!string.IsNullOrEmpty(path)) {
+			var existingGuid = UnityEditor.AssetDatabase.AssetPathToGUID(path);
+			if (existingGuid != this.abilityID) {
+				this.abilityID = existingGuid;
+				UnityEditor.EditorUtility.SetDirty(this);
+			}
 		}
 #endif
 		Enable();
 	}
+
+
 
 	/// <summary>
 	/// Called when the asset is enabled, in both editor and builds.

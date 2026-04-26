@@ -12,7 +12,7 @@ public class ExampleAbility : AbilityBase {
 	[SerializeField, Tooltip("The type of hit targets this ability can affect.")]
 	private HitTargetType applicableHitTargetType = HitTargetType.Entity;
 	[SerializeReference, SubclassSelector]
-	private List<IEffectFactory<ICombatable>> damageEffects = new();
+	private List<IEffectFactory<IDamagable>> damageEffects = new();
 	[SerializeReference, SubclassSelector]
 	private List<IEffectFactory<IHealable>> healEffects = new();
 	[SerializeReference, SubclassSelector]

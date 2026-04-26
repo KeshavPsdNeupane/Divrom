@@ -130,7 +130,7 @@ namespace Kope.Component.Combat {
 			return finalDamage;
 		}
 
-		public void ApplyEffect(IEffect<ICombatable> effect) {
+		public void ApplyEffect(IEffect<IDamagable> effect) {
 			if (!this.IsInitialized || effect == null) return;
 
 			if (effect is ITickableEffect tickable) {

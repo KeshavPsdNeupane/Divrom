@@ -10,32 +10,10 @@ namespace Kope.AbilitySystem.Effect {
 	// or who the target
 
 	[Serializable]
-	public struct HealOverTimeEffectData {
-		[Header("Healing")]
-		[Min(0f)]
-		public float healPerInterval;
-		[Header("Timing")]
-		[Min(0f)]
-		public float duration;
-		[Range(0.1f, 5f)] public float tickInterval;
-	}
-	[Serializable]
-	public struct HealOverTimeEffectLevelScaling {
-		[Header("Scaling")]
-		[Min(0f)]
-		public int abilityUsedThreshold;
-		[Min(0f)]
-		public float healPerInterval;
-		[Min(0f)]
-		public float duration;
-		[Range(0.1f, 5f)] public float tickInterval;
-	}
-
-	[Serializable]
 	public class HealOverTimeEffectFactory : IEffectFactory<IHealable> {
-		public HealOverTimeEffectData BaseData;
+		[SerializeField] private HealOverTimeEffectData BaseData;
 		[Tooltip("Scaling data for the heal-over-time effect. Overrides the base data when the ability use count meets a threshold. Must be in ascending order by abilityUsedThreshold.")]
-		public HealOverTimeEffectLevelScaling[] LevelScaling = new HealOverTimeEffectLevelScaling[3];
+		[SerializeField] private HealOverTimeEffectLevelScaling[] nextLevelScaling = new HealOverTimeEffectLevelScaling[3];
 		private HealOverTimeEffectData _cachedData;
 		private int _nextRecomputeThreshold = 0;
 
@@ -49,70 +27,75 @@ namespace Kope.AbilitySystem.Effect {
 		}
 
 		private HealOverTimeEffectData ResolveData(int useCount, out int newLevelThreshold) {
-			if (this.LevelScaling == null || this.LevelScaling.Length == 0) {
+			if (this.nextLevelScaling == null || this.nextLevelScaling.Length == 0) {
 				newLevelThreshold = int.MaxValue;
 				return this.BaseData;
 			}
 
-			newLevelThreshold = this.LevelScaling[0].abilityUsedThreshold;
-			for (int i = this.LevelScaling.Length - 1; i >= 0; i--) {
-				if (useCount >= this.LevelScaling[i].abilityUsedThreshold) {
-					newLevelThreshold = (i + 1 < this.LevelScaling.Length)
-						? this.LevelScaling[i + 1].abilityUsedThreshold
+			newLevelThreshold = this.nextLevelScaling[0].AbilityUsedThreshold;
+			for (int i = this.nextLevelScaling.Length - 1; i >= 0; i--) {
+				if (useCount >= this.nextLevelScaling[i].AbilityUsedThreshold) {
+					newLevelThreshold = (i + 1 < this.nextLevelScaling.Length)
+						? this.nextLevelScaling[i + 1].AbilityUsedThreshold
 						: int.MaxValue;
 
 					// If a field in the scaling data is set to 0 or less, fall back to the base value.
 					// This allows partial overrides without repeating every field for each level.
 					return new HealOverTimeEffectData {
-						healPerInterval = this.LevelScaling[i].healPerInterval <= 0
-							? this.BaseData.healPerInterval : this.LevelScaling[i].healPerInterval,
-						duration = this.LevelScaling[i].duration <= 0
-							? this.BaseData.duration : this.LevelScaling[i].duration,
-						tickInterval = this.LevelScaling[i].tickInterval <= 0
-							? this.BaseData.tickInterval : this.LevelScaling[i].tickInterval
+						FlathealPerInterval = this.nextLevelScaling[i].FlathealPerInterval <= 0
+							? this.BaseData.FlathealPerInterval : this.nextLevelScaling[i].FlathealPerInterval,
+						PercentHealPerInterval = this.nextLevelScaling[i].PercentHealPerInterval <= 0
+							? this.BaseData.PercentHealPerInterval : this.nextLevelScaling[i].PercentHealPerInterval,
+						Duration = this.nextLevelScaling[i].Duration <= 0
+							? this.BaseData.Duration : this.nextLevelScaling[i].Duration,
+						DickInterval = this.nextLevelScaling[i].TickInterval <= 0
+							? this.BaseData.DickInterval : this.nextLevelScaling[i].TickInterval
 					};
 				}
 			}
 			return this.BaseData;
 		}
+
+		public void OnBeforeSerialize() { }
+
+		public void OnAfterDeserialize() {
+			if (this.nextLevelScaling == null || this.nextLevelScaling.Length == 0) {
+				this.nextLevelScaling = new HealOverTimeEffectLevelScaling[3];
+			}
+		}
 	}
 
 	[Serializable]
 	public class HealOverTimeEffect : IEffect<IHealable>, ITickableEffect {
-		public float flathealAmountPerInterval;
-		public float duration;
-		public float tickInterval;
+		private readonly HealOverTimeEffectData _data;
 		public event Action<ITickableEffect> OnCompletedOrCancelled;
 		private IntervalTimer timer;
 		private IHealable currentTarget;
 
 
 		public HealOverTimeEffect(HealOverTimeEffectData data) {
-
-			this.flathealAmountPerInterval = data.healPerInterval;
-			this.duration = data.duration;
-			this.tickInterval = data.tickInterval;
-
+			this._data = data;
 			this.OnCompletedOrCancelled = null;
 			this.timer = null;
 			this.currentTarget = null;
 
 		}
 
-		public float Apply(IHealable target) {
+		public void Apply(IHealable target) {
 			this.currentTarget = target;
-			this.timer = new IntervalTimer(duration, tickInterval) {
+			this.timer = new IntervalTimer(this._data.Duration, this._data.DickInterval) {
 				OnInterval = OnInterval,
 				OnTimerStop = OnStop
 			};
 			this.timer.Start();
-			return 0f;
+			//initial heal
+			this.currentTarget?.Heal(this._data.FlathealPerInterval, this._data.PercentHealPerInterval);
 		}
 
 		public void Tick(float deltaTime) => this.timer?.Tick(deltaTime);
 
 		private void OnInterval() {
-			this.currentTarget?.Heal(this.flathealAmountPerInterval, 0f);
+			this.currentTarget?.Heal(this._data.FlathealPerInterval, this._data.PercentHealPerInterval);
 		}
 		private void OnStop() => Cleanup();
 
@@ -126,6 +109,35 @@ namespace Kope.AbilitySystem.Effect {
 			this.currentTarget = null;
 			this.OnCompletedOrCancelled?.Invoke(this);
 		}
+	}
+
+
+
+
+	[Serializable]
+	public struct HealOverTimeEffectData {
+		[Header("Healing")]
+		[Min(0f)]
+		public float FlathealPerInterval;
+		[Range(0f, 1f)]
+		public float PercentHealPerInterval;
+		[Header("Timing")]
+		[Min(0f)]
+		public float Duration;
+		[Range(0.1f, 5f)] public float DickInterval;
+	}
+	[Serializable]
+	public struct HealOverTimeEffectLevelScaling {
+		[Header("Scaling")]
+		[Min(0f)]
+		public int AbilityUsedThreshold;
+		[Min(0f)]
+		public float FlathealPerInterval;
+		[Range(0f, 1f)]
+		public float PercentHealPerInterval;
+		[Min(0f)]
+		public float Duration;
+		[Range(0.1f, 5f)] public float TickInterval;
 	}
 
 }

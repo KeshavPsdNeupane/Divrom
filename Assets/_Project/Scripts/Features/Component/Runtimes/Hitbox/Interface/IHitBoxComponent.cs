@@ -15,12 +15,12 @@ namespace Kope.Component.HitBox.Interface {
 	public readonly struct CombatibleHitInfo {
 		public readonly HitTargetType CombatType;
 		public readonly EffectContext EffectContext;
-		public readonly IReadOnlyList<IEffectFactory<ICombatable>> Effects;
+		public readonly IReadOnlyList<IEffectFactory<IDamagable>> Effects;
 
 		public CombatibleHitInfo(
 			EffectContext effectContext = default,
 			HitTargetType combatType = HitTargetType.Entity,
-			IReadOnlyList<IEffectFactory<ICombatable>> effects = null) {
+			IReadOnlyList<IEffectFactory<IDamagable>> effects = null) {
 			this.CombatType = combatType;
 			this.EffectContext = effectContext;
 			this.Effects = effects;
@@ -77,7 +77,7 @@ namespace Kope.Component.HitBox.Interface {
 		public void HitCombatible(
 			in EffectContext effectContext = default,
 			HitTargetType combatType = HitTargetType.Entity,
-			IReadOnlyList<IEffectFactory<ICombatable>> effects = null);
+			IReadOnlyList<IEffectFactory<IDamagable>> effects = null);
 		public void HitHealable(
 				in EffectContext effectContext = default,
 				HitTargetType combatType = HitTargetType.Entity,

@@ -693,7 +693,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5f2a7e09a5e7f4dfaad5c673c86dc7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Kope.Core.Runtime::UniqueID
-  guid: 40340066-601d-48a2-8b8d-1b1b9e420741
+  guid: fb926a23-48cb-4ec1-917b-86dddb207cd2
   absoluteHierarchyPath: SampleScene-->Hpres->Hpstore (2)
 --- !u!114 &155803198
 MonoBehaviour:
@@ -6478,6 +6478,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1048981498321793666, guid: 9772af79b74a077ec8dd339b7b2c7dfc, type: 3}
+      propertyPath: guid
+      value: 2184b5d8-81cc-49d3-b3de-c8ab18a5a8fb
+      objectReference: {fileID: 0}
+    - target: {fileID: 1048981498321793666, guid: 9772af79b74a077ec8dd339b7b2c7dfc, type: 3}
+      propertyPath: absoluteHierarchyPath
+      value: SampleScene-->EnemyNew
+      objectReference: {fileID: 0}
     - target: {fileID: 3400886148539648344, guid: 9772af79b74a077ec8dd339b7b2c7dfc, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -7625,22 +7633,28 @@ MonoBehaviour:
     gameObjectName: SceneServiceLocator
   - typeName: EntityInitCaller
     order: -40
+    gameObjectName: Addhp
+  - typeName: EntityInitCaller
+    order: -40
     gameObjectName: AddSpd (1)
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: Hpstore (1)
+    gameObjectName: InitCaller
   - typeName: EntityInitCaller
     order: -40
     gameObjectName: EnemyNew (1)
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: AddDef
+    gameObjectName: Hpstore
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: Addhp (2)
+    gameObjectName: PlayerNew
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: InitCaller
+    gameObjectName: Addhp (1)
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Hpstore (1)
   - typeName: EntityInitCaller
     order: -40
     gameObjectName: EnemyNew
@@ -7649,22 +7663,16 @@ MonoBehaviour:
     gameObjectName: AddDef (1)
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: Hpstore
+    gameObjectName: AddSpd
   - typeName: EntityInitCaller
     order: -40
     gameObjectName: Hpstore (2)
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: PlayerNew
+    gameObjectName: AddDef
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: Addhp
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: Addhp (1)
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: AddSpd
+    gameObjectName: Addhp (2)
   - typeName: InGameUIInitCaller
     order: -30
     gameObjectName: UI
@@ -8021,8 +8029,8 @@ MonoBehaviour:
   x: 0.726
   result: 0.33709687
   unityResult: 0.18408638
-  customEvalTime: 0.00030000000000000003
-  unityEvalTime: 0.0006000000000000001
+  customEvalTime: 0.0005
+  unityEvalTime: 0.0004
 --- !u!1001 &1031836800
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8958,14 +8966,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1048981498321793666, guid: 9772af79b74a077ec8dd339b7b2c7dfc, type: 3}
-      propertyPath: guid
-      value: 2e384518-028c-40ca-b908-4f9724302afa
-      objectReference: {fileID: 0}
-    - target: {fileID: 1048981498321793666, guid: 9772af79b74a077ec8dd339b7b2c7dfc, type: 3}
-      propertyPath: absoluteHierarchyPath
-      value: SampleScene-->EnemyNew (1)
-      objectReference: {fileID: 0}
     - target: {fileID: 3400886148539648344, guid: 9772af79b74a077ec8dd339b7b2c7dfc, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -11983,7 +11983,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5f2a7e09a5e7f4dfaad5c673c86dc7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Kope.Core.Runtime::UniqueID
-  guid: e0b900e1-9e3f-4146-a326-91a013486d7a
+  guid: 9aa25231-2a25-4853-9cc4-ce8d675a74a4
   absoluteHierarchyPath: SampleScene-->Hpres->Hpstore (1)
 --- !u!114 &1868347084
 MonoBehaviour:

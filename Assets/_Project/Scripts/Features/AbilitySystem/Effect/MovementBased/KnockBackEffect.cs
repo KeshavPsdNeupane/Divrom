@@ -20,10 +20,10 @@ namespace Kope.AbilitySystem.Effect {
 	[Serializable]
 	public class KnockbackEffectFactory : IEffectFactory<IKnockbackable> {
 		[Header("Knockback")]
-		public KnockbackDetail Detail;
+		[SerializeField] private KnockbackDetail Detail;
 		[Tooltip("Scaling values for the knockback effect based on ability usage." +
 		"Overrides base data when the ability use count meets a threshold. Must be in ascending order by abilityUsedThreshold.")]
-		public KnockBackLevelScaling[] LevelScaling = new KnockBackLevelScaling[3];
+		[SerializeField] private KnockBackLevelScaling[] nextLevelScaling = new KnockBackLevelScaling[3];
 		private KnockbackDetail _cachedDetail;
 		private int _nextRecomputeThreshold = 0;
 
@@ -37,29 +37,36 @@ namespace Kope.AbilitySystem.Effect {
 		}
 
 		private KnockbackDetail ResolveData(int useCount, out int newLevelThreshold) {
-			if (this.LevelScaling == null || this.LevelScaling.Length == 0) {
+			if (this.nextLevelScaling == null || this.nextLevelScaling.Length == 0) {
 				newLevelThreshold = int.MaxValue;
 				return this.Detail;
 			}
 
-			newLevelThreshold = this.LevelScaling[0].abilityUsedThreshold;
-			for (int i = this.LevelScaling.Length - 1; i >= 0; i--) {
-				if (useCount >= this.LevelScaling[i].abilityUsedThreshold) {
-					newLevelThreshold = (i + 1 < this.LevelScaling.Length)
-						? this.LevelScaling[i + 1].abilityUsedThreshold
+			newLevelThreshold = this.nextLevelScaling[0].abilityUsedThreshold;
+			for (int i = this.nextLevelScaling.Length - 1; i >= 0; i--) {
+				if (useCount >= this.nextLevelScaling[i].abilityUsedThreshold) {
+					newLevelThreshold = (i + 1 < this.nextLevelScaling.Length)
+						? this.nextLevelScaling[i + 1].abilityUsedThreshold
 						: int.MaxValue;
 
 					// If a field in the scaling data is set to 0 or less, fall back to the base value.
 					// This allows partial overrides without repeating every field for each level.
 					return new KnockbackDetail(
-						this.LevelScaling[i].knockbackStrength <= 0
-							? this.Detail.KnockbackStrength : this.LevelScaling[i].knockbackStrength,
-						this.LevelScaling[i].duration <= 0
-							? this.Detail.Duration : this.LevelScaling[i].duration,
+						this.nextLevelScaling[i].knockbackStrength <= 0
+							? this.Detail.KnockbackStrength : this.nextLevelScaling[i].knockbackStrength,
+						this.nextLevelScaling[i].duration <= 0
+							? this.Detail.Duration : this.nextLevelScaling[i].duration,
 						this.Detail.IsPulling);
 				}
 			}
 			return this.Detail;
+		}
+		public void OnBeforeSerialize() { }
+
+		public void OnAfterDeserialize() {
+			if (this.nextLevelScaling == null || this.nextLevelScaling.Length == 0) {
+				this.nextLevelScaling = new KnockBackLevelScaling[3];
+			}
 		}
 	}
 
@@ -72,9 +79,9 @@ namespace Kope.AbilitySystem.Effect {
 			this.Detail = detail;
 			this.hitPoint = hitPoint;
 		}
-		public float Apply(IKnockbackable target) {
+		public void Apply(IKnockbackable target) {
 			target.ApplyKnockback(this.hitPoint, this.Detail.Duration, this.Detail.KnockbackStrength);
-			return 0f;
+
 		}
 	}
 }

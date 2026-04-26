@@ -4,10 +4,13 @@ using Kope.Component.Combat.Interface;
 using UnityEngine;
 
 namespace Kope.Component.Ability.Targeting {
+	[Serializable]
+	public class SelfTargetingStrategyFactory : ITargetingFactory {
+		public TargetingStrategy Create() => new SelfTargetingStrategy();
+	}
 
 	[Serializable]
-	public sealed class SelfTargetingStrategy : TargetingStrategy, ITargetingFactory {
-		public TargetingStrategy Create() => new SelfTargetingStrategy();
+	public sealed class SelfTargetingStrategy : TargetingStrategy {
 
 		public override void Start(
 			TargetingManager targetingManager,

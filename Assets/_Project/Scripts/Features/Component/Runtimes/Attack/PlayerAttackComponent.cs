@@ -76,8 +76,7 @@ namespace Kope.Component.Attack {
 		}
 
 		protected override float PerformAttackInternal() {
-
-			float damage = CalculateDamage();
+			float damage = GetDamageValue();
 			return damage;
 		}
 	}

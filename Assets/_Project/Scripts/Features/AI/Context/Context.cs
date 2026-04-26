@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using ZLinq;
 using Kope.Component;
 using Kope.Core.EntityComponentRegistry;
 
@@ -39,7 +39,8 @@ public class Context : IReadOnlyContext {
 	}
 
 	public int GetTotalEntityCount() {
-		return this._targetEntityContexts.Count == 0 ? 0 : this._targetEntityContexts.Values.Sum(innerDict => innerDict.Count);
+		return this._targetEntityContexts.Count == 0 ? 0 : this._targetEntityContexts.Values.AsValueEnumerable()
+		.Sum(innerDict => innerDict.Count);
 	}
 
 	public Context(ComponentRegistry currentEntityContext) {

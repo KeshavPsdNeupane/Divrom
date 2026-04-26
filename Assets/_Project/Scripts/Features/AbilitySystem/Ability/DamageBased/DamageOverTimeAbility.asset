@@ -1,0 +1,99 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ba106e680aad7b82a7f058128a2b964, type: 3}
+  m_Name: DamageOverTimeAbility
+  m_EditorClassIdentifier: Assembly-CSharp::DamageAbility
+  abilityName: DamageOverTime
+  abilityID: bc8ab4b407053887cb29e361a939e7f5
+  castSfx: {fileID: 0}
+  castVfx: {fileID: 0}
+  runningVfx: {fileID: 0}
+  targetingSettings:
+    selectedType: 0
+    area:
+      includeCaster: 0
+      previewPrefab: {fileID: 0}
+      radius: 5
+      layerMask:
+        serializedVersion: 2
+        m_Bits: 1
+      minSearchDepth: -1
+      previewHeightOffset: 0.1
+      maxTargets: 16
+    projectile:
+      projectilePrefab: {fileID: 0}
+      projectileSpeed: 18
+      projectileLifetime: 2
+      spawnOffset: {x: 0, y: 1, z: 0}
+      pierceCount: 0
+  applicableHitTargetType: 0
+  damageEffectSettings:
+  - selectedType: 1
+    instantDamage:
+      BaseData:
+        pityDamage: 0
+        DamageMultiplier: 0
+        DamageType: 0
+        ScalingStat: 0
+        pierceRatio: 0
+        ignoreResistance: 0
+      nextLevelScalings:
+      - abilityUsedThreshold: 0
+        Multiplier: 0
+        pierceRatio: 0
+        ignoreResistance: 0
+      - abilityUsedThreshold: 0
+        Multiplier: 0
+        pierceRatio: 0
+        ignoreResistance: 0
+      - abilityUsedThreshold: 0
+        Multiplier: 0
+        pierceRatio: 0
+        ignoreResistance: 0
+    overTimeDamage:
+      BaseData:
+        Duration: 4
+        TickInterval: 0.5
+        PityDamagePerTick: 3
+        DamageMultiplier: 0.8
+        DamageType: 0
+        ScalingStat: 1
+        PierceRatio: 0
+        IgnoreResistance: 0
+      nextLevelScaling:
+      - abilityUsedThreshold: 0
+        duration: 0
+        tickInterval: 0
+        Multiplier: 0
+        pierceRatio: 0
+        ignoreResistance: 0
+      - abilityUsedThreshold: 0
+        duration: 0
+        tickInterval: 0
+        Multiplier: 0
+        pierceRatio: 0
+        ignoreResistance: 0
+      - abilityUsedThreshold: 0
+        duration: 0
+        tickInterval: 0
+        Multiplier: 0
+        pierceRatio: 0
+        ignoreResistance: 0
+    vampiricDamage:
+      lifeStealRatio: 0
+      DamageEffectData:
+        pityDamage: 0
+        DamageMultiplier: 0
+        DamageType: 0
+        ScalingStat: 0
+        pierceRatio: 0
+        ignoreResistance: 0
