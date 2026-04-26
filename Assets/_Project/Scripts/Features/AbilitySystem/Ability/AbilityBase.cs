@@ -1,12 +1,11 @@
 using System;
 using Kope.Component.Ability.Targeting;
 using Kope.Component.Combat.Interface;
-using Kope.Component.HitBox;
 using Kope.Component.HitBox.Interface;
 using Kope.Core.Attribute;
 using Kope.Core.Attributes;
 using UnityEngine;
-
+using Kope.Core.Extensions;
 public class TargetContext {
 	public readonly IHitBoxComponent HitBox;
 
@@ -25,7 +24,7 @@ public class TargetContext {
 	}
 }
 [Serializable]
-public abstract class AbilityBase : ScriptableObject {
+public abstract class AbilityBase : ScriptableObject, ITargetingReceiver {
 	[SerializeField] string abilityName;
 	[SerializeField, ReadOnly] string abilityID;
 	[SerializeField, Tooltip("Audio clip to play when the ability is cast.")]
@@ -38,7 +37,6 @@ public abstract class AbilityBase : ScriptableObject {
 
 	private int _abilityUsedCount = 0;
 	public int AbilityUsedCount => this._abilityUsedCount;
-
 	public string AbilityName => this.abilityName;
 	public string AbilityID => this.abilityID;
 	public AudioClip CastSfx => this.castSfx;
@@ -64,13 +62,12 @@ public abstract class AbilityBase : ScriptableObject {
 	public void InjectAbilityUsedCount(int count) => this._abilityUsedCount = count;
 
 
-	public abstract void Execute(TargetContext target, EffectContext context);
-
 	public virtual void Cast(
 		   TargetingManager targetingManager,
-		   in TargetContext casterContext,
+			TargetContext casterContext,
 		   EffectContext effectContext) {
 		var strategy = targetingFactory?.Create() ?? new SelfTargetingStrategy();
+
 		// here we can play the casting sfx and vfx immediately upon casting
 		// # cast vfx/sfx that will be played when the ability is cast, before the targeting is resolved. 
 		// this is for things like a fireball that shoots out immediately when you cast, even if it doesn't 
@@ -90,8 +87,15 @@ public abstract class AbilityBase : ScriptableObject {
 			targetingManager,
 			casterContext,
 			effectContext,
-			(target, ctx) => Execute(target, ctx)
+			this
 		);
+	}
+
+	public abstract void Execute(TargetContext target, EffectContext context);
+
+
+	public void OnTargetingResolved(TargetContext target, EffectContext context) {
+		Execute(target, context);
 	}
 
 	protected void PlayCastSfx(Vector3 position) {
@@ -164,6 +168,8 @@ public abstract class AbilityBase : ScriptableObject {
 	protected virtual void Enable() {
 		// no op
 	}
+
+
 	#endregion
 
 

@@ -16,7 +16,7 @@ namespace Kope.Component.Ability.Targeting {
 		private int _pierceCount = 0;
 
 		private int _piercesRemaining;
-		private Action<TargetContext, EffectContext> _onTargetResolved;
+		ITargetingReceiver _onTargetResolved;
 		private Action _onProjectileFinished;
 		private EffectContext _effectContext;
 		private Rigidbody2D _body;
@@ -35,7 +35,7 @@ namespace Kope.Component.Ability.Targeting {
 		}
 
 		public void Initialize(
-			Action<TargetContext, EffectContext> onTargetResolved,
+			ITargetingReceiver onTargetResolved,
 			Action onProjectileFinished,
 			EffectContext effectContext,
 			Vector3 direction,
@@ -77,7 +77,7 @@ namespace Kope.Component.Ability.Targeting {
 			var targetContext = TargetContext.Create(other);
 			if (targetContext == null || targetContext.HitBox == null) return;
 
-			this._onTargetResolved?.Invoke(targetContext, this._effectContext);
+			this._onTargetResolved?.OnTargetingResolved(targetContext, this._effectContext);
 
 			if (this._piercesRemaining > 0) {
 				this._piercesRemaining--;

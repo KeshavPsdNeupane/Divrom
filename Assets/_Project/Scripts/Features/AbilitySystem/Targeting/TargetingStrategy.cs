@@ -7,6 +7,9 @@ namespace Kope.Component.Ability.Targeting {
 	public interface ITargetingFactory {
 		TargetingStrategy Create();
 	}
+	public interface ITargetingReceiver {
+		void OnTargetingResolved(TargetContext target, EffectContext context);
+	}
 
 	[Serializable]
 	public abstract class TargetingStrategy {
@@ -14,7 +17,7 @@ namespace Kope.Component.Ability.Targeting {
 		protected TargetContext casterContext;
 		protected EffectContext effectContext;
 		protected bool _isTargeting;
-		protected Action<TargetContext, EffectContext> _onTargetResolved;
+		protected ITargetingReceiver _onTargetResolved;
 
 		public bool IsTargeting => this._isTargeting;
 
@@ -22,7 +25,7 @@ namespace Kope.Component.Ability.Targeting {
 			TargetingManager targetingManager,
 			TargetContext casterContext,
 			EffectContext effectContext,
-			Action<TargetContext, EffectContext> onTargetResolved);
+			ITargetingReceiver onTargetResolved);
 
 		public virtual void Update() { }
 
@@ -47,13 +50,12 @@ namespace Kope.Component.Ability.Targeting {
 		TargetingManager targetingManager,
 		TargetContext casterContext,
 		EffectContext effectContext,
-		Action<TargetContext, EffectContext> onTargetResolved,
+		ITargetingReceiver onTargetResolved,
 		// this is so that self targeting strategies can choose to not
 		// set themselves in the manager, since they won't be using the manager 
 		// for target resolution and thus don't need to be registered with it.
 		bool setStraegyInManager = true
 		) {
-
 			this.targetingManager = targetingManager;
 			this.casterContext = casterContext;
 			this.effectContext = effectContext;
@@ -96,7 +98,7 @@ namespace Kope.Component.Ability.Targeting {
 				specificContext.HitPoint = hitPoint.Value;
 			}
 
-			this._onTargetResolved?.Invoke(target, specificContext);
+			this._onTargetResolved?.OnTargetingResolved(target, specificContext);
 		}
 
 		protected virtual void ResolveGroupOfTargets(TargetContext[] targets, Vector3? hitPoint = null) {
@@ -106,7 +108,7 @@ namespace Kope.Component.Ability.Targeting {
 			}
 			foreach (var target in targets) {
 				if (target.HitBox == null) continue;
-				this._onTargetResolved?.Invoke(target, context);
+				this._onTargetResolved?.OnTargetingResolved(target, context);
 			}
 		}
 	}

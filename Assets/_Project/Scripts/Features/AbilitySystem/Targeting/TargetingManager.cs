@@ -4,7 +4,6 @@ using Kope.Core.Init;
 using ServiceLocatorPattern;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
 
 namespace Kope.Component.Ability.Targeting {
 

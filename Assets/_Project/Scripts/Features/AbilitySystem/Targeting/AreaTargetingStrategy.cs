@@ -6,20 +6,47 @@ using Kope.Component.HitBox.Interface;
 using Kope.Core;
 
 namespace Kope.Component.Ability.Targeting {
-
 	[Serializable]
-	public sealed class AreaTargetingStrategy : TargetingStrategy, ITargetingFactory {
+	public sealed class AreaTargetingStrategyFactory : ITargetingFactory {
 		[SerializeField] private bool includeCaster = false;
 		[SerializeField] private GameObject previewPrefab;
 		[SerializeField, Min(0.001f)] private float radius = 5f;
-		[SerializeField] LayerMask layerMask = 1;
+		[SerializeField] private LayerMask layerMask = 1;
 		[SerializeField] private float previewHeightOffset = 0.1f;
 		[SerializeField, Range(1, 64)] private int maxTargets = 16;
 
-		private static readonly Quaternion PERPENDICULAR_DIRECTION = Quaternion.Euler(90f, 0f, 0f);
+		public TargetingStrategy Create() {
+			return new AreaTargetingStrategy(
+				this.includeCaster,
+				this.previewPrefab,
+				this.radius,
+				this.layerMask,
+				this.previewHeightOffset,
+				this.maxTargets
+			);
+		}
+	}
 
-		private GameObject previewInstance;
-		private AbilityAreaTargetingController previewController;
+
+
+
+	[Serializable]
+	public sealed class AreaTargetingStrategy : TargetingStrategy {
+		// even though this this class is being created and destroyed every time the ability is used,
+		// we still want to minimize GC allocations as much as possible, hence the use of non-alloc buffers
+		// and careful structuring of data.
+		// making struct wont work due to pack we need to inherit from TargetingStrategy, and we need
+		// reference semantics for the preview controller and instance.
+		private readonly bool _includeCaster = false;
+		private readonly GameObject _previewPrefab;
+		private readonly float _radius = 5f;
+		private readonly LayerMask _layerMask = 1;
+		private readonly float _previewHeightOffset = 0.1f;
+		private readonly int _maxTargets = 16;
+
+		private static readonly Quaternion PERPENDICULAR_DIRECTION = Quaternion.Euler(90f, 0f, 0f);
+		private GameObject _previewInstance;
+		private AbilityAreaTargetingController _previewController;
 
 		private Vector3 currentPoint;
 
@@ -27,38 +54,40 @@ namespace Kope.Component.Ability.Targeting {
 		private Collider[] _results3d;
 		private Collider2D[] _results2d;
 
-		public TargetingStrategy Create() {
-			return new AreaTargetingStrategy {
-				includeCaster = this.includeCaster,
-				previewPrefab = this.previewPrefab,
-				radius = this.radius,
-				layerMask = this.layerMask,
-				previewHeightOffset = this.previewHeightOffset,
-				maxTargets = this.maxTargets
-			};
+		public AreaTargetingStrategy(bool includeCaster,
+		 GameObject previewPrefab, float radius, LayerMask layerMask,
+		 float previewHeightOffset, int maxTargets) {
+
+			this._includeCaster = includeCaster;
+			this._previewPrefab = previewPrefab;
+			this._radius = radius;
+			this._layerMask = layerMask;
+			this._previewHeightOffset = previewHeightOffset;
+			this._maxTargets = maxTargets;
+			// Init buffers
+			this._results3d = new Collider[this._maxTargets];
+			this._results2d = new Collider2D[this._maxTargets];
+
 		}
 
 		public override void Start(
 			TargetingManager targetingManager,
 			TargetContext casterContext,
 			EffectContext effectContext,
-			Action<TargetContext, EffectContext> onTargetResolved) {
+			ITargetingReceiver onTargetResolved) {
 
 			Begin(targetingManager, casterContext, effectContext, onTargetResolved);
 
-			// Init buffers
-			this._results3d = new Collider[maxTargets];
-			this._results2d = new Collider2D[maxTargets];
 
 			// Spawn preview
-			if (this.previewPrefab != null && this.targetingManager != null) {
-				this.previewInstance = UnityEngine.Object.Instantiate(
-					this.previewPrefab, Vector3.zero, Quaternion.identity);
+			if (this._previewPrefab != null && this.targetingManager != null) {
+				this._previewInstance = UnityEngine.Object.Instantiate(
+					this._previewPrefab, Vector3.zero, Quaternion.identity);
 
-				this.previewController = this.previewInstance.GetComponent<AbilityAreaTargetingController>();
+				this._previewController = this._previewInstance.GetComponent<AbilityAreaTargetingController>();
 
-				if (this.previewController != null) {
-					this.previewController.Initialize(this.radius);
+				if (this._previewController != null) {
+					this._previewController.Initialize(this._radius);
 				}
 			}
 		}
@@ -67,15 +96,15 @@ namespace Kope.Component.Ability.Targeting {
 			if (!this._isTargeting || this.targetingManager == null) return;
 			if (!this.targetingManager.TryGetMouseGroundPoint(out this.currentPoint)) return;
 
-			if (this.previewController != null) {
+			if (this._previewController != null) {
 				if (this.effectContext.Dimension == AxisMode.TwoD) {
-					this.previewController.UpdatePosition(
+					this._previewController.UpdatePosition(
 						new Vector3(this.currentPoint.x, this.currentPoint.y, -0.1f),
 						Quaternion.identity
 					);
 				} else {
-					this.previewController.UpdatePosition(
-						this.currentPoint + Vector3.up * this.previewHeightOffset,
+					this._previewController.UpdatePosition(
+						this.currentPoint + Vector3.up * this._previewHeightOffset,
 						PERPENDICULAR_DIRECTION
 					);
 				}
@@ -85,14 +114,13 @@ namespace Kope.Component.Ability.Targeting {
 		public override void FinishTheStratrgy(bool clearOnTargetResolved = true) {
 			base.FinishTheStratrgy(clearOnTargetResolved);
 
-			if (this.previewInstance != null) {
-				UnityEngine.Object.Destroy(this.previewInstance);
-				this.previewInstance = null;
-				this.previewController = null;
+			if (this._previewInstance != null) {
+				UnityEngine.Object.Destroy(this._previewInstance);
+				this._previewInstance = null;
+				this._previewController = null;
 			}
-
-			this._results3d = null;
-			this._results2d = null;
+			Array.Clear(this._results3d, 0, this._results3d.Length);
+			Array.Clear(this._results2d, 0, this._results2d.Length);
 		}
 
 		protected override bool ExecuteResolution(Vector3 clickPoint) {
@@ -111,14 +139,14 @@ namespace Kope.Component.Ability.Targeting {
 			int count;
 
 			if (this.effectContext.Dimension == AxisMode.TwoD) {
-				this._results2d = Physics2D.OverlapCircleAll(point, this.radius, this.layerMask);
+				this._results2d = Physics2D.OverlapCircleAll(point, this._radius, this._layerMask);
 				count = this._results2d.Length;
-
+				Debug.Log($"Found {count} hits in 2D area targeting.");
 				for (int i = 0; i < count; i++) {
 					ProcessHit(this._results2d[i], uniqueHits, resolvedList);
 				}
 			} else {
-				count = Physics.OverlapSphereNonAlloc(point, this.radius, this._results3d, this.layerMask);
+				count = Physics.OverlapSphereNonAlloc(point, this._radius, this._results3d, this._layerMask);
 
 				for (int i = 0; i < count; i++) {
 					ProcessHit(this._results3d[i], uniqueHits, resolvedList);
@@ -138,7 +166,7 @@ namespace Kope.Component.Ability.Targeting {
 				// If includeCaster is true, we don't care if it's the caster or not.
 				// If includeCaster is false, we MUST ensure ctx.HitBox != casterHitBox.
 
-				if (this.includeCaster || ctx.HitBox != casterHitBox) {
+				if (this._includeCaster || ctx.HitBox != casterHitBox) {
 					results.Add(ctx);
 				}
 

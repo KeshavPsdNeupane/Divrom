@@ -13,7 +13,7 @@ namespace Kope.Component.Ability.Targeting {
 			TargetingManager targetingManager,
 			TargetContext casterContext,
 			EffectContext effectContext,
-			Action<TargetContext, EffectContext> onTargetResolved) {
+			ITargetingReceiver onTargetResolved) {
 
 			Begin(targetingManager, casterContext, effectContext, onTargetResolved, false);
 
