@@ -1,6 +1,10 @@
 using System;
+using System.Collections;
 using Kope.Component.Combat.Interface;
 using Kope.Core;
+using Kope.Core.ObjectPooling;
+using ServiceLocatorPattern;
+using ThirdParty;
 using UnityEngine;
 
 namespace Kope.Component.Ability.Targeting {
@@ -25,11 +29,36 @@ namespace Kope.Component.Ability.Targeting {
 	}
 
 	public sealed class ProjectileTargetingStrategy : TargetingStrategy {
+		/*
+    Why does this Strategy relinquish control immediately after spawning?
+    
+    1. The "Fire and Forget" Pattern: Projectiles are ballistic entities. Once the 
+       LMB click resolution occurs, the 'targeting phase' is technically over. By 
+       handing the lifetime management to the ProjectileController, the Strategy 
+       can finish immediately. This keeps the TargetingManager's active strategy 
+       list clean and prevents "Update-bloat."
+
+    2. State Encapsulation: A projectile's death is often reactive (hitting a wall, 
+       piercing a limit, or timing out). If the Strategy managed this, it would 
+       have to maintain a persistent link to the projectile instance, creating 
+       unnecessary coupling. Instead, the Strategy acts as a "Launcher"—it sets 
+       the initial conditions (velocity, layer, logic) and then steps aside.
+
+    3. Resource Efficiency: Since the strategy is cleared from the manager upon 
+       resolution, it loses its ability to Tick() a timer. Letting the Projectile 
+       (which is a persistent MonoBehavior in the scene) tick its own CountdownTimer 
+       ensures that the "Return to Pool" logic is guaranteed to execute without 
+       requiring a separate management task.
+*/
 		private readonly GameObject _projectilePrefab;
 		private readonly float _projectileSpeed;
 		private readonly float _projectileLifetime;
 		private readonly Vector3 _spawnOffset;
 		private readonly int _pierceCount;
+
+		private ObjectPooler _pooler;
+		private AbilityProjectileController _activeController;
+		private CountdownTimer _lifetimeTimer;
 
 		public ProjectileTargetingStrategy(GameObject projectilePrefab, float projectileSpeed,
 			float projectileLifetime, Vector3 spawnOffset, int pierceCount) {
@@ -40,16 +69,25 @@ namespace Kope.Component.Ability.Targeting {
 			this._pierceCount = pierceCount;
 		}
 
-		public override void Start(
-			TargetingManager targetingManager,
-			TargetContext casterContext,
-			EffectContext effectContext,
-			ITargetingReceiver onTargetResolved) {
-
+		public override void Start(TargetingManager targetingManager, TargetContext casterContext, EffectContext effectContext, ITargetingReceiver onTargetResolved) {
 			Begin(targetingManager, casterContext, effectContext, onTargetResolved);
+			GlobalServiceLocator.Instance.TryGetService(out this._pooler);
+
+			// Initialize the timer
+			this._lifetimeTimer = new CountdownTimer(this._projectileLifetime);
+			this._lifetimeTimer.OnTimerStop += CleanupProjectile;
 
 			if (this._projectilePrefab == null || this.targetingManager == null) {
 				FinishTheStratrgy();
+			}
+		}
+
+		public override void Update() {
+			base.Update();
+
+			if (this._lifetimeTimer != null && this._lifetimeTimer.IsRunning) {
+				Debug.Log($"Projectile Lifetime Remaining: {this._lifetimeTimer.Time:F2} seconds");
+				this._lifetimeTimer.Tick(UnityEngine.Time.deltaTime);
 			}
 		}
 
@@ -60,17 +98,29 @@ namespace Kope.Component.Ability.Targeting {
 			var rotation = CalculateSpawnRotation(direction, this.effectContext.Dimension);
 			var spawnPosition = CalculateSpawnPosition(origin, direction, this._spawnOffset, this.effectContext.Dimension);
 
-			var projectileObject = UnityEngine.Object.Instantiate(this._projectilePrefab, spawnPosition, rotation);
+			if (_pooler != null && _pooler.TryRent(this._projectilePrefab, out GameObject go)) {
+				go.transform.SetPositionAndRotation(spawnPosition, rotation);
 
-			if (projectileObject.TryGetComponent<AbilityProjectileController>(out var controller)) {
-				// We pass a callback to FinishTheStratrgy so the strategy ends when the projectile is done
-				controller.Initialize(this._onTargetResolved, FinishTheStratrgy, this.effectContext,
-									  direction, this._projectileSpeed, this._projectileLifetime, this._pierceCount);
-				return false; // False because we handle resolution inside the controller
+				if (go.TryGetComponent<AbilityProjectileController>(out var controller)) {
+					controller.Initialize(this._onTargetResolved, this.effectContext,
+										  direction, this._projectileSpeed, this._projectileLifetime, this._pierceCount);
+
+					return true;
+				}
+			}
+			return true;
+		}
+		private void OnProjectileImpact() {
+			this._lifetimeTimer.Stop();
+		}
+
+		private void CleanupProjectile() {
+			if (this._activeController != null && this._pooler != null) {
+				this._pooler.Release(this._activeController);
+				this._activeController = null;
 			}
 
-			UnityEngine.Object.Destroy(projectileObject);
-			return true;
+			FinishTheStratrgy();
 		}
 
 		private Vector3 GetDirectionToClickPoint(Vector3 clickPoint, Vector3 origin) {
@@ -88,26 +138,25 @@ namespace Kope.Component.Ability.Targeting {
 		private Vector3 CalculateSpawnPosition(Vector3 position, Vector3 fwd, Vector3 offset, AxisMode dimension) {
 			if (dimension == AxisMode.TwoD) {
 				/*
-					Using projection the spawn point around the caster rather than using the Trignometic approch
-					since arcTan2 is expensive and this method is more performant, and the slight inaccuracy 
-					in spawn position is not noticeable for most cases, and can be adjusted with the offset values if needed.
-					Formula Derivation:
-					Let the forward direction be represented as a 2D vector (v.x, v.y) and the desired spawn offset
-					 as (o.x, o.y) where o.x is the perpendicular offset and o.y is the forward offset. The spawn 
-					 position can be calculated as:
-					 "In a sense we are using 2d "cross product" to get the perpendicular offset direction"
-					 spawn.x = position.x + (v.x * o.y) + (v.y * o.x) 
-					 spawn.y = position.y + (v.y * o.y) - (v.x * o.x)
-					 This formula effectively rotates the offset vector by the angle of 
-					 the forward direction and then translates it to the caster's position, giving us 
-					 the correct spawn point around the caster based on the forward direction and the specified offsets.
-				*/
+                    Using projection the spawn point around the caster rather than using the Trignometic approch
+                    since arcTan2 is expensive and this method is more performant, and the slight inaccuracy 
+                    in spawn position is not noticeable for most cases, and can be adjusted with the offset values if needed.
+                    Formula Derivation:
+                    Let the forward direction be represented as a 2D vector (v.x, v.y) and the desired spawn offset
+                     as (o.x, o.y) where o.x is the perpendicular offset and o.y is the forward offset. The spawn 
+                     position can be calculated as:
+                     "In a sense we are using 2d "cross product" to get the perpendicular offset direction"
+                     spawn.x = position.x + (v.x * o.y) + (v.y * o.x) 
+                     spawn.y = position.y + (v.y * o.y) - (v.x * o.x)
+                     This formula effectively rotates the offset vector by the angle of 
+                     the forward direction and then translates it to the caster's position, giving us 
+                     the correct spawn point around the caster based on the forward direction and the specified offsets.
+                */
 				float offsetX = (fwd.x * offset.y) + (fwd.y * offset.x);
 				float offsetY = (fwd.y * offset.y) - (fwd.x * offset.x);
 				return new Vector3(position.x + offsetX, position.y + offsetY, 0f);
 			}
-			// just using normal crossproduct to get the right and up directions for the offset, since we are 
-			// in 3D and can have any forward direction
+
 			Vector3 side = Vector3.Cross(Mathf.Abs(fwd.y) > 0.9f ? Vector3.right : Vector3.up, fwd).normalized;
 			Vector3 up = Vector3.Cross(fwd, side);
 			return position + (fwd * offset.z) + (side * offset.x) + (up * offset.y);

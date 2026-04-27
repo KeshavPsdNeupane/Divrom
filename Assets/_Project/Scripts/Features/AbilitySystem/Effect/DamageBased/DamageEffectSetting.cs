@@ -27,7 +27,9 @@ namespace Kope.AbilitySystem.Effect.Settings {
 		[BindToEnum(DamageEffectType.Vampiric, typeof(VampiricDamageEffectFactory))]
 		private VampiricDamageEffectFactory vampiricDamage;
 
-		public IEffectFactory<IDamagable> GetFactory() => GetSelected();
+		public IEffectFactory<IDamagable> GetFactory() {
+			return GetSelected();
+		}
 
 	}
 }

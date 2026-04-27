@@ -9,6 +9,9 @@ using UnityEngine;
 public class DamageAbility : AbilityBase {
 	[SerializeField] private HitTargetType applicableHitTargetType = HitTargetType.Entity;
 	[SerializeField] private List<DamageEffectSetting> damageEffectSettings;
+	// need external caching due to fact being a list ,if single internal caching is enough since
+	// the class itself is cached by the DynamicSelection, but since it's a list we need to cache
+	// each element in the list to avoid using reflection every time we execute the ability
 	private List<IEffectFactory<IDamagable>> _cachedEffectFactories = new();
 	protected override void Enable() {
 		this._cachedEffectFactories = this.damageEffectSettings?.AsValueEnumerable()

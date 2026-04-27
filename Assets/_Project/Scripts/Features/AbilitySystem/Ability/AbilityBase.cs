@@ -4,6 +4,7 @@ using Kope.Component.Combat.Interface;
 using Kope.Component.HitBox.Interface;
 using Kope.Core.Attribute;
 using UnityEngine;
+
 public class TargetContext {
 	public readonly IHitBoxComponent HitBox;
 
@@ -21,6 +22,7 @@ public class TargetContext {
 		return null;
 	}
 }
+
 [Serializable]
 public abstract class AbilityBase : ScriptableObject, ITargetingReceiver {
 	[SerializeField] string abilityName;
@@ -33,7 +35,6 @@ public abstract class AbilityBase : ScriptableObject, ITargetingReceiver {
 	protected GameObject runningVfx;
 
 	[SerializeField] protected TargetingSettings targetingSettings;
-
 	private int _abilityUsedCount = 0;
 	public int AbilityUsedCount => this._abilityUsedCount;
 	public string AbilityName => this.abilityName;
@@ -61,17 +62,9 @@ public abstract class AbilityBase : ScriptableObject, ITargetingReceiver {
 		   TargetingManager targetingManager,
 			TargetContext casterContext,
 		   EffectContext effectContext) {
-		//var strategy = targetingFactory?.Create() ?? new SelfTargetingStrategy();
+		// for single it internally caches the selected factory,
 
-
-		// lets see if the new enum based binding system works correctly, this should be able to
-		// get the correct targeting strategy based on the selected enum value in the editor, 
-		// without needing to hardcode any logic for each specific strategy in the ability class,
-		// and it should also automatically instantiate the strategy if it hasn't been created yet, 
-		// which is a nice bonus feature that reduces boilerplate and makes it easier to manage the 
-		// targeting strategies for each ability.
-		var strategy = this.targetingSettings.GetFactory()?.Create() ?? new SelfTargetingStrategy();
-
+		var strategy = this.targetingSettings.GetFactory().Create() ?? new SelfTargetingStrategy();
 		// here we can play the casting sfx and vfx immediately upon casting
 		// # cast vfx/sfx that will be played when the ability is cast, before the targeting is resolved. 
 		// this is for things like a fireball that shoots out immediately when you cast, even if it doesn't 
@@ -132,7 +125,6 @@ public abstract class AbilityBase : ScriptableObject, ITargetingReceiver {
 
 
 
-	#region  Editor Only - 
 	/// <summary>
 	/// OnEnable is called when the asset is loaded in the editor, which can happen when the project is
 	///  opened or when scripts are recompiled.
@@ -146,7 +138,6 @@ public abstract class AbilityBase : ScriptableObject, ITargetingReceiver {
 	/// ability asset for use and ensure that it is in a valid state before it is used in the game
 	/// </summary>
 	private void OnEnable() {
-
 		// only run on editor since this is for maintaining the 
 		// unique ID for each ability asset, which is used for saving and loading the ability state,
 		// and we don't want this code running in a build since it relies on UnityEditor APIs 
@@ -179,7 +170,6 @@ public abstract class AbilityBase : ScriptableObject, ITargetingReceiver {
 	}
 
 
-	#endregion
 
 
 }

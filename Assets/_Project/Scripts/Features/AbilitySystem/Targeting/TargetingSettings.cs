@@ -10,10 +10,10 @@ public enum TargetingType {
 	// If a designer adds this component and forgets to configure it, 
 	// the ability will simply target the caster rather than failing.
 	SelfTargeting = 0,
-
 	AOETargeting = 1,
 	ProjectileBasedTargeting = 2,
 }
+
 [Serializable]
 public class TargetingSettings : DynamicSelection<TargetingType, ITargetingFactory> {
 	[SerializeField]

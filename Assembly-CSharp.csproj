@@ -54,28 +54,29 @@
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/UI/InventoryDisplays/InventoryDisplay.cs" />
     <Compile Include="Assets/_Project/_BootStrap/GlobalBootStrap.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AnimationCurve/Curve.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/ConcreteClass/AreaTargeting/AreaTargetingStrategy3D.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AnimationCurve/CurveTester.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/UI/ItemSlotDoubleTap.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/UI/InventoryDisplays/PlayerInventoryDisplay.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/UI/ItemSlotUI/SimpleItemUIDragAndDropInteractionHelperClass.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/HealBased/HealEffectSetting.cs" />
     <Compile Include="Assets/_Project/UI/Menu/TabController.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Ability/ExampleAbility.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/HealBased/InstantHealEffect.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/PlayerItemCollector.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Component/UI/Health/ReduceHp.cs" />
     <Compile Include="Assets/_Project/UI/UIState/UIState.cs" />
     <Compile Include="Assets/_Project/UI/Common/PanelFader.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Ability/AbilityBase.cs" />
-    <Compile Include="Assets/_Project/FOVGizmo.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/UtilityClasses/AbilityAreaTargetingController.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/ConcreteClass/AreaTargeting/AreaTargetingStrategy2D.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AnimationCurve/CurveAsset.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/PlayerAbilityCaster.cs" />
-    <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/ConcreteClass/AreaTargetingStrategy.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/DamageBased/DamageOverTimeEffect.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/MovementBased/StunEffect.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Component/UI/Health/HealthBar.cs" />
-    <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/ConcreteClass/ProjectileTargetingStrategy.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/ConcreteClass/SelfTargetingStrategy.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/ConcreteClass/ProjectileTargetingStrategy.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/TargetingManager.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/HealBased/HealOverTimeEffect.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/DamageBased/VampericDamageEffect.cs" />
@@ -88,7 +89,9 @@
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/TargetingStrategy.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/MovementBased/KnockBackEffect.cs" />
     <Compile Include="Assets/_Project/UI/UIState/InGameUI/GameplayUIController.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/ConcreteClass/AreaTargeting/AreaTargetingStrategy.cs" />
     <Compile Include="Assets/_Project/Scripts/Managers/ItemDragDropManager.cs" />
+    <Compile Include="Assets/_Project/Scripts/FOVGizmo.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/DamageBased/DamageEffectSetting.cs" />
     <Compile Include="Assets/_Project/Scripts/Managers/ItemDatabase/HashUtility.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Ability/HealBased/HealAbility.cs" />
@@ -96,7 +99,6 @@
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/DamageBased/InstantDamageEffect.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/TargetingSettings.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/ConcreteClass/SingleTargetTargetingStrategy.cs" />
-    <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Ability/HurtBoxHitAbility.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets/TextMesh Pro/Shaders/TMPro.cginc" />

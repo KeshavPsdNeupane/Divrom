@@ -50,9 +50,9 @@ namespace Kope.SaveSystem {
 			}
 			var dataAggregate = new SceneSaveDataAggregate(this.SceneIndex, this.SceneName, data);
 			this._globalSaveSystem.BufferSceneData(dataAggregate);
-
-			//_globalSaveSystem.CommitAllToDisk();
+#if UNITY_EDITOR
 			Debug.Log($"[SceneSaveSystem] Save triggered for {this._saveProviders.Count} providers.");
+#endif
 		}
 
 		public void TriggerLoad() {
@@ -68,7 +68,9 @@ namespace Kope.SaveSystem {
 					Debug.LogWarning($"No save provider found for provider type {kvp.Key}. Skipping load for this provider.");
 				}
 			}
+#if UNITY_EDITOR
 			Debug.Log($"[SceneSaveSystem] Load triggered for {this._saveProviders.Count} providers.");
+#endif
 		}
 	}
 }

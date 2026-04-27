@@ -1,11 +1,33 @@
 using Kope.Core.Extensions;
+using Kope.Core.ObjectPooling;
 using UnityEngine;
 
-public class AbilityAreaTargetingController : MonoBehaviour {
+public class AbilityAreaTargetingController : MonoBehaviour, IPoolable {
+	/*
+		Why is this class "passive" compared to the Projectile Controller?
+
+		1. Lifecycle Dependency: Unlike projectiles, an Area Preview's life is tied 1:1 
+		   to the active Targeting Strategy. It has no reason to exist once the player 
+		   stops aiming. Therefore, it does not need internal 'Release' logic; the 
+		   Strategy handles its cleanup as part of the FinishTheStrategy routine.
+
+		2. Behavior Responsibility: This class acts as a 'Data Sink'—it simply receives 
+		   position and radius data from the Strategy and applies it to its local 
+		   components (Colliders, Sprites, VFX). By keeping it "dumb," we avoid 
+		   duplicate logic between the targeting math (Strategy) and the visual 
+		   representation (this Controller).
+
+		3. Performance: Since the Strategy already possesses an active 'Update' loop 
+		   to track the mouse, letting the Strategy tick the Preview avoids adding 
+		   hundreds of independent 'Update' calls to the Unity engine if multiple 
+		   previews were somehow active.
+	*/
 	[SerializeField] private Collider2D _areaCollider2D;
 	[SerializeField] private Rigidbody2D _rigidbody2D;
 
 	private float _radius = 5f;
+
+	public GameObject OriginPrefab { get; set; }
 
 	private void OnValidate() {
 		if (this._areaCollider2D == null) {
@@ -22,8 +44,9 @@ public class AbilityAreaTargetingController : MonoBehaviour {
 		this._rigidbody2D.gravityScale = 0f;
 	}
 
-	public void Initialize(float radius) {
+	public void Initialize(Vector3 position, float radius) {
 		this._radius = radius;
+		this.transform.position = position;
 
 		if (this._areaCollider2D != null) {
 			switch (this._areaCollider2D) {
@@ -51,5 +74,11 @@ public class AbilityAreaTargetingController : MonoBehaviour {
 		} else {
 			this.transform.SetPositionAndRotation(position, rotation);
 		}
+	}
+
+	public void ClearState() {
+		this.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
+		this.transform.localScale = Vector3.one;
+		this._radius = 5f;
 	}
 }

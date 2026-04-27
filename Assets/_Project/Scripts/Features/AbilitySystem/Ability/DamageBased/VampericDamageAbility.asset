@@ -26,8 +26,9 @@ MonoBehaviour:
       layerMask:
         serializedVersion: 2
         m_Bits: 192
-      minSearchDepth: -1
       previewHeightOffset: 0.1
+      dimension: 0
+      minSearchDepth: -1
       maxTargets: 16
     projectile:
       projectilePrefab: {fileID: 0}

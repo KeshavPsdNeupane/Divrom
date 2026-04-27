@@ -1,78 +1,84 @@
 using System;
+using ThirdParty;
 using Kope.Component.Combat.Interface;
-using Kope.Core.Extensions;
+using Kope.Core.ObjectPooling;
 using Kope.Core.Sensor;
 using UnityEngine;
 
 namespace Kope.Component.Ability.Targeting {
 
-	[RequireComponent(typeof(Collider2D))]
-	[RequireComponent(typeof(Rigidbody2D))]
-	public sealed class AbilityProjectileController : SensorBase {
+	public sealed class AbilityProjectileController : SensorBase, IPoolable {
+		// Why does this controller handle the pooler release rather than actual strategy that spawns it?
+		// 
+		// Projectiles are "Autonomous Objects." Once fired, they travel independently of the 
+		// caster or the strategy that created them. They possess their own internal state 
+		// (velocity, pierce count, and lifetime). 
+		//
+		// By encapsulating the 'Release' logic here, we ensure that no matter how the projectile 
+		// ends—whether by timing out, hitting a wall, or impacting a target—it is always 
+		// responsible for its own cleanup. This prevents the Strategy from having to "track" 
+		// dozens of active projectiles, significantly reducing memory overhead and complexity.
 		[SerializeField] private Rigidbody2D projectileRigidbody;
 		[SerializeField] private bool destroyOnAnyHit = true;
-		[SerializeField, Tooltip("The default lifetime of the projectile in seconds.")]
-		private float defaultLifetime = 5f;
-		private int _pierceCount = 0;
 
 		private int _piercesRemaining;
-		ITargetingReceiver _onTargetResolved;
-		private Action<bool> _onProjectileFinished;
+		private ITargetingReceiver _onTargetResolved;
 		private EffectContext _effectContext;
 		private Rigidbody2D _body;
 		private bool _isInitialized;
 		private bool _hasFinished;
 
+		private CountdownTimer _lifetimeTimer;
+		private ObjectPooler _pooler;
+
+		public GameObject OriginPrefab { get; set; }
+
 		public override void OnStart() {
-			var hiearchyMessage = this.GetFullHierarchyPath();
-			if (this.projectileRigidbody == null) {
-				Debug.LogError($"AbilityProjectileController on {gameObject.name} has no Rigidbody2D assigned. {hiearchyMessage}");
-				Destroy(gameObject);
-				return;
-			}
-			this._body = this.projectileRigidbody;
-			this._body.gravityScale = 0f;
+			this._body = this.projectileRigidbody ?? GetComponent<Rigidbody2D>();
+			if (this._body != null) this._body.gravityScale = 0f;
+
+			// Get pooler once
+			ServiceLocatorPattern.GlobalServiceLocator.Instance.TryGetService(out _pooler);
 		}
 
 		public void Initialize(
 			ITargetingReceiver onTargetResolved,
-			Action<bool> onProjectileFinished,
 			EffectContext effectContext,
 			Vector3 direction,
 			float speed,
 			float lifetime,
-			int pierceCount = 0
-			) {
+			int pierceCount) {
+
 			this._onTargetResolved = onTargetResolved;
-			this._onProjectileFinished = onProjectileFinished;
 			this._effectContext = effectContext;
 			this._isInitialized = true;
 			this._hasFinished = false;
-			this._pierceCount = pierceCount;
+			this._piercesRemaining = pierceCount;
 
 			if (this._body == null) this._body = GetComponent<Rigidbody2D>();
-			this._body.gravityScale = 0f;
 			this._body.linearVelocity = direction.normalized * speed;
-			this._piercesRemaining = this._pierceCount;
-			Destroy(gameObject, lifetime > 0f ? lifetime : this.defaultLifetime);
-		}
-		private void OnDestroy() {
-			if (this._hasFinished) return;
-			this._hasFinished = true;
-			this._onTargetResolved = null;
-			// so we wont try to call the callback on a destroyed projectile if it hits something 
-			// at the same frame it's destroyed, which can happen with fast projectiles.
-			if (gameObject.scene.isLoaded) {
-				this._onProjectileFinished?.Invoke(true);
+
+			// Setup and start the timer
+			if (_lifetimeTimer == null) {
+				_lifetimeTimer = new CountdownTimer(lifetime);
+				_lifetimeTimer.OnTimerStop += () => ReleaseProjectile();
+			} else {
+				_lifetimeTimer.Reset(lifetime);
 			}
-			this._onProjectileFinished = null;
+			_lifetimeTimer.Start();
+		}
+
+		private void Update() {
+			if (_isInitialized && _lifetimeTimer != null && _lifetimeTimer.IsRunning) {
+				_lifetimeTimer.Tick(Time.deltaTime);
+			}
 		}
 
 		public override void OnDetect(Collider2D other) {
-			if (!this._isInitialized || other == null) return;
+			if (!this._isInitialized || _hasFinished || other == null) return;
 
 			var caster = this._effectContext.Caster;
-			if (caster != null && other.transform.root.gameObject == caster.transform.root.gameObject) return;
+			if (caster != null && other.transform.root == caster.transform.root) return;
 
 			var targetContext = TargetContext.Create(other);
 			if (targetContext == null || targetContext.HitBox == null) return;
@@ -82,8 +88,30 @@ namespace Kope.Component.Ability.Targeting {
 			if (this._piercesRemaining > 0) {
 				this._piercesRemaining--;
 			} else if (this.destroyOnAnyHit) {
+				ReleaseProjectile();
+			}
+		}
+
+		private void ReleaseProjectile() {
+			if (_hasFinished) return;
+			_hasFinished = true;
+
+			_lifetimeTimer?.Stop();
+
+			if (_pooler != null) {
+				_pooler.Release(this);
+			} else {
 				Destroy(gameObject);
 			}
+		}
+
+		public void ClearState() {
+			this._onTargetResolved = null;
+			this._isInitialized = false;
+			this._hasFinished = false;
+			this._piercesRemaining = 0;
+			if (this._body != null) this._body.linearVelocity = Vector2.zero;
+			_lifetimeTimer?.Stop();
 		}
 	}
 }

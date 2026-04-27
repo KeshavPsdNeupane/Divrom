@@ -5,18 +5,27 @@ namespace Kope.Core.Attribute.DataStructure {
 	using UnityEngine;
 
 	/// <summary>
-	/// Provides a polymorphic container that dynamically binds an enum selection to a specific data field.<br/>
-	/// This system uses <see cref="BindToEnumAttribute"/> to link enum values to concrete class fields, 
-	/// enabling a "Swapping UI" in the Inspector without the fragility of Managed References.<br/><br/>
-	/// <b>CRITICAL:</b> The enumeration <typeparamref name="TEnum"/> MUST define its default behavior 
-	/// (the safest fallback) at index 0. This ensures that uninitialized components default to a 
-	/// predictable state (e.g., Self-Targeting) rather than an invalid one.<br/><br/>
-	/// <b>Note:</b> If a bound field is null, <see cref="GetSelected"/> will attempt to 
-	/// auto-instantiate the type defined in the attribute's TargetType.
+	/// A polymorphic container that dynamically binds an enum selection to a specific data field using <see cref="BindToEnumAttribute"/>.
+	/// <para>
+	/// This enables a "Swapping UI" in the Unity Inspector that avoids the fragility of Managed References ([SerializeReference]) 
+	/// while maintaining a clean, type-safe API for retrieving concrete logic.
+	/// </para>
 	/// </summary>
+	/// <remarks>
+	/// <para><b>CRITICAL:</b> The enumeration <typeparamref name="TEnum"/> MUST define its safest fallback/default behavior 
+	/// at index 0. This ensures uninitialized components default to a predictable state (e.g., Self-Targeting).</para>
+	/// 
+	/// <para><b>AUTO-INSTANTIATION:</b> If a bound field is null, <see cref="GetSelected"/> attempts to 
+	/// instantiate the <c>TargetType</c> defined in the attribute. This allows for lazy initialization of data structures.</para>
+	/// 
+	/// <para><b>PERFORMANCE &amp; LISTS:</b> While this class performs internal instance-level caching, 
+	/// reflection is still required to find the bound field on the first access (a "Cache Miss"). 
+	/// If using a <c>List&lt;DynamicSelection&gt;</c>, it is highly recommended to "warm" the cache 
+	/// by calling <see cref="GetSelected"/> for each element during initialization (e.g., in <c>OnEnable</c>) 
+	/// to prevent frame spikes during high-frequency execution like <c>Ability.Execute()</c>.</para>
+	/// </remarks>
 	/// <typeparam name="TEnum">The enumeration type used for selection.</typeparam>
 	/// <typeparam name="TBase">The base interface or class type the selected fields implement.</typeparam>
-
 	[Serializable]
 	public abstract class DynamicSelection<TEnum, TBase> where TEnum : Enum {
 		public TEnum selectedType;
@@ -24,10 +33,33 @@ namespace Kope.Core.Attribute.DataStructure {
 		// Keyed by (concrete subclass type, enum value) since different subclasses
 		// have different field layouts. Null is a valid cached result (missing binding).
 		private static readonly Dictionary<(Type, object), (FieldInfo field, Type targetType)> _fieldCache = new();
+		/// <summary>
+		/// Caches the selected field's value after the first retrieval to optimize subsequent accesses.
+		/// This assumes that the selected enum value does not change at runtime. If the enum selection can change,
+		/// this cache should be invalidated accordingly (not implemented in this version for simplicity).
+		/// </summary>
+		private TBase _cachedEnumType;
+		private TEnum _lastSelectedType;
 
+
+		/// <summary>
+		/// Retrieves the instance of <typeparamref name="TBase"/> associated with the currently selected 
+		/// <typeparamref name="TEnum"/> value.<br/>
+		/// On the first call, it uses reflection to find the field bound to the selected enum value, 
+		/// retrieves its value, and caches it for future calls.<br/>
+		/// If the bound field's value is null and the field's type is concrete, it will attempt to 
+		/// auto-instantiate it using the TargetType specified in the <see cref="BindToEnumAttribute"/>.
+		/// This allows for lazy initialization of the bound data, but be cautious as it will create
+		/// an instance on the fly if accessed without proper setup.
+		/// </summary>
+		/// <returns></returns>
 		public TBase GetSelected() {
+			// highly optimized path for repeated access without changing the selected enum value,
+			//  which is the common case in ability execution
+			if (this._cachedEnumType != null && this._lastSelectedType.Equals(this.selectedType)) {
+				return this._cachedEnumType;
+			}
 			var key = (this.GetType(), (object)this.selectedType);
-
 			if (!_fieldCache.TryGetValue(key, out var cached)) {
 				cached = FindBoundField(GetType(), this.selectedType);
 				_fieldCache[key] = cached;
@@ -60,14 +92,11 @@ namespace Kope.Core.Attribute.DataStructure {
 			// some of the data is better represented as SO (e.g., damage formula) while
 			// some is better as plain class (e.g., targeting logic)
 			if (value == null && cached.targetType != null) {
-				if (typeof(ScriptableObject).IsAssignableFrom(cached.targetType)) {
-					value = ScriptableObject.CreateInstance(cached.targetType);
-				} else {
-					value = Activator.CreateInstance(cached.targetType);
-				}
+				value = Activator.CreateInstance(cached.targetType);
 				cached.field.SetValue(this, value);
 			}
-
+			this._cachedEnumType = (TBase)value;
+			this._lastSelectedType = this.selectedType;
 			return (TBase)value;
 		}
 

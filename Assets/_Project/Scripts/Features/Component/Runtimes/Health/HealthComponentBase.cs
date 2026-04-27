@@ -51,7 +51,6 @@ namespace Kope.Component.Health {
 
 		protected override bool OnInit() {
 			if (ecr == null) return false;
-
 			if (ecr.ComponentRegistry.TryGetMutatableComponent(out characterStatsSystem)) {
 				return true;
 			}
