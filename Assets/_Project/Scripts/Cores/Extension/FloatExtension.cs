@@ -26,6 +26,7 @@ namespace Kope.Core.Extensions {
 			// just return the final score, it can be >1, since we want to have
 			//  more dynamic range for better differentiation between actions.
 			// and not allowing x<0, since utility should not be negative.
+			// full formula: finalScore = orginal + ((1 - orginal) * (1 - (1 / size))) * orginal
 			return Math.Max(0.0f, finalScore);
 		}
 

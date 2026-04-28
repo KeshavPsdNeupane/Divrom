@@ -227,10 +227,14 @@ When an action deactivates, `cooldownUntil = Time.time + cooldownDuration`. The 
 Each `ActionSO` holds a list of `ConsiderationSO` assets. Scoring uses **multiplicative evaluation with compensated utility** to balance actions fairly across different numbers of considerations:
 
 ```
-FinalScore = (C1 × C2 × ... × CN) ^ (1/N)
+orginal = c1 * c2 * .... * cn 
+finalScore = orginal + ((1 - orginal) * (1 - (1 / cn))) * orginal
 ```
 
-The `^(1/N)` normalization (compensated utility) prevents actions with many considerations from being unfairly penalized compared to simpler ones.
+The `+ ((1 - orginal) * (1 - (1 / cn))) * orginal` normalization (compensated utility) prevents actions with many considerations from being unfairly penalized compared to simpler ones.
+Let orginal = 0.67, n = 7, finally  
+final score = 0.67 + ((1 - 0.67) * (1 - (1 / 7))) * 0.67 = 0.8595...
+Derived using  [Algorithm Written by Mr.Dave Mark in his book Behavioral Mathematics for Game AI (Applied Mathematics)]( https://www.amazon.com/Behavioral-Mathematics-Game-AI-Applied/dp/1584506849	)
 
 **ConsiderationSO** is abstract — implement `Evaluate(IReadOnlyContext)` returning a `(float score, int multiplicationCount)` tuple. The multiplication count drives the compensated utility normalization correctly.
 
