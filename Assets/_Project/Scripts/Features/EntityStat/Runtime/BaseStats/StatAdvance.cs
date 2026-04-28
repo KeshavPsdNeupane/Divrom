@@ -54,14 +54,11 @@ namespace Kope.Character.Stats {
 		public void RemoveAllPointStat() {
 			this.pointStats.RemoveAllPointModifiers();
 		}
-		public bool AddStatusEffect(StatModifier effect) {
+		public bool AddStatusEffect(AbstractBaseModifier effect) {
 			return this.currentStat.AddModifier(effect);
 		}
-		public void RemoveAllStatus() {
+		public void RemoveAllModifiers() {
 			this.currentStat.RemoveAllModifiers();
-		}
-		public void RemoveAllModifiersFromSource(string sourceName) {
-			this.currentStat.RemoveAllModifiersFromSource(sourceName);
 		}
 	}
 }

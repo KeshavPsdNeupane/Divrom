@@ -22,8 +22,7 @@ namespace Kope.Character.Stats {
 		/// <summary>
 		/// Directly injects a modifier (Buff/Debuff) into the stat's internal lifecycle.
 		/// </summary>
-		bool AddStatModifier(StatModifier modifier);
-
-		void RemoveAllModifiersFromSource(string sourceName);
+		bool AddStatModifier(BaseStatModifier modifier);
+		bool AddResistanceModifier(ResistanceStatModifier modifier);
 	}
 }

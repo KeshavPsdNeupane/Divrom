@@ -17,12 +17,15 @@ namespace Kope.Component.Ability.Targeting {
 		[SerializeField] private LayerMask layerMask = 1;
 
 		[SerializeField] private float previewHeightOffset = 0.1f;
-
 		[SerializeField] private AxisMode dimension = AxisMode.TwoD;
 
 		[Header("2D Only Settings")]
 		[SerializeField, Min(-10), Tooltip("Minimum search depth for overlap checks. Only for 2D physics. Ignored for 3D physics.")]
 		private int minSearchDepth = -1;
+		[SerializeField, Tooltip("Color of the area preview." +
+		"Just for testing purposes, will be removed or replaced with a more robust visual system later." +
+		"Only applies to 2D targeting for now. Ignored for 3D targeting.")]
+		private Color previewColor = Color.red;
 		[Header("Shared Settings")]
 		[SerializeField, Range(1, 64)] private int maxTargets = 16;
 
@@ -30,7 +33,7 @@ namespace Kope.Component.Ability.Targeting {
 			if (this.dimension == AxisMode.TwoD)
 				return new AreaTargetingStrategy2D(this.includeCaster, this.previewPrefab,
 					this.radius, this.layerMask, this.previewHeightOffset,
-					this.maxTargets, this.minSearchDepth);
+					this.maxTargets, this.minSearchDepth, this.previewColor);
 
 			return new AreaTargetingStrategy3D(this.includeCaster, this.previewPrefab,
 				this.radius, this.layerMask, this.previewHeightOffset, this.maxTargets);
@@ -57,7 +60,7 @@ namespace Kope.Component.Ability.Targeting {
 		protected readonly LayerMask _layerMask;
 		protected readonly float _previewHeightOffset;
 		protected readonly int _maxTargets;
-
+		protected readonly Color _previewColor;
 		private GameObject _previewInstance;
 		private AbilityAreaTargetingController _previewController;
 		private ObjectPooler _universalPooler; // Use the service instead of manual management
@@ -65,13 +68,14 @@ namespace Kope.Component.Ability.Targeting {
 		protected Vector3 currentPoint;
 
 		protected AreaTargetingStrategy(bool includeCaster, GameObject previewPrefab,
-			float radius, LayerMask layerMask, float previewHeightOffset, int maxTargets) {
+			float radius, LayerMask layerMask, float previewHeightOffset, int maxTargets, Color previewColor) {
 			this._includeCaster = includeCaster;
 			this._previewPrefab = previewPrefab;
 			this._radius = radius;
 			this._layerMask = layerMask;
 			this._previewHeightOffset = previewHeightOffset;
 			this._maxTargets = maxTargets;
+			this._previewColor = previewColor;
 		}
 
 		public override void Start(
@@ -88,18 +92,24 @@ namespace Kope.Component.Ability.Targeting {
 			}
 
 			// Rent preview instead of Instantiate
-			if (this._previewPrefab != null && this._universalPooler != null) {
-				if (this._universalPooler.TryRent(this._previewPrefab, out this._previewInstance)) {
-					this._previewController = this._previewInstance.GetComponent<AbilityAreaTargetingController>();
-
-					if (this._previewController != null) {
-						if (!this.targetingManager.TryGetMouseGroundPoint(out Vector3 mousePoint)) {
-							mousePoint = Vector3.zero;
-						}
-						this._previewController.Initialize(mousePoint, this._radius);
-					}
-				}
+			if (this._previewPrefab == null || this._universalPooler == null) return;
+			var go = this._universalPooler.Rent(this._previewPrefab);
+			this._previewInstance = go;
+			if (!go.TryGetComponent(out this._previewController)) {
+				Debug.LogError("AreaTargetingStrategy: Preview prefab does not have" +
+				" an AbilityAreaTargetingController component.", this._previewPrefab);
+				// Return it immediately if it doesn't have the expected component
+				this._universalPooler.Release(this._previewPrefab, go);
+				this._previewInstance = null;
+				this._previewController = null;
+				return;
 			}
+			if (!this.targetingManager.TryGetMouseGroundPoint(out Vector3 mousePoint)) {
+				mousePoint = Vector3.zero;
+			}
+			go.SetActive(true);
+			this._previewController.Initialize(mousePoint, this._radius, this._previewColor);
+
 		}
 
 		public override void Update() {
@@ -109,10 +119,12 @@ namespace Kope.Component.Ability.Targeting {
 				UpdatePreviewPosition(this._previewController);
 		}
 
-		public override void FinishTheStratrgy(bool clearOnTargetResolved = true) {
-			base.FinishTheStratrgy(clearOnTargetResolved);
+		public override void FinishTheStrategy(bool clearOnTargetResolved = true) {
+			base.FinishTheStrategy(clearOnTargetResolved);
 			if (this._previewController != null && this._universalPooler != null) {
-				this._universalPooler.Release(this._previewController);
+				this._previewInstance.SetActive(false);
+				this._universalPooler.Release(this._previewPrefab, this._previewInstance);
+
 			} else if (this._previewInstance != null) {
 				UnityEngine.Object.Destroy(this._previewInstance);
 			}

@@ -1,6 +1,4 @@
 
-// Copyright (c) 2026 Keshav Prasad Neupane (Kope)
-// Licensed under the MIT License. See LICENSE in the repository root for details.
 
 using UnityEngine;
 using Kope.Core.Sensor;
@@ -59,10 +57,10 @@ public class EntitySensor : SensorBase {
 		}
 		var entityManager = other.GetComponentInParent<EntityInstance>();
 		if (entityManager == null) return;
-		// this is garunteed to be valid for all entity since we check the commonname on the EM itself,
-		//  so we can skip the check here and just add it to the context
+		// this is garunteed to be valid for all entity since we check the commonname on the EI itself,
+		// so we can skip the check here and just add it to the context
 		// so if entity manager is valid then all other tags and registry should be valid as well,
-		//  if not then we have bigger problems and should just let it throw an error
+		// if not then we have bigger problems and should just let it throw an error
 
 
 		// later i am going to make this register an event like

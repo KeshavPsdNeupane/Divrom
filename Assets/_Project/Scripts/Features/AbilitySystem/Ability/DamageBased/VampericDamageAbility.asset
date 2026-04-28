@@ -29,6 +29,7 @@ MonoBehaviour:
       previewHeightOffset: 0.1
       dimension: 0
       minSearchDepth: -1
+      previewColor: {r: 0.9056604, g: 0.32894266, b: 0.32894266, a: 0.47058824}
       maxTargets: 16
     projectile:
       projectilePrefab: {fileID: 0}
@@ -94,7 +95,7 @@ MonoBehaviour:
       DamageEffectData:
         PityDamage: 4
         DamageMultiplier: 2
-        DamageType: 1
+        DamageType: 0
         ScalingStat: 1
         PierceRatio: 0
         IgnoreResistance: 0
@@ -104,4 +105,4 @@ MonoBehaviour:
       - AbilityUsedThreshold: 6
         LifeStealRatioScale: 0.3
       - AbilityUsedThreshold: 9
-        LifeStealRatioScale: 0.4
+        LifeStealRatioScale: 0.5

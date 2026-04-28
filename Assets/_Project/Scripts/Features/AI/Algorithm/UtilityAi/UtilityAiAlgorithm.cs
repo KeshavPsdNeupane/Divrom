@@ -1,5 +1,3 @@
-// Copyright (c) 2026 Keshav Prasad Neupane (Kope)
-// Licensed under the MIT License. See LICENSE in the repository root for details.
 using System;
 using System.Collections.Generic;
 using Kope.AI.Utility.Config;

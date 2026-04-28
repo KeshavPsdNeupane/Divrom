@@ -49,7 +49,7 @@ namespace Kope.Component.Ability.Targeting {
 			this.previewInstance.transform.position = point + Vector3.up * this.previewHeightOffset;
 		}
 
-		public override void FinishTheStratrgy(bool clearOnTargetResolved = true) {
+		public override void FinishTheStrategy(bool clearOnTargetResolved = true) {
 			// if (this.targetingManager != null && this.targetingManager.InputManager != null) {
 			// 	this.targetingManager.InputManager.UnSubscribe(
 			// 		new InputActionSubscriptionLifetime<PlayerInputActionKey>(
@@ -65,7 +65,7 @@ namespace Kope.Component.Ability.Targeting {
 				this.previewInstance = null;
 			}
 
-			base.FinishTheStratrgy();
+			base.FinishTheStrategy();
 		}
 
 		protected override bool ExecuteResolution(Vector3 clickPoint) {

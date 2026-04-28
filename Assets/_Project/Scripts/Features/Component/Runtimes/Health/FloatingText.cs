@@ -1,5 +1,4 @@
-using Kope.Core.ObjectPooling;
-using ServiceLocatorPattern;
+using System;
 using TMPro;
 using UnityEngine;
 
@@ -9,24 +8,8 @@ namespace Kope.Component.Health {
 	/// Designed to be used with a TextMeshPro (Non-UGUI) component in World Space.
 	/// </summary>
 	[RequireComponent(typeof(TextMeshPro))]
-	public class FloatingText : MonoBehaviour, IPoolable {
-		/*
-    Why does FloatingText manage its own lifetime and release?
-    
-    1. Feedback Autonomy: Much like a projectile, FloatingText is "fired" and then 
-       becomes independent. The Spawner (CombatTextSpawner) should not be 
-       burdened with tracking hundreds of text instances to see if they've faded out.
-       
-    2. Lifecycle Consistency: The text's life is defined by its visual duration. 
-       By ticking its own timer and calling Release(this), the FloatingText 
-       ensures it returns to the pool exactly when its animation ends, 
-       decoupling the UI feedback layer from the combat logic layer.
+	public class FloatingText : MonoBehaviour {
 
-    3. Performance: Handling the release internally allows the ObjectPooler 
-       to treat FloatingText as a "fire-and-forget" service, which is essential 
-       when high-frequency combat (like AOE or rapid fire) generates dozens 
-       of instances per second.
-*/
 		[Header("Text Settings")]
 		[SerializeField] private TextMeshPro textMeshPro;
 		[SerializeField] private string sortingLayerName = "Default";
@@ -46,33 +29,13 @@ namespace Kope.Component.Health {
 		private float _timer;
 		private Color _currentColor;
 		private Vector3 _initialScale;
-		private ObjectPooler _universalPooler;
 
-		// --- IPoolable Implementation ---
+		private event Action<GameObject> OnRelease;
 
-		/// <summary>
-		/// Automatically set by the PoolGroup during Preload/CreateNew.
-		/// </summary>
-		public GameObject OriginPrefab { get; set; }
 
-		/// <summary>
-		/// Resets the object state. Called by ObjectPooler.Release before returning to queue.
-		/// </summary>
-		public void ClearState() {
-			if (this.textMeshPro != null) this.textMeshPro.text = string.Empty;
-			this._timer = 0f;
-			this.transform.localScale = this._initialScale;
+		public void SubScribeToRelease(Action<GameObject> callback) {
+			this.OnRelease += callback;
 		}
-
-		// --------------------------------
-
-		/*
-        TODO: Potential optimizations and features to consider:
-        - Material Variants: Use material property blocks to change text color without 
-        creating new material instances.
-        - Performance: Consider using a single mesh with multiple quads for text instead of individual 
-        GameObjects for each text instance, if performance becomes an issue.
-        */
 
 		private void Awake() {
 			this._initialScale = transform.localScale;
@@ -80,17 +43,11 @@ namespace Kope.Component.Health {
 			if (this.textMeshPro == null)
 				this.textMeshPro = GetComponent<TextMeshPro>();
 
-			if (!GlobalServiceLocator.Instance.TryGetService(out this._universalPooler)) {
-				Debug.LogError("FloatingText: Failed to get ObjectPooler from Service Locator.");
-			}
-
 			ApplySettings();
 		}
 
-		/// <summary>
-		/// Initializes the floating text with the specified parameters.
-		/// </summary>
 		public void Initialize(string formattedNumber, Color color, int textSize, Vector3 position, Quaternion rotation) {
+			this._timer = 0f;
 			this._textSize = textSize;
 			this.textMeshPro.text = formattedNumber;
 			this.transform.SetPositionAndRotation(position, rotation);
@@ -102,9 +59,9 @@ namespace Kope.Component.Health {
 
 			// Randomize Position
 			this.transform.position += new Vector3(
-				Random.Range(-randomizeIntensity.x, randomizeIntensity.x),
-				Random.Range(-randomizeIntensity.y, randomizeIntensity.y),
-				Random.Range(-randomizeIntensity.z, randomizeIntensity.z)
+				UnityEngine.Random.Range(-randomizeIntensity.x, randomizeIntensity.x),
+				UnityEngine.Random.Range(-randomizeIntensity.y, randomizeIntensity.y),
+				UnityEngine.Random.Range(-randomizeIntensity.z, randomizeIntensity.z)
 			);
 		}
 
@@ -134,11 +91,8 @@ namespace Kope.Component.Health {
 			float progress = this._timer / this.duration;
 
 			if (progress >= 1.0f) {
-				if (this._universalPooler != null) {
-					this._universalPooler.Release(this);
-				} else {
-					Destroy(this.gameObject);
-				}
+				this.OnRelease?.Invoke(this.gameObject);
+				ClearState();
 				return;
 			}
 
@@ -146,6 +100,12 @@ namespace Kope.Component.Health {
 			this._currentColor.a = this.alphaCurve.Evaluate(progress);
 			this.textMeshPro.color = this._currentColor;
 			this.transform.localScale = this._initialScale * this.scaleCurve.Evaluate(progress);
+		}
+		private void ClearState() {
+			if (this.textMeshPro != null) this.textMeshPro.text = string.Empty;
+			this._timer = 0f;
+			this.transform.localScale = this._initialScale;
+			this.OnRelease = null;
 		}
 	}
 }

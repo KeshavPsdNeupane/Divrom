@@ -146,15 +146,13 @@ namespace Kope.Character.Stats {
 			return 0f;
 		}
 
-		public bool AddStatModifier(StatModifier effect) {
+		public bool AddStatModifier(BaseStatModifier effect) {
 			if (this.currentStats.TryGetValue(effect.statType, out AdvanceStat stat))
 				return stat.AddStatusEffect(effect);
 
 			MyLogger.Warn($"Stat {effect.statType} not found for adding modifier!");
 			return false;
 		}
-
-
 
 		public void TriggerLevelUp() {
 			foreach (var kvp in this.levelIncreasingStatWithLevelingValue) {
@@ -173,12 +171,25 @@ namespace Kope.Character.Stats {
 			}
 		}
 
-		public void RemoveAllModifiersFromSource(string sourceName) {
+
+
+		public bool AddResistanceModifier(ResistanceStatModifier modifier) {
+			if (this.resistanceStats.TryGetValue(modifier.statType, out StatBase stat))
+				return stat.AddModifier(modifier);
+
+			MyLogger.Warn($"Resistance {modifier.statType} not found for adding modifier!");
+			return false;
+		}
+
+
+
+		public void RemoveAllStatModifiers() {
 			foreach (var stat in this.currentStats.Values)
-				stat.RemoveAllModifiersFromSource(sourceName);
+				stat.RemoveAllModifiers();
 
 			foreach (var stat in this.resistanceStats.Values)
-				stat.RemoveAllModifiersFromSource(sourceName);
+				stat.RemoveAllModifiers();
 		}
+
 	}
 }

@@ -24,8 +24,8 @@ public class StatModifierContainer : InitializableBase
 	[TextArea]
 	[SerializeField] private string description;
 
-	private StatModifier statusEffect;
-	public StatModifier StatusEffect => this.statusEffect ??= new StatModifier(
+	private BaseStatModifier statusEffect;
+	public BaseStatModifier StatusEffect => this.statusEffect ??= new BaseStatModifier(
 		this.source,
 		this.effectName,
 		this.statType,

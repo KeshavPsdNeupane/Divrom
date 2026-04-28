@@ -7560,46 +7560,46 @@ MonoBehaviour:
     gameObjectName: SceneServiceLocator
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: Hpstore
+    gameObjectName: Dummy
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: Hpstore (1)
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: Dummy (1)
+    gameObjectName: AddDef (1)
   - typeName: EntityInitCaller
     order: -40
     gameObjectName: InitCaller
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: AddSpd (1)
-  - typeName: EntityInitCaller
-    order: -40
     gameObjectName: Addhp (2)
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: Addhp (1)
+    gameObjectName: Hpstore (1)
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: Dummy
+    gameObjectName: PlayerNew
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: AddSpd
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Dummy (1)
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: AddSpd (1)
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Hpstore
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Hpstore (2)
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Addhp (1)
   - typeName: EntityInitCaller
     order: -40
     gameObjectName: AddDef
   - typeName: EntityInitCaller
     order: -40
     gameObjectName: Addhp
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: Hpstore (2)
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: PlayerNew
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: AddDef (1)
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: AddSpd
   - typeName: InGameUIInitCaller
     order: -30
     gameObjectName: UI
@@ -7956,8 +7956,8 @@ MonoBehaviour:
   x: 0.726
   result: 0.33709687
   unityResult: 0.18408638
-  customEvalTime: 0.0004
-  unityEvalTime: 0.0006000000000000001
+  customEvalTime: 0.0007
+  unityEvalTime: 0.0007
 --- !u!1001 &1031836800
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14132,6 +14132,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 682615762668415778, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: abilityScriptableObjects.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 682615762668415778, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: 'abilityScriptableObjects.Array.data[0]'
+      value: 
+      objectReference: {fileID: 11400000, guid: aaf48e97b5f8efe7391506c7dc5fc8d5, type: 2}
+    - target: {fileID: 682615762668415778, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: 'abilityScriptableObjects.Array.data[1]'
+      value: 
+      objectReference: {fileID: 11400000, guid: bc8ab4b407053887cb29e361a939e7f5, type: 2}
+    - target: {fileID: 682615762668415778, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: 'abilityScriptableObjects.Array.data[2]'
+      value: 
+      objectReference: {fileID: 11400000, guid: abc73f1787c462740aac08f8b477e347, type: 2}
+    - target: {fileID: 682615762668415778, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: 'abilityScriptableObjects.Array.data[3]'
+      value: 
+      objectReference: {fileID: 11400000, guid: bc9a3576add404caa914ef5a9a60fe43, type: 2}
     - target: {fileID: 2033154260760698069, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
       propertyPath: m_Name
       value: PlayerNew

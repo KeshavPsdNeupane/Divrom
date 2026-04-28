@@ -203,3 +203,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AbilityAreaTargetingController
   _areaCollider2D: {fileID: 306934033965796471}
   _rigidbody2D: {fileID: 3396750463771622214}
+  _areaSpriteRenderer: {fileID: 6078952306810910312}

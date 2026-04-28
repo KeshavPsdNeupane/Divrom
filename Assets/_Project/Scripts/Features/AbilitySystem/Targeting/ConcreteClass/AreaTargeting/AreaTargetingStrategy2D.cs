@@ -11,8 +11,8 @@ namespace Kope.Component.Ability.Targeting {
 
 		public AreaTargetingStrategy2D(bool includeCaster, GameObject previewPrefab,
 			float radius, LayerMask layerMask, float previewHeightOffset,
-			int maxTargets, int minSearchDepth)
-			: base(includeCaster, previewPrefab, radius, layerMask, previewHeightOffset, maxTargets) {
+			int maxTargets, int minSearchDepth, Color previewColor)
+			: base(includeCaster, previewPrefab, radius, layerMask, previewHeightOffset, maxTargets, previewColor) {
 			this._minSearchDepth = minSearchDepth;
 			this._results = new Collider2D[maxTargets];
 		}

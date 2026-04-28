@@ -8,8 +8,7 @@ using Kope.Core.Attributes;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Scriptable Objects/Abilities/Example Ability", fileName = "ExampleAbility")]
-public class ExampleAbility : AbilityBase
-{
+public class ExampleAbility : AbilityBase {
 	[SerializeField, Tooltip("The type of hit targets this ability can affect.")]
 	private HitTargetType applicableHitTargetType = HitTargetType.Entity;
 	[SerializeReference, SubclassSelector]
@@ -21,8 +20,8 @@ public class ExampleAbility : AbilityBase
 	[SerializeReference, SubclassSelector]
 	private List<IEffectFactory<IKnockbackable>> knockEffects = new();
 
-	public override void Execute(TargetContext target, EffectContext context)
-	{
+
+	public override void Execute(TargetContext target, EffectContext context) {
 		if (target.HitBox == null || context.Caster == null) return;
 		if (target.HitBox.CombatType != this.applicableHitTargetType) return;
 

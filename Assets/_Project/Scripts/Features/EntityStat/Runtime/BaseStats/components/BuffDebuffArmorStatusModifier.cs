@@ -6,34 +6,31 @@ namespace Kope.Character.Stats {
 		[HideInInspector] public bool canRemove = false;
 		[HideInInspector] public CountdownTimer durationCountDownTimer;
 
-		[SerializeField] private StatModifier statusEffect;
+		[SerializeField] private AbstractBaseModifier baseEffect;
 
-		public bool IsDebuff => this.statusEffect.IsDebuff;
-		public string EffectName => this.statusEffect.effectName;
-		public string Source => this.statusEffect.source;
-		public float ModifierAmount => this.statusEffect.modifierAmount;
-		public bool IsPercentage => this.statusEffect.isPercentage;
-		public bool IsDebuffFromArmor => this.statusEffect.isDebuffFromArmor;
-		public bool IsDebuffFromEnemy => this.statusEffect.isDebuffFromEnemy;
-		public int DebuffPriority => this.statusEffect.debuffPriority;
-		public float Duration => this.statusEffect.totalDuration;
-		public CharacterStatType StatType => this.statusEffect.statType;
-
-		public bool IsPermanentBuff => this.statusEffect.IsPermanentEffect;
+		public bool IsDebuff => this.baseEffect.IsDebuff;
+		public string EffectName => this.baseEffect.effectName;
+		public string Source => this.baseEffect.source;
+		public float ModifierAmount => this.baseEffect.ModifierAmount;
+		public bool IsPercentage => this.baseEffect.isPercentage;
+		public bool IsDebuffFromArmor => this.baseEffect.isDebuffFromArmor;
+		public bool IsDebuffFromEnemy => this.baseEffect.isDebuffFromEnemy;
+		public int DebuffPriority => this.baseEffect.debuffPriority;
+		public bool IsPermanentBuff => this.baseEffect.IsPermanentEffect;
 
 
 
-		public BuffDebuffArmorStatusModifier(StatModifier effect) {
-			this.statusEffect = effect;
+		public BuffDebuffArmorStatusModifier(AbstractBaseModifier effect) {
+			this.baseEffect = effect;
 		}
 
 		public void InitializeTimer() {
-			if (this.statusEffect == null) return;
+			if (this.baseEffect == null) return;
 
 			if (this.durationCountDownTimer == null)
-				this.durationCountDownTimer = new CountdownTimer(statusEffect.totalDuration);
+				this.durationCountDownTimer = new CountdownTimer(baseEffect.totalDuration);
 			else
-				this.durationCountDownTimer.Reset(statusEffect.totalDuration);
+				this.durationCountDownTimer.Reset(baseEffect.totalDuration);
 		}
 
 		public void StartTimer() {

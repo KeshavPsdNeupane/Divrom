@@ -1,6 +1,5 @@
 # Divrom
-
-A feature-rich 2D Unity game project built with modular architecture, featuring advanced AI systems, character statistics, modular sprite animation, and a flexible entity-component framework.
+It is a sandbox project where i make all my project.
 
 ---
 
@@ -26,18 +25,6 @@ A feature-rich 2D Unity game project built with modular architecture, featuring 
 - [Architecture Patterns](#architecture-patterns)
 - [Contributing](#contributing)
 
----
-
-## Overview
-
-**Divrom** is a 2D Unity game project showcasing professional game development practices with custom frameworks and systems. The project emphasizes:
-
-- **Modularity**: Clean separation of concerns with custom assembly definitions
-- **Scalability**: Built-in support for complex AI behaviors and character customization
-- **Maintainability**: Well-documented code with extensive use of interfaces and abstract patterns
-- **Performance**: Optimized entity component registry and efficient update loops
-
----
 
 ## Project Structure
 

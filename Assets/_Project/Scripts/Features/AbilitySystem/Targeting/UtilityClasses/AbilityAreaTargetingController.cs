@@ -1,8 +1,7 @@
 using Kope.Core.Extensions;
-using Kope.Core.ObjectPooling;
 using UnityEngine;
 
-public class AbilityAreaTargetingController : MonoBehaviour, IPoolable {
+public class AbilityAreaTargetingController : MonoBehaviour {
 	/*
 		Why is this class "passive" compared to the Projectile Controller?
 
@@ -24,10 +23,9 @@ public class AbilityAreaTargetingController : MonoBehaviour, IPoolable {
 	*/
 	[SerializeField] private Collider2D _areaCollider2D;
 	[SerializeField] private Rigidbody2D _rigidbody2D;
-
+	[SerializeField] private SpriteRenderer _areaSpriteRenderer;
 	private float _radius = 5f;
 
-	public GameObject OriginPrefab { get; set; }
 
 	private void OnValidate() {
 		if (this._areaCollider2D == null) {
@@ -40,13 +38,22 @@ public class AbilityAreaTargetingController : MonoBehaviour, IPoolable {
 			$" Disabling the component.{this.GetFullHierarchyPath()}", this);
 			return;
 		}
+		if (this._areaSpriteRenderer == null) {
+			Debug.LogWarning($"[AreaTargeting] No SpriteRenderer found on {this.gameObject.name}." +
+			$" Disabling the component.{this.GetFullHierarchyPath()}", this);
+			return;
+		}
 		this._areaCollider2D.isTrigger = true;
 		this._rigidbody2D.gravityScale = 0f;
 	}
 
-	public void Initialize(Vector3 position, float radius) {
+	public void Initialize(Vector3 position, float radius, Color? areaColor = null) {
 		this._radius = radius;
 		this.transform.position = position;
+		if (areaColor.HasValue) {
+			this._areaSpriteRenderer.color = areaColor.Value;
+		}
+
 
 		if (this._areaCollider2D != null) {
 			switch (this._areaCollider2D) {
@@ -74,11 +81,5 @@ public class AbilityAreaTargetingController : MonoBehaviour, IPoolable {
 		} else {
 			this.transform.SetPositionAndRotation(position, rotation);
 		}
-	}
-
-	public void ClearState() {
-		this.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
-		this.transform.localScale = Vector3.one;
-		this._radius = 5f;
 	}
 }

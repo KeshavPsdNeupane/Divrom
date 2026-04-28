@@ -89,7 +89,7 @@ namespace Kope.Component.Ability.Targeting {
 
 			var strategyToClear = this._currentStrategy;
 			this._currentStrategy = null;
-			strategyToClear.FinishTheStratrgy();
+			strategyToClear.FinishTheStrategy();
 		}
 
 		/// <summary>

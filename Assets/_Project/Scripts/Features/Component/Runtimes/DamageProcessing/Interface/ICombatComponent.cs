@@ -50,12 +50,10 @@ namespace Kope.Component.Combat.Interface {
 		float TakeHit(DamageDetail damageDetail);
 		void TakeDamageDebugOnly(int amount);
 	}
-
-	public interface IDamageProcessor : IDamagable { }
-
 	public interface IEffectFactory<TTarget> : ISerializationCallbackReceiver {
 		IEffect<TTarget> Create(EffectContext context = default);
 	}
+
 
 	public interface IEffect<TTarget> {
 		void Apply(TTarget target);

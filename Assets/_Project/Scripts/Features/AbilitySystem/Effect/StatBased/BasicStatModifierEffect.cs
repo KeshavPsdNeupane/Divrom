@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Kope.AbilitySystem.Effect {
 	[Serializable]
-	public struct StatMofifierEffectLevelingScale {
+	public struct BasicStatMofifierEffectLevelingScale {
 		[Header("Scaling")]
 		[Min(0f)]
 		public int abilityUsedThreshold;
@@ -16,13 +16,15 @@ namespace Kope.AbilitySystem.Effect {
 	}
 
 	[Serializable]
-	public class StatModifierEffectFactory : IEffectFactory<IStatSystem> {
+	public class BasicStatChangeEffectFactory : IEffectFactory<IStatSystem> {
 		[Header("Stat Modifier")]
-		[SerializeField] private StatModifier BaseModifier;
+		[SerializeField] private BaseStatModifier BaseModifier;
 		[Tooltip("Scaling values for the stat modifier based on ability usage." +
 		"Overrides base modifier when the ability use count meets a threshold. Must be in ascending order by abilityUsedThreshold.")]
-		[SerializeField] private StatMofifierEffectLevelingScale[] nextlevelScaling = new StatMofifierEffectLevelingScale[3];
-		private StatModifier _cachedModifier;
+		[SerializeField]
+		private BasicStatMofifierEffectLevelingScale[] nextlevelScaling
+		 = new BasicStatMofifierEffectLevelingScale[3];
+		private BaseStatModifier _cachedModifier;
 		private int _nextRecomputeThreshold = 0;
 
 
@@ -33,10 +35,10 @@ namespace Kope.AbilitySystem.Effect {
 				this._cachedModifier = this.ResolveModifier(context.AbilityUsedCount,
 				out this._nextRecomputeThreshold);
 			}
-			return new StatModifierEffect(this._cachedModifier);
+			return new BasicStatModifierEffect(this._cachedModifier);
 		}
 
-		private StatModifier ResolveModifier(int useCount, out int newLevelThreshold) {
+		private BaseStatModifier ResolveModifier(int useCount, out int newLevelThreshold) {
 			if (this.nextlevelScaling == null || this.nextlevelScaling.Length == 0) {
 				newLevelThreshold = int.MaxValue;
 				return this.BaseModifier;
@@ -51,7 +53,7 @@ namespace Kope.AbilitySystem.Effect {
 
 					// If a field in the scaling data is set to 0 or less, fall back to the base value.
 					// This allows partial overrides without repeating every field for each level.
-					return new StatModifier(
+					return new BaseStatModifier(
 						this.BaseModifier.source,
 						this.BaseModifier.effectName,
 						this.BaseModifier.statType,
@@ -72,20 +74,21 @@ namespace Kope.AbilitySystem.Effect {
 
 		public void OnAfterDeserialize() {
 			if (this.nextlevelScaling == null || this.nextlevelScaling.Length == 0) {
-				this.nextlevelScaling = new StatMofifierEffectLevelingScale[3];
+				this.nextlevelScaling = new BasicStatMofifierEffectLevelingScale[3];
 			}
 		}
 	}
 
 	[Serializable]
-	public class StatModifierEffect : IEffect<IStatSystem> {
-		public StatModifier modifier;
+	public class BasicStatModifierEffect : IEffect<IStatSystem> {
+		public BaseStatModifier modifier;
 
 
-		public StatModifierEffect(StatModifier modifier) {
+		public BasicStatModifierEffect(BaseStatModifier modifier) {
 			this.modifier = modifier;
 		}
 		public void Apply(IStatSystem target) {
+			Debug.Log($"Applying stat modifier {modifier} to target {target}");
 			target.AddStatModifier(modifier);
 
 		}

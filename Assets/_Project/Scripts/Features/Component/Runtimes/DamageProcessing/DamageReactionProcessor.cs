@@ -9,6 +9,58 @@ using UnityEngine;
 using Kope.Component.Health;
 
 namespace Kope.Component.Combat {
+
+	internal class DamageCalculator {
+		// these variables are contant for all entity with the same config,
+		// so we cache them and there is not need to have DI just for these values.
+		private readonly float _resistanceDiminishingReturnsThreshold = 0.5f;
+		private readonly float _defenceScalingFactor = 100f;
+		private readonly float _levelScalingFactor = 0.1f;
+		private readonly float _inverseResistanceDiminishingReturnsThreshold = 1f;
+
+		public DamageCalculator(DamageCalculationConfig config) {
+			this._resistanceDiminishingReturnsThreshold = config.ResistanceDiminishingReturnsThreshold;
+			this._defenceScalingFactor = config.DefenceScalingFactor;
+			this._levelScalingFactor = config.LevelScalingFactor;
+			this._inverseResistanceDiminishingReturnsThreshold = config.ReciprocalOfResistanceDiminishingReturnsThreshold;
+		}
+
+		protected virtual float GetDefenceMultiplier(float defence, float pierceRatio = 0) {
+			float effectiveDefence = defence * Mathf.Clamp01(1 - pierceRatio);
+			return this._defenceScalingFactor / (this._defenceScalingFactor + effectiveDefence);
+		}
+
+		protected virtual float GetResistanceMultiplier(float resistanceValue,
+		 DamageType damageType, float ignore = 0) {
+			float er = resistanceValue - ignore;
+			if (er < 0) return 1f - (er * 0.5f);
+			if (er < this._resistanceDiminishingReturnsThreshold) return 1f - er;
+			return 1f / (1f + er * this._inverseResistanceDiminishingReturnsThreshold);
+		}
+
+		protected virtual float GetLevelMultiplier(int casterLevel, float currentLevel) {
+			float lvlDiff = casterLevel - currentLevel;
+
+			float temp = this._levelScalingFactor * Mathf.Abs(lvlDiff) + 1;
+			return lvlDiff < 0f ? 1f / temp : temp;
+		}
+
+		public float TakeHit(DamageDetail damageDetail, float currentLevel, IStatSystem statSystem) {
+			float def = statSystem.GetStatValue(CharacterStatType.DEF);
+			float res = statSystem.GetResistanceValue(damageDetail.DamageType);
+			float defMult = GetDefenceMultiplier(def, damageDetail.DefencePierceRatio);
+			float resMult = GetResistanceMultiplier(res, damageDetail.DamageType, damageDetail.IgnoreResistance);
+			float levelMult = GetLevelMultiplier(damageDetail.CasterLevel, currentLevel);
+			float finalDamage = damageDetail.DamageAmount * defMult * resMult * levelMult;
+			Debug.Log($"Damage Calculation: BaseDamage={damageDetail.DamageAmount}," +
+			$"Current def={def}, DefenceMultiplier={defMult}," +
+			$"Res={res} ResistanceMultiplier={resMult}, LevelMultiplier={levelMult}, FinalDamage={finalDamage}");
+			return finalDamage;
+		}
+	}
+
+
+
 	/// <summary>
 	/// This component is responsible for processing incoming damage and effects on an entity. 
 	/// It listens for hits on the attached HurtBox and applies damage and effects accordingly.
@@ -22,26 +74,21 @@ namespace Kope.Component.Combat {
 	///  a destructible environment might just need to get destroyed on a single hit, we can just create 1HitEntityComponent.
 	/// 	which will handle that event rather than this bloat of component. <br/>
 	/// </summary>
-	public class DamageReactionProcessor : InitializableBase, IDamageProcessor {
+	public class DamageReactionProcessor : InitializableBase, IDamagable {
 		[SerializeField] private EntityComponentsRegistry ecr;
-		[SerializeField] private HealthComponentConfig config;
+		[SerializeField] private DamageCalculationConfig config;
 
-		private IHitBoxComponent hurtBox;
-		private IHealthComponent healthComponent;
-		private IStatSystem statSystem;
-
-		public IHitBoxComponent HurtBox => this.hurtBox;
+		private IHitBoxComponent _hurtBox;
+		private IHealthComponent _healthComponent;
+		private IStatSystem _statSystem;
+		private DamageCalculator _damageCalculator;
 
 		private readonly List<ITickableEffect> _activeTickableEffects = new();
 		// replace this with the actual LevelUp component when we have it, this is just for
 		// testing the level scaling portion of the damage formula
 		private readonly float _currentLevel = 0;
 
-
-		private float ResistanceDiminishingReturnsThreshold => config.ResistanceDiminishingReturnsThreshold;
-		private float DefenceScalingFactor => config.DefenceScalingFactor;
-		private float LevelScalingFactor => config.LevelScalingFactor;
-		private float InverseResistanceDiminishingReturnsThreshold => config.ReciprocalOfResistanceDiminishingReturnsThreshold;
+		public IHitBoxComponent HurtBox => this._hurtBox;
 
 		protected override bool OnInit() {
 			if (this.ecr == null) {
@@ -49,86 +96,86 @@ namespace Kope.Component.Combat {
 				return false;
 			}
 
-			if (!this.ecr.ComponentRegistry.TryGetMutatableComponent(out healthComponent)) {
+			if (!this.ecr.ComponentRegistry.TryGetMutatableComponent(out _healthComponent)) {
 				Debug.LogError($"DamageProcessor on {gameObject.name} failed to find HealthComponent.");
 				return false;
 			}
 
-			if (!this.ecr.ComponentRegistry.TryGetReadOnlyComponent(out statSystem)) {
+			if (!this.ecr.ComponentRegistry.TryGetReadOnlyComponent(out _statSystem)) {
 				Debug.LogError($"DamageProcessor on {gameObject.name} failed to find IStatSystem.");
 				return false;
 			}
 
-			if (!this.ecr.ComponentRegistry.TryGetMutatableComponent(out this.hurtBox)) {
+			if (!this.ecr.ComponentRegistry.TryGetMutatableComponent(out this._hurtBox)) {
 				Debug.LogError($"DamageProcessor on {gameObject.name} failed to find HurtBox.");
 				return false;
 			}
+			this._damageCalculator = new DamageCalculator(config);
 
 			return true;
 		}
 
 
-		private void OnEnable() {
-			if (this.hurtBox == null) return;
-			this.hurtBox.OnHitCombatible += HandleHurtBoxHit;
-		}
 
-		private void OnDisable() {
-			if (this.hurtBox != null) {
-				this.hurtBox.OnHitCombatible -= HandleHurtBoxHit;
-			}
-			ClearActiveEffects();
-		}
-
-		protected override void OnUpdate() {
-			if (this._activeTickableEffects.Count == 0) return;
-
-			float deltaTime = Time.deltaTime;
-			for (int i = this._activeTickableEffects.Count - 1; i >= 0; i--) {
-				this._activeTickableEffects[i]?.Tick(deltaTime);
-			}
-		}
-
-		#region Damage Formula Logic
-
-		protected virtual float GetDefenceMultiplier(float pierceRatio = 0) {
-			float currentDef = this.statSystem.GetStatValue(CharacterStatType.DEF);
-			float effectiveDefence = currentDef * Mathf.Clamp01(1 - pierceRatio);
-			return this.DefenceScalingFactor / (this.DefenceScalingFactor + effectiveDefence);
-		}
-
-		protected virtual float GetResistanceMultiplier(DamageType damageType, float ignore = 0) {
-			float resistanceValue = this.statSystem.GetResistanceValue(damageType);
-			float er = resistanceValue - ignore;
-			if (er < 0) return 1f - (er * 0.5f);
-			if (er < this.ResistanceDiminishingReturnsThreshold) return 1f - er;
-			return 1f / (1f + er * this.InverseResistanceDiminishingReturnsThreshold);
-		}
-
-		protected virtual float GetLevelMultiplier(int casterLevel = 0) {
-			float lvlDiff = casterLevel - this._currentLevel;
-
-			float temp = this.LevelScalingFactor * Mathf.Abs(lvlDiff) + 1;
-			return lvlDiff < 0f ? 1f / temp : temp;
-		}
-
-		#endregion
+		#region IDamagable Implementation
 
 		public void TakeDamageDebugOnly(int amount) {
-			TakeHit(new DamageDetail(amount, null, DamageType.Physical));
+			this._healthComponent.ApplyDamage(amount);
+			Debug.Log($"TakeDamageDebugOnly called with amount: {amount}. Current health: {this._healthComponent.CurrentHealth}");
 		}
 
 		public float TakeHit(DamageDetail damageDetail) {
 			if (!this.IsInitialized) return 0f;
+			float finalDamage = this._damageCalculator.TakeHit(damageDetail, this._currentLevel, this._statSystem);
 
-			float defMult = GetDefenceMultiplier(damageDetail.DefencePierceRatio);
-			float resMult = GetResistanceMultiplier(damageDetail.DamageType, damageDetail.IgnoreResistance);
-			float levelMult = GetLevelMultiplier(damageDetail.CasterLevel);
-
-			float finalDamage = damageDetail.DamageAmount * defMult * resMult * levelMult;
-			this.healthComponent.ApplyDamage(finalDamage);
+			this._healthComponent.ApplyDamage(finalDamage);
 			return finalDamage;
 		}
+		public void AddStatModifier(BaseStatModifier modifier) {
+			if (!this.IsInitialized) return;
+			// for the return bool, this component dont care whether modifier is applied or not.
+			_ = this._statSystem.AddStatModifier(modifier);
+		}
+		#endregion
+
+
+
+
+		#region  Hit Handling
+		private void HandleHurtBoxHit(DamagableHitInfo hitInfo) {
+			if (!this.IsInitialized || hitInfo.Effects == null) return;
+
+			for (int i = 0; i < hitInfo.Effects.Count; i++) {
+				var effect = hitInfo.Effects[i]?.Create(hitInfo.EffectContext);
+				ApplyEffect(effect);
+			}
+		}
+		private void HandleStatChangeHit(StatChangeHitInfo hitInfo) {
+			if (!this.IsInitialized || hitInfo.StatEffects == null) return;
+
+			for (int i = 0; i < hitInfo.StatEffects.Count; i++) {
+				var effect = hitInfo.StatEffects[i]?.Create(hitInfo.EffectContext);
+				ApplyEffect(effect);
+			}
+		}
+		#endregion
+
+		#region Effect Application
+		// why we are handling stat effect here rather than in the stat system itself?
+		// since this class references stats anyway to get the stat values for damage calculation, 
+		// it is more efficient to apply the stat modifier here rather than having the stat
+		// system listen for hit events and then apply the modifier, which would require additional
+		// event handling and potentially more complex logic to determine when to apply the modifier.
+		// finally if a entity has this component then that eniity has 1000% the stat system, 
+		// so we don't need to worry about null reference when applying stat modifier here.
+		public void ApplyEffect(IEffect<IStatSystem> effect) {
+			if (!this.IsInitialized || effect == null) return;
+			// IEffect is never ITickableEffect since the statsystem effects
+			// are instant for this component, and stat system manages the duration of the stat modifier 
+			// itself, so we don't need to track it here.
+			effect.Apply(this._statSystem);
+		}
+
 
 		public void ApplyEffect(IEffect<IDamagable> effect) {
 			if (!this.IsInitialized || effect == null) return;
@@ -139,6 +186,10 @@ namespace Kope.Component.Combat {
 			}
 			effect.Apply(this);
 		}
+
+		#endregion
+
+
 
 		private void OnEffectExpired(ITickableEffect effect) {
 			effect.OnCompletedOrCancelled -= OnEffectExpired;
@@ -152,13 +203,31 @@ namespace Kope.Component.Combat {
 			this._activeTickableEffects.Clear();
 		}
 
-		private void HandleHurtBoxHit(CombatibleHitInfo hitInfo) {
-			if (!this.IsInitialized || hitInfo.Effects == null) return;
 
-			for (int i = 0; i < hitInfo.Effects.Count; i++) {
-				var effect = hitInfo.Effects[i]?.Create(hitInfo.EffectContext);
-				ApplyEffect(effect);
+		private void OnEnable() {
+			if (this._hurtBox == null) return;
+			this._hurtBox.OnHitCombatible += HandleHurtBoxHit;
+			this._hurtBox.OnHitStatChange += HandleStatChangeHit;
+		}
+
+		private void OnDisable() {
+			if (this._hurtBox != null) {
+				this._hurtBox.OnHitCombatible -= HandleHurtBoxHit;
+				this._hurtBox.OnHitStatChange -= HandleStatChangeHit;
+			}
+			ClearActiveEffects();
+		}
+
+		protected override void OnUpdate() {
+			if (this._activeTickableEffects.Count == 0) return;
+
+			float deltaTime = Time.deltaTime;
+			for (int i = this._activeTickableEffects.Count - 1; i >= 0; i--) {
+				this._activeTickableEffects[i]?.Tick(deltaTime);
 			}
 		}
+
+
+
 	}
 }

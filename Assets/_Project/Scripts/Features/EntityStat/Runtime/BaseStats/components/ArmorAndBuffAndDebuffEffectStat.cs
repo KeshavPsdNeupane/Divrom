@@ -29,7 +29,7 @@ namespace Kope.Character.Stats {
 			}
 		}
 
-		public bool AddModifier(StatModifier effect) {
+		public bool AddModifier(AbstractBaseModifier effect) {
 			if (!effect.IsDebuff) {
 				return AddToList(effect);
 			}
@@ -53,11 +53,11 @@ namespace Kope.Character.Stats {
 
 		}
 
-		private bool AddToList(StatModifier effect) {
+		private bool AddToList(AbstractBaseModifier effect) {
 			// Prevent  duplicate permanent buff modifiers from same source
 			bool alreadyApplied = modifiers.Exists(
 				m => m.Source == effect.source &&
-				m.ModifierAmount == effect.modifierAmount &&
+				m.ModifierAmount == effect.ModifierAmount &&
 				m.IsPercentage == effect.isPercentage);
 
 			if (alreadyApplied)

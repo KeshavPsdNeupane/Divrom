@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Kope.Character.Stats;
 using Kope.Component.Combat.Interface;
 using Kope.Component.Health.Interface;
 using Kope.Component.Movement;
@@ -12,12 +13,12 @@ namespace Kope.Component.HitBox.Interface {
 		Other
 	}
 
-	public readonly struct CombatibleHitInfo {
+	public readonly struct DamagableHitInfo {
 		public readonly HitTargetType CombatType;
 		public readonly EffectContext EffectContext;
 		public readonly IReadOnlyList<IEffectFactory<IDamagable>> Effects;
 
-		public CombatibleHitInfo(
+		public DamagableHitInfo(
 			EffectContext effectContext = default,
 			HitTargetType combatType = HitTargetType.Entity,
 			IReadOnlyList<IEffectFactory<IDamagable>> effects = null) {
@@ -66,14 +67,28 @@ namespace Kope.Component.HitBox.Interface {
 			this.KnockEffects = knockEffects;
 		}
 	}
+	public readonly struct StatChangeHitInfo {
+		public readonly HitTargetType CombatType;
+		public readonly EffectContext EffectContext;
+		public readonly IReadOnlyList<IEffectFactory<IStatSystem>> StatEffects;
+		public StatChangeHitInfo(
+			in EffectContext effectContext = default,
+			HitTargetType combatType = HitTargetType.Entity,
+			IReadOnlyList<IEffectFactory<IStatSystem>> statEffects = null) {
+			this.CombatType = combatType;
+			this.EffectContext = effectContext;
+			this.StatEffects = statEffects;
+		}
+	}
 
 	public interface IHitBoxComponent {
 		Transform Transform { get; }
 		public HitTargetType CombatType { get; }
-		public event Action<CombatibleHitInfo> OnHitCombatible;
+		public event Action<DamagableHitInfo> OnHitCombatible;
 		public event Action<HealableHitInfo> OnHitHealable;
 		public event Action<StunnableHitInfo> OnHitStunnable;
 		public event Action<KnockableHitInfo> OnHitKnockable;
+		public event Action<StatChangeHitInfo> OnHitStatChange;
 		public void HitCombatible(
 			in EffectContext effectContext = default,
 			HitTargetType combatType = HitTargetType.Entity,
@@ -90,6 +105,10 @@ namespace Kope.Component.HitBox.Interface {
 		in EffectContext effectContext = default,
 		HitTargetType combatType = HitTargetType.Entity,
 		IReadOnlyList<IEffectFactory<IKnockbackable>> knockEffects = null);
+		public void HitStatChange(
+			in EffectContext effectContext = default,
+			HitTargetType combatType = HitTargetType.Entity,
+			IReadOnlyList<IEffectFactory<IStatSystem>> statEffects = null);
 	}
 
 }

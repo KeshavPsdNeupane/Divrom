@@ -1,10 +1,8 @@
 using System;
-using System.Collections;
 using Kope.Component.Combat.Interface;
 using Kope.Core;
 using Kope.Core.ObjectPooling;
 using ServiceLocatorPattern;
-using ThirdParty;
 using UnityEngine;
 
 namespace Kope.Component.Ability.Targeting {
@@ -56,9 +54,7 @@ namespace Kope.Component.Ability.Targeting {
 		private readonly Vector3 _spawnOffset;
 		private readonly int _pierceCount;
 
-		private ObjectPooler _pooler;
-		private AbilityProjectileController _activeController;
-		private CountdownTimer _lifetimeTimer;
+		private ObjectPooler _universalPooler;
 
 		public ProjectileTargetingStrategy(GameObject projectilePrefab, float projectileSpeed,
 			float projectileLifetime, Vector3 spawnOffset, int pierceCount) {
@@ -71,25 +67,16 @@ namespace Kope.Component.Ability.Targeting {
 
 		public override void Start(TargetingManager targetingManager, TargetContext casterContext, EffectContext effectContext, ITargetingReceiver onTargetResolved) {
 			Begin(targetingManager, casterContext, effectContext, onTargetResolved);
-			GlobalServiceLocator.Instance.TryGetService(out this._pooler);
-
-			// Initialize the timer
-			this._lifetimeTimer = new CountdownTimer(this._projectileLifetime);
-			this._lifetimeTimer.OnTimerStop += CleanupProjectile;
+			// Get the pooler service
+			if (this._universalPooler == null) {
+				GlobalServiceLocator.Instance.TryGetService(out this._universalPooler);
+			}
 
 			if (this._projectilePrefab == null || this.targetingManager == null) {
-				FinishTheStratrgy();
+				FinishTheStrategy();
 			}
 		}
 
-		public override void Update() {
-			base.Update();
-
-			if (this._lifetimeTimer != null && this._lifetimeTimer.IsRunning) {
-				Debug.Log($"Projectile Lifetime Remaining: {this._lifetimeTimer.Time:F2} seconds");
-				this._lifetimeTimer.Tick(UnityEngine.Time.deltaTime);
-			}
-		}
 
 		protected override bool ExecuteResolution(Vector3 clickPoint) {
 			Vector3 origin = this.casterContext.HitBox.Transform.position;
@@ -98,10 +85,12 @@ namespace Kope.Component.Ability.Targeting {
 			var rotation = CalculateSpawnRotation(direction, this.effectContext.Dimension);
 			var spawnPosition = CalculateSpawnPosition(origin, direction, this._spawnOffset, this.effectContext.Dimension);
 
-			if (_pooler != null && _pooler.TryRent(this._projectilePrefab, out GameObject go)) {
+			if (this._universalPooler != null && this._projectilePrefab != null) {
+				var go = this._universalPooler.Rent(this._projectilePrefab);
 				go.transform.SetPositionAndRotation(spawnPosition, rotation);
 
 				if (go.TryGetComponent<AbilityProjectileController>(out var controller)) {
+					controller.OnProjectileRelease += CleanupProjectile;
 					controller.Initialize(this._onTargetResolved, this.effectContext,
 										  direction, this._projectileSpeed, this._projectileLifetime, this._pierceCount);
 
@@ -110,17 +99,13 @@ namespace Kope.Component.Ability.Targeting {
 			}
 			return true;
 		}
-		private void OnProjectileImpact() {
-			this._lifetimeTimer.Stop();
-		}
 
-		private void CleanupProjectile() {
-			if (this._activeController != null && this._pooler != null) {
-				this._pooler.Release(this._activeController);
-				this._activeController = null;
+
+		private void CleanupProjectile(GameObject obj) {
+			if (this._universalPooler != null) {
+				obj.SetActive(false);
+				this._universalPooler.Release(this._projectilePrefab, obj);
 			}
-
-			FinishTheStratrgy();
 		}
 
 		private Vector3 GetDirectionToClickPoint(Vector3 clickPoint, Vector3 origin) {

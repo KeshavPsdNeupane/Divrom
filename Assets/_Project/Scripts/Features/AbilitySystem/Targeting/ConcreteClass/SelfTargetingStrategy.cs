@@ -26,7 +26,7 @@ namespace Kope.Component.Ability.Targeting {
 			// we will clear the stragety state regardless of whether the caster context had 
 			// a valid hitbox or not, because even if it doesn't have a hitbox, 
 			// it is still a valid target for self-targeting abilities (e.g. self-buffs).
-			FinishTheStratrgy();
+			FinishTheStrategy();
 		}
 		protected override bool ExecuteResolution(Vector3 clickPoint) {
 			// self Targeting doesn't use clickPoint for resolution, so we can ignore it here.

@@ -1,13 +1,11 @@
 using System;
-using ThirdParty;
 using Kope.Component.Combat.Interface;
-using Kope.Core.ObjectPooling;
 using Kope.Core.Sensor;
 using UnityEngine;
 
 namespace Kope.Component.Ability.Targeting {
 
-	public sealed class AbilityProjectileController : SensorBase, IPoolable {
+	public sealed class AbilityProjectileController : SensorBase {
 		// Why does this controller handle the pooler release rather than actual strategy that spawns it?
 		// 
 		// Projectiles are "Autonomous Objects." Once fired, they travel independently of the 
@@ -28,17 +26,14 @@ namespace Kope.Component.Ability.Targeting {
 		private bool _isInitialized;
 		private bool _hasFinished;
 
-		private CountdownTimer _lifetimeTimer;
-		private ObjectPooler _pooler;
+		float _timer;
+		float _lifetime;
 
-		public GameObject OriginPrefab { get; set; }
+		public event Action<GameObject> OnProjectileRelease;
 
 		public override void OnStart() {
 			this._body = this.projectileRigidbody ?? GetComponent<Rigidbody2D>();
 			if (this._body != null) this._body.gravityScale = 0f;
-
-			// Get pooler once
-			ServiceLocatorPattern.GlobalServiceLocator.Instance.TryGetService(out _pooler);
 		}
 
 		public void Initialize(
@@ -58,24 +53,21 @@ namespace Kope.Component.Ability.Targeting {
 			if (this._body == null) this._body = GetComponent<Rigidbody2D>();
 			this._body.linearVelocity = direction.normalized * speed;
 
-			// Setup and start the timer
-			if (_lifetimeTimer == null) {
-				_lifetimeTimer = new CountdownTimer(lifetime);
-				_lifetimeTimer.OnTimerStop += () => ReleaseProjectile();
-			} else {
-				_lifetimeTimer.Reset(lifetime);
-			}
-			_lifetimeTimer.Start();
+			this._lifetime = lifetime;
+			this._timer = 0f;
 		}
 
 		private void Update() {
-			if (_isInitialized && _lifetimeTimer != null && _lifetimeTimer.IsRunning) {
-				_lifetimeTimer.Tick(Time.deltaTime);
+			if (!this._isInitialized || this._hasFinished) return;
+
+			this._timer += Time.deltaTime;
+			if (this._timer >= this._lifetime) {
+				ReleaseProjectile();
 			}
 		}
 
 		public override void OnDetect(Collider2D other) {
-			if (!this._isInitialized || _hasFinished || other == null) return;
+			if (!this._isInitialized || this._hasFinished || other == null) return;
 
 			var caster = this._effectContext.Caster;
 			if (caster != null && other.transform.root == caster.transform.root) return;
@@ -93,25 +85,11 @@ namespace Kope.Component.Ability.Targeting {
 		}
 
 		private void ReleaseProjectile() {
-			if (_hasFinished) return;
-			_hasFinished = true;
-
-			_lifetimeTimer?.Stop();
-
-			if (_pooler != null) {
-				_pooler.Release(this);
-			} else {
-				Destroy(gameObject);
-			}
-		}
-
-		public void ClearState() {
-			this._onTargetResolved = null;
-			this._isInitialized = false;
-			this._hasFinished = false;
-			this._piercesRemaining = 0;
-			if (this._body != null) this._body.linearVelocity = Vector2.zero;
-			_lifetimeTimer?.Stop();
+			if (this._hasFinished) return;
+			this._hasFinished = true;
+			this._timer = 0f;
+			this._body.linearVelocity = Vector2.zero;
+			this.OnProjectileRelease?.Invoke(this.gameObject);
 		}
 	}
 }

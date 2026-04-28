@@ -148,6 +148,7 @@ namespace Kope.AbilitySystem.Effect {
 		[Min(0f)] public float PierceRatio;
 		[Min(0f)] public float IgnoreResistance;
 	}
+
 	[Serializable]
 	public struct DOTEffectLevelScaling {
 		[Min(0f)] public int AbilityUsedThreshold;

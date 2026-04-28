@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Kope.Character.Stats;
 using Kope.Component.Combat.Interface;
 using Kope.Component.Health.Interface;
 using Kope.Component.HitBox.Interface;
@@ -14,10 +15,11 @@ namespace Kope.Component.HitBox {
 		[SerializeField] private Collider2D hurtBoxCollider;
 		[SerializeField] private bool isInvulnerable;
 
-		public event Action<CombatibleHitInfo> OnHitCombatible;
+		public event Action<DamagableHitInfo> OnHitCombatible;
 		public event Action<HealableHitInfo> OnHitHealable;
 		public event Action<StunnableHitInfo> OnHitStunnable;
 		public event Action<KnockableHitInfo> OnHitKnockable;
+		public event Action<StatChangeHitInfo> OnHitStatChange;
 		public Collider2D HurtBoxCollider => hurtBoxCollider;
 		public HitTargetType CombatType => combatType;
 		public Transform Transform => this.gameObject.transform;
@@ -41,7 +43,7 @@ namespace Kope.Component.HitBox {
 			// but we can check if the Caster is null to determine if it's a valid context.
 			// and also using "in" to avoid copying the struct since it might be large.
 			if (effectContext == default || effectContext.Caster == null || effects == null) return;
-			this.OnHitCombatible?.Invoke(new CombatibleHitInfo(effectContext, combatType, effects));
+			this.OnHitCombatible?.Invoke(new DamagableHitInfo(effectContext, combatType, effects));
 		}
 
 		public void HitHealable(
@@ -64,6 +66,13 @@ namespace Kope.Component.HitBox {
 			IReadOnlyList<IEffectFactory<IKnockbackable>> knockEffects = null) {
 			if (effectContext == default || effectContext.Caster == null || knockEffects == null) return;
 			this.OnHitKnockable?.Invoke(new KnockableHitInfo(effectContext, combatType, knockEffects));
+		}
+
+		public void HitStatChange(in EffectContext effectContext = default,
+		HitTargetType combatType = HitTargetType.Entity,
+		IReadOnlyList<IEffectFactory<IStatSystem>> statEffects = null) {
+			if (effectContext == default || effectContext.Caster == null || statEffects == null) return;
+			this.OnHitStatChange?.Invoke(new StatChangeHitInfo(effectContext, combatType, statEffects));
 		}
 	}
 }

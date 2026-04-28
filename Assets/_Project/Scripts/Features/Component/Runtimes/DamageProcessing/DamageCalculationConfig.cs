@@ -3,8 +3,8 @@ using UnityEngine;
 
 namespace Kope.Component.Health {
 
-	[CreateAssetMenu(fileName = "HealthComponentConfig", menuName = "Configs/HealthComponentConfig")]
-	public class HealthComponentConfig : ScriptableObject {
+	[CreateAssetMenu(fileName = "DamageCalculationConfig", menuName = "Configs/DamageCalculationConfig", order = 1)]
+	public class DamageCalculationConfig : ScriptableObject {
 		[SerializeField, Tooltip("Factor by which defence scales with level")] private float defenceScalingFactor = 0.5f;
 		[SerializeField, Tooltip("Threshold at which resistance begins to diminish")] private float resistanceDiminishingReturnsThreshold = 0.8f;
 		[SerializeField, Tooltip("Factor by which level affects health")] private float levelScalingFactor = 0.02f;

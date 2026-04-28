@@ -11,7 +11,8 @@ namespace Kope.Component.Ability.Targeting {
 
 		public AreaTargetingStrategy3D(bool includeCaster, GameObject previewPrefab,
 			float radius, LayerMask layerMask, float previewHeightOffset, int maxTargets)
-			: base(includeCaster, previewPrefab, radius, layerMask, previewHeightOffset, maxTargets) {
+			: base(includeCaster, previewPrefab, radius, layerMask, previewHeightOffset, maxTargets, Color.red) {
+			this._results = new Collider[maxTargets];
 			this._results = new Collider[maxTargets];
 		}
 

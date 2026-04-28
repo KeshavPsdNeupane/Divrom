@@ -29,7 +29,7 @@ namespace Kope.Component.Ability.Targeting {
 
 		public virtual void Update() { }
 
-		public virtual void FinishTheStratrgy(bool clearOnTargetResolved = true) {
+		public virtual void FinishTheStrategy(bool clearOnTargetResolved = true) {
 			if (!this._isTargeting) return;
 			this._isTargeting = false;
 			if (clearOnTargetResolved) {
@@ -73,7 +73,7 @@ namespace Kope.Component.Ability.Targeting {
 			// (e.g. projectile strategies defer resolution until hit or expiry).
 			// FinishTheStrategy is always called here so derived classes can't leave the strategy lingering.
 			bool shouldClearCallback = ExecuteResolution(clickPoint);
-			FinishTheStratrgy(shouldClearCallback);
+			FinishTheStrategy(shouldClearCallback);
 		}
 
 		/// <summary>
