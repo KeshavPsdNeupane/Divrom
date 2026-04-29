@@ -6566,7 +6566,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &731899372
 Transform:
   m_ObjectHideFlags: 0
@@ -7560,19 +7560,19 @@ MonoBehaviour:
     gameObjectName: SceneServiceLocator
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: Dummy
+    gameObjectName: Hpstore (2)
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: AddDef (1)
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: InitCaller
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: Addhp (2)
+    gameObjectName: AddSpd (1)
   - typeName: EntityInitCaller
     order: -40
     gameObjectName: Hpstore (1)
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Addhp (1)
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: AddDef (1)
   - typeName: EntityInitCaller
     order: -40
     gameObjectName: PlayerNew
@@ -7584,22 +7584,22 @@ MonoBehaviour:
     gameObjectName: Dummy (1)
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: AddSpd (1)
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: Hpstore
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: Hpstore (2)
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: Addhp (1)
+    gameObjectName: InitCaller
   - typeName: EntityInitCaller
     order: -40
     gameObjectName: AddDef
   - typeName: EntityInitCaller
     order: -40
     gameObjectName: Addhp
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Hpstore
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Addhp (2)
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Dummy
   - typeName: InGameUIInitCaller
     order: -30
     gameObjectName: UI
@@ -7953,11 +7953,11 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  x: 0.726
-  result: 0.33709687
-  unityResult: 0.18408638
-  customEvalTime: 0.0007
-  unityEvalTime: 0.0007
+  x: 0.575
+  result: 0.6205578
+  unityResult: 0.38834375
+  customEvalTime: 0.0005
+  unityEvalTime: 0.0006000000000000001
 --- !u!1001 &1031836800
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9359,6 +9359,51 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1384080214
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1384080215}
+  - component: {fileID: 1384080216}
+  m_Layer: 3
+  m_Name: AnimationStateController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1384080215
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1384080214}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7554677529030367479}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1384080216
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1384080214}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49737d9be5326955c905d27711b5235d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Kope.Actor.AnimationStateController
+  ecr: {fileID: 630533316}
 --- !u!1 &1406489389
 GameObject:
   m_ObjectHideFlags: 0
@@ -14132,26 +14177,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 682615762668415778, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
-      propertyPath: abilityScriptableObjects.Array.size
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 682615762668415778, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
-      propertyPath: 'abilityScriptableObjects.Array.data[0]'
-      value: 
-      objectReference: {fileID: 11400000, guid: aaf48e97b5f8efe7391506c7dc5fc8d5, type: 2}
-    - target: {fileID: 682615762668415778, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
-      propertyPath: 'abilityScriptableObjects.Array.data[1]'
-      value: 
-      objectReference: {fileID: 11400000, guid: bc8ab4b407053887cb29e361a939e7f5, type: 2}
-    - target: {fileID: 682615762668415778, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
-      propertyPath: 'abilityScriptableObjects.Array.data[2]'
-      value: 
-      objectReference: {fileID: 11400000, guid: abc73f1787c462740aac08f8b477e347, type: 2}
-    - target: {fileID: 682615762668415778, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
-      propertyPath: 'abilityScriptableObjects.Array.data[3]'
-      value: 
-      objectReference: {fileID: 11400000, guid: bc9a3576add404caa914ef5a9a60fe43, type: 2}
     - target: {fileID: 2033154260760698069, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
       propertyPath: m_Name
       value: PlayerNew
@@ -14164,6 +14189,14 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6037248722059709900, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: components.Array.size
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 6037248722059709900, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: 'components.Array.data[12]'
+      value: 
+      objectReference: {fileID: 1384080216}
     - target: {fileID: 6671984905160279280, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
       propertyPath: m_LocalPosition.x
       value: -3.6
@@ -14210,7 +14243,10 @@ PrefabInstance:
       objectReference: {fileID: 1294788629}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 6671984905160279280, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1384080215}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
 --- !u!4 &7554677529030367479 stripped

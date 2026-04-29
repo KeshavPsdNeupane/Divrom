@@ -22,7 +22,7 @@ namespace Kope.Core.Extensions {
 			var type = obj.GetType();
 			var fields = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
-			StringBuilder sb = new StringBuilder();
+			StringBuilder sb = new();
 			sb.AppendLine($"<b>Memory Breakdown for {type.Name}</b>");
 			sb.AppendLine("<color=#888888>-----------------------------------------------------------</color>");
 			sb.AppendLine(string.Format("{0,-25} | {1,-15} | {2,-10}", "Field Name", "Type", "Size (B)"));

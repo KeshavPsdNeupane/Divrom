@@ -1164,7 +1164,7 @@ MonoBehaviour:
   detectionCollider: {fileID: 1528198142297516788}
   detectableLayers:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 2048
   detectionRadius: 1
   isTrigger: 1
   usesExitDetection: 0
@@ -1355,10 +1355,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Kope.Component.Ability.PlayerAbilityCaster
   abilityCount: 4
   abilityScriptableObjects:
-  - {fileID: 11400000, guid: ccf6bb4f3c3672f4f9b8e12a2dabb7d3, type: 2}
-  - {fileID: 11400000, guid: 2d0f82783fd20e0518618494584aa2b0, type: 2}
+  - {fileID: 11400000, guid: aaf48e97b5f8efe7391506c7dc5fc8d5, type: 2}
   - {fileID: 11400000, guid: bc8ab4b407053887cb29e361a939e7f5, type: 2}
   - {fileID: 11400000, guid: abc73f1787c462740aac08f8b477e347, type: 2}
+  - {fileID: 11400000, guid: bc9a3576add404caa914ef5a9a60fe43, type: 2}
   ecr: {fileID: 6037248722059709900}
 --- !u!1 &7369234751102343601
 GameObject:

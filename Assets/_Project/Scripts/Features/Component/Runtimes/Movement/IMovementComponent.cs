@@ -36,14 +36,34 @@ namespace Kope.Component.Movement {
 		public static MovementIntent Default => new(Vector3.zero, MovementIntentType.Stop, MovementIntentPriority.Normal);
 	}
 
-	public interface IMovementComponent {
+	/// <summary>
+	/// Provides a orientation vector representing the actor's most recent "facing" or "heading."
+	/// This is context-agnostic: it could be the last movement vector or the last look-at target.
+	/// </summary>
+	public interface ILastDirectionProvider {
+		/// <summary>
+		/// The last valid direction registered by the provider. 
+		/// Ensures systems (like Animations) have a non-zero fallback when current movement stops.
+		/// </summary>
+		Vector3 LastDirection { get; }
+	}
+
+	/// <summary>
+	/// Defines core locomotion capabilities. Inherits from ILastDirectionProvider to ensure 
+	/// that any entity capable of movement also provides a persistent heading for secondary systems.
+	/// </summary>
+	public interface IMovementComponent : ILastDirectionProvider {
 		Vector3 Direction { get; }
 		Vector3 Position { get; }
 		AxisMode Dimension { get; }
+
 		void SetMovementIntent(MovementIntent intent);
 		Vector3 GetLookingAtDirection();
 		void StopMovementIntent();
 	}
+
+
+
 	public interface IKnockbackable {
 		void ApplyKnockback(Vector3 direction, float duration, float impulse = 2.5f, bool isPulling = false);
 	}

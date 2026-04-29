@@ -1,52 +1,36 @@
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using ServiceLocatorPattern;
 
-/// <summary>
-/// Written by chatGPT-4 deep model with some adjustments.
-/// Simple manager to hold the currently dragged ItemSlot and source UI.
-/// </summary>
+
 public class ItemDragDropManager : SceneServiceBase {
-	public ItemSlot CopyOfDraggedSourceItemSlot { get; private set; }
 	public ItemSlotUI SourceSlotUI { get; private set; }
-
-	private GameObject dragIcon;
-	private Image dragIconImage;
 	private Canvas parentCanvas;
+	private Image _dragIconImage1;
 
+	public void Start() {
+		this._dragIconImage1 = new GameObject("DragInventoryItemIcon").AddComponent<Image>();
+		this._dragIconImage1.raycastTarget = false;
+		this._dragIconImage1.gameObject.SetActive(false);
+		this._dragIconImage1.preserveAspect = true;
+	}
 
-	public void BeginDrag(ItemSlot slotCopy, ItemSlotUI sourceUI, Canvas canvas, Sprite icon) {
-		this.CopyOfDraggedSourceItemSlot = slotCopy;
+	public void BeginDrag(ItemSlotUI sourceUI, Canvas canvas, Sprite icon) {
 		this.SourceSlotUI = sourceUI;
 		this.parentCanvas = canvas;
 
-		if (this.dragIcon != null) Destroy(dragIcon);
-		this.dragIcon = new GameObject("DragIcon");
-		this.dragIcon.transform.SetParent(parentCanvas.transform, false);
-		this.dragIconImage = dragIcon.AddComponent<Image>();
-		this.dragIconImage.raycastTarget = false;
-		this.dragIconImage.sprite = icon;
-		this.dragIconImage.preserveAspect = true;
+		this._dragIconImage1.gameObject.transform.SetParent(parentCanvas.transform, false);
+		this._dragIconImage1.gameObject.SetActive(true);
+		this._dragIconImage1.sprite = icon;
+
 	}
 	public void UpdateDragPosition(Vector2 screenPosition) {
-		if (this.dragIcon != null)
-			this.dragIcon.transform.position = screenPosition;
+		this._dragIconImage1.gameObject.transform.position = screenPosition;
 	}
 
 	public void EndDrag() {
-		if (this.dragIcon != null) Destroy(this.dragIcon);
-		this.dragIcon = null;
-		this.dragIconImage = null;
-		this.CopyOfDraggedSourceItemSlot = null;
+		this._dragIconImage1.gameObject.SetActive(false);
+		this._dragIconImage1.sprite = null;
 		this.SourceSlotUI = null;
 	}
-
-	public bool IsDroppedItemIsOverUI(PointerEventData eventData) {
-		List<RaycastResult> results = new List<RaycastResult>();
-		EventSystem.current.RaycastAll(eventData, results);
-		return results.Count > 0;
-	}
-
 }

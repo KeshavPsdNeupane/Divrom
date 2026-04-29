@@ -51,18 +51,17 @@ namespace Kope.Component.Movement {
 		}
 	}
 	/// <summary>
-	/// MovementComponentBase is a comprehensive movement system designed to handle both player input and 
-	/// external forces in a flexible way.
-	/// The amount of interfact might be scary at first but it is designed to 
-	/// be modular and extensible, allowing for a wide range of movement behaviors 
-	/// and interactions while maintaining a clear separation of concerns between different layers 
-	/// of movement logic.
-	/// And all the complexity of this implementation is kinda expected this this component is responsible ]
-	/// for handling not only the movement intent from player input but also the physics interactions
-	/// from external forces, stuns, and knockbacks, which can all interact in complex ways.
-	/// And these 2 kind of interaction need to be here so that we can have a consistent and unified movement 
-	/// system that can handle all these cases without needing to scatter the logic across multiple 
-	/// components or systems, which would make it harder to maintain and extend in the long run.
+	/// Centralized Locomotion Controller for the Kope Framework.
+	/// 
+	/// DESIGN RATIONALE:
+	/// This component acts as a 'Velocity Mediator,' blending high-level Movement Intent 
+	/// (Input/AI) with low-level Physical Forces (Knockbacks/Impulses). 
+	/// 
+	/// By centralizing these layers, we avoid 'Velocity Fighting' and ensure consistent 
+	/// behavior during complex states like Stuns or SuperStuns. The multi-interface 
+	/// implementation allows external systems (Combat, Save, Status) to interact with 
+	/// the Actor through narrow contracts without requiring a direct dependency on 
+	/// the movement logic.
 	/// </summary>
 	public class MovementComponentBase : InitializableBase,
 	IMovementComponent, ISaveable, IStunnable, IKnockbackable {
@@ -93,6 +92,9 @@ namespace Kope.Component.Movement {
 		public Rigidbody2D Rigidbody => this.rb;
 
 		public bool IsStunned => this._stunTimer != null && this._stunTimer.IsRunning;
+
+		// ILastDirectionProvider implementation.
+		public Vector3 LastDirection => this._lastDirection;
 
 		#region Initialization & Stats
 

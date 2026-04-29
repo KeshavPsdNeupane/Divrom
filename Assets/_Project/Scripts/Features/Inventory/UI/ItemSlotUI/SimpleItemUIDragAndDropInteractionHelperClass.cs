@@ -15,10 +15,7 @@ public class SimpleItemUIDragAndDropInteractionHelperClass {
 	public void BeginDrag(ItemSlotUI itemUISlot, CanvasGroup canvasGroup, Canvas parentCanvas) {
 		if (itemUISlot == null || itemUISlot.AssignedInventorySlot == null || itemUISlot.AssignedInventorySlot.ItemData == null || mgr == null) return;
 
-		ItemSlot tempCopy = new(itemUISlot.AssignedInventorySlot.ItemData,
-								itemUISlot.AssignedInventorySlot.StackCount);
-
-		this.mgr.BeginDrag(tempCopy, itemUISlot, parentCanvas, itemUISlot.AssignedInventorySlot.ItemData.itemIcon);
+		this.mgr.BeginDrag(itemUISlot, parentCanvas, itemUISlot.AssignedInventorySlot.ItemData.itemIcon);
 
 		canvasGroup.alpha = 0.5f;
 		canvasGroup.blocksRaycasts = false;
@@ -43,11 +40,11 @@ public class SimpleItemUIDragAndDropInteractionHelperClass {
 	}
 
 	public void Drop(ItemSlotUI targetUISlot) {
-		if (this.mgr == null || this.mgr.CopyOfDraggedSourceItemSlot == null ||
-			this.mgr.SourceSlotUI == null || targetUISlot == null) return;
+		if (this.mgr == null || this.mgr.SourceSlotUI == null ||
+		this.mgr.SourceSlotUI.AssignedInventorySlot == null || targetUISlot == null) return;
 
-		ItemSlot draggedSlot = this.mgr.CopyOfDraggedSourceItemSlot;
 		ItemSlotUI sourceUISlot = this.mgr.SourceSlotUI;
+		ItemSlot draggedSlot = this.mgr.SourceSlotUI.AssignedInventorySlot;
 		ItemSlot targetSlot = targetUISlot.AssignedInventorySlot;
 
 		// Handle drop cases
@@ -101,6 +98,17 @@ public class SimpleItemUIDragAndDropInteractionHelperClass {
 	}
 
 	private void SwapSlots(ItemSlotUI sourceUISlot, ItemSlotUI targetUISlot) {
+		// need to make deep copy of the source and target slot data to avoid reference issues when swapping
+		// if someone goes to swap two slots and one of them is the source slot, if we don't
+		// make a copy, we will end up with reference issues and both slots will end up
+		// with the same data after the swap. the item in the dragged slot will end up in both the
+		// source and target slot after the swap because they will reference the same ItemSlot data.
+		// by making a copy, we can avoid this issue and ensure that the source and target slots
+		// end up with the correct data after the swap.
+
+		// these class are fairly small so the deep copy is not a big deal, if we were dealing 
+		// with larger classes we would want to implement a more efficient way to handle this, 
+		// but for our purposes this is sufficient and keeps the code simple and easy to understand.
 		ItemSlot sourceCopy = new(sourceUISlot.AssignedInventorySlot.ItemData, sourceUISlot.AssignedInventorySlot.StackCount);
 		ItemSlot targetCopy = new(targetUISlot.AssignedInventorySlot.ItemData, targetUISlot.AssignedInventorySlot.StackCount);
 

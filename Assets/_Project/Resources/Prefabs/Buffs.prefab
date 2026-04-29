@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 1703189556996044989}
   - component: {fileID: 7847816778885904574}
   - component: {fileID: 7491166595083753095}
-  m_Layer: 9
+  m_Layer: 11
   m_Name: AddDef (1)
   m_TagString: StatusEffect
   m_Icon: {fileID: 0}
@@ -187,7 +187,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2220858226749057220}
   - component: {fileID: 4255318028384407776}
-  m_Layer: 9
+  m_Layer: 11
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -284,7 +284,7 @@ GameObject:
   - component: {fileID: 4784172945682777350}
   - component: {fileID: 346225319489772788}
   - component: {fileID: 1743002802768173349}
-  m_Layer: 9
+  m_Layer: 11
   m_Name: Addhp (1)
   m_TagString: StatusEffect
   m_Icon: {fileID: 0}
@@ -461,7 +461,7 @@ GameObject:
   - component: {fileID: 6738816631613905506}
   - component: {fileID: 3991051474799595702}
   - component: {fileID: 5654987288443734813}
-  m_Layer: 9
+  m_Layer: 11
   m_Name: AddDef
   m_TagString: StatusEffect
   m_Icon: {fileID: 0}
@@ -672,7 +672,7 @@ GameObject:
   - component: {fileID: 5306763311426310566}
   - component: {fileID: 6317169973083217252}
   - component: {fileID: 426976735408551214}
-  m_Layer: 9
+  m_Layer: 11
   m_Name: Addhp (2)
   m_TagString: StatusEffect
   m_Icon: {fileID: 0}
@@ -843,7 +843,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7139108682145815513}
   - component: {fileID: 2447180412080917058}
-  m_Layer: 9
+  m_Layer: 11
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -934,7 +934,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7417557193169813272}
   - component: {fileID: 5744335524032519228}
-  m_Layer: 9
+  m_Layer: 11
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1024,7 +1024,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4529134496874935388}
-  m_Layer: 9
+  m_Layer: 11
   m_Name: def
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1064,7 +1064,7 @@ GameObject:
   - component: {fileID: 4630339933961776763}
   - component: {fileID: 3076879283262664330}
   - component: {fileID: 2710043825809214334}
-  m_Layer: 9
+  m_Layer: 11
   m_Name: AddSpd (1)
   m_TagString: StatusEffect
   m_Icon: {fileID: 0}
@@ -1235,7 +1235,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5182074621675209341}
   - component: {fileID: 9217696127393331227}
-  m_Layer: 9
+  m_Layer: 11
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1326,7 +1326,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3968961660713098963}
   - component: {fileID: 4352088365947146624}
-  m_Layer: 9
+  m_Layer: 11
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1423,7 +1423,7 @@ GameObject:
   - component: {fileID: 7768581690230232246}
   - component: {fileID: 24027889215411010}
   - component: {fileID: 9107418771064554752}
-  m_Layer: 9
+  m_Layer: 11
   m_Name: AddSpd
   m_TagString: StatusEffect
   m_Icon: {fileID: 0}
@@ -1593,7 +1593,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7613188475979125402}
-  m_Layer: 9
+  m_Layer: 11
   m_Name: AddHpCollction
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1634,7 +1634,7 @@ GameObject:
   - component: {fileID: 9025357845960183026}
   - component: {fileID: 3186751994654637514}
   - component: {fileID: 7892775882635857607}
-  m_Layer: 9
+  m_Layer: 11
   m_Name: Addhp
   m_TagString: StatusEffect
   m_Icon: {fileID: 0}
@@ -1805,7 +1805,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8920257308691409854}
   - component: {fileID: 7040802182733158023}
-  m_Layer: 9
+  m_Layer: 11
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1895,7 +1895,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8538014386256031303}
-  m_Layer: 9
+  m_Layer: 11
   m_Name: AddMoveCollection
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1929,7 +1929,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4672372140032682091}
   - component: {fileID: 3993539281564519698}
-  m_Layer: 9
+  m_Layer: 11
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
