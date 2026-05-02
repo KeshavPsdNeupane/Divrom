@@ -96,6 +96,7 @@ namespace Kope.Component.Movement {
 		// ILastDirectionProvider implementation.
 		public Vector3 LastDirection => this._lastDirection;
 
+
 		#region Initialization & Stats
 
 		protected override bool OnInit() {
@@ -268,6 +269,18 @@ namespace Kope.Component.Movement {
 			this._stunTimer.Start();
 		}
 		public void ForceCancellStun() => this._stunTimer?.Stop();
+
+		void IMovementComponent.SetMovementIntent(MovementIntent intent) {
+			throw new NotImplementedException();
+		}
+
+		Vector3 IMovementComponent.GetLookingAtDirection() {
+			throw new NotImplementedException();
+		}
+
+		void IMovementComponent.StopMovementIntent() {
+			throw new NotImplementedException();
+		}
 
 		#endregion
 	}

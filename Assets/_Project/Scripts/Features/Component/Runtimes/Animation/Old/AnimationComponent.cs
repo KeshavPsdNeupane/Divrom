@@ -17,7 +17,7 @@ namespace Kope.Component.Animation {
 
 		protected override bool OnInit() {
 			if (this.anim == null) {
-				MyLogger.Error("Animator component is not assigned in AnimationComponent." + GetParentGameObjectHeirarchyMessage());
+				Debug.LogError("Animator component is not assigned in AnimationComponent." + GetParentGameObjectHeirarchyMessage());
 				return false;
 			}
 			/// Defaulting to faceing down on init
@@ -57,9 +57,11 @@ namespace Kope.Component.Animation {
 			return stateInfo.normalizedTime >= THRESHOLD;
 		}
 
-		public bool CanTransitionToAnimation(int animationHash) {
+		public bool CanTransitionToNextAnimation(int nextAnimationHash) {
+			// animation can be transitioned to if the animator is not in transition and
+			// the current animation is not the same as the target animation
 			return this.anim.IsInTransition(0) == false &&
-				   this.anim.GetCurrentAnimatorStateInfo(0).shortNameHash != animationHash;
+				   this.anim.GetCurrentAnimatorStateInfo(0).shortNameHash != nextAnimationHash;
 		}
 
 	}

@@ -8,6 +8,6 @@ namespace Kope.Component.Animation {
 		void AnimationTrigger();
 		bool DoesAnimationExist(int animationHash);
 		bool IsAnimationFinished(int animationHash, float THRESHOLD = 0.9f);
-		bool CanTransitionToAnimation(int animationHash);
+		bool CanTransitionToNextAnimation(int animationHash);
 	}
 }

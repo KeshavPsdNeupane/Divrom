@@ -194,7 +194,7 @@ namespace Kope.Component.Attack {
 		}
 
 		private bool CanPerformAttack() =>
-			this._animationComponent.CanTransitionToAnimation(this.EquippedWeaponData.PrimaryAttackAnimationHash);
+			this._animationComponent.CanTransitionToNextAnimation(this.EquippedWeaponData.PrimaryAttackAnimationHash);
 
 		protected abstract float PerformAttackInternal();
 	}

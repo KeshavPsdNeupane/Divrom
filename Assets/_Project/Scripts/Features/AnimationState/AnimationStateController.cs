@@ -35,8 +35,8 @@ namespace Kope.Actor {
 			// it wont spam the log.
 			if (this._tempLastDir != _lastDirectionProvider.LastDirection) {
 				this._tempLastDir = _lastDirectionProvider.LastDirection;
-				Debug.Log($"Last direction changed to: {this._tempLastDir}");
 			}
 		}
+
 	}
 }
