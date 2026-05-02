@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb0459794d166c46b8fa943056a6016c, type: 3}
+  m_Name: AnimationDataSO
+  m_EditorClassIdentifier: Assembly-CSharp::Kope.Actor.AnimationDataSO
+  _profiles:
+  - _name: SO1
+    _animationSpeed: 2
+    _isLooping: 0
+    _normalizedExitTime: 0.7
+  - _name: SO2
+    _animationSpeed: 1
+    _isLooping: 1
+    _normalizedExitTime: 0

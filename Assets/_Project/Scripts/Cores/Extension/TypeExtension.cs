@@ -12,7 +12,7 @@ namespace Kope.Core.Extensions {
 		/// <param name="type"></param>
 		/// <param name="suffix"></param>
 		/// <returns></returns>
-		public static string ToStringRemovePostFix(this Type type, string suffix = "Enum") {
+		public static string ToStringRemovePostFix(this System.Type type, string suffix = "Enum") {
 
 			return StringExtension.RemovePostFix(type.Name, suffix);
 		}

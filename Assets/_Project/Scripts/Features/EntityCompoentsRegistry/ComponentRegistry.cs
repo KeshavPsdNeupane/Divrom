@@ -24,9 +24,9 @@ namespace Kope.Core.EntityComponentRegistry {
 		private readonly AxisMode dimension = AxisMode.TwoD;
 		private readonly bool hasBehavioralComponents = false;
 		private readonly Transform entityTransform;
-		private readonly Dictionary<Type, object> components = new();
+		private readonly Dictionary<System.Type, object> components = new();
 
-		private readonly HashSet<Type> excludedTypes = new()
+		private readonly HashSet<System.Type> excludedTypes = new()
 	{
 		typeof(MonoBehaviour),
 		typeof(Behaviour),
@@ -39,7 +39,7 @@ namespace Kope.Core.EntityComponentRegistry {
 		public string RegistryName => this.registryName;
 		public AxisMode Dimension => this.dimension;
 
-		public Dictionary<Type, object> Components => this.components;
+		public Dictionary<System.Type, object> Components => this.components;
 
 		/// <summary>
 		/// Indicates whether this EntityContext contains a state machine context.
@@ -70,7 +70,7 @@ namespace Kope.Core.EntityComponentRegistry {
 			this.hasBehavioralComponents = hasBehavioralComponents;
 			if (excludedTypes != null) {
 				foreach (var typeName in excludedTypes) {
-					Type type = Type.GetType(typeName);
+					System.Type type = System.Type.GetType(typeName);
 					if (type != null) {
 						this.excludedTypes.Add(type);
 					} else {
@@ -87,7 +87,7 @@ namespace Kope.Core.EntityComponentRegistry {
 		/// </summary>
 		/// <param name="entityTransform"></param>
 		/// <param name="excludedTypes"></param>
-		public ComponentRegistry(AxisMode dimension, string registryName, Transform entityTransform, bool hasBehavioralComponents, HashSet<Type> excludedTypes = null) {
+		public ComponentRegistry(AxisMode dimension, string registryName, Transform entityTransform, bool hasBehavioralComponents, HashSet<System.Type> excludedTypes = null) {
 			this.dimension = dimension;
 			this.registryName = registryName;
 			this.entityTransform = entityTransform;
@@ -111,12 +111,12 @@ namespace Kope.Core.EntityComponentRegistry {
 				return;
 			}
 
-			void Register(Type type) {
+			void Register(System.Type type) {
 				if (this.components.ContainsKey(type)) return;
 				this.components[type] = component;
 			}
 
-			bool ShouldStop(Type type) {
+			bool ShouldStop(System.Type type) {
 				return this.excludedTypes.Contains(type);
 			}
 

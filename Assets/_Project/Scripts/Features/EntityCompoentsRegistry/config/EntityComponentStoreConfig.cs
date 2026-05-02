@@ -12,9 +12,9 @@ namespace Kope.Core.EntityComponentRegistry {
 
 		// Remove 'readonly' as Unity serialization can interfere with it on ScriptableObjects.
 		// We will initialize these lazily or during Init.
-		private HashSet<Type> excludedTypeSet;
+		private HashSet<System.Type> excludedTypeSet;
 
-		private static readonly Type[] commonTypes =
+		private static readonly System.Type[] commonTypes =
 		{
 			typeof(MonoBehaviour),
 			typeof(Component),
@@ -23,7 +23,7 @@ namespace Kope.Core.EntityComponentRegistry {
 			typeof(UnityEngine.Object)
 		};
 
-		public HashSet<Type> ExcludedTypeSet {
+		public HashSet<System.Type> ExcludedTypeSet {
 			get {
 				if (excludedTypeSet == null) InitType();
 				return excludedTypeSet;
@@ -35,7 +35,7 @@ namespace Kope.Core.EntityComponentRegistry {
 
 		private void InitType() {
 			// Initialize if null, otherwise clear to reuse memory
-			if (this.excludedTypeSet == null) this.excludedTypeSet = new HashSet<Type>();
+			if (this.excludedTypeSet == null) this.excludedTypeSet = new HashSet<System.Type>();
 			else excludedTypeSet.Clear();
 
 			foreach (var type in commonTypes) {

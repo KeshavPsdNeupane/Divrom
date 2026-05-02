@@ -23,7 +23,7 @@ public class RandomWanderActionSO : ActionSO {
 	protected override void OnEndOrAbort() {
 		if (this.mc == null) return;
 
-		this.mc.StopMovementIntent();
+		this.mc.SetMovementIntent(MovementIntent.UnlockNext);
 		this.mc = null;
 	}
 	public override void TickUpdate() {
@@ -49,11 +49,10 @@ public class RandomWanderActionSO : ActionSO {
 			var currentDirection = this.mc.Direction;
 			float turnSpeed = 5f / mass; // Adjust turn speed based on mass
 			currentDirection = Vector2.Lerp(currentDirection, targetDirection, turnSpeed * Time.fixedDeltaTime);
-			currentDirection.Normalize();
 			this.mc.SetMovementIntent(new MovementIntent(currentDirection, MovementIntentType.Move));
 			return;
 		}
-		this.mc.StopMovementIntent();
+		this.mc.SetMovementIntent(MovementIntent.UnlockNext);
 		MarkCompleted();
 	}
 

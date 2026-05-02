@@ -63,17 +63,6 @@ public class EntityStateController : InitializableBase {
 		this.stateMachine.ChangeState(this.entityStates.EntityAttack);
 	}
 
-	/// <summary>
-	/// Changes the animation state of the entity.
-	/// Using enum AnimationState for better readability and maintainability.
-	/// and other systems can also use this enum to request animation changes.
-	/// with out direct references to animation names or hashes.
-	/// Enhances decoupling between animation system and other game systems.
-	/// Empty for now, to be implemented later.
-	/// </summary>
-	private void ChangeState(AnimationState state) {
-		//no op for now
-	}
 
 	// this delegate func called when AnimationComponent invokes OnAnimationTrigger event
 	// so we can notify the current state about the animation trigger

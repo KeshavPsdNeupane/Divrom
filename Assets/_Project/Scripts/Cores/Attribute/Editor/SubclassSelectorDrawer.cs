@@ -18,7 +18,7 @@ namespace Kope.Core.Attributes.Editor {
 			var labelRect = new Rect(position.x, position.y, position.width, EditorGUIUtility.singleLineHeight);
 
 			// 1. Improved Type Extraction
-			Type fieldType = GetTargetType(property);
+			System.Type fieldType = GetTargetType(property);
 
 			// Draw the Type Picker Dropdown
 			Rect buttonRect = EditorGUI.PrefixLabel(labelRect, label);
@@ -90,7 +90,7 @@ namespace Kope.Core.Attributes.Editor {
 			return height;
 		}
 
-		private void ShowTypeMenu(SerializedProperty property, Type targetType) {
+		private void ShowTypeMenu(SerializedProperty property, System.Type targetType) {
 			GenericMenu menu = new GenericMenu();
 			menu.AddItem(new GUIContent("Null"), false, () => {
 				property.serializedObject.Update();
@@ -111,8 +111,8 @@ namespace Kope.Core.Attributes.Editor {
 			menu.ShowAsContext();
 		}
 
-		private Type GetTargetType(SerializedProperty property) {
-			Type type = fieldInfo.FieldType;
+		private System.Type GetTargetType(SerializedProperty property) {
+			System.Type type = fieldInfo.FieldType;
 			if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>)) {
 				return type.GetGenericArguments()[0];
 			}
@@ -128,17 +128,17 @@ namespace Kope.Core.Attributes.Editor {
 			.Split('.').AsValueEnumerable().Last();
 		}
 
-		private Type GetTypeFromManagedReference(string fullTypeName) {
+		private System.Type GetTypeFromManagedReference(string fullTypeName) {
 			if (string.IsNullOrEmpty(fullTypeName)) return null;
 
 			var parts = fullTypeName.Split(' ');
-			if (parts.Length < 2) return Type.GetType(fullTypeName);
+			if (parts.Length < 2) return System.Type.GetType(fullTypeName);
 
 			var assemblyName = parts[0];
 			var className = parts[1];
 
 			// Combines class and assembly so Type.GetType can find it
-			return Type.GetType($"{className}, {assemblyName}");
+			return System.Type.GetType($"{className}, {assemblyName}");
 		}
 	}
 }

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Kope.SaveSystem;
@@ -10,7 +9,7 @@ using Kope.Core.Extensions;
 namespace Kope.Core.Identity {
 	public class EntitySaveSystem : MonoBehaviour, IEntitySavePacketProvider {
 		[SerializeField] private EntityInstance identity;
-		private readonly Dictionary<Type, ISaveable> _saveableComponents = new();
+		private readonly Dictionary<System.Type, ISaveable> _saveableComponents = new();
 
 
 		private SavableEntityRegistry _savableEntityRegistry;
@@ -106,7 +105,7 @@ namespace Kope.Core.Identity {
 				string saveId = kvp.Key;
 				ISaveData dataStruct = kvp.Value;
 
-				if (!SaveTypeRegistry.TryResolve(saveId, out Type componentType)) {
+				if (!SaveTypeRegistry.TryResolve(saveId, out System.Type componentType)) {
 					Debug.LogWarning($"[EntitySaveSystem] No component type registered for SaveId '{saveId}'. Skipping load.");
 					continue;
 				}
