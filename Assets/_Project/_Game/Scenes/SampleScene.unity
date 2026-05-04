@@ -153,57 +153,6 @@ Transform:
   - {fileID: 2071341709}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &11974264
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 11974266}
-  - component: {fileID: 11974265}
-  m_Layer: 0
-  m_Name: GameObject
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &11974265
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 11974264}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0f8d6ffd4d952195b869cec982c55282, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Kope.Core.Runtime::Kope.Core.EditorAssetExample
-  DamageType:
-    Source: {fileID: 11400000, guid: d18e06c2241e36f4488ff7ca121a6aee, type: 2}
-    SelectedValue: 1
-  StatusEffects:
-    Source: {fileID: 11400000, guid: 84244300505a076eca743d29b3f7e215, type: 2}
-    SelectedValue: 0400000005000000
-    BindedValues: 0400000005000000
---- !u!4 &11974266
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 11974264}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.59673, y: 4.58623, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &54307723
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5708,7 +5657,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 342759138}
-  - component: {fileID: 342759137}
+  - component: {fileID: 342759139}
   m_Layer: 0
   m_Name: AnimationStateController
   m_TagString: Untagged
@@ -5716,29 +5665,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &342759137
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 342759136}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 49737d9be5326955c905d27711b5235d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Kope.Actor.AnimationStateController
-  ecr: {fileID: 630533316}
-  animationData:
-    useScriptableObject: 0
-    inspector:
-      _profiles:
-      - name: Idle
-        animationSpeed: 0
-        isLooping: 0
-        normalizedExitTime: 0
-    scriptableObject: {fileID: 11400000, guid: 524194b99011fba648590d2c1d02848f, type: 2}
-  loadOnStart: 0
 --- !u!4 &342759138
 Transform:
   m_ObjectHideFlags: 0
@@ -5754,6 +5680,35 @@ Transform:
   m_Children: []
   m_Father: {fileID: 7554677529030367479}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &342759139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 342759136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49737d9be5326955c905d27711b5235d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Kope.Feature.AnimationState.EntityStateManagement
+  ecr: {fileID: 630533316}
+  animationData:
+    useScriptableObject: 1
+    inspector:
+      _profiles: []
+    scriptableObject: {fileID: 11400000, guid: 524194b99011fba648590d2c1d02848f, type: 2}
+  animationStateHashTable:
+    _source: {fileID: 11400000, guid: 84244300505a076eca743d29b3f7e215, type: 2}
+    _selectedValue: 0400000005000000
+    _bindedValues:
+    - _isLooping: 1
+      _animationSpeed: 4
+      _normalizedExitTime: 0.4
+    - _isLooping: 1
+      _animationSpeed: 5
+      _normalizedExitTime: 0.5
+  loadOnStart: 1
 --- !u!1 &417700174
 GameObject:
   m_ObjectHideFlags: 0
@@ -7896,46 +7851,46 @@ MonoBehaviour:
     gameObjectName: SceneServiceLocator
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: PlayerNew
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: Hpstore (1)
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: Dummy (1)
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: Hpstore
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: AddDef
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: InitCaller
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: AddSpd (1)
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: Addhp (2)
-  - typeName: EntityInitCaller
-    order: -40
     gameObjectName: Dummy
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: AddDef (1)
   - typeName: EntityInitCaller
     order: -40
     gameObjectName: Hpstore (2)
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: Addhp (1)
-  - typeName: EntityInitCaller
-    order: -40
     gameObjectName: AddSpd
   - typeName: EntityInitCaller
     order: -40
+    gameObjectName: Dummy (1)
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: AddSpd (1)
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: AddDef
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Hpstore
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Addhp (1)
+  - typeName: EntityInitCaller
+    order: -40
     gameObjectName: Addhp
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Hpstore (1)
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: PlayerNew
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: AddDef (1)
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Addhp (2)
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: InitCaller
   - typeName: InGameUIInitCaller
     order: -30
     gameObjectName: UI
@@ -8292,8 +8247,8 @@ MonoBehaviour:
   x: 0.575
   result: 0.6205578
   unityResult: 0.38834375
-  customEvalTime: 0.1532
-  unityEvalTime: 0.07740000000000001
+  customEvalTime: 0.2106
+  unityEvalTime: 0.108
 --- !u!1001 &1031836800
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14487,7 +14442,7 @@ PrefabInstance:
     - target: {fileID: 6037248722059709900, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
       propertyPath: 'components.Array.data[12]'
       value: 
-      objectReference: {fileID: 342759137}
+      objectReference: {fileID: 342759139}
     - target: {fileID: 6671984905160279280, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
       propertyPath: m_LocalPosition.x
       value: -3.6
@@ -14569,4 +14524,3 @@ SceneRoots:
   - {fileID: 1067244225}
   - {fileID: 947394590}
   - {fileID: 1562017648}
-  - {fileID: 11974266}

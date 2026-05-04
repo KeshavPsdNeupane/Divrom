@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: EnumAsset1
   m_EditorClassIdentifier: Kope.Core.Runtime::Kope.Core.Type.EnumAsset.EnumAsset
   Instances:
-  - Name: One
-    Value: 1
-  - Name: two
-    Value: 2
+  - _name: 'One '
+    _value: 1
+  - _name: Two
+    _value: 2
+  - _name: Three
+    _value: 3

@@ -9,6 +9,8 @@ namespace Kope.Core.Type.EnumAsset.EditorTools {
 		private ReorderableList _list;
 
 		// Tracking lists for indices that have collisions
+		private const string ALIAS_FIELD = "_name";
+		private const string VALUE_FIELD = "_value";
 		private List<int> _duplicateValueIndices = new();
 		private List<int> _duplicateNameIndices = new();
 
@@ -42,8 +44,8 @@ namespace Kope.Core.Type.EnumAsset.EditorTools {
 
 			this._list.drawElementCallback = (rect, index, isActive, isFocused) => {
 				var element = this._list.serializedProperty.GetArrayElementAtIndex(index);
-				var nameProp = element.FindPropertyRelative("Name");
-				var valueProp = element.FindPropertyRelative("Value");
+				var nameProp = element.FindPropertyRelative(ALIAS_FIELD);
+				var valueProp = element.FindPropertyRelative(VALUE_FIELD);
 				rect.y += 2;
 
 				float valueWidth = VALUE_WIDTH;
@@ -111,8 +113,8 @@ namespace Kope.Core.Type.EnumAsset.EditorTools {
 
 			for (int i = 0; i < prop.arraySize; i++) {
 				var element = prop.GetArrayElementAtIndex(i);
-				int val = element.FindPropertyRelative("Value").intValue;
-				string name = element.FindPropertyRelative("Name").stringValue;
+				int val = element.FindPropertyRelative(VALUE_FIELD).intValue;
+				string name = element.FindPropertyRelative(ALIAS_FIELD).stringValue;
 
 				// Track Values
 				if (!valueMap.ContainsKey(val)) valueMap[val] = new List<int>();

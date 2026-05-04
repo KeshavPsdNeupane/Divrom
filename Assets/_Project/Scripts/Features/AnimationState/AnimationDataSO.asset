@@ -13,11 +13,15 @@ MonoBehaviour:
   m_Name: AnimationDataSO
   m_EditorClassIdentifier: Assembly-CSharp::Kope.Actor.AnimationDataSO
   _profiles:
-  - _name: SO1
-    _animationSpeed: 2
+  - _animationState:
+      _source: {fileID: 11400000, guid: 84244300505a076eca743d29b3f7e215, type: 2}
+      _selectedValue: 4
     _isLooping: 0
-    _normalizedExitTime: 0.7
-  - _name: SO2
-    _animationSpeed: 1
-    _isLooping: 1
-    _normalizedExitTime: 0
+    _animationSpeed: 4
+    _normalizedExitTime: 0.711
+  - _animationState:
+      _source: {fileID: 11400000, guid: 84244300505a076eca743d29b3f7e215, type: 2}
+      _selectedValue: 5
+    _isLooping: 0
+    _animationSpeed: 5
+    _normalizedExitTime: 0.526

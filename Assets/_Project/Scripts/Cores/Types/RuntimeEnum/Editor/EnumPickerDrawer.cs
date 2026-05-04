@@ -6,9 +6,9 @@ namespace Kope.Core.Type.EnumAsset.EditorTools {
 	[CustomPropertyDrawer(typeof(EnumPicker))]
 	public class EnumPickerDrawer : PropertyDrawer {
 		// this must be same as the field names in EnumPicker class
-		private const string SOURCE_PROPERTY_NAME = "Source";
+		private const string SOURCE_PROPERTY_NAME = "_source";
 		// this must be same as the field names in EnumPicker class
-		private const string VALUE_PROPERTY_NAME = "SelectedValue";
+		private const string VALUE_PROPERTY_NAME = "_selectedValue";
 
 		public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
 			EditorGUI.BeginProperty(position, label, property);
@@ -37,7 +37,7 @@ namespace Kope.Core.Type.EnumAsset.EditorTools {
 				// If the Source was changed/assigned, default to the first available index
 				EnumAsset newAsset = sourceProp.objectReferenceValue as EnumAsset;
 				if (newAsset != null && newAsset.Instances.Count > 0) {
-					valueProp.intValue = newAsset.Instances[0].Value;
+					valueProp.intValue = newAsset.Instances[0].InternalValue;
 				} else {
 					valueProp.intValue = -1; // Reset if asset is null/empty
 				}
@@ -46,8 +46,8 @@ namespace Kope.Core.Type.EnumAsset.EditorTools {
 			// --- 2. Draw the Popup ---
 			EnumAsset asset = sourceProp.objectReferenceValue as EnumAsset;
 			if (asset != null && asset.Instances.Count > 0) {
-				string[] names = asset.Instances.Select(i => i.Name).ToArray();
-				int[] values = asset.Instances.Select(i => i.Value).ToArray();
+				string[] names = asset.Instances.Select(i => i.Alias).ToArray();
+				int[] values = asset.Instances.Select(i => i.InternalValue).ToArray();
 
 				int currentIndex = System.Array.IndexOf(values, valueProp.intValue);
 

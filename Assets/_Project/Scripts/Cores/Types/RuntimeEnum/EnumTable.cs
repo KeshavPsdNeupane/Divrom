@@ -3,48 +3,76 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Kope.Core.Type.EnumAsset {
+	/// <summary>
+	/// Maps specific <see cref="EnumAsset"/> entries to generic data values.
+	/// Useful for creating lookup tables (e.g., mapping an 'Element' Enum to a 'Color').
+	/// </summary>
 	[Serializable]
-	public class EnumTable<TBinded> {
-		public EnumAsset Source;
-		public int[] SelectedValue = Array.Empty<int>();
-		public TBinded[] BindedValues = Array.Empty<TBinded>();
+	public sealed class EnumTable<TBinded> {
+
+		// ==========================================================================================
+		// CRITICAL: DO NOT RENAME '_source', '_selectedValue', OR '_bindedValues'.
+		// 1. REFLECTION: The custom 'EnumTableDrawer' (or Editor) targets these specific names.
+		// 2. SERIALIZATION: Renaming these will cause Unity to lose all table data in Prefabs/Scenes.
+		// 3. ARCHITECTURE: These arrays are kept parallel for Inspector editing; they are 
+		//    transformed into Dictionaries at runtime for O(1) performance.
+		// ==========================================================================================
+
+		[SerializeField] private EnumAsset _source;
+		[SerializeField] private int[] _selectedValue = Array.Empty<int>();
+		[SerializeField] private TBinded[] _bindedValues = Array.Empty<TBinded>();
 
 		private Dictionary<EnumInstance, TBinded> _bindLookup;
 		private Dictionary<int, TBinded> _idLookup;
 
+		/// <summary>
+		/// Lazy-initializes the internal dictionaries. 
+		/// Converts parallel serialized arrays into high-performance lookups.
+		/// </summary>
 		private void EnsureInitialized() {
 			if (this._idLookup != null) return;
 
-			Debug.Assert(Source != null, $"[{nameof(EnumTable<TBinded>)}] Source EnumAsset is not assigned!");
+			Debug.Assert(_source != null, $"[{nameof(EnumTable<TBinded>)}] Source EnumAsset is null. Table cannot be initialized!");
 
 			this._bindLookup = new Dictionary<EnumInstance, TBinded>();
 			this._idLookup = new Dictionary<int, TBinded>();
 
-			int count = Mathf.Min(this.SelectedValue.Length, this.BindedValues.Length);
+			// Ensure we don't go out of bounds if arrays are somehow out of sync
+			int count = Mathf.Min(this._selectedValue.Length, this._bindedValues.Length);
 
 			for (int i = 0; i < count; i++) {
-				int id = this.SelectedValue[i];
-				EnumInstance instance = this.Source.GetInstance(id);
+				int id = this._selectedValue[i];
+				EnumInstance instance = this._source.GetInstance(id);
 
 				if (instance != null) {
-					TBinded value = this.BindedValues[i];
+					TBinded value = this._bindedValues[i];
 					this._bindLookup[instance] = value;
 					this._idLookup[id] = value;
 				}
 			}
 		}
 
+		/// <summary>
+		/// Retrieves the binded value using the persistent Integer ID (Handle).
+		/// Recommended for performance and save-file compatibility.
+		/// </summary>
 		public TBinded Get(int enumId) {
 			EnsureInitialized();
 			return this._idLookup.TryGetValue(enumId, out TBinded value) ? value : default;
 		}
 
+		/// <summary>
+		/// Retrieves the binded value using the <see cref="EnumInstance"/> reference.
+		/// </summary>
 		public TBinded Get(EnumInstance instance) {
 			if (instance == null) return default;
 			EnsureInitialized();
 			return this._bindLookup.TryGetValue(instance, out TBinded value) ? value : default;
 		}
 
+		/// <summary>
+		/// Provides access to the full lookup dictionary.
+		/// </summary>
 		public Dictionary<EnumInstance, TBinded> BindLookup {
 			get {
 				EnsureInitialized();

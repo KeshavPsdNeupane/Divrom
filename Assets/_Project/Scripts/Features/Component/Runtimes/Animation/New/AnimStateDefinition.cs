@@ -9,45 +9,59 @@ namespace Kope.Actor.New {
 		AlreadyInTransition = 3
 	}
 	/// <summary>
-	/// Immutable struct to hold animation state data for use in the new animation system. 
+	/// A read-only data container representing an animation state configuration.
 	/// </summary>
-	[Serializable]
-	public struct AnimationStateProfile {
+	/// <remarks>
+	/// <b>Note:</b> This struct is not Unity-serializable due to private setters. 
+	/// To edit these values via the Unity Inspector, create a serializable wrapper class.
+	/// This design ensures immutability; instances can only be created via the constructor 
+	/// or modified via the <see cref="CopyWith"/> method.
+	/// </remarks>
+	public struct AnimationStateProfileData {
 		public const float DEFAULT_ANIMATION_SPEED = 1.0f;
 		public const float DEFAULT_NORMALIZED_EXIT_TIME = 0.9f;
 
-		[SerializeField] private string name;
-		[SerializeField] private float animationSpeed;
-		[SerializeField] private bool isLooping;
-		[SerializeField, Range(0.0f, 1.0f)] private float normalizedExitTime;
+		public string Name { get; private set; }
+		public float AnimationSpeed { get; private set; }
+		public bool IsLooping { get; private set; }
+		public float NormalizedExitTime { get; private set; }
 
-		private int _hash;
+		private readonly int _hash;
+		public readonly int Hash => this._hash;
 
-		public readonly string Name => this.name;
-		public int Hash {
-			get {
-				if (this._hash == 0) {
-					this._hash = Animator.StringToHash(Name);
-				}
-				return _hash;
-			}
-		}
-		public readonly float AnimationSpeed => animationSpeed;
-		public readonly bool IsLooping => isLooping;
-		public readonly float NormalizedExitTime => normalizedExitTime;
-
-		public AnimationStateProfile(string name, float animationSpeed = DEFAULT_ANIMATION_SPEED,
+		/// <summary>
+		/// Initializes a new instance of the AnimationStateProfileData.
+		/// </summary>
+		public AnimationStateProfileData(string name, float animationSpeed = DEFAULT_ANIMATION_SPEED,
 			bool isLooping = false, float normalizedExitTime = DEFAULT_NORMALIZED_EXIT_TIME) {
-			this.name = name;
-			this.animationSpeed = animationSpeed;
-			this.isLooping = isLooping;
-			this.normalizedExitTime = Mathf.Clamp01(normalizedExitTime);
-			_hash = Animator.StringToHash(name);
+			this.Name = name;
+			this.AnimationSpeed = animationSpeed;
+			this.IsLooping = isLooping;
+			this.NormalizedExitTime = Mathf.Clamp01(normalizedExitTime);
+			this._hash = Animator.StringToHash(name);
 		}
 
-		public AnimationStateProfile CopyWith(string name = null, float? animationSpeed = null,
-			bool? isLooping = null, float? normalizedExitTime = null) {
-			return new AnimationStateProfile(
+		/// <summary>
+		/// Deep copy constructor.
+		/// </summary>
+		public AnimationStateProfileData(AnimationStateProfileData profile) {
+			this.Name = profile.Name;
+			this.AnimationSpeed = profile.AnimationSpeed;
+			this.IsLooping = profile.IsLooping;
+			this.NormalizedExitTime = Mathf.Clamp01(profile.NormalizedExitTime);
+			this._hash = profile._hash;
+		}
+
+		/// <summary>
+		/// Creates a new copy of the profile with optionally modified parameters.
+		/// </summary>
+		/// <returns>A new instance of <see cref="AnimationStateProfileData"/> with updated values.</returns>
+		public readonly AnimationStateProfileData CopyWith(
+			string name = null,
+			float? animationSpeed = null,
+			bool? isLooping = null,
+			float? normalizedExitTime = null) {
+			return new AnimationStateProfileData(
 				name ?? Name,
 				animationSpeed ?? AnimationSpeed,
 				isLooping ?? IsLooping,
@@ -57,7 +71,7 @@ namespace Kope.Actor.New {
 
 		public override readonly string ToString() {
 			return $"AnimationStateProfile(Name: {Name}, AnimationSpeed: {AnimationSpeed}, " +
-				   $"IsLooping: {IsLooping}, NormalizedExitTime: {NormalizedExitTime})";
+				   $"IsLooping: {IsLooping}, NormalizedExitTime: {NormalizedExitTime},Hash: {Hash})";
 		}
 	}
 }

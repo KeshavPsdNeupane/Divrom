@@ -95,6 +95,7 @@
     <Compile Include="Assets/_Project/Scripts/UI/Menu/TabController.cs" />
     <Compile Include="Assets/_Project/Scripts/FOVGizmo.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/DamageBased/DamageEffectSetting.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/AnimationState/AnimationStateProfile.cs" />
     <Compile Include="Assets/_Project/Scripts/Managers/ItemDatabase/HashUtility.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Ability/HealBased/HealAbility.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/StatBased/BasicStatModifierEffect.cs" />

@@ -14,12 +14,12 @@ namespace Kope.Component {
 		/// This method follows a non-blocking pattern, allowing callers to either "fire and forget" 
 		/// or implement custom logic (e.g., queuing or logging) based on the returned status.
 		/// </remarks>
-		AnimationStatus PlayAnimation(AnimationStateProfile animState);
+		AnimationStatus PlayAnimation(AnimationStateProfileData animState);
 
 		void SetDefaultSpeed();
 		void SetDirection(Vector2 dir);
 		bool DoesAnimationExist(int animationHash);
-		bool IsAnimationFinished(AnimationStateProfile animState);
+		bool IsAnimationFinished(AnimationStateProfileData animState);
 		bool CanTransitionToNextAnimation(int animationHash);
 	}
 }

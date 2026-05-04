@@ -17,7 +17,7 @@ namespace Kope.Component {
 			return true;
 		}
 
-		public AnimationStatus PlayAnimation(AnimationStateProfile animState) {
+		public AnimationStatus PlayAnimation(AnimationStateProfileData animState) {
 			if (!DoesAnimationExist(animState.Hash)) return AnimationStatus.AnimationDoesNotExist;
 
 			var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
@@ -51,11 +51,11 @@ namespace Kope.Component {
 			this.animator.SetFloat(AnimationVariableHashes.DirectionY, snapped.y);
 		}
 
-		public void SetDefaultSpeed() => this.animator.speed = AnimationStateProfile.DEFAULT_ANIMATION_SPEED;
+		public void SetDefaultSpeed() => this.animator.speed = AnimationStateProfileData.DEFAULT_ANIMATION_SPEED;
 
 		public bool DoesAnimationExist(int hash) => this.animator.HasState(0, hash);
 
-		public bool IsAnimationFinished(AnimationStateProfile animState) {
+		public bool IsAnimationFinished(AnimationStateProfileData animState) {
 			var stateInfo = this.animator.GetCurrentAnimatorStateInfo(0);
 			if (stateInfo.shortNameHash != animState.Hash) return false;
 			if (animState.IsLooping) {
