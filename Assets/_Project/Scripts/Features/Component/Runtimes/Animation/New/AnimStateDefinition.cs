@@ -52,23 +52,6 @@ namespace Kope.Actor.New {
 			this._hash = profile._hash;
 		}
 
-		/// <summary>
-		/// Creates a new copy of the profile with optionally modified parameters.
-		/// </summary>
-		/// <returns>A new instance of <see cref="AnimationStateProfileData"/> with updated values.</returns>
-		public readonly AnimationStateProfileData CopyWith(
-			string name = null,
-			float? animationSpeed = null,
-			bool? isLooping = null,
-			float? normalizedExitTime = null) {
-			return new AnimationStateProfileData(
-				name ?? Name,
-				animationSpeed ?? AnimationSpeed,
-				isLooping ?? IsLooping,
-				normalizedExitTime ?? NormalizedExitTime
-			);
-		}
-
 		public override readonly string ToString() {
 			return $"AnimationStateProfile(Name: {Name}, AnimationSpeed: {AnimationSpeed}, " +
 				   $"IsLooping: {IsLooping}, NormalizedExitTime: {NormalizedExitTime},Hash: {Hash})";

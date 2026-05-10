@@ -62,15 +62,6 @@ namespace Kope.Core.Type.EnumAsset {
 		}
 
 		/// <summary>
-		/// Retrieves the binded value using the <see cref="EnumInstance"/> reference.
-		/// </summary>
-		public TBinded Get(EnumInstance instance) {
-			if (instance == null) return default;
-			EnsureInitialized();
-			return this._bindLookup.TryGetValue(instance, out TBinded value) ? value : default;
-		}
-
-		/// <summary>
 		/// Provides access to the full lookup dictionary.
 		/// </summary>
 		public Dictionary<EnumInstance, TBinded> BindLookup {
@@ -78,6 +69,12 @@ namespace Kope.Core.Type.EnumAsset {
 				EnsureInitialized();
 				return this._bindLookup;
 			}
+		}
+		public (EnumInstance, TBinded) GetDefaultBinding() {
+			if (this._source == null) return default;
+			var zeroInstance = this._source.GetIndexZeroItem();
+			if (zeroInstance == null) return default;
+			return (zeroInstance, Get(zeroInstance.InternalValue));
 		}
 	}
 }

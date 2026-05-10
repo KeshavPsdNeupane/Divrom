@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30fbe0bb9894e0b25ab152e4b65bef91, type: 3}
+  m_Name: PlayerStateEnum
+  m_EditorClassIdentifier: Kope.Core.Runtime::Kope.Core.Type.EnumAsset.EnumAsset
+  _enumAssetId: 63507
+  Instances:
+  - _name: Idle
+    _value: 635070000
+  - _name: Walk
+    _value: 635070001
+  - _name: Shoot
+    _value: 635070002
+  - _name: Swing
+    _value: 635070003
+  - _name: Spell
+    _value: 635070004
+  - _name: Thrust
+    _value: 635070005
+  - _name: Death
+    _value: 635070006

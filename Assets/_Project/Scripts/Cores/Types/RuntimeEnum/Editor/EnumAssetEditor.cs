@@ -2,18 +2,19 @@ using UnityEngine;
 using UnityEditor;
 using UnityEditorInternal;
 using System.Collections.Generic;
+using Kope.Core.Attribute; // Ensure this matches your namespace
 
 namespace Kope.Core.Type.EnumAsset.EditorTools {
 	[CustomEditor(typeof(EnumAsset))]
 	public class EnumAssetEditor : Editor {
 		private ReorderableList _list;
 
-		// Tracking lists for indices that have collisions
 		private const string ALIAS_FIELD = "_name";
 		private const string VALUE_FIELD = "_value";
+		private const string ASSET_ID_FIELD = "_enumAssetId"; // Field we want to show as ReadOnly
+
 		private List<int> _duplicateValueIndices = new();
 		private List<int> _duplicateNameIndices = new();
-
 		private bool _hasValueDuplicates = false;
 		private bool _hasNameDuplicates = false;
 
@@ -21,13 +22,14 @@ namespace Kope.Core.Type.EnumAsset.EditorTools {
 		private static readonly Color NORMAL_COLOR = new(0.6f, 0.8f, 1f);
 
 		private const string HELP_TEXT =
-			"Designer Note:\n" +
-			"• You can drag the handles (left) to reorganize the list.\n" +
-			"• 'Enum Name' is for display only, but should be unique for clarity.\n" +
-			"• 'ID/Value' is the unique key. If you change this, existing references will return null.\n" +
-			"• Duplicate IDs/Names will be highlighted in red.";
+			"DESIGNER GUIDELINES\n\n" +
+			"• ORGANIZATION: Drag handles (left) to reorder. This is for visual grouping only.\n" +
+			"• ANIMATION RULE: If this enum is used for Animator parameters, 'Idle' must always be at Local ID 0 to ensure default state consistency.\n" +
+			"• ALIAS: The 'Enum Name' is for display and Animator hashing. Keep names unique and descriptive.\n" +
+			"• INTERNAL ID: This is the persistent key (Asset ID + Local ID). DO NOT CHANGE if this entry is already referenced in save data or external assets.\n" +
+			"• VALIDATION: Duplicate names or IDs will be highlighted and must be resolved to avoid runtime errors.";
 
-		private const int VALUE_WIDTH = 50;
+		private const int VALUE_WIDTH = 65;
 
 		private void OnEnable() {
 			this._list = new ReorderableList(serializedObject,
@@ -38,7 +40,7 @@ namespace Kope.Core.Type.EnumAsset.EditorTools {
 					float nameWidth = rect.width - valueWidth - 25;
 
 					EditorGUI.LabelField(new Rect(rect.x + 15, rect.y, nameWidth, rect.height), "Enum Name", EditorStyles.miniBoldLabel);
-					EditorGUI.LabelField(new Rect(rect.x + 15 + nameWidth, rect.y, valueWidth, rect.height), "ID/Value", EditorStyles.miniBoldLabel);
+					EditorGUI.LabelField(new Rect(rect.x + 15 + nameWidth, rect.y, valueWidth, rect.height), "Local ID", EditorStyles.miniBoldLabel);
 				}
 			};
 
@@ -52,20 +54,25 @@ namespace Kope.Core.Type.EnumAsset.EditorTools {
 				float nameWidth = rect.width - valueWidth - 10;
 
 				// --- Column 1: Name ---
-				if (_duplicateNameIndices.Contains(index)) GUI.backgroundColor = DUPLICATE_COLOR;
-				EditorGUI.PropertyField(
-					new Rect(rect.x, rect.y, nameWidth, EditorGUIUtility.singleLineHeight),
-					nameProp, GUIContent.none);
+				if (this._duplicateNameIndices.Contains(index)) GUI.backgroundColor = DUPLICATE_COLOR;
+				EditorGUI.PropertyField(new Rect(rect.x, rect.y, nameWidth, EditorGUIUtility.singleLineHeight), nameProp, GUIContent.none);
 				GUI.backgroundColor = Color.white;
 
-				// --- Column 2: Value ---
-				if (_duplicateValueIndices.Contains(index)) GUI.backgroundColor = DUPLICATE_COLOR;
+				// --- Column 2: Value (Masked Display) ---
+				if (this._duplicateValueIndices.Contains(index)) GUI.backgroundColor = DUPLICATE_COLOR;
 				else GUI.backgroundColor = NORMAL_COLOR;
 
-				EditorGUI.PropertyField(
-					new Rect(rect.x + nameWidth + 5, rect.y, valueWidth, EditorGUIUtility.singleLineHeight),
-					valueProp, GUIContent.none);
+				int fullId = valueProp.intValue;
+				int multiplier = EnumAsset.MASK_MULTIPLIER;
+				int displayId = fullId % multiplier;
 
+				EditorGUI.BeginChangeCheck();
+				int newLocalId = EditorGUI.IntField(new Rect(rect.x + nameWidth + 5, rect.y, valueWidth, EditorGUIUtility.singleLineHeight), displayId);
+
+				if (EditorGUI.EndChangeCheck()) {
+					int prefix = (fullId / multiplier) * multiplier;
+					valueProp.intValue = prefix + Mathf.Clamp(newLocalId, 0, multiplier - 1);
+				}
 				GUI.backgroundColor = Color.white;
 			};
 
@@ -80,21 +87,26 @@ namespace Kope.Core.Type.EnumAsset.EditorTools {
 		public override void OnInspectorGUI() {
 			this.serializedObject.Update();
 
-			// Perform detection before drawing
+			// 1. Draw the Read-Only Asset ID at the top
+			EditorGUILayout.Space();
+			SerializedProperty assetIdProp = serializedObject.FindProperty(ASSET_ID_FIELD);
+			if (assetIdProp != null) {
+				EditorGUILayout.PropertyField(assetIdProp);
+			}
+
+			// 2. Check logic
 			CheckForDuplicates();
 
+			// 3. Draw the List
 			EditorGUILayout.Space();
 			this._list.DoLayoutList();
 
-			// Error Feedback
-			if (_hasValueDuplicates) {
-				EditorGUILayout.HelpBox("DUPLICATE IDs: Multiple entries share the same Value. This breaks data integrity!", MessageType.Error);
-			}
+			// 4. Warnings
+			if (this._hasValueDuplicates) EditorGUILayout.HelpBox("DUPLICATE IDs: Multiple entries share the same Local ID!", MessageType.Error);
+			if (this._hasNameDuplicates) EditorGUILayout.HelpBox("DUPLICATE NAMES: Ensure names are unique for Animator hashing.", MessageType.Warning);
 
-			if (_hasNameDuplicates) {
-				EditorGUILayout.HelpBox("DUPLICATE NAMES: Multiple entries share the same Name. This may cause confusion.", MessageType.Warning);
-			}
-
+			// 5. Help Text
+			EditorGUILayout.Space();
 			EditorGUILayout.HelpBox(HELP_TEXT, MessageType.Info);
 
 			this.serializedObject.ApplyModifiedProperties();
@@ -107,7 +119,6 @@ namespace Kope.Core.Type.EnumAsset.EditorTools {
 			this._hasNameDuplicates = false;
 
 			var prop = this.serializedObject.FindProperty("Instances");
-
 			Dictionary<int, List<int>> valueMap = new();
 			Dictionary<string, List<int>> nameMap = new();
 
@@ -116,29 +127,20 @@ namespace Kope.Core.Type.EnumAsset.EditorTools {
 				int val = element.FindPropertyRelative(VALUE_FIELD).intValue;
 				string name = element.FindPropertyRelative(ALIAS_FIELD).stringValue;
 
-				// Track Values
 				if (!valueMap.ContainsKey(val)) valueMap[val] = new List<int>();
 				valueMap[val].Add(i);
 
-				// Track Names
 				if (!nameMap.ContainsKey(name)) nameMap[name] = new List<int>();
 				nameMap[name].Add(i);
 			}
 
-			// Mark Value collisions
-			foreach (var kvp in valueMap) {
-				if (kvp.Value.Count > 1) {
-					this._duplicateValueIndices.AddRange(kvp.Value);
-					this._hasValueDuplicates = true;
-				}
+			foreach (var kvp in valueMap) if (kvp.Value.Count > 1) {
+				this._duplicateValueIndices.AddRange(kvp.Value);
+				this._hasValueDuplicates = true;
 			}
-
-			// Mark Name collisions
-			foreach (var kvp in nameMap) {
-				if (kvp.Value.Count > 1) {
-					this._duplicateNameIndices.AddRange(kvp.Value);
-					this._hasNameDuplicates = true;
-				}
+			foreach (var kvp in nameMap) if (kvp.Value.Count > 1) {
+				this._duplicateNameIndices.AddRange(kvp.Value);
+				this._hasNameDuplicates = true;
 			}
 		}
 	}
