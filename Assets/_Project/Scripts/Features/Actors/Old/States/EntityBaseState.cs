@@ -11,7 +11,7 @@ public abstract class EntityBaseState : IStateCanAcceptCommand {
 
 	public virtual AnimationState AnimationState { get; protected set; }
 	public virtual int AnimationStateHash { get; protected set; }
-	public abstract bool CanAcceptCommand { get; }
+	public abstract bool CanStateAcceptExternalCommand { get; }
 
 	public EntityBaseState(EntityStateManager StateManager,
 		EntityStateController playerStateController) {

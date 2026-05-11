@@ -13,5 +13,5 @@ public interface IStateCanAcceptCommand {
 	/// There wont be no assumptions about the default behavior.
 	/// </summary>
 	/// <returns></returns>
-	bool CanAcceptCommand { get; }
+	bool CanStateAcceptExternalCommand { get; }
 }

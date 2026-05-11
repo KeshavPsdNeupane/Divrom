@@ -20,7 +20,7 @@ public class EntityStateController : InitializableBase {
 	public EntityStateManager StateMachine => stateMachine;
 	public EntityStates EntityStates => entityStates;
 
-	public bool CanStateMachineAcceptCommand => this.stateMachine == null || this.stateMachine.CurrentState is not IStateCanAcceptCommand state || state.CanAcceptCommand;
+	public bool CanStateMachineAcceptCommand => this.stateMachine == null || this.stateMachine.CurrentState is not IStateCanAcceptCommand state || state.CanStateAcceptExternalCommand;
 
 	protected override bool OnInit() {
 		try {

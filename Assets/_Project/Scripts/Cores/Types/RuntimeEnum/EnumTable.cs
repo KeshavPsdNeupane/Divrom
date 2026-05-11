@@ -9,7 +9,7 @@ namespace Kope.Core.Type.EnumAsset {
 	/// </summary>
 	[Serializable]
 	public sealed class EnumTable<TBinded> {
-
+		public EnumAsset Source => this._source;
 		// ==========================================================================================
 		// CRITICAL: DO NOT RENAME '_source', '_selectedValue', OR '_bindedValues'.
 		// 1. REFLECTION: The custom 'EnumTableDrawer' (or Editor) targets these specific names.
@@ -72,9 +72,9 @@ namespace Kope.Core.Type.EnumAsset {
 		}
 		public (EnumInstance, TBinded) GetDefaultBinding() {
 			if (this._source == null) return default;
-			var zeroInstance = this._source.GetIndexZeroItem();
-			if (zeroInstance == null) return default;
-			return (zeroInstance, Get(zeroInstance.InternalValue));
+			int zeroID = this._source.GetDefaultItemId();
+			if (zeroID == default) return default;
+			return (this._source.GetInstance(zeroID), Get(zeroID));
 		}
 	}
 }

@@ -12,7 +12,7 @@ public class EntityAttack : EntityBaseState {
 	public override AnimationState AnimationState => this.currentAnimationState;
 	public override int AnimationStateHash => this.currentAnimationHash;
 
-	public override bool CanAcceptCommand => true;
+	public override bool CanStateAcceptExternalCommand => true;
 
 	private const float ATTACK_ANIMATION_THRESHOLD = 0.9f;
 

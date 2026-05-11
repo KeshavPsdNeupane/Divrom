@@ -14,9 +14,10 @@ namespace Kope.Feature.AnimationState {
 	[Serializable]
 	public class AnimationStateProfile {
 		[SerializeField] private EnumPicker _animationState;
-		[SerializeField] private bool _isLooping;
-		[SerializeField] private float _animationSpeed;
-		[Range(0f, 1f)][SerializeField] private float _normalizedExitTime;
+		[SerializeField] private bool _isLooping = false;
+		[SerializeField] private float _animationSpeed = 1f;
+		[Range(0f, 1f)][SerializeField] private float _normalizedExitTime = 0.9f;
+		public EnumPicker AnimationState => this._animationState;
 
 		public AnimationStateProfileData ToData() {
 			EnumInstance instance = this._animationState.GetInstance();
@@ -41,9 +42,9 @@ namespace Kope.Feature.AnimationState {
 	/// </summary>
 	[Serializable]
 	public class AnimationStateMappedProfile {
-		[SerializeField] private bool _isLooping;
-		[SerializeField] private float _animationSpeed;
-		[Range(0f, 1f)][SerializeField] private float _normalizedExitTime;
+		[SerializeField] private bool _isLooping = false;
+		[SerializeField] private float _animationSpeed = 1f;
+		[Range(0f, 1f)][SerializeField] private float _normalizedExitTime = 0.9f;
 
 		public AnimationStateProfileData ToData(string name) {
 			return new AnimationStateProfileData(

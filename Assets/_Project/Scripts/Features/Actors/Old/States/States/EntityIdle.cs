@@ -10,7 +10,7 @@ public class EntityIdle : EntityBaseState {
 
 	public override AnimationState AnimationState => this.animationState;
 	public override int AnimationStateHash => this.animationStateHash;
-	public override bool CanAcceptCommand => true;
+	public override bool CanStateAcceptExternalCommand => true;
 
 	public EntityIdle(EntityStateManager baseStateManager,
 		EntityStateController playerStateController, AnimationState animationState = AnimationState.Idle)

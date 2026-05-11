@@ -135,14 +135,15 @@ namespace Kope.Core.Type.EnumAsset {
 			}
 		}
 
-		public EnumInstance GetIndexZeroItem() {
-			if (Instances.Count == 0) return null;
+		public int GetDefaultItemId() {
+			if (Instances.Count == 0) return default;
 
 			var idle = GetInstance(this._enumAssetId * MASK_MULTIPLIER); ;
-			if (idle != null) return idle;
-			// Fallback: If ID 0 is missing, just give the first thing available 
-			// so the game doesn't crash.
-			return Instances.Count > 0 ? Instances[0] : null;
+			if (idle != null) return idle.InternalValue;
+
+			// since the count is already checked so,
+			// this will not cause any issue because the first item will be returned if the idle is not found.
+			return Instances[0].InternalValue;
 		}
 	}
 }

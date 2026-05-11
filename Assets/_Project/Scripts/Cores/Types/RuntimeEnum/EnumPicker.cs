@@ -28,11 +28,11 @@ namespace Kope.Core.Type.EnumAsset {
 		/// <returns>The instance containing the Alias and Handle, or null if unassigned.</returns>
 		public EnumInstance GetInstance() {
 			Debug.Assert(this._source != null && this._selectedValue != -1,
-			 $"[EnumPicker] Source EnumAsset is not assigned or no value is selected on Object: {this.ToString()}");
+			 $"[EnumPicker] Source EnumAsset is not assigned or no value is selected on Object: {this}");
 
 			return this._source != null ? this._source.GetInstance(this._selectedValue) : null;
 		}
-
+		public int GetSelectedEnumId() => this.GetInstance()?.InternalValue ?? -1;
 		/// <summary>
 		/// Quick validation check to ensure the picker has a source and a valid selection.
 		/// </summary>

@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEditor;
 using UnityEditorInternal;
 using System.Collections.Generic;
-using Kope.Core.Attribute; // Ensure this matches your namespace
 
 namespace Kope.Core.Type.EnumAsset.EditorTools {
 	[CustomEditor(typeof(EnumAsset))]
@@ -11,8 +10,7 @@ namespace Kope.Core.Type.EnumAsset.EditorTools {
 
 		private const string ALIAS_FIELD = "_name";
 		private const string VALUE_FIELD = "_value";
-		private const string ASSET_ID_FIELD = "_enumAssetId"; // Field we want to show as ReadOnly
-
+		private const string ASSET_ID_FIELD = "_enumAssetId";
 		private List<int> _duplicateValueIndices = new();
 		private List<int> _duplicateNameIndices = new();
 		private bool _hasValueDuplicates = false;
@@ -22,13 +20,12 @@ namespace Kope.Core.Type.EnumAsset.EditorTools {
 		private static readonly Color NORMAL_COLOR = new(0.6f, 0.8f, 1f);
 
 		private const string HELP_TEXT =
-			"DESIGNER GUIDELINES\n\n" +
-			"• ORGANIZATION: Drag handles (left) to reorder. This is for visual grouping only.\n" +
-			"• ANIMATION RULE: If this enum is used for Animator parameters, 'Idle' must always be at Local ID 0 to ensure default state consistency.\n" +
-			"• ALIAS: The 'Enum Name' is for display and Animator hashing. Keep names unique and descriptive.\n" +
-			"• INTERNAL ID: This is the persistent key (Asset ID + Local ID). DO NOT CHANGE if this entry is already referenced in save data or external assets.\n" +
-			"• VALIDATION: Duplicate names or IDs will be highlighted and must be resolved to avoid runtime errors.";
-
+		"DESIGNER GUIDELINES\n\n" +
+		"• DEFAULT BEHAVIOR: Local ID 0 is reserved for the default state. (e.g., for an Animation Type enum, Index 0 should be 'Idle').\n" +
+		"• ORGANIZATION: Drag handles (left) to reorder. This is for visual grouping only.\n" +
+		"• GENERAL RULE: The 'Enum Name' is for display and hashing. Keep names unique and descriptive.\n" +
+		"• INTERNAL ID: This is the persistent key (Asset ID + Local ID). DO NOT CHANGE if this entry is already referenced in save data or external assets.\n" +
+		"• VALIDATION: Duplicate names or IDs will be highlighted and must be resolved to avoid runtime errors.";
 		private const int VALUE_WIDTH = 65;
 
 		private void OnEnable() {
