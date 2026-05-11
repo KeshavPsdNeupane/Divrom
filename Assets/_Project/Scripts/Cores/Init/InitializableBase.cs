@@ -109,7 +109,6 @@ namespace Kope.Core.Init {
 
 		protected void FixedUpdate() {
 			if (!this.IsInitialized) return;
-
 			OnFixedUpdate();
 		}
 

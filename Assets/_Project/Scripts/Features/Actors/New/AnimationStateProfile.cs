@@ -1,10 +1,9 @@
 using System;
-using Kope.Actor.New;
 using Kope.Core.Type.EnumAsset;
 using UnityEngine;
 
 
-namespace Kope.Feature.AnimationState {
+namespace Kope.Actor.New {
 	/// <summary>
 	/// A serializable class representing an animation state profile for Unity's Inspector.
 	/// This class is used by EnumPicker class to allow designers to configure animation states in a user-friendly way.
@@ -17,7 +16,8 @@ namespace Kope.Feature.AnimationState {
 		[SerializeField] private bool _isLooping = false;
 		[SerializeField] private float _animationSpeed = 1f;
 		[Range(0f, 1f)][SerializeField] private float _normalizedExitTime = 0.9f;
-		public EnumPicker AnimationState => this._animationState;
+
+		public EnumPicker StatePicker => this._animationState;
 
 		public AnimationStateProfileData ToData() {
 			EnumInstance instance = this._animationState.GetInstance();

@@ -1,12 +1,12 @@
 using UnityEngine;
 
 namespace Kope.Actor.New {
-	public enum AnimationStatus {
+	public enum AnimationStatus : byte {
 		Success = 0,
-		AnimationDoesNotExist = 1,
-		AnimationNotFinished = 2,
-		AlreadyInTransition = 3,
-		UnknownError = 99
+		NotFound = 1,
+		InTransition = 2,
+		Busy = 3,       // Animation hasn't reached ExitTime
+		Failed = 99
 	}
 	/// <summary>
 	/// A read-only data container representing an animation state configuration.

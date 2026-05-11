@@ -48,7 +48,7 @@ namespace Kope.Component.Movement {
 		[Header("Settings")]
 		[SerializeField] protected float defaultMovementSpeed = 2f;
 		public const float MOVEMENT_EPSILON = 0.1f;
-
+		public const float DEFAULT_RESPONSIVENESS = 0.7f;
 		// Specialized Handlers
 		private MovementIntentHandler _intentHandler;
 		private MovementForceHandler _forceHandler;
@@ -57,6 +57,7 @@ namespace Kope.Component.Movement {
 		private CharacterStatsSystem _readOnlycharacterStatsSystem;
 		private AxisMode _dimension;
 		private BasicCountDownTimer _stunTimer;
+		private float _currentResponsiveness = DEFAULT_RESPONSIVENESS;
 
 		// Public API
 		public float Mass => this.rb.mass;
@@ -122,6 +123,10 @@ namespace Kope.Component.Movement {
 			this._intentHandler.TrySetIntent(intent, IsStunned);
 		}
 
+		public virtual void SetResponsiveness(float responsiveness = DEFAULT_RESPONSIVENESS) {
+			this._currentResponsiveness = responsiveness;
+		}
+
 		protected override void OnUpdate() {
 			this._forceHandler.Tick(Time.deltaTime);
 			if (this._stunTimer.IsRunning) this._stunTimer.Tick(Time.deltaTime);
@@ -133,7 +138,7 @@ namespace Kope.Component.Movement {
 		/// </summary>
 		public virtual void ApplyPhysics(float stateSpeedMultiplier = 1f) {
 			// 1. Physics Layer (Always active, pre-masked in force handler)
-			Vector3 physicsPart = _forceHandler.NetForce;
+			Vector3 physicsPart = this._forceHandler.NetForce;
 
 			// 2. Intent Layer (Evaluates to zero if stunned or stopping)
 			bool canMove = !this.IsStunned && this._intentHandler.Current.IntentType != MovementIntentType.Stop;
@@ -148,7 +153,8 @@ namespace Kope.Component.Movement {
 			// 4. The Final Cast for Rigidbody2D
 			// (0.3 * current) allows for momentum conservation
 			// (0.7 * target) ensures snappy response to input or new forces
-			this.rb.linearVelocity = (this.rb.linearVelocity * 0.3f) + (Vector2)(targetVelocity * 0.7f);
+			this.rb.linearVelocity = (this.rb.linearVelocity * (1f - this._currentResponsiveness)) +
+			(Vector2)(targetVelocity * this._currentResponsiveness);
 		}
 
 		public virtual void ApplyKnockback(Vector3 hitPoint, float duration, float impulse = 1f, bool isPulling = false) {
@@ -193,6 +199,8 @@ namespace Kope.Component.Movement {
 		}
 
 		public void ForceCancellStun() => this._stunTimer?.Stop();
+
+
 
 		#endregion
 	}

@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace Kope.Core.Type.EnumAsset {
@@ -32,7 +33,10 @@ namespace Kope.Core.Type.EnumAsset {
 
 			return this._source != null ? this._source.GetInstance(this._selectedValue) : null;
 		}
-		public int GetSelectedEnumId() => this.GetInstance()?.InternalValue ?? -1;
+
+		// just inline this 1 line function for efficiency — we call it every frame in some cases,
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public int GetSelectedEnumId() => this.GetInstance().InternalValue;
 		/// <summary>
 		/// Quick validation check to ensure the picker has a source and a valid selection.
 		/// </summary>
