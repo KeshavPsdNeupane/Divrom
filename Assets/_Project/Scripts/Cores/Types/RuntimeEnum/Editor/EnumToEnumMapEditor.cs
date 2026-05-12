@@ -17,6 +17,7 @@ namespace Kope.Core.Type.EnumAsset.EditorTools {
 		private const float ROW_PADDING = 2f;
 		private const float HEADER_HEIGHT = 20f;
 
+		// ── Colors ───────────────────────────────────────────────────────────────
 		private static readonly Color MISSING_COLOR = new(1f, 0.4f, 0.4f);
 		private static readonly Color UNMAPPED_COLOR = new(1f, 0.85f, 0.4f);
 		private static readonly Color EXCLUDED_COLOR = new(1f, 0.4f, 0.4f);
@@ -28,6 +29,8 @@ namespace Kope.Core.Type.EnumAsset.EditorTools {
 			"• Yellow rows are unmapped or just got excluded. Red rows have a target ID that no longer exists.\n" +
 			"• The row list is driven by the source enum. Add/remove entries there.\n" +
 			"• Excluded Targets are hidden from the picker and cannot be mapped to from any source.";
+
+		// ── OnInspectorGUI ───────────────────────────────────────────────────────
 
 		public override void OnInspectorGUI() {
 			serializedObject.Update();
@@ -56,12 +59,14 @@ namespace Kope.Core.Type.EnumAsset.EditorTools {
 				return;
 			}
 
+			// All target entries
 			string[] allTargetNames = targetAsset.Instances.Select(i => i.Alias).ToArray();
-			long[] allTargetIds = targetAsset.Instances.Select(i => i.InternalValue).ToArray();
+			int[] allTargetIds = targetAsset.Instances.Select(i => i.InternalValue).ToArray();
 
+			// Filtered: excluded entries are hidden from the mapping picker
 			var allowedInstances = targetAsset.Instances.Where(i => !map.IsExcluded(i.InternalValue)).ToList();
 			string[] allowedNames = allowedInstances.Select(i => i.Alias).ToArray();
-			long[] allowedIds = allowedInstances.Select(i => i.InternalValue).ToArray();
+			int[] allowedIds = allowedInstances.Select(i => i.InternalValue).ToArray();
 
 			// ── Mapping rows ──────────────────────────────────────────────────────
 			DrawSectionHeader("Mappings");
@@ -74,16 +79,18 @@ namespace Kope.Core.Type.EnumAsset.EditorTools {
 
 			EditorGUILayout.Space(8);
 
+			// ── Exclusion list ────────────────────────────────────────────────────
 			DrawSectionHeader("Excluded Targets");
 			DrawHead("Target Entry", "");
 
 			var currentExclusions = map.ExcludedTargets.ToList();
-			foreach (long excludedId in currentExclusions) {
+			foreach (int excludedId in currentExclusions) {
 				int idx = System.Array.IndexOf(allTargetIds, excludedId);
 				string label = idx == -1 ? $"! MISSING (ID: {excludedId})" : allTargetNames[idx];
 				dirty |= DrawExclusionRow(map, excludedId, label, idx == -1);
 			}
 
+			// Add exclusion button — only shows target entries not already excluded
 			var addableInstances = targetAsset.Instances.Where(i => !map.IsExcluded(i.InternalValue)).ToList();
 			if (addableInstances.Count > 0) {
 				EditorGUILayout.Space(2);
@@ -94,11 +101,11 @@ namespace Kope.Core.Type.EnumAsset.EditorTools {
 				string[] addableNames = addableInstances.Select(i => $"+ {i.Alias}").ToArray();
 				int picked = EditorGUI.Popup(addRect, -1, addableNames);
 				if (picked >= 0) {
-					long chosenId = addableInstances[picked].InternalValue;
-					map.AddExclusion(chosenId);
+					map.AddExclusion(addableInstances[picked].InternalValue);
 
+					// If any existing mapping points to this now-excluded target, remove it
 					foreach (var sourceInstance in sourceAsset.Instances) {
-						if (map.GetTargetValue(sourceInstance.InternalValue) == chosenId)
+						if (map.GetTargetValue(sourceInstance.InternalValue) == addableInstances[picked].InternalValue)
 							map.RemoveMapping(sourceInstance.InternalValue);
 					}
 					dirty = true;
@@ -116,6 +123,8 @@ namespace Kope.Core.Type.EnumAsset.EditorTools {
 			serializedObject.ApplyModifiedProperties();
 		}
 
+		// ── Section header ────────────────────────────────────────────────────────
+
 		private static void DrawSectionHeader(string title) {
 			var rect = GUILayoutUtility.GetRect(0, 18f, GUILayout.ExpandWidth(true));
 			EditorGUI.LabelField(rect, title, EditorStyles.boldLabel);
@@ -125,15 +134,25 @@ namespace Kope.Core.Type.EnumAsset.EditorTools {
 			var rect = GUILayoutUtility.GetRect(0, HEADER_HEIGHT, GUILayout.ExpandWidth(true));
 			float kw = rect.width * DEFAULT_KEY_RATIO;
 
-			EditorGUI.LabelField(new Rect(rect.x, rect.y, kw, rect.height), leftLabel, EditorStyles.miniBoldLabel);
+			EditorGUI.LabelField(new Rect(rect.x, rect.y, kw, rect.height),
+				leftLabel, EditorStyles.miniBoldLabel);
 			if (!string.IsNullOrEmpty(rightLabel))
-				EditorGUI.LabelField(new Rect(rect.x + kw + COL_GAP, rect.y, rect.width - kw - COL_GAP, rect.height), rightLabel, EditorStyles.miniBoldLabel);
+				EditorGUI.LabelField(new Rect(rect.x + kw + COL_GAP, rect.y, rect.width - kw - COL_GAP, rect.height),
+					rightLabel, EditorStyles.miniBoldLabel);
 
-			EditorGUI.DrawRect(new Rect(rect.x, rect.yMax - 1, rect.width, 1), new Color(0.5f, 0.5f, 0.5f, 0.5f));
+			EditorGUI.DrawRect(new Rect(rect.x, rect.yMax - 1, rect.width, 1),
+				new Color(0.5f, 0.5f, 0.5f, 0.5f));
 		}
 
+		// ── Mapping row ───────────────────────────────────────────────────────────
 
-		private static bool DrawMappingRow(EnumToEnumMap map, EnumInstance sourceInstance, string[] allowedNames, long[] allowedIds) {
+		/// <summary>Returns true if the mapping was changed this frame.</summary>
+		private static bool DrawMappingRow(
+				EnumToEnumMap map,
+				EnumInstance sourceInstance,
+				string[] allowedNames,
+				int[] allowedIds) {
+
 			var rect = GUILayoutUtility.GetRect(0, ROW_HEIGHT + ROW_PADDING * 2, GUILayout.ExpandWidth(true));
 			rect.y += ROW_PADDING;
 			rect.height = ROW_HEIGHT;
@@ -144,8 +163,8 @@ namespace Kope.Core.Type.EnumAsset.EditorTools {
 
 			EditorGUI.LabelField(new Rect(rect.x, rect.y, kw, rect.height), sourceInstance.Alias);
 
-			long sourceId = sourceInstance.InternalValue;
-			long currentTargetId = map.GetTargetValue(sourceId);
+			int sourceId = sourceInstance.InternalValue;
+			int currentTargetId = map.GetTargetValue(sourceId);
 			int currentIdx = System.Array.IndexOf(allowedIds, currentTargetId);
 			bool unmapped = currentTargetId == 0;
 			bool excluded = !unmapped && map.IsExcluded(currentTargetId);
@@ -158,9 +177,14 @@ namespace Kope.Core.Type.EnumAsset.EditorTools {
 			var popupRect = new Rect(vx, rect.y, vw, rect.height);
 			bool changed = false;
 
-			if (excluded || missing) {
-				string prefix = excluded ? "EXCLUDED" : "MISSING";
-				var display = allowedNames.Prepend($"! {prefix} — was ID: {currentTargetId}").ToArray();
+			if (excluded) {
+				// Show error label — the previously selected target is now excluded.
+				// Force the designer to pick a valid replacement.
+				var display = allowedNames.Prepend($"! EXCLUDED — was ID: {currentTargetId}").ToArray();
+				int next = EditorGUI.Popup(popupRect, 0, display);
+				if (next > 0) { map.SetMapping(sourceId, allowedIds[next - 1]); changed = true; }
+			} else if (missing) {
+				var display = allowedNames.Prepend($"! MISSING (ID: {currentTargetId})").ToArray();
 				int next = EditorGUI.Popup(popupRect, 0, display);
 				if (next > 0) { map.SetMapping(sourceId, allowedIds[next - 1]); changed = true; }
 			} else {
@@ -178,7 +202,10 @@ namespace Kope.Core.Type.EnumAsset.EditorTools {
 			return changed;
 		}
 
-		private static bool DrawExclusionRow(EnumToEnumMap map, long excludedId, string label, bool isMissing) {
+		// ── Exclusion row ─────────────────────────────────────────────────────────
+
+		/// <summary>Returns true if the exclusion list was changed this frame.</summary>
+		private static bool DrawExclusionRow(EnumToEnumMap map, int excludedId, string label, bool isMissing) {
 			var rect = GUILayoutUtility.GetRect(0, ROW_HEIGHT + ROW_PADDING * 2, GUILayout.ExpandWidth(true));
 			rect.y += ROW_PADDING;
 			rect.height = ROW_HEIGHT;

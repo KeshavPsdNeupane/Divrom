@@ -10,12 +10,6 @@ namespace Kope.Actor {
 		"1 = normal speed, <1 = slower, >1 = faster.")]
 		private float moveSpeedMultiplier = 1f;
 
-		public override StateChangeResult EnterState() {
-			var res = this._animationComponent.PlayAnimation(this._profileData, true).ToStateChangeResult();
-			Debug.Log($"Entering Move State. Animation Play Result: {res}, " +
-			$"length of animation: {this._profileData.ApprarentAnimationLength}");
-			return res;
-		}
 
 		public override void TickUpdate() {
 			if (this._movementComponent.Direction.sqrMagnitude <= MovementComponentBase.MOVEMENT_EPSILON) {

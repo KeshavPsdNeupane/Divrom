@@ -19,7 +19,7 @@ namespace Kope.Actor.New {
 		/// </remarks>
 		/// <param name="enumId">The unique identifier of the target state.</param>
 		/// <returns>The result of the transition attempt.</returns>
-		StateChangeResult ChangeState(long enumId, bool handleFallbackInternally = false);
+		StateChangeResult ChangeState(int enumId, bool handleFallbackInternally = false);
 
 		/// <summary>
 		/// The standard internal exit path for active states to return the entity to a neutral baseline.
@@ -53,12 +53,12 @@ namespace Kope.Actor.New {
 		private IAnimationComponentNew _animationComponent;
 
 		// EnumId of the idle state — stored separately so TransitionToIdle never needs a lookup key from outside.
-		private long _idleEnumId;
+		private int _idleEnumId;
 		private readonly EntityStateMachine _stateMachine = new();
 
 		// Primary lookup: enumId → logic SO.
 		// Null values are valid — purely data-driven states have no logic.
-		private readonly Dictionary<long, EntityStateBaseSO> _stateLookUp = new();
+		private readonly Dictionary<int, EntityStateBaseSO> _stateLookUp = new();
 
 		private void Awake() { if (this.loadOnStart) Init(); }
 
@@ -68,7 +68,7 @@ namespace Kope.Actor.New {
 
 			// --- Register idle first so it's always available as a fallback ---
 			var idleData = this.defaultIdleStateData.Profile.ToData();
-			long idleID = this.defaultIdleStateData.Profile.StatePicker.GetSelectedEnumId();
+			int idleID = this.defaultIdleStateData.Profile.StatePicker.GetSelectedEnumId();
 			this._idleEnumId = idleID;
 
 			EntityStateBaseSO idleLogic = null;
@@ -121,12 +121,11 @@ namespace Kope.Actor.New {
 				this._stateMachine.CurrentState.TickFixedUpdate();
 		}
 
-		public StateChangeResult ChangeState(long enumId, bool handleFallbackInternally = false) {
+		public StateChangeResult ChangeState(int enumId, bool handleFallbackInternally = false) {
 			// Attempt to find and schedule the transition.
 			var result = this._stateLookUp.TryGetValue(enumId, out var logic)
 				? this._stateMachine.ScheduleTransition(logic)
 				: StateChangeResult.Error_NotFound;
-
 
 			if (handleFallbackInternally && result != StateChangeResult.Success && result != StateChangeResult.Internal_Fallback) {
 				var stateName = logic.ProfileData.Name ?? $"EnumId {enumId}";

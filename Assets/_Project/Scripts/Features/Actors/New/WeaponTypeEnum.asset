@@ -12,21 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30fbe0bb9894e0b25ab152e4b65bef91, type: 3}
   m_Name: WeaponTypeEnum
   m_EditorClassIdentifier: Kope.Core.Runtime::Kope.Core.Type.EnumAsset.EnumAsset
-  _enumAssetId: 1394676604
+  _enumAssetId: 58511
   Instances:
   - _name: Bare
-    _value: 5990090402000000000
+    _value: 585110000
   - _name: LongSword
-    _value: 5990090402000000001
+    _value: 585110001
   - _name: Sword
-    _value: 5990090402000000002
+    _value: 585110002
   - _name: Dagger
-    _value: 5990090402000000003
+    _value: 585110003
   - _name: Bow
-    _value: 5990090402000000004
+    _value: 585110004
   - _name: CrossBow
-    _value: 5990090402000000005
+    _value: 585110005
   - _name: Staff
-    _value: 5990090402000000006
+    _value: 585110006
   - _name: Spear
-    _value: 5990090402000000007
+    _value: 585110007
