@@ -10,21 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 30fbe0bb9894e0b25ab152e4b65bef91, type: 3}
-  m_Name: PlayerStateEnum
+  m_Name: EntityAnimationEnum
   m_EditorClassIdentifier: Kope.Core.Runtime::Kope.Core.Type.EnumAsset.EnumAsset
-  _enumAssetId: 63507
+  _enumAssetId: 873160015
   Instances:
   - _name: Idle
-    _value: 635070000
+    _value: 3750193708000000000
   - _name: Walk
-    _value: 635070001
-  - _name: Shoot
-    _value: 635070002
+    _value: 3750193708000000001
   - _name: Swing
-    _value: 635070003
+    _value: 3750193708000000002
   - _name: Spell
-    _value: 635070004
+    _value: 3750193708000000003
   - _name: Thrust
-    _value: 635070005
+    _value: 3750193708000000004
+  - _name: Shoot
+    _value: 3750193708000000005
   - _name: Death
-    _value: 635070006
+    _value: 3750193708000000006

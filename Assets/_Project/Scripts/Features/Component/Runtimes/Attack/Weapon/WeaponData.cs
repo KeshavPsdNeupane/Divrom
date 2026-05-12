@@ -1,32 +1,22 @@
 using System;
+using Kope.Core.Type.EnumAsset;
 using UnityEngine;
 
 namespace Kope.Component.Attack {
 	[Serializable]
 	public class WeaponData1 {
-		private readonly string weaponName;
-		private readonly string weaponTypeName;
-		private readonly int weaponTypeID;
-		private readonly float attackSpeed;
-		private readonly string primaryAttackAnimation;
-		private readonly int primaryAttackAnimationHash;
-
-
-		public string WeaponName => weaponName;
-		public string WeaponType => weaponTypeName;
-		public int WeaponTypeID => weaponTypeID;
-		public string PrimaryAttackAnimation => primaryAttackAnimation;
-		public float AttackSpeed => attackSpeed;
-		public int PrimaryAttackAnimationHash => primaryAttackAnimationHash;
-
-		public WeaponData1(string weaponName, string weaponType, int weaponTypeID, float attackSpeed,
+		public string WeaponName { get; private set; }
+		public float AttackSpeed { get; private set; }
+		public EnumInstance WeaponTypeInstance { get; private set; }
+		public string PrimaryAttackAnimation { get; private set; }
+		public int PrimaryAttackAnimationHash { get; private set; }
+		public WeaponData1(string weaponName, EnumInstance weaponType, float attackSpeed,
 		 string overrideAnimation) {
-			this.weaponName = weaponName;
-			this.weaponTypeName = weaponType;
-			this.weaponTypeID = weaponTypeID;
-			this.attackSpeed = attackSpeed;
-			this.primaryAttackAnimation = overrideAnimation;
-			this.primaryAttackAnimationHash = Animator.StringToHash(primaryAttackAnimation.ToString());
+			this.WeaponName = weaponName;
+			this.WeaponTypeInstance = weaponType;
+			this.AttackSpeed = attackSpeed;
+			this.PrimaryAttackAnimation = overrideAnimation;
+			this.PrimaryAttackAnimationHash = Animator.StringToHash(PrimaryAttackAnimation);
 		}
 	}
 }

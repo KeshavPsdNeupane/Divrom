@@ -31,12 +31,10 @@ namespace Kope.Component.Attack {
 
 				this._dataCache = new WeaponData1(
 					this.weaponName,
-					weaponTypeInstance.Alias,
-					weaponTypeID,
+					weaponTypeInstance,
 					this.attackSpeed,
 					animInstance.Alias
 				);
-
 				return this._dataCache;
 			}
 		}

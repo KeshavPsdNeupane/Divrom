@@ -11,6 +11,7 @@ namespace Kope.Core.Type.EnumAsset.EditorTools {
 		private const string ALIAS_FIELD = "_name";
 		private const string VALUE_FIELD = "_value";
 		private const string ASSET_ID_FIELD = "_enumAssetId";
+
 		private readonly List<int> _duplicateValueIndices = new();
 		private readonly List<int> _duplicateNameIndices = new();
 		private bool _hasValueDuplicates = false;
@@ -20,19 +21,20 @@ namespace Kope.Core.Type.EnumAsset.EditorTools {
 		private static readonly Color NORMAL_COLOR = new(0.6f, 0.8f, 1f);
 
 		private const string HELP_TEXT =
-		"DESIGNER GUIDELINES\n\n" +
-		"• DEFAULT ENTRY: Local ID 0 should always represent the default/fallback state (e.g. 'Idle' for animation enums).\n" +
-		"• REORDERING: Drag handles only change visual order in the inspector. Internal IDs are not affected.\n" +
-		"• ENUM NAME: Used for display, debugging, and hashing. Names should remain unique and descriptive.\n" +
-		"• INTERNAL ID: Persistent identifier (Asset ID + Local ID). Changing it can break save data, references, or external assets.\n" +
-		"• VALIDATION: Duplicate names or duplicate IDs are invalid and may cause runtime lookup or serialization issues.";
-		private const int VALUE_WIDTH = 65;
+			"DESIGNER GUIDELINES\n\n" +
+			"• DEFAULT ENTRY: Local ID 0 should always represent the default/fallback state.\n" +
+			"• REORDERING: Drag handles only change visual order. Internal IDs remain persistent.\n" +
+			"• ENUM NAME: Used for display and hashing. Keep them unique.\n" +
+			"• INTERNAL ID: Calculated as (AssetHash * 1B) + LocalID. Changing Local ID manually can break references.\n" +
+			"• VALIDATION: Red highlights indicate duplicate names or Local IDs.";
 
+		private const int VALUE_WIDTH = 80;
 
 		private void OnEnable() {
-			this._list = new ReorderableList(serializedObject,
-				this.serializedObject.FindProperty("Instances"),
+			_list = new ReorderableList(serializedObject,
+				serializedObject.FindProperty("Instances"),
 				true, true, true, true) {
+
 				drawHeaderCallback = rect => {
 					float valueWidth = VALUE_WIDTH;
 					float nameWidth = rect.width - valueWidth - 25;
@@ -42,8 +44,8 @@ namespace Kope.Core.Type.EnumAsset.EditorTools {
 				}
 			};
 
-			this._list.drawElementCallback = (rect, index, isActive, isFocused) => {
-				var element = this._list.serializedProperty.GetArrayElementAtIndex(index);
+			_list.drawElementCallback = (rect, index, isActive, isFocused) => {
+				var element = _list.serializedProperty.GetArrayElementAtIndex(index);
 				var nameProp = element.FindPropertyRelative(ALIAS_FIELD);
 				var valueProp = element.FindPropertyRelative(VALUE_FIELD);
 				rect.y += 2;
@@ -52,77 +54,79 @@ namespace Kope.Core.Type.EnumAsset.EditorTools {
 				float nameWidth = rect.width - valueWidth - 10;
 
 				// --- Column 1: Name ---
-				if (this._duplicateNameIndices.Contains(index)) GUI.backgroundColor = DUPLICATE_COLOR;
+				if (_duplicateNameIndices.Contains(index)) GUI.backgroundColor = DUPLICATE_COLOR;
 				EditorGUI.PropertyField(new Rect(rect.x, rect.y, nameWidth, EditorGUIUtility.singleLineHeight), nameProp, GUIContent.none);
 				GUI.backgroundColor = Color.white;
 
-				// --- Column 2: Value (Masked Display) ---
-				if (this._duplicateValueIndices.Contains(index)) GUI.backgroundColor = DUPLICATE_COLOR;
+				// --- Column 2: Local ID (Masked) ---
+				if (_duplicateValueIndices.Contains(index)) GUI.backgroundColor = DUPLICATE_COLOR;
 				else GUI.backgroundColor = NORMAL_COLOR;
 
-				int fullId = valueProp.intValue;
-				int multiplier = EnumAsset.MASK_MULTIPLIER;
-				int displayId = fullId % multiplier;
+				// Using longValue for the new 64-bit ID system
+				long fullId = valueProp.longValue;
+				long multiplier = EnumAsset.MASK_MULTIPLIER;
+				long localId = fullId % multiplier;
 
 				EditorGUI.BeginChangeCheck();
-				int newLocalId = EditorGUI.IntField(new Rect(rect.x + nameWidth + 5, rect.y, valueWidth, EditorGUIUtility.singleLineHeight), displayId);
+				// We use LongField or IntField for the local part (since it's < 1B)
+				long newLocalId = EditorGUI.LongField(new Rect(rect.x + nameWidth + 5, rect.y, valueWidth, EditorGUIUtility.singleLineHeight), localId);
 
 				if (EditorGUI.EndChangeCheck()) {
-					int prefix = (fullId / multiplier) * multiplier;
-					valueProp.intValue = prefix + Mathf.Clamp(newLocalId, 0, multiplier - 1);
+					long prefix = (fullId / multiplier) * multiplier;
+					// Clamp to ensure the local ID doesn't bleed into the Asset ID prefix
+					valueProp.longValue = prefix + Mathf.Clamp((int)newLocalId, 0, (int)multiplier - 1);
 				}
 				GUI.backgroundColor = Color.white;
 			};
 
-			this._list.onAddCallback = l => {
+			_list.onAddCallback = l => {
 				var asset = (EnumAsset)target;
 				Undo.RecordObject(asset, "Add Enum Entry");
 				asset.AddNewInstance();
 				EditorUtility.SetDirty(asset);
+				serializedObject.Update(); // Refresh to show new entry
 			};
 		}
 
 		public override void OnInspectorGUI() {
-			this.serializedObject.Update();
+			serializedObject.Update();
 
-			// 1. Draw the Read-Only Asset ID at the top
 			EditorGUILayout.Space();
 			SerializedProperty assetIdProp = serializedObject.FindProperty(ASSET_ID_FIELD);
 			if (assetIdProp != null) {
-				EditorGUILayout.PropertyField(assetIdProp);
+				// Keep the Asset ID read-only so the prefix remains stable
+				GUI.enabled = false;
+				EditorGUILayout.PropertyField(assetIdProp, new GUIContent("Global Asset Prefix (Hash)"));
+				GUI.enabled = true;
 			}
 
-			// 2. Check logic
 			CheckForDuplicates();
 
-			// 3. Draw the List
 			EditorGUILayout.Space();
-			this._list.DoLayoutList();
+			_list.DoLayoutList();
 
-			// 4. Warnings
-			if (this._hasValueDuplicates) EditorGUILayout.HelpBox("DUPLICATE IDs: Multiple entries share the same Local ID!", MessageType.Error);
-			if (this._hasNameDuplicates) EditorGUILayout.HelpBox("DUPLICATE NAMES: Ensure names are unique for Animator hashing.", MessageType.Warning);
+			if (_hasValueDuplicates) EditorGUILayout.HelpBox("DUPLICATE IDs: Multiple entries share the same Local ID!", MessageType.Error);
+			if (_hasNameDuplicates) EditorGUILayout.HelpBox("DUPLICATE NAMES: Ensure names are unique.", MessageType.Warning);
 
-			// 5. Help Text
 			EditorGUILayout.Space();
 			EditorGUILayout.HelpBox(HELP_TEXT, MessageType.Info);
 
-			this.serializedObject.ApplyModifiedProperties();
+			serializedObject.ApplyModifiedProperties();
 		}
 
 		private void CheckForDuplicates() {
-			this._duplicateValueIndices.Clear();
-			this._duplicateNameIndices.Clear();
-			this._hasValueDuplicates = false;
-			this._hasNameDuplicates = false;
+			_duplicateValueIndices.Clear();
+			_duplicateNameIndices.Clear();
+			_hasValueDuplicates = false;
+			_hasNameDuplicates = false;
 
-			var prop = this.serializedObject.FindProperty("Instances");
-			Dictionary<int, List<int>> valueMap = new();
+			var prop = serializedObject.FindProperty("Instances");
+			Dictionary<long, List<int>> valueMap = new();
 			Dictionary<string, List<int>> nameMap = new();
 
 			for (int i = 0; i < prop.arraySize; i++) {
 				var element = prop.GetArrayElementAtIndex(i);
-				int val = element.FindPropertyRelative(VALUE_FIELD).intValue;
+				long val = element.FindPropertyRelative(VALUE_FIELD).longValue;
 				string name = element.FindPropertyRelative(ALIAS_FIELD).stringValue;
 
 				if (!valueMap.ContainsKey(val)) valueMap[val] = new List<int>();
@@ -133,12 +137,12 @@ namespace Kope.Core.Type.EnumAsset.EditorTools {
 			}
 
 			foreach (var kvp in valueMap) if (kvp.Value.Count > 1) {
-				this._duplicateValueIndices.AddRange(kvp.Value);
-				this._hasValueDuplicates = true;
+				_duplicateValueIndices.AddRange(kvp.Value);
+				_hasValueDuplicates = true;
 			}
 			foreach (var kvp in nameMap) if (kvp.Value.Count > 1) {
-				this._duplicateNameIndices.AddRange(kvp.Value);
-				this._hasNameDuplicates = true;
+				_duplicateNameIndices.AddRange(kvp.Value);
+				_hasNameDuplicates = true;
 			}
 		}
 	}

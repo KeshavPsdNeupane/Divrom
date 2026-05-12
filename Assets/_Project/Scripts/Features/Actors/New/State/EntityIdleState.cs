@@ -9,7 +9,7 @@ namespace Kope.Actor.New {
 
 		public override void TickUpdate() {
 			if (this._movementComponent.Direction.sqrMagnitude >= MovementComponentBase.MOVEMENT_EPSILON) {
-				int movementEnumId = this.movementStateEnum.GetSelectedEnumId();
+				long movementEnumId = this.movementStateEnum.GetSelectedEnumId();
 
 				// already in Idle; we don't need to 'fallback' to it if Move is briefly Busy.
 				_ = this._stateManagement.ChangeState(movementEnumId, false);
