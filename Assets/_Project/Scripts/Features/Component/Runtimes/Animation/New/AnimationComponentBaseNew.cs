@@ -5,31 +5,59 @@ using UnityEngine;
 namespace Kope.Component {
 	public class AnimationComponentBaseNew : InitializableBase, IAnimationComponentNew {
 		[SerializeField] protected Animator animator;
+
+
+
 		protected override bool OnInit() {
 			if (!this.animator) return false;
 			SetDirection(Vector2.down);
 			return true;
 		}
+		/// <summary>
+		/// Executes a state change on the underlying Animator using the provided profile data.
+		/// </summary>
+		/// <param name="animState">The data profile containing the animation hash, speed, and timing constraints.</param>
+		/// <param name="alreadyChecked">
+		/// If <see langword="true"/>, bypasses <see cref="EvaluateTransitionFeasibility"/> safety checks. 
+		/// Use this to optimize performance when the transition has already been validated by a State Machine 
+		/// or Pre-flight check.
+		/// </param>
+		/// <returns>
+		/// Returns <see cref="AnimationStatus.Success"/> if the play command was issued. 
+		/// Otherwise, returns the specific failure reason (e.g., Busy, NotFound).
+		/// </returns>
+		/// <remarks>
+		/// <para><b>Caution:</b> Setting <paramref name="alreadyChecked"/> to true assumes the caller 
+		/// has verified that the animation exists and that current non-looping states have reached their 
+		/// <c>NormalizedExitTime</c>.</para>
+		/// </remarks>
+		public AnimationStatus PlayAnimation(AnimationStateProfileData animState, bool alreadyChecked = false) {
+			if (!alreadyChecked) {
+				var validity = EvaluateTransitionFeasibility(animState);
+				if (validity != AnimationStatus.Success) return validity;
+			}
 
-		public AnimationStatus PlayAnimation(AnimationStateProfileData animState) {
+			this.animator.speed = animState.AnimationSpeed;
+			this.animator.Play(animState.Hash);
+			return AnimationStatus.Success;
+		}
+
+		public AnimationStatus EvaluateTransitionFeasibility(AnimationStateProfileData animState) {
 			if (!DoesAnimationExist(animState.Hash)) return AnimationStatus.NotFound;
-
 			var info = this.animator.GetCurrentAnimatorStateInfo(0);
 			bool isSame = info.shortNameHash == animState.Hash;
-
-			// Block if the current non-looping animation hasn't hit exit time
-			if (!animState.IsLooping && isSame) {
+			// block is current is same non-looping animation and hasn't reached exit time yet.
+			// if loping then we only check if it's the same, since it can be interrupted at any time.
+			if (isSame && animState.IsOneShot) {
 				if ((info.normalizedTime % 1f) < animState.NormalizedExitTime) {
 					return AnimationStatus.Busy;
 				}
 			}
 
 			if (this.animator.IsInTransition(0)) return AnimationStatus.InTransition;
-
-			this.animator.speed = animState.AnimationSpeed;
-			this.animator.Play(animState.Hash);
 			return AnimationStatus.Success;
 		}
+
 
 		public void SetDirection(Vector2 dir) {
 			if (dir == Vector2.zero) return;
@@ -47,11 +75,11 @@ namespace Kope.Component {
 		public bool IsAnimationFinished(AnimationStateProfileData animState) {
 			var stateInfo = this.animator.GetCurrentAnimatorStateInfo(0);
 			if (stateInfo.shortNameHash != animState.Hash) return false;
-			if (animState.IsLooping) {
-				// Loop is considered "finished" after a full cycle
-				return stateInfo.normalizedTime >= 1f;
+			if (animState.IsOneShot) {
+				// One-shot is considered "finished" after reaching the exit time
+				return stateInfo.normalizedTime >= animState.NormalizedExitTime;
 			}
-			return stateInfo.normalizedTime >= animState.NormalizedExitTime;
+			return true; // Looping animations are always "finished" since they can be interrupted at any time
 		}
 
 		public bool CanTransitionToNextAnimation(int hash) =>

@@ -5700,8 +5700,9 @@ MonoBehaviour:
       _animationState:
         _source: {fileID: 11400000, guid: c997d1aa8d271d3a0beda74d85b42526, type: 2}
         _selectedValue: 635070000
-      _isLooping: 0
+      _durationInSeconds: 0.01
       _animationSpeed: 1
+      _isOneShot: 0
       _normalizedExitTime: 0.9
     StateSO: {fileID: 11400000, guid: 94ef0cbd3c3c312c5a08d72350bbcd2d, type: 2}
   animationStateMap:
@@ -5709,8 +5710,9 @@ MonoBehaviour:
     _selectedValue: 3166da25
     _bindedValues:
     - Profile:
-        _isLooping: 1
-        _animationSpeed: 1
+        _durationInSeconds: 1.2
+        _animationSpeed: 2
+        _isOneShot: 0
         _normalizedExitTime: 1
       StateSO: {fileID: 11400000, guid: b8ae37d9db98b4181aecd79b93df8e6c, type: 2}
 --- !u!1 &417700174
@@ -7855,13 +7857,34 @@ MonoBehaviour:
     gameObjectName: SceneServiceLocator
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: Addhp (2)
+    gameObjectName: InitCaller
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Addhp
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Hpstore (2)
   - typeName: EntityInitCaller
     order: -40
     gameObjectName: Hpstore (1)
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: AddSpd (1)
+    gameObjectName: Dummy
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: AddDef (1)
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Addhp (2)
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Hpstore
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Addhp (1)
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: AddDef
   - typeName: EntityInitCaller
     order: -40
     gameObjectName: PlayerNew
@@ -7870,31 +7893,10 @@ MonoBehaviour:
     gameObjectName: Dummy (1)
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: Dummy
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: Hpstore (2)
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: Addhp (1)
-  - typeName: EntityInitCaller
-    order: -40
     gameObjectName: AddSpd
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: Hpstore
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: AddDef
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: AddDef (1)
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: InitCaller
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: Addhp
+    gameObjectName: AddSpd (1)
   - typeName: InGameUIInitCaller
     order: -30
     gameObjectName: UI
@@ -8251,8 +8253,8 @@ MonoBehaviour:
   x: 0.575
   result: 0.6205578
   unityResult: 0.38834375
-  customEvalTime: 0.24810000000000001
-  unityEvalTime: 0.10930000000000001
+  customEvalTime: 0.23500000000000001
+  unityEvalTime: 0.1077
 --- !u!1001 &1031836800
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14477,13 +14479,65 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 41162499886760769, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: m_labelHash
+      value: 0.000013487398
+      objectReference: {fileID: 0}
+    - target: {fileID: 41162499886760769, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: m_CategoryHash
+      value: 8.965765e-31
+      objectReference: {fileID: 0}
     - target: {fileID: 196204471101592853, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 436724788896674924, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: m_labelHash
+      value: 0.000013487398
+      objectReference: {fileID: 0}
+    - target: {fileID: 436724788896674924, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: m_CategoryHash
+      value: 8.965765e-31
+      objectReference: {fileID: 0}
+    - target: {fileID: 973961213652398782, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: m_labelHash
+      value: 0.000013487398
+      objectReference: {fileID: 0}
+    - target: {fileID: 973961213652398782, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: m_CategoryHash
+      value: 8.965765e-31
+      objectReference: {fileID: 0}
+    - target: {fileID: 1118928791644788329, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -2127780029, guid: 4f1e5b8ba06cbda55a694c1b1025d1a7, type: 3}
+    - target: {fileID: 1697320415807463119, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: m_labelHash
+      value: 0.000013487398
+      objectReference: {fileID: 0}
+    - target: {fileID: 1697320415807463119, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: m_CategoryHash
+      value: 8.965765e-31
+      objectReference: {fileID: 0}
     - target: {fileID: 2033154260760698069, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
       propertyPath: m_Name
       value: PlayerNew
+      objectReference: {fileID: 0}
+    - target: {fileID: 2359971793931666236, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: m_labelHash
+      value: 0.000013487398
+      objectReference: {fileID: 0}
+    - target: {fileID: 2359971793931666236, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: m_CategoryHash
+      value: 8.965765e-31
+      objectReference: {fileID: 0}
+    - target: {fileID: 2625232810054269837, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: m_labelHash
+      value: 0.000013487398
+      objectReference: {fileID: 0}
+    - target: {fileID: 2625232810054269837, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: m_CategoryHash
+      value: 8.965765e-31
       objectReference: {fileID: 0}
     - target: {fileID: 2741082705423238104, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
       propertyPath: m_AnchorMax.x
@@ -14493,6 +14547,26 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3388033084637387449, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: m_labelHash
+      value: 0.000013487398
+      objectReference: {fileID: 0}
+    - target: {fileID: 3388033084637387449, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: m_CategoryHash
+      value: 8.965765e-31
+      objectReference: {fileID: 0}
+    - target: {fileID: 4203578172416337362, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -1976043293, guid: e57d0019a56699c93bb6ff3a7e1e7da1, type: 3}
+    - target: {fileID: 4628812339733595628, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 77017084, guid: e4cf14472c3524a74b3f281b897a88b1, type: 3}
+    - target: {fileID: 4871272455601320476, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -659143660, guid: 369a417af5b27b2d9afb5719b7c1fae0, type: 3}
     - target: {fileID: 6037248722059709900, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
       propertyPath: components.Array.size
       value: 14
@@ -14505,6 +14579,18 @@ PrefabInstance:
       propertyPath: 'components.Array.data[13]'
       value: 
       objectReference: {fileID: 342759139}
+    - target: {fileID: 6207735159566137385, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: m_labelHash
+      value: 0.000013487398
+      objectReference: {fileID: 0}
+    - target: {fileID: 6207735159566137385, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: m_CategoryHash
+      value: 8.965765e-31
+      objectReference: {fileID: 0}
+    - target: {fileID: 6553369446378874605, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -4369906226497229518, guid: f3794dee20967e9dba8153ab2537b453, type: 3}
     - target: {fileID: 6671984905160279280, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
       propertyPath: m_LocalPosition.x
       value: -3.6
@@ -14549,6 +14635,86 @@ PrefabInstance:
       propertyPath: cam
       value: 
       objectReference: {fileID: 1294788629}
+    - target: {fileID: 6930303796094257619, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: m_labelHash
+      value: 0.000013487398
+      objectReference: {fileID: 0}
+    - target: {fileID: 6930303796094257619, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: m_CategoryHash
+      value: 8.965765e-31
+      objectReference: {fileID: 0}
+    - target: {fileID: 6997000961746611988, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: m_labelHash
+      value: 0.000013487398
+      objectReference: {fileID: 0}
+    - target: {fileID: 6997000961746611988, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: m_CategoryHash
+      value: 8.965765e-31
+      objectReference: {fileID: 0}
+    - target: {fileID: 7258270735581084377, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: m_labelHash
+      value: 0.000013487398
+      objectReference: {fileID: 0}
+    - target: {fileID: 7258270735581084377, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: m_CategoryHash
+      value: 8.965765e-31
+      objectReference: {fileID: 0}
+    - target: {fileID: 7358816911231301464, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -855901985, guid: 780c04f42cd663241a0a2a61f37b0e0e, type: 3}
+    - target: {fileID: 7735574521479141810, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 4309644004551084477, guid: 15f0c0868164618e9b8c1c7fe7447732, type: 3}
+    - target: {fileID: 7749565980604087050, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: m_labelHash
+      value: 0.000013487398
+      objectReference: {fileID: 0}
+    - target: {fileID: 7749565980604087050, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: m_CategoryHash
+      value: 8.965765e-31
+      objectReference: {fileID: 0}
+    - target: {fileID: 7798952480107608526, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -8498407833611962168, guid: 14619560ade8d0221a350f84a97a2e1c, type: 3}
+    - target: {fileID: 8225534597066264464, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -1111047886, guid: 3b3c7bb5434dfa91ea3f0fc3173faf2d, type: 3}
+    - target: {fileID: 8627556327939001407, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 1433470982, guid: 71e6c17a4099c9e80ab09029e70bf1b8, type: 3}
+    - target: {fileID: 8642391075006133350, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: m_labelHash
+      value: 0.000013487398
+      objectReference: {fileID: 0}
+    - target: {fileID: 8642391075006133350, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: m_CategoryHash
+      value: 8.965765e-31
+      objectReference: {fileID: 0}
+    - target: {fileID: 9017780235423865461, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: m_labelHash
+      value: 0.000013487398
+      objectReference: {fileID: 0}
+    - target: {fileID: 9017780235423865461, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: m_CategoryHash
+      value: 8.965765e-31
+      objectReference: {fileID: 0}
+    - target: {fileID: 9093045635616778328, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 4839505426810885240, guid: 9e563b88af2e71614a9cc0dda8a67022, type: 3}
+    - target: {fileID: 9126230424678781745, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: m_labelHash
+      value: 0.000013487398
+      objectReference: {fileID: 0}
+    - target: {fileID: 9126230424678781745, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: m_CategoryHash
+      value: 8.965765e-31
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:

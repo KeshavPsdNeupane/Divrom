@@ -1,7 +1,7 @@
 using Kope.Core.CompilerServices;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "NewWeapon", menuName = "Actors/Weapon")]
+[CreateAssetMenu(fileName = "NewWeapon", menuName = "Scriptable Objects/Weapon")]
 public class WeaponSO : ScriptableObject {
 	[SerializeField] private string weaponName = "Bare Hands";
 	[SerializeField] private WeaponType weaponType = WeaponType.Bare;

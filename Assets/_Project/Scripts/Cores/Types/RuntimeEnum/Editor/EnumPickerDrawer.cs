@@ -39,7 +39,7 @@ namespace Kope.Core.Type.EnumAsset.EditorTools {
 				if (newAsset != null && newAsset.Instances.Count > 0) {
 					valueProp.intValue = newAsset.Instances[0].InternalValue;
 				} else {
-					valueProp.intValue = -1; // Reset if asset is null/empty
+					valueProp.intValue = 0; // Reset if asset is null/empty
 				}
 			}
 

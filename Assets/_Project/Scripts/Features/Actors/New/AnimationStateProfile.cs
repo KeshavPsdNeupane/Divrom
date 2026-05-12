@@ -13,8 +13,20 @@ namespace Kope.Actor.New {
 	[Serializable]
 	public class AnimationStateProfile {
 		[SerializeField] private EnumPicker _animationState;
-		[SerializeField] private bool _isLooping = false;
-		[SerializeField] private float _animationSpeed = 1f;
+		[SerializeField, Min(0f), Tooltip("The total duration of the animation in seconds, matching the Animator's 'Seconds.Milliseconds' format.\n\n" +
+			"Direct Conversion Guide:\n" +
+			"- If Animator shows 0:45, enter 0.45\n" +
+			"- If Animator shows 1:20, enter 1.20\n" +
+			"- If Animator shows 1:55, enter 1.55")]
+		private float _durationInSeconds = 0f;
+		[SerializeField, Min(0.1f), Tooltip("The speed at which the animation plays. 1.0 is" +
+		" normal speed, <1 is slower, >1 is faster.")]
+		private float _animationSpeed = 1f;
+		[SerializeField, Tooltip("When enabled (One-Shot), the State Machine treats this animation as" +
+		" a non-interruptible sequence that must reach its 'Normalized Exit Time' " +
+		"before allowing external transitions. \n\n" +
+		"When disabled (Loop), the animation is considered interruptible at any frame.")]
+		private bool _isOneShot = true;
 		[Range(0f, 1f)][SerializeField] private float _normalizedExitTime = 0.9f;
 
 		public EnumPicker StatePicker => this._animationState;
@@ -24,8 +36,9 @@ namespace Kope.Actor.New {
 			Debug.Assert(instance != null, "[AnimationStateProfile] EnumPicker has no valid selection.");
 			return new AnimationStateProfileData(
 				instance?.Alias ?? string.Empty,
+				this._durationInSeconds,
 				this._animationSpeed,
-				this._isLooping,
+				this._isOneShot,
 				this._normalizedExitTime
 			);
 		}
@@ -42,15 +55,27 @@ namespace Kope.Actor.New {
 	/// </summary>
 	[Serializable]
 	public class AnimationStateMappedProfile {
-		[SerializeField] private bool _isLooping = false;
-		[SerializeField] private float _animationSpeed = 1f;
+		[SerializeField, Min(0f), Tooltip("The total duration of the animation in seconds, matching the Animator's 'Seconds.Milliseconds' format.\n\n" +
+		"Direct Conversion Guide:\n" +
+		"- If Animator shows 0:45, enter 0.45\n" +
+		"- If Animator shows 1:20, enter 1.20\n" +
+		"- If Animator shows 1:55, enter 1.55")]
+		private float _durationInSeconds = 0f;
+		// min 0.1 to avoid zero or negative speeds which can cause issues with Animator playback.
+		[SerializeField, Min(0.1f)] private float _animationSpeed = 1f;
+		[SerializeField, Tooltip("When enabled (One-Shot), the State Machine treats this animation as" +
+		" a non-interruptible sequence that must reach its 'Normalized Exit Time' " +
+		"before allowing external transitions. \n\n" +
+		"When disabled (Loop), the animation is considered interruptible at any frame.")]
+		private bool _isOneShot = true;
 		[Range(0f, 1f)][SerializeField] private float _normalizedExitTime = 0.9f;
 
 		public AnimationStateProfileData ToData(string name) {
 			return new AnimationStateProfileData(
 				name,
+				this._durationInSeconds,
 				this._animationSpeed,
-				this._isLooping,
+				this._isOneShot,
 				this._normalizedExitTime
 			);
 		}

@@ -19,7 +19,7 @@ namespace Kope.Actor.New {
 		/// </remarks>
 		/// <param name="enumId">The unique identifier of the target state.</param>
 		/// <returns>The result of the transition attempt.</returns>
-		StateChangeResult ChangeState(int enumId);
+		StateChangeResult ChangeState(int enumId, bool handleFallbackInternally = false);
 
 		/// <summary>
 		/// The standard internal exit path for active states to return the entity to a neutral baseline.
@@ -41,6 +41,7 @@ namespace Kope.Actor.New {
 		[SerializeField] private bool loadOnStart = true;
 
 		[Header("States")]
+		[Header("No need to worry about shared logic SOs here \n each entry is instantiated on init, \nso they can be reused as templates without risk of shared state.")]
 		// Idle is kept separate — it's the universal fallback, always registered first.
 		[SerializeField] private AnimationStateData<AnimationStateProfile> defaultIdleStateData;
 		// All non-idle states. Idle entries here are silently skipped.
@@ -73,8 +74,7 @@ namespace Kope.Actor.New {
 			EntityStateBaseSO idleLogic = null;
 			if (this.defaultIdleStateData.StateSO != null) {
 				idleLogic = Instantiate(this.defaultIdleStateData.StateSO);
-				idleLogic.Init(this, idleData, this._movementComponent, this._attackComponent, this._animationComponent);
-
+				idleLogic.Init(this, idleData, this._movementComponent, this._animationComponent);
 				this._stateMachine.Initialize(idleLogic);
 
 			} else {
@@ -91,7 +91,7 @@ namespace Kope.Actor.New {
 				EntityStateBaseSO profileLogic = null;
 				if (profile.StateSO != null) {
 					profileLogic = Instantiate(profile.StateSO);
-					profileLogic.Init(this, profileData, this._movementComponent, this._attackComponent, this._animationComponent);
+					profileLogic.Init(this, profileData, this._movementComponent, this._animationComponent);
 				}
 
 				// Collisions here mean two enum entries share the same InternalValue — check the EnumAsset.
@@ -106,39 +106,60 @@ namespace Kope.Actor.New {
 		}
 
 		protected override void OnUpdate() {
-			if (this._stateMachine.CurrentState != null)
+			// 1. Flush any pending transitions at the start of the frame.
+			// This captures the EnterState() result (Success, Busy, etc.)
+			var processResult = this._stateMachine.ProcessStateChanges();
+			// Optional: Handle critical failures if a state fails to Enter() even after validation
+			if (processResult == StateChangeResult.Failed) {
+				Debug.LogError($"[Kope.State] Critical failure: {this._stateMachine.CurrentState.name} failed Enter logic.");
+			}
+			if (this._stateMachine.CurrentState != null) {
 				this._stateMachine.CurrentState.TickUpdate();
+			}
 		}
 		protected override void OnFixedUpdate() {
 			if (this._stateMachine.CurrentState != null)
 				this._stateMachine.CurrentState.TickFixedUpdate();
 		}
 
-
-
-		/// <summary>
-		/// Primary entry point for state changes. Pass the enum's integer ID;
-		/// handle non-Success results (e.g. fall back to <see cref="TransitionToIdle"/> on Error_NotFound).
-		/// </summary>
-		public StateChangeResult ChangeState(int enumId) {
-			return this._stateLookUp.TryGetValue(enumId, out var logic)
-				? this._stateMachine.ExecuteTransition(logic)
+		public StateChangeResult ChangeState(int enumId, bool handleFallbackInternally = false) {
+			// Attempt to find and schedule the transition.
+			var result = this._stateLookUp.TryGetValue(enumId, out var logic)
+				? this._stateMachine.ScheduleTransition(logic)
 				: StateChangeResult.Error_NotFound;
+
+
+			if (handleFallbackInternally && result != StateChangeResult.Success && result != StateChangeResult.Internal_Fallback) {
+				var stateName = logic.ProfileData.Name ?? $"EnumId {enumId}";
+				Debug.LogWarning($"[Kope.State] Transition to '{stateName}' failed with result: {result}. " +
+								 "Self-correcting to Idle baseline. \n" +
+								 "TIP: If this is unintended behavior, check the Inspector definition for this state. " +
+								 "Ensure 'IsLooping' is correct and look if any ProfileData or Hash values are missing/incorrect.");
+
+				return ScheduleTransitionToIdleInternal();
+			}
+
+			return result;
 		}
 
 		/// <summary>
-		/// Forces the state machine to transition to the Idle state.
+		/// Public entry point to force the entity back to its baseline.
 		/// </summary>
-		/// <remarks>
-		/// Useful for states that need to terminate themselves or for external systems 
-		/// resetting an entity to its baseline. This method abstracts away the need 
-		/// for state-specific IDs or lookup table access.
-		/// </remarks>
 		public void TransitionToIdle() {
-			if (this._stateLookUp.TryGetValue(this._idleEnumId, out var idle))
-				this._stateMachine.ExecuteTransition(idle);
+			this.ScheduleTransitionToIdleInternal();
 		}
 
+		/// <summary>
+		/// Internal helper to schedule the Idle fallback with the priority flag.
+		/// </summary>
+		private StateChangeResult ScheduleTransitionToIdleInternal() {
+			if (this._stateLookUp.TryGetValue(this._idleEnumId, out var idle)) {
+				// 'true' ensures we bypass feasibility/lock checks.
+				return this._stateMachine.ScheduleTransition(idle, true);
+			}
+			Debug.LogError("[Kope.State] Critical: Idle state missing from lookup table.");
+			return StateChangeResult.Error_LogicMissing;
+		}
 		private bool ValidateDependencies() {
 			if (ecr == null) {
 				Debug.LogError($"[Kope] Registry missing on {gameObject.name}" + GetParentGameObjectHeirarchyMessage());

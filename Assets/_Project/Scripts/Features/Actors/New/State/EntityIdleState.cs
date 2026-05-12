@@ -7,20 +7,12 @@ namespace Kope.Actor.New {
 	public class EntityIdleState : EntityStateBaseSO {
 		[SerializeField] private EnumPicker movementStateEnum;
 
-		public override StateChangeResult EnterState() {
-			// attempt to play idle.
-			return this._animationComponent.PlayAnimation(this._profileData).ToStateChangeResult();
-		}
-
-
-
 		public override void TickUpdate() {
 			if (this._movementComponent.Direction.sqrMagnitude >= MovementComponentBase.MOVEMENT_EPSILON) {
 				int movementEnumId = this.movementStateEnum.GetSelectedEnumId();
 
-				// Directly transitioning to movement. While other states must call 
-				// 'TransitionToIdle' to reset, Idle can explicitly route to specific states.
-				_ = this._stateManagement.ChangeState(movementEnumId);
+				// already in Idle; we don't need to 'fallback' to it if Move is briefly Busy.
+				_ = this._stateManagement.ChangeState(movementEnumId, false);
 			}
 		}
 		public override void TickFixedUpdate() {

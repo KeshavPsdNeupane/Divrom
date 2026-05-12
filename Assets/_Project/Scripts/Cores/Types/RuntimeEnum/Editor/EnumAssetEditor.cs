@@ -11,8 +11,8 @@ namespace Kope.Core.Type.EnumAsset.EditorTools {
 		private const string ALIAS_FIELD = "_name";
 		private const string VALUE_FIELD = "_value";
 		private const string ASSET_ID_FIELD = "_enumAssetId";
-		private List<int> _duplicateValueIndices = new();
-		private List<int> _duplicateNameIndices = new();
+		private readonly List<int> _duplicateValueIndices = new();
+		private readonly List<int> _duplicateNameIndices = new();
 		private bool _hasValueDuplicates = false;
 		private bool _hasNameDuplicates = false;
 
@@ -21,12 +21,13 @@ namespace Kope.Core.Type.EnumAsset.EditorTools {
 
 		private const string HELP_TEXT =
 		"DESIGNER GUIDELINES\n\n" +
-		"• DEFAULT BEHAVIOR: Local ID 0 is reserved for the default state. (e.g., for an Animation Type enum, Index 0 should be 'Idle').\n" +
-		"• ORGANIZATION: Drag handles (left) to reorder. This is for visual grouping only.\n" +
-		"• GENERAL RULE: The 'Enum Name' is for display and hashing. Keep names unique and descriptive.\n" +
-		"• INTERNAL ID: This is the persistent key (Asset ID + Local ID). DO NOT CHANGE if this entry is already referenced in save data or external assets.\n" +
-		"• VALIDATION: Duplicate names or IDs will be highlighted and must be resolved to avoid runtime errors.";
+		"• DEFAULT ENTRY: Local ID 0 should always represent the default/fallback state (e.g. 'Idle' for animation enums).\n" +
+		"• REORDERING: Drag handles only change visual order in the inspector. Internal IDs are not affected.\n" +
+		"• ENUM NAME: Used for display, debugging, and hashing. Names should remain unique and descriptive.\n" +
+		"• INTERNAL ID: Persistent identifier (Asset ID + Local ID). Changing it can break save data, references, or external assets.\n" +
+		"• VALIDATION: Duplicate names or duplicate IDs are invalid and may cause runtime lookup or serialization issues.";
 		private const int VALUE_WIDTH = 65;
+
 
 		private void OnEnable() {
 			this._list = new ReorderableList(serializedObject,

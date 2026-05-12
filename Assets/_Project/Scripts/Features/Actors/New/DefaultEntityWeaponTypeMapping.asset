@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e863e03aa7f34fb9ba168ba2f59ac15, type: 3}
+  m_Name: DefaultEntityWeaponTypeMapping
+  m_EditorClassIdentifier: Kope.Core.Runtime::Kope.Core.Type.EnumAsset.EnumToEnumMap
+  _source: {fileID: 11400000, guid: c109988bfe1ea128ca27b5d8a76f6dc6, type: 2}
+  _target: {fileID: 11400000, guid: c997d1aa8d271d3a0beda74d85b42526, type: 2}
+  _serializedKeys: 0000000001000000020000000300000004000000050000000600000007000000f011e022f111e022f211e022f311e022f411e022f511e022f611e022f711e0221112e022
+  _serializedValues: 3366da253366da253366da253366da253566da253266da253566da253566da253366da253366da253366da253366da253266da253566da253566da253566da253466da25
+  _excludedTargets: 3066da253166da253666da25

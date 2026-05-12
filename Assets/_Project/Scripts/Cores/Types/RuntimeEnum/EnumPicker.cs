@@ -21,17 +21,17 @@ namespace Kope.Core.Type.EnumAsset {
 		// ==========================================================================================
 
 		[SerializeField] private EnumAsset _source;
-		[SerializeField] private int _selectedValue = -1;
+		[SerializeField] private int _selectedValue = 0;
 
 		/// <summary>
 		/// Resolves the current selection into a functional <see cref="EnumInstance"/>.
 		/// </summary>
 		/// <returns>The instance containing the Alias and Handle, or null if unassigned.</returns>
 		public EnumInstance GetInstance() {
-			Debug.Assert(this._source != null && this._selectedValue != -1,
+			Debug.Assert(this._source != null && this._selectedValue != 0,
 			 $"[EnumPicker] Source EnumAsset is not assigned or no value is selected on Object: {this}");
-
-			return this._source != null ? this._source.GetInstance(this._selectedValue) : null;
+			var instance = this._source != null ? this._source.GetInstance(this._selectedValue) : null;
+			return instance;
 		}
 
 		// just inline this 1 line function for efficiency — we call it every frame in some cases,
@@ -41,5 +41,15 @@ namespace Kope.Core.Type.EnumAsset {
 		/// Quick validation check to ensure the picker has a source and a valid selection.
 		/// </summary>
 		public bool IsValid => this._source != null && this._source.GetInstance(this._selectedValue) != null;
+
+
+		public void LogAllSourceAsset() {
+			if (this._source == null) {
+				Debug.LogWarning($"[EnumPicker] No source assigned for EnumPicker on Object: {this}");
+				return;
+			}
+
+			this.Source.LogAllInstances();
+		}
 	}
 }

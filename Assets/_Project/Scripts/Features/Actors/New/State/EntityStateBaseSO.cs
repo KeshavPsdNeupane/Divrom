@@ -1,6 +1,4 @@
-using System;
 using Kope.Component;
-using Kope.Component.Attack;
 using Kope.Component.Movement;
 using UnityEngine;
 
@@ -13,22 +11,29 @@ namespace Kope.Actor.New {
 
 		protected AnimationStateProfileData _profileData;
 		protected IMovementComponent _movementComponent;
-		protected IAttackComponent _attackComponent;
 		protected IAnimationComponentNew _animationComponent;
 		protected IEntityStateManagement _stateManagement;
 
 		public bool CanStateAcceptExternalCommand => this._isInputReceptive;
-
-		public void Init(IEntityStateManagement stateManagement, AnimationStateProfileData profileData, IMovementComponent movementComponent,
-			IAttackComponent attackComponent, IAnimationComponentNew animationComponent) {
+		public AnimationStateProfileData ProfileData => this._profileData;
+		public void Init(IEntityStateManagement stateManagement, AnimationStateProfileData profileData,
+		IMovementComponent movementComponent, IAnimationComponentNew animationComponent) {
 			this._stateManagement = stateManagement;
 			this._movementComponent = movementComponent;
-			this._attackComponent = attackComponent;
 			this._animationComponent = animationComponent;
 			this._profileData = profileData;
 		}
 
-		public abstract StateChangeResult EnterState();
+		public StateChangeResult CheckStateChangeFeasibility(AnimationStateProfileData newState) {
+			if (!this.CanStateAcceptExternalCommand) return StateChangeResult.Denied_Locked;
+			return this._animationComponent.EvaluateTransitionFeasibility(this._profileData).ToStateChangeResult();
+		}
+
+
+		public virtual StateChangeResult EnterState() {
+			return this._animationComponent.PlayAnimation(this._profileData, true).ToStateChangeResult();
+		}
+
 
 		public virtual void ExitState() {
 			this._animationComponent.SetDefaultSpeed();

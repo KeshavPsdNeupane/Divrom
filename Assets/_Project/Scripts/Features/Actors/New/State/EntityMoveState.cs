@@ -9,8 +9,12 @@ namespace Kope.Actor {
 		"Use this to create variations like Walk vs Run without needing separate logic SOs." +
 		"1 = normal speed, <1 = slower, >1 = faster.")]
 		private float moveSpeedMultiplier = 1f;
+
 		public override StateChangeResult EnterState() {
-			return this._animationComponent.PlayAnimation(this._profileData).ToStateChangeResult();
+			var res = this._animationComponent.PlayAnimation(this._profileData, true).ToStateChangeResult();
+			Debug.Log($"Entering Move State. Animation Play Result: {res}, " +
+			$"length of animation: {this._profileData.ApprarentAnimationLength}");
+			return res;
 		}
 
 		public override void TickUpdate() {

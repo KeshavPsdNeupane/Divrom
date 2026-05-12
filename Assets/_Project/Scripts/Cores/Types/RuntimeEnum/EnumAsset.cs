@@ -145,5 +145,11 @@ namespace Kope.Core.Type.EnumAsset {
 			// this will not cause any issue because the first item will be returned if the idle is not found.
 			return Instances[0].InternalValue;
 		}
+		public void LogAllInstances() {
+			Debug.Log($"[EnumAsset] Logging all instances for asset: {this.name} (ID: {this._enumAssetId})");
+			foreach (var instance in this.Instances) {
+				Debug.Log($"- Instance Alias: {instance.Alias}, ID: {instance.InternalValue}");
+			}
+		}
 	}
 }

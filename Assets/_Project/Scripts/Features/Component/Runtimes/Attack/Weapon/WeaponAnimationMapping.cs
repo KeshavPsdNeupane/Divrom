@@ -33,12 +33,12 @@ public static class WeaponAnimationMapper {
 		cached = new Dictionary<WeaponType, AnimationState>
 		{
 			{ WeaponType.Bare, AnimationState.Swing },
+			{ WeaponType.Sword, AnimationState.Swing },
 			{ WeaponType.LongSword, AnimationState.Swing },
-			{ WeaponType.Crossbow, AnimationState.Thrust }, // Crossbow uses Thrust for attack animation,intentional 
-            { WeaponType.Bow, AnimationState.Shoot },
-			{ WeaponType.Staff, AnimationState.Thrust }, // Staff uses Thrust for attack animation, intentional
-            { WeaponType.Sword, AnimationState.Swing },
 			{ WeaponType.Dagger, AnimationState.Swing },
+			{ WeaponType.Bow, AnimationState.Shoot },
+			{ WeaponType.Crossbow, AnimationState.Thrust }, // Crossbow uses Thrust for attack animation,intentional 
+			{ WeaponType.Staff, AnimationState.Thrust }, // Staff uses Thrust for attack animation, intentional
 			{ WeaponType.Spear, AnimationState.Thrust }
 		};
 	}
@@ -64,7 +64,8 @@ public class WeaponData {
 	public float AttackSpeed => attackSpeed;
 	public int PrimaryAttackAnimationHash => primaryAttackAnimationHash;
 
-	public WeaponData(string weaponName, WeaponType weaponType, float attackSpeed, AnimationState overrideAnimation = AnimationState.None) {
+	public WeaponData(string weaponName, WeaponType weaponType, float attackSpeed,
+	 AnimationState overrideAnimation = AnimationState.None) {
 		this.weaponName = weaponName;
 		this.weaponType = weaponType;
 		this.attackSpeed = attackSpeed;
@@ -76,5 +77,13 @@ public class WeaponData {
 
 		// Immutable hash computed once
 		this.primaryAttackAnimationHash = Animator.StringToHash(primaryAttackAnimation.ToString());
+	}
+	public WeaponData(string weaponName, WeaponType weaponType, float attackSpeed, int primaryAttackAnimationHash) {
+		this.weaponName = weaponName;
+		this.weaponType = weaponType;
+		this.attackSpeed = attackSpeed;
+		this.primaryAttackAnimationHash = primaryAttackAnimationHash;
+		// just a placeholder since the work is actually done by hash, and the enum is only for editor readability
+		this.primaryAttackAnimation = AnimationState.Idle;
 	}
 }

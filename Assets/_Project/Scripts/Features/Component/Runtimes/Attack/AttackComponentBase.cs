@@ -21,10 +21,10 @@ namespace Kope.Component.Attack {
 
 
 	public interface IAttackComponent {
+		event UnityAction OnAttackPerformed;
 		float PerformAttack();
 		float GetDamageValue(CharacterStatType damageType, float multiplier = 1f);
 		float GetDamageValue(List<DamageBaseStatComposition> composition);
-		event UnityAction OnAttackPerformed;
 	}
 
 	public abstract class AttackComponentBase : InitializableBase, IAttackComponent {

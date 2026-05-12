@@ -23,8 +23,16 @@ namespace Kope.Actor.New {
 
 		public string Name { get; private set; }
 		public float AnimationSpeed { get; private set; }
-		public bool IsLooping { get; private set; }
+		public float AnimationLength { get; private set; }
+		public bool IsOneShot { get; private set; }
 		public float NormalizedExitTime { get; private set; }
+
+		public readonly float ApprarentAnimationLength {
+			get {
+				if (Mathf.Approximately(this.AnimationSpeed, 0f)) return float.PositiveInfinity;
+				return Mathf.Abs(this.AnimationLength / this.AnimationSpeed);
+			}
+		}
 
 		private readonly int _hash;
 		public readonly int Hash => this._hash;
@@ -32,11 +40,12 @@ namespace Kope.Actor.New {
 		/// <summary>
 		/// Initializes a new instance of the AnimationStateProfileData.
 		/// </summary>
-		public AnimationStateProfileData(string name, float animationSpeed = DEFAULT_ANIMATION_SPEED,
-			bool isLooping = false, float normalizedExitTime = DEFAULT_NORMALIZED_EXIT_TIME) {
+		public AnimationStateProfileData(string name, float animationLength, float animationSpeed = DEFAULT_ANIMATION_SPEED,
+			bool isOneShot = false, float normalizedExitTime = DEFAULT_NORMALIZED_EXIT_TIME) {
 			this.Name = name;
 			this.AnimationSpeed = animationSpeed;
-			this.IsLooping = isLooping;
+			this.AnimationLength = animationLength;
+			this.IsOneShot = isOneShot;
 			this.NormalizedExitTime = Mathf.Clamp01(normalizedExitTime);
 			this._hash = Animator.StringToHash(name);
 		}
@@ -47,14 +56,15 @@ namespace Kope.Actor.New {
 		public AnimationStateProfileData(AnimationStateProfileData profile) {
 			this.Name = profile.Name;
 			this.AnimationSpeed = profile.AnimationSpeed;
-			this.IsLooping = profile.IsLooping;
+			this.AnimationLength = profile.AnimationLength;
+			this.IsOneShot = profile.IsOneShot;
 			this.NormalizedExitTime = Mathf.Clamp01(profile.NormalizedExitTime);
 			this._hash = profile._hash;
 		}
 
 		public override readonly string ToString() {
-			return $"AnimationStateProfile(Name: {Name}, AnimationSpeed: {AnimationSpeed}, " +
-				   $"IsLooping: {IsLooping}, NormalizedExitTime: {NormalizedExitTime},Hash: {Hash})";
+			return $"AnimationStateProfile(Name: {Name}, AnimationSpeed: {AnimationSpeed}, AnimationLength: {AnimationLength}, " +
+				   $"IsOneShot: {IsOneShot}, NormalizedExitTime: {NormalizedExitTime},Hash: {Hash})";
 		}
 	}
 }
