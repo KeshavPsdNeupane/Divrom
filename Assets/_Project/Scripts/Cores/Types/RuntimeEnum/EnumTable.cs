@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 
 namespace Kope.Core.Type.EnumAsset {
@@ -75,6 +76,29 @@ namespace Kope.Core.Type.EnumAsset {
 			int zeroID = this._source.GetDefaultItemId();
 			if (zeroID == default) return default;
 			return (this._source.GetInstance(zeroID), Get(zeroID));
+		}
+
+		public bool ValidateTheInternal(EnumAsset checkEnum = null, Component callingComponent = null) {
+			StringBuilder sb = new();
+			if (this._source == null) {
+				sb.AppendLine($"[{nameof(EnumTable<TBinded>)}] Validation failed: Source EnumAsset is not assigned.\n");
+			}
+			for (int i = 0; i < this._selectedValue.Length; i++) {
+				int id = this._selectedValue[i];
+				if (this._source.GetInstance(id) == null) {
+					sb.AppendLine($"[{nameof(EnumTable<TBinded>)}] Validation warning: No EnumInstance" +
+					$" with ID '{id}' found in source '{this._source.name}'. This entry will be ignored.");
+				}
+			}
+			if (checkEnum != null && this._source != checkEnum) {
+				sb.AppendLine($"[{nameof(EnumTable<TBinded>)}] Validation warning: Source EnumAsset" +
+				$" '{this._source.name}' does not match expected '{checkEnum.name}'.");
+			}
+			if (sb.Length > 0) {
+				Debug.LogError(sb.ToString(), callingComponent != null ? callingComponent.gameObject : null);
+				return false;
+			}
+			return true;
 		}
 	}
 }

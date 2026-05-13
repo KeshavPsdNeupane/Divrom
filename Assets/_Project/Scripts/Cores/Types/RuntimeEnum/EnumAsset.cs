@@ -41,18 +41,25 @@ namespace Kope.Core.Type.EnumAsset {
 	[CreateAssetMenu(fileName = "NewEnumAsset", menuName = "Kope/Enum Asset")]
 	public class EnumAsset : ScriptableObject, ISerializationCallbackReceiver {
 		// ========================================================================================
-		// ID LAYOUT: [AAAAAA][LLLL]  (10 digits total, fits comfortably in int32)
-		//   A = Asset prefix  (6 digits, range 10000–214748, derived from asset GUID)
-		//   L = Local suffix  (4 digits, range 0–9999, sequential per instance)
+		// ID LAYOUT: [AAAAAA][LLLL]  (Up to 10 digits total, fits in signed int32)
+		//   A = Asset prefix  (range 10000–214747, derived from asset GUID)
+		//   L = Local suffix  (range 0–9999, sequential per instance)
 		//
 		// Example: assetId=123456, localId=7 → fullId = 1234560007
 		//
-		// Total addressable IDs: ~204,748 assets × 9,999 instances ≈ 2.04 billion
-		// int32 max:             2,147,483,647  ✓ safe (214748 * 10000 + 9999 = 2,147,489,999)
+		// TOTAL CAPACITY:
+		// Assets: 204,748 unique prefixes (214747 - 10000)
+		// Instances: 10,000 local IDs per asset
 		//
-		// Ctrl+D resistance: prefix is derived from the asset's Unity GUID via FNV-1a hash.
-		// Duplicating an asset produces a new .meta file with a new GUID, so the derived
-		// prefix automatically diverges — no O(n) collision scan required.
+		// SAFETY CHECK:
+		// Max prefix (214747) * Multiplier (10000) + Max suffix (9999) = 2,147,479,999
+		// int32.MaxValue = 2,147,483,647
+		// Result: 2,147,479,999 < 2,147,483,647 (✓ SAFE with 3,648 margin)
+		//
+		// GUID HASHING:
+		// Prefix is derived from the asset's Unity GUID via FNV-1a hash.
+		// Duplicating an asset (Ctrl+D) creates a new GUID, forcing a new prefix 
+		// automatically without needing an O(n) collision scan.
 		// ========================================================================================
 
 		/// <summary>Splits the full ID into asset prefix and local suffix.</summary>
@@ -117,6 +124,16 @@ namespace Kope.Core.Type.EnumAsset {
 				field.SetValue(Instances[i], newValue);
 			}
 		}
+		public void RevertToAutomaticId() {
+			this._isManualId = false;
+			var path = UnityEditor.AssetDatabase.GetAssetPath(this);
+			if (!string.IsNullOrEmpty(path)) {
+				string guid = UnityEditor.AssetDatabase.AssetPathToGUID(path);
+				int derivedId = GuidToAssetPrefix(guid);
+				ManualUpdateId(derivedId);
+				this._isManualId = false;
+			}
+		}
 #endif
 
 		public void AddNewInstance() {
@@ -167,5 +184,8 @@ namespace Kope.Core.Type.EnumAsset {
 				Debug.Log($"- Instance Alias: {instance.Alias}, ID: {instance.InternalValue}");
 			}
 		}
+
+
+
 	}
 }

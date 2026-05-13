@@ -33,9 +33,8 @@ namespace Kope.Core.Type.EnumAsset.EditorTools {
 
 		private const int VALUE_WIDTH = 65;
 
-
 		private void OnEnable() {
-			this._list = new ReorderableList(serializedObject,
+			this._list = new ReorderableList(this.serializedObject,
 				this.serializedObject.FindProperty("Instances"),
 				true, true, true, true) {
 				drawHeaderCallback = rect => {
@@ -56,12 +55,10 @@ namespace Kope.Core.Type.EnumAsset.EditorTools {
 				float valueWidth = VALUE_WIDTH;
 				float nameWidth = rect.width - valueWidth - 10;
 
-				// --- Column 1: Name ---
 				if (this._duplicateNameIndices.Contains(index)) GUI.backgroundColor = DUPLICATE_COLOR;
 				EditorGUI.PropertyField(new Rect(rect.x, rect.y, nameWidth, EditorGUIUtility.singleLineHeight), nameProp, GUIContent.none);
 				GUI.backgroundColor = Color.white;
 
-				// --- Column 2: Value (Masked Display) ---
 				if (this._duplicateValueIndices.Contains(index)) GUI.backgroundColor = DUPLICATE_COLOR;
 				else GUI.backgroundColor = NORMAL_COLOR;
 
@@ -80,7 +77,7 @@ namespace Kope.Core.Type.EnumAsset.EditorTools {
 			};
 
 			this._list.onAddCallback = l => {
-				var asset = (EnumAsset)target;
+				var asset = (EnumAsset)this.target;
 				Undo.RecordObject(asset, "Add Enum Entry");
 				asset.AddNewInstance();
 				EditorUtility.SetDirty(asset);
@@ -90,10 +87,9 @@ namespace Kope.Core.Type.EnumAsset.EditorTools {
 		public override void OnInspectorGUI() {
 			this.serializedObject.Update();
 
-			// 1. Draw the Asset ID
 			EditorGUILayout.Space();
-			SerializedProperty assetIdProp = serializedObject.FindProperty(ASSET_ID_FIELD);
-			SerializedProperty manualProp = serializedObject.FindProperty("_isManualId");
+			SerializedProperty assetIdProp = this.serializedObject.FindProperty(ASSET_ID_FIELD);
+			SerializedProperty manualProp = this.serializedObject.FindProperty("_isManualId");
 
 			if (assetIdProp != null) {
 				string labelPrefix = manualProp.boolValue ? "[MANUAL] " : "[AUTO] ";
@@ -104,28 +100,19 @@ namespace Kope.Core.Type.EnumAsset.EditorTools {
 
 				if (manualProp.boolValue) {
 					EditorGUILayout.HelpBox($"MANUAL ID ACTIVE: This ID is locked and will not change automatically.", MessageType.Warning);
-					if (GUILayout.Button("Revert to Auto-GUID Hash")) {
-						manualProp.boolValue = false;
-					}
 				}
 			}
 
-			// 2. Check logic
-			CheckForDuplicates();
+			this.CheckForDuplicates();
 
-			// 3. Draw the List
 			EditorGUILayout.Space();
 			this._list.DoLayoutList();
 
-			// 4. Warnings
 			if (this._hasValueDuplicates) EditorGUILayout.HelpBox("DUPLICATE IDs: Multiple entries share the same Local ID!", MessageType.Error);
 			if (this._hasNameDuplicates) EditorGUILayout.HelpBox("DUPLICATE NAMES: Ensure names are unique for Animator hashing.", MessageType.Warning);
 
-			// 5. Help Text
 			EditorGUILayout.Space();
 			EditorGUILayout.HelpBox(HELP_TEXT, MessageType.Info);
-
-			// 6. Highlighted Collision Warning
 			EditorGUILayout.HelpBox(COLLISION_WARNING, MessageType.Warning);
 
 			this.serializedObject.ApplyModifiedProperties();

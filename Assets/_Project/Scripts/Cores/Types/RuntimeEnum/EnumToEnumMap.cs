@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 
 namespace Kope.Core.Type.EnumAsset {
@@ -99,5 +100,71 @@ namespace Kope.Core.Type.EnumAsset {
 
 			this._excludedSet = new HashSet<int>(this._excludedTargets);
 		}
+
+#if UNITY_EDITOR
+		private void OnValidate() => OnEnable();
+#endif
+		private void OnEnable() {
+			StringBuilder sb = new();
+			if (this._source == null) {
+				sb.AppendLine($"[{nameof(EnumToEnumMap)}] Validation failed: Source EnumAsset is not assigned.\n");
+				return;
+			}
+			if (this._target == null) {
+				sb.AppendLine($"[{nameof(EnumToEnumMap)}] Validation failed: Target EnumAsset is not assigned.\n");
+				return;
+			}
+			foreach (var kvp in this._mapping) {
+				var sourceInstance = this._source.GetInstance(kvp.Key);
+				var targetInstance = this._target.GetInstance(kvp.Value);
+				if (sourceInstance == null) {
+					sb.AppendLine($"[{nameof(EnumToEnumMap)}] Validation warning: Source value '{kvp.Key}' does not exist " +
+					$"in source '{this._source.name}'. This mapping will be ignored.\n");
+				}
+				if (targetInstance == null) {
+					sb.AppendLine($"[{nameof(EnumToEnumMap)}] Validation warning: Target value '{kvp.Value}' does not exist " +
+					$"in target '{this._target.name}'. This mapping will be ignored.\n");
+				}
+				if (targetInstance != null && this._excludedSet.Contains(targetInstance.InternalValue)) {
+					sb.AppendLine($"[{nameof(EnumToEnumMap)}] Validation warning: Target value '{targetInstance.InternalValue}' is in the exclusion set " +
+					$"and cannot be mapped to. This mapping will be ignored.\n");
+				}
+			}
+			if (sb.Length > 0) {
+				Debug.LogWarning(sb.ToString(), this);
+			}
+		}
+
+
+		/// <summary>
+		/// Checks if the provided EnumAsset matches the required Source of this map.
+		/// </summary>
+		public bool ValidateSourceOrTarget(EnumAsset asset, bool isSource, Object context) {
+			if (asset == null || (isSource && this._source == null) || (!isSource && this._target == null)) return false;
+			var checkingAsset = isSource ? this._source : this._target;
+			if (asset != checkingAsset) {
+				Debug.LogError($"[{context.name}] {(isSource ? "Source" : "Target")} mismatch: Provided {asset.name} does not match Map {(isSource ? "Source" : "Target")} {checkingAsset.name}.", context);
+				return false;
+			}
+			return true;
+		}
+
+		/// <summary>
+		/// Safely retrieves a target instance and validates it against exclusions.
+		/// </summary>
+		public EnumInstance GetValidatedTarget(int sourceValue, Object context) {
+			var instance = GetTargetInstance(sourceValue);
+			if (instance == null) {
+				Debug.LogWarning($"[{context.name}] Source ID {sourceValue} is not mapped to a valid target.", context);
+				return null;
+			}
+
+			if (IsExcluded(instance.InternalValue)) {
+				Debug.LogError($"[{context.name}] Mapped target '{instance.Alias}' is globally excluded.", context);
+				return null;
+			}
+			return instance;
+		}
+
 	}
 }

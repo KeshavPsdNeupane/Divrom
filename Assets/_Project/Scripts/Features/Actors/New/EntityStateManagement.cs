@@ -175,20 +175,9 @@ namespace Kope.Actor.New {
 
 #if UNITY_EDITOR
 		private void OnValidate() {
-			if (this.defaultIdleStateData.Profile.StatePicker.Source == null) {
-				Debug.LogWarning("State Management: Idle has no EnumAsset source." + GetParentGameObjectHeirarchyMessage());
-				return;
-			}
-			if (this.defaultIdleStateData.Profile.StatePicker.GetSelectedEnumId() == -1) {
-				Debug.LogWarning("State Management: No Idle state selected." + GetParentGameObjectHeirarchyMessage());
-				return;
-			}
-			// Both the idle slot and the map must reference the same EnumAsset or enumId lookups will diverge.
-			if (this.animationStateMap.Source != null &&
-				this.defaultIdleStateData.Profile.StatePicker.Source != this.animationStateMap.Source) {
-				Debug.LogError("[Kope] Asset mismatch: Idle and State Map must share the same EnumAsset."
-					+ GetParentGameObjectHeirarchyMessage());
-			}
+			EnumPicker idleStatePicker = this.defaultIdleStateData.Profile.StatePicker;
+			_ = idleStatePicker.ValidateTheInternal(this);
+			_ = this.animationStateMap.ValidateTheInternal(idleStatePicker.Source, this);
 		}
 #endif
 
