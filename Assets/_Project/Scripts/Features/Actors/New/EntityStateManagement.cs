@@ -149,9 +149,7 @@ namespace Kope.Actor.New {
 			return result;
 		}
 
-
 		private void PerformAttackAnimation(WeaponData1 weaponData1) {
-			Debug.Log("Attacked Performed");
 			if (!this._stateLookUp.TryGetValue(weaponData1.AnimationID, out var so)) {
 				Debug.Log("Animation Not found");
 				return;

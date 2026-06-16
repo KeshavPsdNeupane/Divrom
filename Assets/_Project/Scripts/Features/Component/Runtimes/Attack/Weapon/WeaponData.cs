@@ -10,7 +10,8 @@ namespace Kope.Component.Attack {
 		public float AttackSpeed { get; private set; }
 
 		public int AnimationID { get; private set; }
-		public string PrimaryAttackAnimationName { get; private set; }
+		public string AttackAnimationName { get; private set; }
+		public int AttackAnimationHash { get; private set; }
 		public WeaponData1(string weaponName, EnumInstance weaponType, float attackSpeed,
  			int animationId, string animationName) {
 
@@ -18,7 +19,8 @@ namespace Kope.Component.Attack {
 			this.WeaponTypeInstance = weaponType;
 			this.AttackSpeed = attackSpeed;
 			this.AnimationID = animationId;
-			this.PrimaryAttackAnimationName = animationName;
+			this.AttackAnimationName = animationName;
+			this.AttackAnimationHash = Animator.StringToHash(animationName);
 		}
 	}
 }

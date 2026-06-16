@@ -15,7 +15,7 @@ MonoBehaviour:
   weaponName: Bare Hands
   weaponType:
     _source: {fileID: 11400000, guid: c109988bfe1ea128ca27b5d8a76f6dc6, type: 2}
-    _selectedValue: 585110006
+    _selectedValue: 585110000
   attackAnimationMap: {fileID: 11400000, guid: c6e8e8bfe2dbeb5d6a361bb0ccd728f8, type: 2}
   overrideAttackAnimation:
     _source: {fileID: 0}

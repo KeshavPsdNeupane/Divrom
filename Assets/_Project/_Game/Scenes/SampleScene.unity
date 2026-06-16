@@ -5717,19 +5717,19 @@ MonoBehaviour:
       StateSO: {fileID: 11400000, guid: b8ae37d9db98b4181aecd79b93df8e6c, type: 2}
     - Profile:
         _durationInSeconds: 1.33
-        _animationSpeed: 1
+        _animationSpeed: 0.95
         _isLooping: 0
         _normalizedExitTime: 0.9
       StateSO: {fileID: 11400000, guid: 3d3d2a3c13a17d20abf635e60f52154f, type: 2}
     - Profile:
         _durationInSeconds: 1
-        _animationSpeed: 1
+        _animationSpeed: 0.95
         _isLooping: 0
         _normalizedExitTime: 0.9
       StateSO: {fileID: 11400000, guid: 3d3d2a3c13a17d20abf635e60f52154f, type: 2}
     - Profile:
         _durationInSeconds: 1.167
-        _animationSpeed: 1
+        _animationSpeed: 0.95
         _isLooping: 0
         _normalizedExitTime: 0.9
       StateSO: {fileID: 11400000, guid: 3d3d2a3c13a17d20abf635e60f52154f, type: 2}
@@ -7875,37 +7875,13 @@ MonoBehaviour:
     gameObjectName: SceneServiceLocator
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: Dummy
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: InitCaller
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: PlayerNew
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: Addhp (2)
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: Dummy (1)
-  - typeName: EntityInitCaller
-    order: -40
     gameObjectName: Addhp (1)
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: AddSpd (1)
+    gameObjectName: Dummy
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: AddDef
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: AddSpd
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: Hpstore (1)
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: Hpstore (2)
+    gameObjectName: Addhp
   - typeName: EntityInitCaller
     order: -40
     gameObjectName: AddDef (1)
@@ -7914,7 +7890,31 @@ MonoBehaviour:
     gameObjectName: Hpstore
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: Addhp
+    gameObjectName: AddSpd
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: AddSpd (1)
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Hpstore (1)
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: AddDef
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: InitCaller
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: PlayerNew
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Dummy (1)
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Addhp (2)
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Hpstore (2)
   - typeName: InGameUIInitCaller
     order: -30
     gameObjectName: UI
@@ -8271,8 +8271,8 @@ MonoBehaviour:
   x: 0.575
   result: 0.6205578
   unityResult: 0.38834375
-  customEvalTime: 0.1797
-  unityEvalTime: 0.07200000000000001
+  customEvalTime: 0.0006000000000000001
+  unityEvalTime: 0.0004
 --- !u!1001 &1031836800
 PrefabInstance:
   m_ObjectHideFlags: 0
