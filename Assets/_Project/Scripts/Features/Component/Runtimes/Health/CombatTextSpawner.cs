@@ -1,6 +1,6 @@
 using Kope.Component.Health.Interface;
 using Kope.Core.ObjectPooling;
-using ServiceLocatorPattern;
+using Kope.Core.ServiceLocator;
 using UnityEngine;
 
 namespace Kope.Component.Health {

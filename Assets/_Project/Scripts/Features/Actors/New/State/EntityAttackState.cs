@@ -1,7 +1,8 @@
 using UnityEngine;
 
 namespace Kope.Actor.New {
-	[CreateAssetMenu(menuName = "Kope/States/Attack", fileName = "New Attack State")]
+
+	[CreateAssetMenu(menuName = "Scriptable Objects/Entity States/Attack", fileName = "New Attack State")]
 	public class EntityAttackState : EntityStateBaseSO {
 		[Header("Attack Settings")]
 		[SerializeField, Range(0f, 1f)]

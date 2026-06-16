@@ -48,7 +48,7 @@ namespace Kope.Component {
 			bool isSame = info.shortNameHash == animState.Hash;
 			// block is current is same non-looping animation and hasn't reached exit time yet.
 			// if loping then we only check if it's the same, since it can be interrupted at any time.
-			if (isSame && animState.IsOneShot) {
+			if (isSame && !animState.IsLooping) {
 				if ((info.normalizedTime % 1f) < animState.NormalizedExitTime) {
 					return AnimationStatus.Busy;
 				}
@@ -60,6 +60,7 @@ namespace Kope.Component {
 
 
 		public void SetDirection(Vector2 dir) {
+			// fixing the direction to the cardinal direction
 			if (dir == Vector2.zero) return;
 			Vector2 snapped = Mathf.Abs(dir.x) >= Mathf.Abs(dir.y)
 				? new Vector2(Mathf.Sign(dir.x), 0)
@@ -69,14 +70,18 @@ namespace Kope.Component {
 			this.animator.SetFloat(AnimationVariableHashes.DirectionY, snapped.y);
 		}
 
-		public bool DoesAnimationExist(int hash) => this.animator.HasState(0, hash); public void SetDefaultSpeed() => this.animator.speed = AnimationStateProfileData.DEFAULT_ANIMATION_SPEED;
+		public bool DoesAnimationExist(int hash) =>
+			this.animator.HasState(0, hash);
+		public void SetDefaultSpeed() =>
+			this.animator.speed = AnimationStateProfileData.DEFAULT_ANIMATION_SPEED;
 
 
 		public bool IsAnimationFinished(AnimationStateProfileData animState) {
 			var stateInfo = this.animator.GetCurrentAnimatorStateInfo(0);
 			if (stateInfo.shortNameHash != animState.Hash) return false;
-			if (animState.IsOneShot) {
-				// One-shot is considered "finished" after reaching the exit time
+			if (!animState.IsLooping) {
+				// For non-looping animations, we check if the normalized time 
+				// has reached or exceeded the exit time.
 				return stateInfo.normalizedTime >= animState.NormalizedExitTime;
 			}
 			return true; // Looping animations are always "finished" since they can be interrupted at any time

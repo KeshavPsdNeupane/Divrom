@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using ServiceLocatorPattern;
+using Kope.Core.ServiceLocator;
 
 public class SimpleItemUIDragAndDropInteractionHelperClass {
 	private readonly ItemDragDropManager mgr;

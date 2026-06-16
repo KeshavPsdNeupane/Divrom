@@ -6,7 +6,7 @@ using Kope.Component.Health.Interface;
 using Kope.Component.Attack;
 using Kope.Core.EntityComponentRegistry;
 using Kope.Core.Init;
-using ServiceLocatorPattern;
+using Kope.Core.ServiceLocator;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Kope.Component.HitBox.Interface;

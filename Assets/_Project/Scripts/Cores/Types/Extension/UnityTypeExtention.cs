@@ -1,7 +1,7 @@
 
 using UnityEngine;
 
-namespace Kope.Core.Extensions {
+namespace Kope.Core.Types.Extensions {
 
 
 	public static class UnityTypeExtension {

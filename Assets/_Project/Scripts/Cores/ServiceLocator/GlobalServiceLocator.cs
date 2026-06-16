@@ -2,7 +2,8 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using Kope.Core;
 using Kope.Core.CompilerServices;
-namespace ServiceLocatorPattern {
+
+namespace Kope.Core.ServiceLocator {
 	/// <summary>
 	/// A global service locator that persists across scenes and manages global services.
 	/// Must be explicitly registered via GloblalBootStrap using RegisterService.
@@ -68,8 +69,5 @@ namespace ServiceLocatorPattern {
 			service.InitializeService();
 			services[type] = service;
 		}
-
-
-
 	}
 }

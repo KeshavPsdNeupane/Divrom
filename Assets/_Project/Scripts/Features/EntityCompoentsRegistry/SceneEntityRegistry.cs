@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Kope.Core.Identity;
-using ServiceLocatorPattern;
-
+using Kope.Core.Types.Hashes;
+using Kope.Core.ServiceLocator;
 
 namespace Kope.EntityComponentSystem.Unused {
 

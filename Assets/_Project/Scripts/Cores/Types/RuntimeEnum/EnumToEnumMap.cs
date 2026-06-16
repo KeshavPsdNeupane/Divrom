@@ -139,7 +139,7 @@ namespace Kope.Core.Type.EnumAsset {
 		/// <summary>
 		/// Checks if the provided EnumAsset matches the required Source of this map.
 		/// </summary>
-		public bool ValidateSourceOrTarget(EnumAsset asset, bool isSource, Object context) {
+		public bool ValidateSourceOrTarget(EnumAsset asset, bool isSource, Object context = null) {
 			if (asset == null || (isSource && this._source == null) || (!isSource && this._target == null)) return false;
 			var checkingAsset = isSource ? this._source : this._target;
 			if (asset != checkingAsset) {

@@ -8,7 +8,6 @@ namespace Kope.Actor.New {
 			"True: Move, Idle, Attack.\n" +
 			"False: Stunned, Knockback, Cinematic.")]
 		private bool _isInputReceptive = false;
-
 		protected AnimationStateProfileData _profileData;
 		protected IMovementComponent _movementComponent;
 		protected IAnimationComponentNew _animationComponent;
@@ -16,12 +15,19 @@ namespace Kope.Actor.New {
 
 		public bool CanStateAcceptExternalCommand => this._isInputReceptive;
 		public AnimationStateProfileData ProfileData => this._profileData;
-		public void Init(IEntityStateManagement stateManagement, AnimationStateProfileData profileData,
-		IMovementComponent movementComponent, IAnimationComponentNew animationComponent) {
+		public void Init(IEntityStateManagement stateManagement,
+		IMovementComponent movementComponent, IAnimationComponentNew animationComponent,
+		 AnimationStateProfileData? profileData = default) {
 			this._stateManagement = stateManagement;
 			this._movementComponent = movementComponent;
 			this._animationComponent = animationComponent;
-			this._profileData = profileData;
+			this._profileData = profileData ?? AnimationStateProfileData.DEFAULT;
+		}
+
+		public void ChangeAnimationSpeed(float? spd = null) {
+			var pd = this._profileData;
+			this._profileData = new(pd.Name, pd.AbsoluteAnimationLength,
+			spd ?? pd.AnimationSpeed, pd.IsLooping, pd.NormalizedExitTime);
 		}
 
 		public StateChangeResult CheckStateChangeFeasibility(AnimationStateProfileData newState) {

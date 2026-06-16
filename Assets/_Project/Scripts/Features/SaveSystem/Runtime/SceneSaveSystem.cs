@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using ServiceLocatorPattern;
+using Kope.Core.ServiceLocator;
 using UnityEngine;
 
 namespace Kope.SaveSystem {

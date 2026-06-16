@@ -1,5 +1,5 @@
 using UnityEngine.InputSystem;
-using ServiceLocatorPattern;
+using Kope.Core.ServiceLocator;
 using Kope.Core.CompilerServices;
 
 namespace Kope.Component.Attack {

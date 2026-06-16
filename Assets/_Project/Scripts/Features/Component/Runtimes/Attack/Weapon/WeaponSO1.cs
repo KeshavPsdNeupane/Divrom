@@ -19,7 +19,7 @@ namespace Kope.Component.Attack {
 
 		public WeaponData1 CurrentWeaponData {
 			get {
-				if (this._dataCache != null) return this._dataCache;
+				if (this._dataCache != default) return this._dataCache;
 
 				var weaponTypeInstance = this.weaponType.GetInstance();
 				var weaponTypeID = weaponTypeInstance.InternalValue;
@@ -33,6 +33,7 @@ namespace Kope.Component.Attack {
 					this.weaponName,
 					weaponTypeInstance,
 					this.attackSpeed,
+					animInstance.InternalValue,
 					animInstance.Alias
 				);
 				return this._dataCache;

@@ -1,4 +1,4 @@
-using ServiceLocatorPattern;
+using Kope.Core.ServiceLocator;
 using UnityEngine;
 using UnityEngine.UI;
 

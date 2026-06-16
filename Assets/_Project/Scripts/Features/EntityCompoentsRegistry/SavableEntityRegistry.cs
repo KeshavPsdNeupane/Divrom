@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using Kope.Core.Identity;
+using Kope.Core.Types.Hashes;
 using Kope.SaveSystem;
-using ServiceLocatorPattern;
+using Kope.Core.ServiceLocator;
 using UnityEngine;
 
 namespace Kope.EntityComponentSystem {

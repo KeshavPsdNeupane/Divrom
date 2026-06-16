@@ -4,7 +4,7 @@ using Kope.Component.Combat.Interface;
 using Kope.Component.HitBox.Interface;
 using Kope.Core;
 using Kope.Core.ObjectPooling;
-using ServiceLocatorPattern;
+using Kope.Core.ServiceLocator;
 using UnityEngine;
 
 namespace Kope.Component.Ability.Targeting {

@@ -1,4 +1,4 @@
-using Kope.Core.Extensions;
+using Kope.Core.Types.Extensions;
 using UnityEngine;
 
 public class AbilityAreaTargetingController : MonoBehaviour {
@@ -28,19 +28,20 @@ public class AbilityAreaTargetingController : MonoBehaviour {
 
 
 	private void OnValidate() {
+		string hpath = this.GetFullHierarchyPath();
 		if (this._areaCollider2D == null) {
 			Debug.LogWarning($"[AreaTargeting] No Collider2D found on {this.gameObject.name}. " +
-			$"Disabling the component.{this.GetFullHierarchyPath()}", this);
+			$"Disabling the component.{hpath}", this);
 			return;
 		}
 		if (this._rigidbody2D == null) {
 			Debug.LogWarning($"[AreaTargeting] No Rigidbody2D found on {this.gameObject.name}." +
-			$" Disabling the component.{this.GetFullHierarchyPath()}", this);
+			$" Disabling the component.{hpath}", this);
 			return;
 		}
 		if (this._areaSpriteRenderer == null) {
 			Debug.LogWarning($"[AreaTargeting] No SpriteRenderer found on {this.gameObject.name}." +
-			$" Disabling the component.{this.GetFullHierarchyPath()}", this);
+			$" Disabling the component.{hpath}", this);
 			return;
 		}
 		this._areaCollider2D.isTrigger = true;

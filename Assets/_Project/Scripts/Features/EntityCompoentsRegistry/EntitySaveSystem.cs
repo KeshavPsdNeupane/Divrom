@@ -1,10 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Kope.SaveSystem;
-using ServiceLocatorPattern;
+using Kope.Core.ServiceLocator;
 using Kope.Core.EntityComponentRegistry;
 using Kope.EntityComponentSystem;
-using Kope.Core.Extensions;
+using Kope.Core.Types.Extensions;
+using Kope.Core.Types.Hashes;
 
 namespace Kope.Core.Identity {
 	public class EntitySaveSystem : MonoBehaviour, IEntitySavePacketProvider {
@@ -23,7 +24,7 @@ namespace Kope.Core.Identity {
 
 			registry.Register(this);
 
-			if (!SceneServiceLocator.Instance.TryGetService<SavableEntityRegistry>(out var savableEntityRegistry)) {
+			if (!Kope.Core.ServiceLocator.SceneServiceLocator.Instance.TryGetService<SavableEntityRegistry>(out var savableEntityRegistry)) {
 				Debug.LogError($"[EntitySaveSystem] No SavableEntityRegistry found in the scene." +
 				" Please ensure that a SavableEntityRegistry is present and properly initialized " +
 				$"in the scene for EntitySaveSystem to function correctly.{this.GetFullHierarchyPath()}"

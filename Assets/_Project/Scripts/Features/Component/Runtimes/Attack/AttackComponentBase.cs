@@ -8,7 +8,6 @@ using Kope.Component.Animation;
 using System.Collections.Generic;
 
 
-
 namespace Kope.Component.Attack {
 	public readonly struct DamageBaseStatComposition {
 		public readonly CharacterStatType BaseStatType;
@@ -21,7 +20,8 @@ namespace Kope.Component.Attack {
 
 
 	public interface IAttackComponent {
-		event UnityAction OnAttackPerformed;
+		event System.Action OnAttackPerformed;
+		event System.Action<WeaponData1> OnAttackPerformed1;
 		float PerformAttack();
 		float GetDamageValue(CharacterStatType damageType, float multiplier = 1f);
 		float GetDamageValue(List<DamageBaseStatComposition> composition);
@@ -30,7 +30,7 @@ namespace Kope.Component.Attack {
 	public abstract class AttackComponentBase : InitializableBase, IAttackComponent {
 		[SerializeField] private EntityComponentsRegistry ecr;
 		[SerializeField] private WeaponSO equippedWeaponDataSO;
-
+		[SerializeField] private WeaponSO1 equippedWeapDataSO1;
 		private AnimationComponentBase _animationComponent;
 		protected CharacterStatsSystem _statsSystem;
 
@@ -42,7 +42,10 @@ namespace Kope.Component.Attack {
 		protected float _normalizedCriticalDamage;
 
 		public WeaponData EquippedWeaponData => this.equippedWeaponDataSO.CurrentWeaponData;
-		public event UnityAction OnAttackPerformed;
+		public event System.Action OnAttackPerformed;
+		public event System.Action<WeaponData1> OnAttackPerformed1;
+
+
 
 		protected override bool OnInit() {
 			if (this.ecr == null) {
@@ -174,7 +177,7 @@ namespace Kope.Component.Attack {
 			// SCENARIOS WHERE CRIT CHANCE IS 0 OR 100%.
 			if (this._normalizedCriticalChance <= 0f) return baseScalingStat;
 			if (this._normalizedCriticalChance >= 1f) return baseScalingStat * this._normalizedCriticalDamage;
-			if (Random.value <= this._normalizedCriticalChance) {
+			if (UnityEngine.Random.value <= this._normalizedCriticalChance) {
 				return baseScalingStat * this._normalizedCriticalDamage;
 			}
 			return baseScalingStat;
@@ -190,6 +193,7 @@ namespace Kope.Component.Attack {
 			if (!CanPerformAttack()) return 0f;
 			float dmg = PerformAttackInternal();
 			this.OnAttackPerformed?.Invoke();
+			this.OnAttackPerformed1?.Invoke(this.equippedWeapDataSO1.CurrentWeaponData);
 			return dmg;
 		}
 

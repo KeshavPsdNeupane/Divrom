@@ -1,7 +1,7 @@
 using UnityEngine;
 using Kope.Core.CompilerServices;
 
-namespace ServiceLocatorPattern {
+namespace Kope.Core.ServiceLocator {
 	public class ServiceBase : MonoBehaviour {
 		private bool isInitialized = false;
 		public bool IsInitialized => isInitialized;

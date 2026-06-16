@@ -35,10 +35,10 @@ namespace Kope.Core {
 		/// </summary>
 		public TReturn Value {
 			get {
-				if (useScriptableObject) {
-					return scriptableObject != null ? scriptableObject.GetValue() : default;
+				if (this.useScriptableObject) {
+					return this.scriptableObject != null ? this.scriptableObject.GetValue() : default;
 				}
-				return inspector != null ? inspector.GetValue() : default;
+				return this.inspector != null ? this.inspector.GetValue() : default;
 			}
 		}
 	}

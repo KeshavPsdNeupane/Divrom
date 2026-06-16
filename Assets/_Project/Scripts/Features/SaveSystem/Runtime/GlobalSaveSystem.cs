@@ -1,5 +1,5 @@
 using Newtonsoft.Json;
-using ServiceLocatorPattern;
+using Kope.Core.ServiceLocator;
 using System;
 using System.Collections.Generic;
 using System.IO;

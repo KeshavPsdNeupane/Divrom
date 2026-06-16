@@ -1,4 +1,4 @@
-using Kope.Core.Extensions;
+using Kope.Core.Types.Extensions;
 using UnityEngine;
 namespace Kope.Core.Init {
 	/// <summary>

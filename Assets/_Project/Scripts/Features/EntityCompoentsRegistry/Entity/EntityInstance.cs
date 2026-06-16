@@ -2,6 +2,8 @@ using UnityEngine;
 using Kope.Core.Init;
 using System;
 using Kope.Core.EntityComponentRegistry;
+using Kope.Core.Types.UniqueId;
+using Kope.Core.Types.Hashes;
 
 namespace Kope.Core.Identity {
 

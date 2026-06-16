@@ -2,7 +2,7 @@ using Kope.Component.Health;
 using Kope.Component.Health.Interface;
 using UnityEngine;
 using UnityEngine.UI;
-using Kope.Core.Extensions;
+using Kope.Core.Types.Extensions;
 
 public class HealthBar : MonoBehaviour {
 	[SerializeField] private HealthComponentBase healthComponent;

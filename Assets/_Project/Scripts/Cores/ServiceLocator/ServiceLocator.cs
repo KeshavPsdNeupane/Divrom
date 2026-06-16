@@ -1,13 +1,12 @@
 using UnityEngine;
-using System;
 using System.Collections.Generic;
 using Kope.Core.CompilerServices;
-namespace ServiceLocatorPattern {
+namespace Kope.Core.ServiceLocator {
 	public abstract class ServiceLocator<T, TBase> : MonoBehaviour
 		where T : MonoBehaviour
 		where TBase : ServiceBase {
 		private static T instance;
-		protected readonly Dictionary<Type, TBase> services = new();
+		protected readonly Dictionary<System.Type, TBase> services = new();
 		private static readonly object lockObj = new();
 		protected bool isPersistent = false;
 
@@ -47,7 +46,7 @@ namespace ServiceLocatorPattern {
 
 		public static TService FindInScene<TService>() where TService : ServiceBase {
 			TService[] candidates = FindObjectsByType<TService>(FindObjectsSortMode.None);
-			Array.Sort(candidates, (a, b) =>
+			System.Array.Sort(candidates, (a, b) =>
 					  GetHierarchyDepth(a.transform).CompareTo(GetHierarchyDepth(b.transform)));
 			foreach (var candidate in candidates) {
 				if (candidate != null) {
@@ -80,7 +79,7 @@ namespace ServiceLocatorPattern {
 			// After a new scene is loaded, we want to ensure that no duplicate services exist.
 			// 1. Iterate through our registered services
 			foreach (var pair in this.services) {
-				Type serviceType = pair.Key;      // The Type we registered (e.g., InputManager)
+				System.Type serviceType = pair.Key;      // The Type we registered (e.g., InputManager)
 				TBase registeredInstance = pair.Value; // The actual Object we are keeping
 
 				// 2. Find every instance of this type currently in the scene

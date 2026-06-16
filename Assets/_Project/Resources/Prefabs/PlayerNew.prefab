@@ -1497,6 +1497,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAttackComponent
   ecr: {fileID: 6037248722059709900}
   equippedWeaponDataSO: {fileID: 11400000, guid: 4108109141f9b5663a6dbf1c537616eb, type: 2}
+  equippedWeapDataSO1: {fileID: 0}
 --- !u!1 &7729364741673237887
 GameObject:
   m_ObjectHideFlags: 0

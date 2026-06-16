@@ -15,7 +15,8 @@ namespace Kope.Actor.New {
 		/// <remarks>
 		/// <para><b>External Use:</b> Universally available for external systems to dictate entity behavior.</para>
 		/// <para><b>Internal Use:</b> Reserved exclusively for the <b>Idle State</b> to route to specific behaviors. 
-		/// All other states must use <see cref="TransitionToIdle"/> to relinquish control rather than self-selecting a successor.</para>
+		/// All other states must use <see cref="TransitionToIdle"/> to relinquish control rather than self-selecting
+		/// a successor.</para>
 		/// </remarks>
 		/// <param name="enumId">The unique identifier of the target state.</param>
 		/// <returns>The result of the transition attempt.</returns>
@@ -74,14 +75,13 @@ namespace Kope.Actor.New {
 			EntityStateBaseSO idleLogic = null;
 			if (this.defaultIdleStateData.StateSO != null) {
 				idleLogic = Instantiate(this.defaultIdleStateData.StateSO);
-				idleLogic.Init(this, idleData, this._movementComponent, this._animationComponent);
+				idleLogic.Init(this, this._movementComponent, this._animationComponent, idleData);
 				this._stateMachine.Initialize(idleLogic);
 
 			} else {
 				Debug.LogWarning("[Kope.State] No logic for Idle — entity may behave unexpectedly.");
 			}
 			this._stateLookUp[this._idleEnumId] = idleLogic;
-			Debug.Log($"[Kope.State] Registered Baseline: Idle (EnumId: {idleID})");
 
 			// --- Register all mapped states, skipping any that duplicate idle ---
 			foreach (var (instance, profile) in this.animationStateMap.BindLookup) {
@@ -91,17 +91,26 @@ namespace Kope.Actor.New {
 				EntityStateBaseSO profileLogic = null;
 				if (profile.StateSO != null) {
 					profileLogic = Instantiate(profile.StateSO);
-					profileLogic.Init(this, profileData, this._movementComponent, this._animationComponent);
+					profileLogic.Init(this, this._movementComponent, this._animationComponent, profileData);
 				}
 
 				// Collisions here mean two enum entries share the same InternalValue — check the EnumAsset.
-				if (!_stateLookUp.TryAdd(instance.InternalValue, profileLogic)) {
+				if (!this._stateLookUp.TryAdd(instance.InternalValue, profileLogic)) {
 					Debug.LogWarning($"[Kope.State] EnumId collision on '{instance.Alias}' — check for duplicate enum values.");
 					continue;
 				}
-				Debug.Log($"[Kope.State] Registered: {instance.Alias} (EnumId: {instance.InternalValue}) | {profileData}");
 			}
 			return true;
+		}
+
+		void OnEnable() {
+			if (!this.IsInitialized) return;
+			this._attackComponent.OnAttackPerformed1 -= PerformAttackAnimation;
+			this._attackComponent.OnAttackPerformed1 += PerformAttackAnimation;
+		}
+		void ODisable() {
+			if (!this.IsInitialized) return;
+			this._attackComponent.OnAttackPerformed1 -= PerformAttackAnimation;
 		}
 
 		protected override void OnUpdate() {
@@ -140,6 +149,17 @@ namespace Kope.Actor.New {
 			return result;
 		}
 
+
+		private void PerformAttackAnimation(WeaponData1 weaponData1) {
+			Debug.Log("Attacked Performed");
+			if (!this._stateLookUp.TryGetValue(weaponData1.AnimationID, out var so)) {
+				Debug.Log("Animation Not found");
+				return;
+			}
+			so.ChangeAnimationSpeed(spd: weaponData1.AttackSpeed);
+			_ = ChangeState(weaponData1.AnimationID, true);
+		}
+
 		/// <summary>
 		/// Public entry point to force the entity back to its baseline.
 		/// </summary>
@@ -159,15 +179,15 @@ namespace Kope.Actor.New {
 			return StateChangeResult.Error_LogicMissing;
 		}
 		private bool ValidateDependencies() {
-			if (ecr == null) {
-				Debug.LogError($"[Kope] Registry missing on {gameObject.name}" + GetParentGameObjectHeirarchyMessage());
+			if (this.ecr == null) {
+				Debug.LogError($"[Kope] Registry missing on {this.gameObject.name}" + GetParentGameObjectHeirarchyMessage());
 				return false;
 			}
-			var reg = ecr.ComponentRegistry;
+			var reg = this.ecr.ComponentRegistry;
 			if (!reg.TryGetMutatableComponent(out this._movementComponent) ||
 				!reg.TryGetMutatableComponent(out this._attackComponent) ||
 				!reg.TryGetMutatableComponent(out this._animationComponent)) {
-				Debug.LogError($"[Kope] Missing required component(s) in registry on {gameObject.name}" + GetParentGameObjectHeirarchyMessage());
+				Debug.LogError($"[Kope] Missing required component(s) in registry on {this.gameObject.name}" + GetParentGameObjectHeirarchyMessage());
 				return false;
 			}
 			return true;

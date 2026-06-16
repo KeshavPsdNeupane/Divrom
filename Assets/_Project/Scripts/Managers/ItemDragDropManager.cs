@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
-using ServiceLocatorPattern;
+using Kope.Core.ServiceLocator;
 
 
 public class ItemDragDropManager : SceneServiceBase {

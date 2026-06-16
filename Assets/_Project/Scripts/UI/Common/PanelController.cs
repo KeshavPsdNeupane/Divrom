@@ -1,5 +1,5 @@
 using UnityEngine;
-using ServiceLocatorPattern;
+using Kope.Core.ServiceLocator;
 using Kope.Core.CompilerServices;
 
 public class PanelController : UIState {

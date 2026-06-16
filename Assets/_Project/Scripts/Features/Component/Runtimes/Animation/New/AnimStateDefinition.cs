@@ -23,14 +23,16 @@ namespace Kope.Actor.New {
 
 		public string Name { get; private set; }
 		public float AnimationSpeed { get; private set; }
-		public float AnimationLength { get; private set; }
-		public bool IsOneShot { get; private set; }
+		public float AbsoluteAnimationLength { get; private set; }
+		public bool IsLooping { get; private set; }
 		public float NormalizedExitTime { get; private set; }
 
-		public readonly float ApprarentAnimationLength {
+		public static AnimationStateProfileData DEFAULT = new("Idle", 0.0001f, DEFAULT_ANIMATION_SPEED, true, DEFAULT_NORMALIZED_EXIT_TIME);
+
+		public readonly float AnimationLength {
 			get {
 				if (Mathf.Approximately(this.AnimationSpeed, 0f)) return float.PositiveInfinity;
-				return Mathf.Abs(this.AnimationLength / this.AnimationSpeed);
+				return Mathf.Abs(this.AbsoluteAnimationLength / this.AnimationSpeed);
 			}
 		}
 
@@ -41,11 +43,11 @@ namespace Kope.Actor.New {
 		/// Initializes a new instance of the AnimationStateProfileData.
 		/// </summary>
 		public AnimationStateProfileData(string name, float animationLength, float animationSpeed = DEFAULT_ANIMATION_SPEED,
-			bool isOneShot = false, float normalizedExitTime = DEFAULT_NORMALIZED_EXIT_TIME) {
+			bool isLooping = false, float normalizedExitTime = DEFAULT_NORMALIZED_EXIT_TIME) {
 			this.Name = name;
 			this.AnimationSpeed = animationSpeed;
-			this.AnimationLength = animationLength;
-			this.IsOneShot = isOneShot;
+			this.AbsoluteAnimationLength = animationLength;
+			this.IsLooping = isLooping;
 			this.NormalizedExitTime = Mathf.Clamp01(normalizedExitTime);
 			this._hash = Animator.StringToHash(name);
 		}
@@ -56,15 +58,16 @@ namespace Kope.Actor.New {
 		public AnimationStateProfileData(AnimationStateProfileData profile) {
 			this.Name = profile.Name;
 			this.AnimationSpeed = profile.AnimationSpeed;
-			this.AnimationLength = profile.AnimationLength;
-			this.IsOneShot = profile.IsOneShot;
+			this.AbsoluteAnimationLength = profile.AbsoluteAnimationLength;
+			this.IsLooping = profile.IsLooping;
 			this.NormalizedExitTime = Mathf.Clamp01(profile.NormalizedExitTime);
 			this._hash = profile._hash;
 		}
 
+
 		public override readonly string ToString() {
-			return $"AnimationStateProfile(Name: {Name}, AnimationSpeed: {AnimationSpeed}, AnimationLength: {AnimationLength}, " +
-				   $"IsOneShot: {IsOneShot}, NormalizedExitTime: {NormalizedExitTime},Hash: {Hash})";
+			return $"AnimationStateProfile(Name: {Name}, AnimationSpeed: {AnimationSpeed}, AnimationLength: {AbsoluteAnimationLength}, " +
+				   $"IsLooping: {IsLooping}, NormalizedExitTime: {NormalizedExitTime},Hash: {Hash})";
 		}
 	}
 }

@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using ServiceLocatorPattern;
+using Kope.Core.ServiceLocator;
 using Kope.Core.CompilerServices;
 using Kope.Core.Init;
 using System.Collections.Generic;

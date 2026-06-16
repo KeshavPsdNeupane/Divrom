@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Kope.Core.Init;
-using ServiceLocatorPattern;
+using Kope.Core.ServiceLocator;
 using UnityEngine;
 
 namespace Kope.Core.EntityComponentRegistry {

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Kope.Core.Identity;
+using Kope.Core.Types.Hashes;
 using Newtonsoft.Json;
 
 /* --- KOPE SAVE SYSTEM Point for future	 ---

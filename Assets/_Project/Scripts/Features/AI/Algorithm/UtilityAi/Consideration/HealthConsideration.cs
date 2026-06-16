@@ -1,6 +1,7 @@
 using Kope.AI.Utility;
 using Kope.Component.Health.Interface;
 using Kope.Core.EntityComponentRegistry;
+using Kope.Core.Types.Hashes;
 using UnityEngine;
 
 

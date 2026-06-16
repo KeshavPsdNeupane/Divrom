@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Kope.Core.Extensions {
+namespace Kope.Core.Types.Extensions {
 	public static class FloatExtension {
 		/// <summary>
 		/// Applies a compensation to the utility score based on the number of considerations.
@@ -28,15 +28,6 @@ namespace Kope.Core.Extensions {
 			// and not allowing x<0, since utility should not be negative.
 			// full formula: finalScore = orginal + ((1 - orginal) * (1 - (1 / size))) * orginal
 			return Math.Max(0.0f, finalScore);
-		}
-
-		/// <summary>
-		/// Checks if two float values are approximately equal within a specified tolerance.
-		/// Most time wont be used because the == operator is usually sufficient for game dev purposes.
-		/// Just added for reference. 
-		/// </summary>
-		public static bool IsApproximately(this float a, float b, float tolerance = 0.0001f) {
-			return Mathf.Abs(a - b) <= tolerance;
 		}
 	}
 }

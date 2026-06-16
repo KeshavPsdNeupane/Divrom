@@ -3,7 +3,7 @@ using UnityEngine;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Reflection;
-namespace Kope.Core.Extensions {
+namespace Kope.Core.Types.Extensions {
 	public static class TypeExtension {
 		/// <summary>
 		/// Removes the "Enum" postfix from the type name.

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Kope.Core.EntityComponentRegistry;
-using Kope.Core.Extensions;
+using Kope.Core.Types.Extensions;
 using UnityEngine;
 
 namespace Kope.AI.Utility {

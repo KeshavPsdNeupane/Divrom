@@ -1,4 +1,6 @@
 using Kope.Core.Identity;
+using Kope.Core.Types.Hashes;
+using Kope.Core.Types.UniqueId;
 
 namespace Kope.Core.EntityComponentRegistry {
 	/// <summary>

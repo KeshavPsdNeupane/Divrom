@@ -1,7 +1,7 @@
 using Kope.Core;
 using Kope.Core.ObjectPooling;
 using Kope.SaveSystem;
-using ServiceLocatorPattern;
+using Kope.Core.ServiceLocator;
 using UnityEngine;
 
 public static class GlobalBootStrap {

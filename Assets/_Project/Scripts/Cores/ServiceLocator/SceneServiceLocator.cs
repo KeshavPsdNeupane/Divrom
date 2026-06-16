@@ -4,7 +4,8 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using Kope.Core.CompilerServices;
 using Kope.Core.Execution;
-namespace ServiceLocatorPattern {
+
+namespace Kope.Core.ServiceLocator {
 	/// <summary>
 	/// Scene-scoped Service Locator
 	/// This locator manages services that are specific to a particular scene.
