@@ -19,6 +19,7 @@ public class RandomWanderActionSO : ActionSO {
 		}
 
 		this.targetPosition = GetRandomValidTarget();
+		//Debug.Log($"pos ={this.mc.Position},rand pos={this.targetPosition}");
 	}
 	protected override void OnEndOrAbort() {
 		if (this.mc == null) return;
@@ -39,7 +40,6 @@ public class RandomWanderActionSO : ActionSO {
 
 		Vector3 target = this.targetPosition;
 		float mass = this.mc.Mass;
-
 		// from 'while' to 'if' to avoid potential infinite loops in single frame.
 		// since we are not using the coroutine, so only one update per frame is possible.
 		// removed coroutine because it was causing issues with AI Brain stopping actions.
@@ -48,8 +48,12 @@ public class RandomWanderActionSO : ActionSO {
 			// never cache any value from mc.Direction, as it is mutable.
 			var currentDirection = this.mc.Direction;
 			float turnSpeed = 5f / mass; // Adjust turn speed based on mass
-			currentDirection = Vector2.Lerp(currentDirection, targetDirection, turnSpeed * Time.fixedDeltaTime);
-			this.mc.SetMovementIntent(new MovementIntent(currentDirection, MovementIntentType.Move));
+
+			currentDirection = Vector2.Lerp(targetDirection, currentDirection, turnSpeed * Time.fixedDeltaTime);
+
+			var intent = new MovementIntent(currentDirection, MovementIntentType.Move);
+			//Debug.Log(intent);
+			this.mc.SetMovementIntent(intent);
 			return;
 		}
 		this.mc.SetMovementIntent(MovementIntent.UnlockNext);

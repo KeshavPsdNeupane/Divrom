@@ -49,7 +49,9 @@ namespace Kope.Component.Movement {
 				&& this.IntentType == other.IntentType
 				&& this.Priority == other.Priority;
 		}
-
+		public override readonly string ToString() {
+			return $"Intent Dir({this.Direction}),IntentType({this.IntentType},Priority({this.Priority}))";
+		}
 	}
 
 	/// <summary>

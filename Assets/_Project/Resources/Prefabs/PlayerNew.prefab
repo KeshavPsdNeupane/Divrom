@@ -49,6 +49,53 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   maxFrameDelayBeforeCleanup: 2
+--- !u!1 &277061344693848772
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5375875091569754437}
+  - component: {fileID: 9026187348811339868}
+  m_Layer: 0
+  m_Name: 'AnimationComponent '
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5375875091569754437
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 277061344693848772}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 636012089227929340}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9026187348811339868
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 277061344693848772}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fe1d21f7fb59cceda28d19a5a07d928, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Kope.Components::Kope.Component.Animation.AnimationComponentBaseNew
+  animator: {fileID: 2449313907762071542}
+  directionX: DirectionX
+  directionY: DirectionY
 --- !u!1 &312338941039084587
 GameObject:
   m_ObjectHideFlags: 0
@@ -226,53 +273,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!1 &1042689184137138446
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6390328746935473517}
-  - component: {fileID: 196204471101592853}
-  m_Layer: 0
-  m_Name: stateController
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &6390328746935473517
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1042689184137138446}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6671984905160279280}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &196204471101592853
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1042689184137138446}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5ec997d50bf99354ca4f5fa2cdd69c8b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EntityContextManager
-  movementComponent: {fileID: 7100714284575033797}
-  animationComponent: {fileID: 2559965507949131218}
-  attackComponent: {fileID: 2247624721500832756}
 --- !u!1 &1654842834341527612
 GameObject:
   m_ObjectHideFlags: 0
@@ -385,7 +385,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6954758242764582700}
-  - {fileID: 6390328746935473517}
+  - {fileID: 5136777619606114344}
   - {fileID: 2042399125604258700}
   - {fileID: 2323630812141244706}
   - {fileID: 636012089227929340}
@@ -407,8 +407,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5f2a7e09a5e7f4dfaad5c673c86dc7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Kope.Core.Runtime::UniqueID
-  guid: 95ab4cc4-16e1-4db8-af83-4f23ba2c63ca
-  absoluteHierarchyPath: SampleScene-->PlayerNew
+  guid: 416322f9-5d1e-4260-ad16-5fe0d777ac88
+  absoluteHierarchyPath: -->PlayerNew
 --- !u!114 &5760765433560478908
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -543,51 +543,6 @@ MonoBehaviour:
   autoPopulate: 0
   includeChildren: 1
   traversal: 0
---- !u!1 &2336535472576801368
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3802224159702318278}
-  - component: {fileID: 2559965507949131218}
-  m_Layer: 0
-  m_Name: AnimationComponent
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &3802224159702318278
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2336535472576801368}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 636012089227929340}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2559965507949131218
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2336535472576801368}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8207a5ac3ea0de14fbfcccff522cc2db, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AnimationComponentBase
-  anim: {fileID: 2449313907762071542}
 --- !u!1 &2738320167129086288
 GameObject:
   m_ObjectHideFlags: 0
@@ -618,8 +573,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 179205763957248772}
-  - {fileID: 3802224159702318278}
   - {fileID: 3327304838387345389}
+  - {fileID: 5375875091569754437}
   - {fileID: 9132898216058479435}
   m_Father: {fileID: 6671984905160279280}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -676,9 +631,9 @@ MonoBehaviour:
   - {fileID: 5294357042670943928}
   - {fileID: 3968986674516492649}
   - {fileID: 7100714284575033797}
-  - {fileID: 2559965507949131218}
+  - {fileID: 9026187348811339868}
   - {fileID: 2247624721500832756}
-  - {fileID: 196204471101592853}
+  - {fileID: 6333170659724995054}
   - {fileID: 9138969578043445410}
   - {fileID: 8812889818776451400}
   - {fileID: 8635207160018288245}
@@ -1496,8 +1451,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAttackComponent
   ecr: {fileID: 6037248722059709900}
-  equippedWeaponDataSO: {fileID: 11400000, guid: 4108109141f9b5663a6dbf1c537616eb, type: 2}
-  equippedWeapDataSO1: {fileID: 0}
+  equippedWeapDataSO: {fileID: 0}
 --- !u!1 &7729364741673237887
 GameObject:
   m_ObjectHideFlags: 0
@@ -1589,6 +1543,90 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Kope.Components::Kope.Component.Health.Interface.HealingProcessor
   ecr: {fileID: 6037248722059709900}
+--- !u!1 &8278368421619568059
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5136777619606114344}
+  - component: {fileID: 6333170659724995054}
+  m_Layer: 0
+  m_Name: StateManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5136777619606114344
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8278368421619568059}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6671984905160279280}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6333170659724995054
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8278368421619568059}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49737d9be5326955c905d27711b5235d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Kope.Actor.Runtime::Kope.Actor.New.EntityStateManagement
+  ecr: {fileID: 6037248722059709900}
+  loadOnStart: 1
+  defaultIdleStateData:
+    Profile:
+      _animationState:
+        _source: {fileID: 11400000, guid: b055dbcc10d0a17748e86103f9257bb6, type: 2}
+        _selectedValue: 576410000
+      _durationInSeconds: 1
+      _animationSpeed: 1
+      _isLooping: 1
+      _normalizedExitTime: 0.9
+    StateSO: {fileID: 11400000, guid: 94ef0cbd3c3c312c5a08d72350bbcd2d, type: 2}
+  animationStateMap:
+    _source: {fileID: 11400000, guid: b055dbcc10d0a17748e86103f9257bb6, type: 2}
+    _selectedValue: 91515b2293515b2294515b2295515b22
+    _bindedValues:
+    - Profile:
+        _durationInSeconds: 1
+        _animationSpeed: 1
+        _isLooping: 1
+        _normalizedExitTime: 0
+      StateSO: {fileID: 11400000, guid: b8ae37d9db98b4181aecd79b93df8e6c, type: 2}
+    - Profile:
+        _durationInSeconds: 1.167
+        _animationSpeed: 1
+        _isLooping: 0
+        _normalizedExitTime: 0.95
+      StateSO: {fileID: 0}
+    - Profile:
+        _durationInSeconds: 1.3333
+        _animationSpeed: 1
+        _isLooping: 0
+        _normalizedExitTime: 0.95
+      StateSO: {fileID: 11400000, guid: 3d3d2a3c13a17d20abf635e60f52154f, type: 2}
+    - Profile:
+        _durationInSeconds: 1
+        _animationSpeed: 1
+        _isLooping: 0
+        _normalizedExitTime: 0.95
+      StateSO: {fileID: 11400000, guid: 3d3d2a3c13a17d20abf635e60f52154f, type: 2}
 --- !u!1 &8898845621659197283
 GameObject:
   m_ObjectHideFlags: 0

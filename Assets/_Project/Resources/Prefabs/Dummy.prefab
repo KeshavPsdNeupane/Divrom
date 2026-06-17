@@ -30,7 +30,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4783440831926274395}
-  - {fileID: 8135913441962873783}
   m_Father: {fileID: 7870155893999714083}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &180829766669641192
@@ -380,7 +379,7 @@ MonoBehaviour:
   config: {fileID: 11400000, guid: fcace0391532e5648a86e8f603e94c7d, type: 2}
   components:
   - {fileID: 5105927726880852106}
-  - {fileID: 6648802711044454528}
+  - {fileID: 0}
   - {fileID: 8172152211638158505}
   - {fileID: 4790525821007680954}
   - {fileID: 9032542264227806970}
@@ -894,51 +893,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Kope.Components::Kope.Component.Combat.DamageReactionProcessor
   ecr: {fileID: 4512281911964162701}
   config: {fileID: 11400000, guid: 6c90447ed9dd89062b08ee34e279d0e1, type: 2}
---- !u!1 &6086573052793594494
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8135913441962873783}
-  - component: {fileID: 6648802711044454528}
-  m_Layer: 0
-  m_Name: AnimationComponent
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8135913441962873783
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6086573052793594494}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 5085260051266556660}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6648802711044454528
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6086573052793594494}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8207a5ac3ea0de14fbfcccff522cc2db, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Kope.Components::Kope.Component.Animation.AnimationComponentBase
-  anim: {fileID: 7023945850789676928}
 --- !u!1 &7439961964390930450
 GameObject:
   m_ObjectHideFlags: 0
@@ -1311,10 +1265,5 @@ PrefabInstance:
 --- !u!4 &6969485785244635476 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6152516264922837659, guid: a3a8a13a5b0e837f2a16f09baf3d90a6, type: 3}
-  m_PrefabInstance: {fileID: 3880614790152709071}
-  m_PrefabAsset: {fileID: 0}
---- !u!95 &7023945850789676928 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 6098057643568931919, guid: a3a8a13a5b0e837f2a16f09baf3d90a6, type: 3}
   m_PrefabInstance: {fileID: 3880614790152709071}
   m_PrefabAsset: {fileID: 0}

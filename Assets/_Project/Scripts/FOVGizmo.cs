@@ -8,6 +8,7 @@ public class FOVGizmo : MonoBehaviour {
 	[SerializeField] private bool visualizeInnerDetectionRadius = true;
 	[SerializeField] private Color innerDetectionRadiusColor = Color.gray;
 	[SerializeField] MovementComponentBase mover;
+
 	void OnValidate() {
 		if (this.sensor == null) {
 			Debug.LogWarning($"[FOVGizmo] EntitySensor reference is not assigned on {gameObject.name}. " +
@@ -24,12 +25,18 @@ public class FOVGizmo : MonoBehaviour {
 
 	private void OnDrawGizmosSelected() {
 		if (this.mover == null || this.sensor == null) return;
+
 		var fovData = this.sensor.FieldOfViewData;
 		float halfAngle = fovData.FieldOfViewAngle * 0.5f;
 		float range = fovData.ViewDistance;
 
+		Vector3 lookDir;
+		try {
+			lookDir = mover.GetLookingAtDirection();
 
-		Vector3 lookDir = mover.GetLookingAtDirection();
+		} catch {
+			lookDir = new Vector3(0, -1, 0);
+		}
 		Vector3 origin = transform.position;
 
 		bool is2D = mover.Dimension == AxisMode.TwoD;

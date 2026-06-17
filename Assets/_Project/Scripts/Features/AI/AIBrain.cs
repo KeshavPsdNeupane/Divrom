@@ -5,6 +5,7 @@ using UnityEngine;
 using ThirdParty;
 using System;
 using Kope.Core.EntityComponentRegistry;
+using Kope.Actor.New;
 
 namespace Kope.AI {
 
@@ -28,7 +29,8 @@ namespace Kope.AI {
 
 		#region Private Fields
 		private Context _ctx;
-		private EntityStateController _entityStateController;
+
+		private EntityStateManagement _entityStateManagement;
 		private BaseActionSO _currentAction;
 		private IEnumerator<BaseActionSO> _currentPlanEnumerator;
 		private CountdownTimer _refreshTimer;
@@ -42,12 +44,12 @@ namespace Kope.AI {
 				return false;
 			}
 
-			if (!this.ecr.ComponentRegistry.TryGetMutatableComponent(out this._entityStateController)) {
+
+			if (!this.ecr.ComponentRegistry.TryGetMutatableComponent(out this._entityStateManagement)) {
 				Debug.LogError($"AIBrain Error: EntityStateController not found on {gameObject.name}" +
 				 GetParentGameObjectHeirarchyMessage());
 				return false;
 			}
-
 			this._ctx = new Context(this.ecr.ComponentRegistry);
 
 			foreach (var comp in components) {
@@ -97,7 +99,7 @@ namespace Kope.AI {
 		protected override void OnFixedUpdate() {
 			base.OnFixedUpdate();
 			if (!IsBrainValid()) return;
-			if (!this._entityStateController.CanStateMachineAcceptCommand) return;
+			if (!this._entityStateManagement.CanStateAcceptExternalCommand) return;
 
 			TickCurrentActionPhysic();
 
@@ -115,7 +117,7 @@ namespace Kope.AI {
 		/// Returns true if the entity is physically unable to execute AI commands.
 		/// </summary>
 		protected virtual bool HandleStateMachine() {
-			if (!this._entityStateController.CanStateMachineAcceptCommand) {
+			if (!this._entityStateManagement.CanStateAcceptExternalCommand) {
 				if (this._currentAction != null) StopCurrentAction();
 				return true;
 			}

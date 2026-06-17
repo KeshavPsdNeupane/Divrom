@@ -61,6 +61,12 @@ namespace Kope.Actor.New {
 		// Null values are valid — purely data-driven states have no logic.
 		private readonly Dictionary<int, EntityStateBaseSO> _stateLookUp = new();
 
+
+
+		public bool CanStateAcceptExternalCommand => this._stateMachine.CurrentState == null
+		|| this._stateMachine.CurrentState.CanStateAcceptExternalCommand;
+
+
 		private void Awake() { if (this.loadOnStart) Init(); }
 
 		protected override bool OnInit() {

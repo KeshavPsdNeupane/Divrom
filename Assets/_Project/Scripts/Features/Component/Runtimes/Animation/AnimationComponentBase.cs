@@ -2,14 +2,21 @@ using Kope.Actor.New;
 using Kope.Core.Init;
 using UnityEngine;
 
-namespace Kope.Component {
-	public class AnimationComponentBaseNew : InitializableBase, IAnimationComponentNew {
+namespace Kope.Component.Animation {
+
+	public class AnimationComponentBase : InitializableBase, IAnimationComponentNew {
 		[SerializeField] protected Animator animator;
 
+		[Header("Enter the name of the string of direction \nfloat from the animator")]
+		[SerializeField] protected string directionX = "DirectionX";
+		[SerializeField] protected string directionY = "DirectionY";
 
+		private Vector2Int _directionStringHashes;
 
 		protected override bool OnInit() {
 			if (!this.animator) return false;
+			this._directionStringHashes.x = Animator.StringToHash(this.directionX);
+			this._directionStringHashes.y = Animator.StringToHash(this.directionY);
 			SetDirection(Vector2.down);
 			return true;
 		}
@@ -66,8 +73,8 @@ namespace Kope.Component {
 				? new Vector2(Mathf.Sign(dir.x), 0)
 				: new Vector2(0, Mathf.Sign(dir.y));
 
-			this.animator.SetFloat(AnimationVariableHashes.DirectionX, snapped.x);
-			this.animator.SetFloat(AnimationVariableHashes.DirectionY, snapped.y);
+			this.animator.SetFloat(this._directionStringHashes.x, snapped.x);
+			this.animator.SetFloat(this._directionStringHashes.y, snapped.y);
 		}
 
 		public bool DoesAnimationExist(int hash) =>

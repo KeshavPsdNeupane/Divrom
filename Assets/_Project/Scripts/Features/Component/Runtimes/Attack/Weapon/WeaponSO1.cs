@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Kope.Component.Attack {
 	[CreateAssetMenu(fileName = "NewWeapon", menuName = "Scriptable Objects/WeaponSO1")]
-	public class WeaponSO1 : ScriptableObject {
+	public class WeaponSO : ScriptableObject {
 		[SerializeField] private string weaponName = "Bare Hands";
 		[SerializeField] private EnumPicker weaponType;
 

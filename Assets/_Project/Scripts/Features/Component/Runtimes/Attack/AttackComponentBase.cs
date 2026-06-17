@@ -4,8 +4,8 @@ using UnityEngine.Events;
 using Kope.Core.Init;
 using Kope.Character.Stats;
 using Kope.Core.EntityComponentRegistry;
-using Kope.Component.Animation;
 using System.Collections.Generic;
+using Kope.Component.Animation;
 
 
 namespace Kope.Component.Attack {
@@ -29,10 +29,9 @@ namespace Kope.Component.Attack {
 
 	public abstract class AttackComponentBase : InitializableBase, IAttackComponent {
 		[SerializeField] private EntityComponentsRegistry ecr;
-		[SerializeField] private WeaponSO equippedWeaponDataSO;
-		[SerializeField] private WeaponSO1 equippedWeapDataSO1;
-		private AnimationComponentBase _animationComponent;
+		[SerializeField] private WeaponSO equippedWeapDataSO;
 		protected CharacterStatsSystem _statsSystem;
+		private AnimationComponentBase _animationComponent;
 
 		// Caching dictionaries for O(1) local access
 		private readonly Dictionary<CharacterStatType, float> _cachedStats = new();
@@ -41,7 +40,6 @@ namespace Kope.Component.Attack {
 		protected float _normalizedCriticalChance;
 		protected float _normalizedCriticalDamage;
 
-		public WeaponData EquippedWeaponData => this.equippedWeaponDataSO.CurrentWeaponData;
 		public event System.Action OnAttackPerformed;
 		public event System.Action<WeaponData1> OnAttackPerformed1;
 
@@ -52,17 +50,17 @@ namespace Kope.Component.Attack {
 				MyLogger.Error("EntityComponentStore reference is missing." + GetParentGameObjectHeirarchyMessage());
 				return false;
 			}
-
 			if (!this.ecr.ComponentRegistry.TryGetMutatableComponent(out this._animationComponent)) {
-				MyLogger.Error("AnimationComponentBase not found." + GetParentGameObjectHeirarchyMessage());
-				return false;
+				MyLogger.Error("AnimationCOmp not found not found." + GetParentGameObjectHeirarchyMessage());
 			}
 
 			if (!this.ecr.ComponentRegistry.TryGetMutatableComponent(out this._statsSystem)) {
 				MyLogger.Error("CharacterStatsSystem not found." + GetParentGameObjectHeirarchyMessage());
 				return false;
 			}
-
+			if (this.equippedWeapDataSO == null) {
+				Debug.LogError($"WeaponSo is null {GetParentGameObjectHeirarchyMessage()}");
+			}
 			InitializeStatCache();
 			SubscribeToStats();
 
@@ -193,13 +191,13 @@ namespace Kope.Component.Attack {
 			if (!CanPerformAttack()) return 0f;
 			float dmg = PerformAttackInternal();
 			this.OnAttackPerformed?.Invoke();
-			this.OnAttackPerformed1?.Invoke(this.equippedWeapDataSO1.CurrentWeaponData);
+			this.OnAttackPerformed1?.Invoke(this.equippedWeapDataSO.CurrentWeaponData);
 			return dmg;
 		}
 
 		private bool CanPerformAttack() =>
 			this._animationComponent.CanTransitionToNextAnimation(
-				this.equippedWeapDataSO1.CurrentWeaponData.AttackAnimationHash
+				this.equippedWeapDataSO.CurrentWeaponData.AttackAnimationHash
 			);
 
 		protected abstract float PerformAttackInternal();
