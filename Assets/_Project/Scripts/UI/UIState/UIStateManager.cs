@@ -25,7 +25,13 @@ public class UIStateManager {
 		this.isReplacing = isReplace;
 	}
 
-
+	public void UpdateState() {
+		// caching locally since i dont want to call the getter multiple times 
+		// and potentially have unintended side effects if it changes between calls
+		var current = this.CurrentUIState;
+		if (current == null) return;
+		current.UpdateState();
+	}
 
 	public void ProcessStateChanges() {
 		if (!this.isAdding) return;

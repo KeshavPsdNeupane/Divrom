@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Kope.Component.Attack {
 	[Serializable]
-	public class WeaponData1 {
+	public class WeaponData {
 		public EnumInstance WeaponTypeInstance { get; private set; }
 		public string WeaponName { get; private set; }
 		public float AttackSpeed { get; private set; }
@@ -12,7 +12,7 @@ namespace Kope.Component.Attack {
 		public int AnimationID { get; private set; }
 		public string AttackAnimationName { get; private set; }
 		public int AttackAnimationHash { get; private set; }
-		public WeaponData1(string weaponName, EnumInstance weaponType, float attackSpeed,
+		public WeaponData(string weaponName, EnumInstance weaponType, float attackSpeed,
  			int animationId, string animationName) {
 
 			this.WeaponName = weaponName;

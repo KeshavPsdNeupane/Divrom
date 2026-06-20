@@ -15,9 +15,9 @@ namespace Kope.Component.Attack {
 
 		[SerializeField] private float attackSpeed = 1.0f;
 
-		private WeaponData1 _dataCache;
+		private WeaponData _dataCache;
 
-		public WeaponData1 CurrentWeaponData {
+		public WeaponData CurrentWeaponData {
 			get {
 				if (this._dataCache != default) return this._dataCache;
 
@@ -29,7 +29,7 @@ namespace Kope.Component.Attack {
 					? this.overrideAttackAnimation.GetInstance()
 					: this.attackAnimationMap.GetTargetInstance(weaponTypeID);
 
-				this._dataCache = new WeaponData1(
+				this._dataCache = new WeaponData(
 					this.weaponName,
 					weaponTypeInstance,
 					this.attackSpeed,

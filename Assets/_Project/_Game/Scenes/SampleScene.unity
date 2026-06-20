@@ -6489,7 +6489,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MenuController
   panelName: Inventory
   currentPanel: {fileID: 1335616151}
-  inputActionMap: 21
+  inputActionMap: 11
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
@@ -7859,46 +7859,46 @@ MonoBehaviour:
     gameObjectName: SceneServiceLocator
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: Hpstore
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: Hpstore (1)
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: Dummy
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: Addhp (2)
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: AddDef (1)
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: Addhp (1)
+    gameObjectName: AddDef
   - typeName: EntityInitCaller
     order: -40
     gameObjectName: EnemyNew
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: Hpstore (2)
+    gameObjectName: Dummy
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: PlayerNew
+    gameObjectName: Hpstore
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: AddDef
+    gameObjectName: AddDef (1)
   - typeName: EntityInitCaller
     order: -40
     gameObjectName: AddSpd
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: Addhp
-  - typeName: EntityInitCaller
-    order: -40
     gameObjectName: Dummy (1)
   - typeName: EntityInitCaller
     order: -40
+    gameObjectName: Hpstore (2)
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Addhp (1)
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Addhp (2)
+  - typeName: EntityInitCaller
+    order: -40
     gameObjectName: AddSpd (1)
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Addhp
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Hpstore (1)
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: PlayerNew
   - typeName: InGameUIInitCaller
     order: -30
     gameObjectName: UI
@@ -8255,8 +8255,8 @@ MonoBehaviour:
   x: 0.575
   result: 0.6205578
   unityResult: 0.38834375
-  customEvalTime: 0.1461
-  unityEvalTime: 0.0635
+  customEvalTime: 0.14
+  unityEvalTime: 0.0713
 --- !u!1001 &1031836800
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14344,7 +14344,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MenuController
   panelName: Menu
   currentPanel: {fileID: 1761344700}
-  inputActionMap: 21
+  inputActionMap: 11
 --- !u!1001 &6493343167458118863
 PrefabInstance:
   m_ObjectHideFlags: 0

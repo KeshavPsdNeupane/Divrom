@@ -5,7 +5,7 @@ using Kope.Core.CompilerServices;
 public class PanelController : UIState {
 	[SerializeField] private string panelName = "Menu";
 	[SerializeField] private GameObject currentPanel;
-	[SerializeField] private PlayerInputActionCollection inputActionMap = PlayerInputActionCollection.Menu;
+	[SerializeField] private PlayerInputActionCollection inputActionMap = PlayerInputActionCollection.UI;
 	private InputManager inputManager;
 	public string PanelName => this.panelName;
 	protected override bool OnInit() {
@@ -61,13 +61,4 @@ public class PanelController : UIState {
 			this.inputManager.SetDefaultActionMap();
 		}
 	}
-	private void TogglePanel() {
-		if (this.currentPanel.activeSelf) {
-			ClosePanel();
-		} else {
-			OpenPanel();
-		}
-	}
-
-
 }

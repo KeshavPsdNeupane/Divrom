@@ -21,7 +21,7 @@ namespace Kope.Component.Attack {
 
 	public interface IAttackComponent {
 		event System.Action OnAttackPerformed;
-		event System.Action<WeaponData1> OnAttackPerformed1;
+		event System.Action<WeaponData> OnAttackPerformed1;
 		float PerformAttack();
 		float GetDamageValue(CharacterStatType damageType, float multiplier = 1f);
 		float GetDamageValue(List<DamageBaseStatComposition> composition);
@@ -41,7 +41,7 @@ namespace Kope.Component.Attack {
 		protected float _normalizedCriticalDamage;
 
 		public event System.Action OnAttackPerformed;
-		public event System.Action<WeaponData1> OnAttackPerformed1;
+		public event System.Action<WeaponData> OnAttackPerformed1;
 
 
 

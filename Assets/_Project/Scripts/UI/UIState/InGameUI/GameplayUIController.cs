@@ -55,8 +55,8 @@ public class GameplayUIController : InitializableBase {
 				EsePressed
 			),
 			new InputActionSubscriptionLifetime<UIInputActionKey>(
-				PlayerInputActionCollection.Menu,
-				UIInputActionKey.RemoveTopUIStack,
+				PlayerInputActionCollection.UI,
+				UIInputActionKey.Cancel,
 				EsePressed
 			),
 			new InputActionSubscriptionLifetime<UIInputActionKey>(
@@ -65,8 +65,8 @@ public class GameplayUIController : InitializableBase {
 				TabPressed
 			),
 			new InputActionSubscriptionLifetime<UIInputActionKey>(
-				PlayerInputActionCollection.Inventory,
-				UIInputActionKey.RemoveTopUIStack,
+				PlayerInputActionCollection.UI,
+				UIInputActionKey.Cancel,
 				TabPressed
 			)
 		});
@@ -86,21 +86,16 @@ public class GameplayUIController : InitializableBase {
 
 	protected override void OnUpdate() {
 		base.OnUpdate();
-
-		if (Mouse.current.rightButton.isPressed) {
-			Unsubscribe();
-			return;
-		}
-
 		if (this.uiStateManager == null) return;
 
 		this.uiStateManager.ProcessStateChanges();
-		this.uiStateManager.CurrentUIState?.UpdateState();
+		this.uiStateManager.UpdateState();
 	}
 
 	public void EsePressed(InputAction.CallbackContext context) {
 		if (!context.performed || context.duration > 0.05f) return;
-
+		// Work: Toggle in-game menu
+		// if no ui is open, open the in-game menu, otherwise close any current ui (including the in-game menu)
 		if (this.uiStateManager.IsEmptyStateStack()) {
 			this.uiStateManager.AddState(this.inGameplayMenu, true);
 		} else {
@@ -110,7 +105,7 @@ public class GameplayUIController : InitializableBase {
 
 	public void TabPressed(InputAction.CallbackContext context) {
 		if (!context.performed || context.duration > 0.05f) return;
-
+		// Work
 		if (this.uiStateManager.IsEmptyStateStack()) {
 			this.uiStateManager.AddState(this.inventoryMenu, true);
 		} else {

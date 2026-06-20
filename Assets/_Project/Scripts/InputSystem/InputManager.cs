@@ -48,8 +48,6 @@ public enum PlayerInputActionCollection {
      * saved in your Prefabs or Scene objects. */
 	Player = 1,
 	UI = 11,
-	Menu = 21,
-	Inventory = 31,
 }
 
 public enum PlayerInputDevice {
@@ -75,7 +73,6 @@ public enum PlayerInputActionKey {
 
 public enum UIInputActionKey {
 	None = 0,
-	Pause = 1,
 	OpenMenu = 11,
 	OpenInventory = 21,
 
@@ -83,6 +80,24 @@ public enum UIInputActionKey {
      * It allows UI panels to close without needing to know which specific 
      * panel is currently active. */
 	RemoveTopUIStack = 31,
+
+	Navigate = 51,
+	// Submit button for ui either Enter or A on a controller, this is the "Confirm" button in many UI contexts
+	Submit = 52,
+	// this is the "Back" button in many UI contexts, often mapped to Escape or B on a controller
+	// this will replace the  RemoveTopUIStack action in the future, but for now we will keep both for compatibility
+	// since cancel is more standardized and can be used in more contexts than just UI, we will
+	// use it for all new actions
+	Cancel = 53,
+	Point = 54,
+	Click = 55,
+	ScrollWheel = 56,
+	MiddleClick = 57,
+	RightClick = 58,
+	TrackedDevicePosition = 59,
+	TrackedDeviceOrientation = 60,
+
+
 }
 
 /// <summary>
@@ -144,8 +159,6 @@ public class InputManager : GlobalServiceBase {
 		return type switch {
 			PlayerInputActionCollection.Player => this.playerInput.Player,
 			PlayerInputActionCollection.UI => this.playerInput.UI,
-			PlayerInputActionCollection.Menu => this.playerInput.Menu,
-			PlayerInputActionCollection.Inventory => this.playerInput.Inventory,
 			_ => null
 		};
 	}
