@@ -104,17 +104,26 @@ namespace Kope.Component.Ability.Targeting {
 				this._previewController = null;
 				return;
 			}
-			if (!this.targetingManager.TryGetMouseGroundPoint(out Vector3 mousePoint)) {
-				mousePoint = Vector3.zero;
-			}
-			go.SetActive(true);
-			this._previewController.Initialize(mousePoint, this._radius, this._previewColor);
 
+			if (!this.targetingManager.TryGetAimGroundPoint(
+				this.CasterPosition,
+				out Vector3 startPoint)) {
+				startPoint = this.CasterPosition;
+			}
+			this.currentPoint = startPoint;
+			go.SetActive(true);
+
+			this._previewController.Initialize(
+				startPoint,
+				this._radius,
+				this._previewColor);
+
+			UpdatePreviewPosition(this._previewController);
 		}
 
 		public override void Update() {
 			if (!this._isTargeting || this.targetingManager == null) return;
-			if (!this.targetingManager.TryGetMouseGroundPoint(out this.currentPoint)) return;
+			if (!this.targetingManager.TryGetAimGroundPoint(this.CasterPosition, out this.currentPoint)) return;
 			if (this._previewController != null)
 				UpdatePreviewPosition(this._previewController);
 		}

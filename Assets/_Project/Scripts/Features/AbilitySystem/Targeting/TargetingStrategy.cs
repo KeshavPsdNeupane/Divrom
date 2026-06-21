@@ -18,7 +18,8 @@ namespace Kope.Component.Ability.Targeting {
 		protected EffectContext effectContext;
 		protected bool _isTargeting;
 		protected ITargetingReceiver _onTargetResolved;
-
+		public Vector3 CasterPosition => this.casterContext.HitBox.Transform.position;
+		protected Vector3 Direction => this.casterContext.HitBox.Transform.TransformDirection(Vector3.forward);
 		public bool IsTargeting => this._isTargeting;
 
 		public abstract void Start(

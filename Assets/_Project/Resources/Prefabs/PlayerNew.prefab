@@ -49,6 +49,11 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   maxFrameDelayBeforeCleanup: 2
+  maxRayDistance: 200
+  inputHandler:
+    gamepadCursorSpeed: 15
+    gamePadCursorReturnSpeed: 8
+    gamepadReturnDelay: 1
 --- !u!1 &277061344693848772
 GameObject:
   m_ObjectHideFlags: 0

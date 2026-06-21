@@ -27,8 +27,11 @@ namespace Kope.Component.Ability.Targeting {
 			Begin(targetingManager, casterContext, effectContext, onTargetResolved);
 
 			if (this.previewPrefab != null && this.targetingManager != null) {
+				// providing the caster position as the initial position for the preview instance
+				// so it doesnt render at the world origin before the first update.
 				this.previewInstance = UnityEngine.Object.Instantiate(
-					this.previewPrefab, Vector3.zero, Quaternion.identity);
+					this.previewPrefab, this.CasterPosition, Quaternion.identity);
+
 			}
 			// if (this.targetingManager != null && this.targetingManager.InputManager != null) {
 
@@ -44,7 +47,7 @@ namespace Kope.Component.Ability.Targeting {
 
 		public override void Update() {
 			if (!this._isTargeting || this.previewInstance == null || this.targetingManager == null) return;
-			if (!this.targetingManager.TryGetMouseGroundPoint(out var point)) return;
+			if (!this.targetingManager.TryGetAimGroundPoint(this.CasterPosition, out var point)) return;
 
 			this.previewInstance.transform.position = point + Vector3.up * this.previewHeightOffset;
 		}

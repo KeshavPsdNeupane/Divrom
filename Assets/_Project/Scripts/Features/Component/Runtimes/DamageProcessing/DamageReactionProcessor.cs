@@ -9,58 +9,6 @@ using UnityEngine;
 using Kope.Component.Health;
 
 namespace Kope.Component.Combat {
-
-	internal class DamageCalculator {
-		// these variables are contant for all entity with the same config,
-		// so we cache them and there is not need to have DI just for these values.
-		private readonly float _resistanceDiminishingReturnsThreshold = 0.5f;
-		private readonly float _defenceScalingFactor = 100f;
-		private readonly float _levelScalingFactor = 0.1f;
-		private readonly float _inverseResistanceDiminishingReturnsThreshold = 1f;
-
-		public DamageCalculator(DamageCalculationConfig config) {
-			this._resistanceDiminishingReturnsThreshold = config.ResistanceDiminishingReturnsThreshold;
-			this._defenceScalingFactor = config.DefenceScalingFactor;
-			this._levelScalingFactor = config.LevelScalingFactor;
-			this._inverseResistanceDiminishingReturnsThreshold = config.ReciprocalOfResistanceDiminishingReturnsThreshold;
-		}
-
-		protected virtual float GetDefenceMultiplier(float defence, float pierceRatio = 0) {
-			float effectiveDefence = defence * Mathf.Clamp01(1 - pierceRatio);
-			return this._defenceScalingFactor / (this._defenceScalingFactor + effectiveDefence);
-		}
-
-		protected virtual float GetResistanceMultiplier(float resistanceValue,
-		 DamageType damageType, float ignore = 0) {
-			float er = resistanceValue - ignore;
-			if (er < 0) return 1f - (er * 0.5f);
-			if (er < this._resistanceDiminishingReturnsThreshold) return 1f - er;
-			return 1f / (1f + er * this._inverseResistanceDiminishingReturnsThreshold);
-		}
-
-		protected virtual float GetLevelMultiplier(int casterLevel, float currentLevel) {
-			float lvlDiff = casterLevel - currentLevel;
-
-			float temp = this._levelScalingFactor * Mathf.Abs(lvlDiff) + 1;
-			return lvlDiff < 0f ? 1f / temp : temp;
-		}
-
-		public float TakeHit(DamageDetail damageDetail, float currentLevel, IStatSystem statSystem) {
-			float def = statSystem.GetStatValue(CharacterStatType.DEF);
-			float res = statSystem.GetResistanceValue(damageDetail.DamageType);
-			float defMult = GetDefenceMultiplier(def, damageDetail.DefencePierceRatio);
-			float resMult = GetResistanceMultiplier(res, damageDetail.DamageType, damageDetail.IgnoreResistance);
-			float levelMult = GetLevelMultiplier(damageDetail.CasterLevel, currentLevel);
-			float finalDamage = damageDetail.DamageAmount * defMult * resMult * levelMult;
-			Debug.Log($"Damage Calculation: BaseDamage={damageDetail.DamageAmount}," +
-			$"Current def={def}, DefenceMultiplier={defMult}," +
-			$"Res={res} ResistanceMultiplier={resMult}, LevelMultiplier={levelMult}, FinalDamage={finalDamage}");
-			return finalDamage;
-		}
-	}
-
-
-
 	/// <summary>
 	/// This component is responsible for processing incoming damage and effects on an entity. 
 	/// It listens for hits on the attached HurtBox and applies damage and effects accordingly.
@@ -81,7 +29,6 @@ namespace Kope.Component.Combat {
 		private IHitBoxComponent _hurtBox;
 		private IHealthComponent _healthComponent;
 		private IStatSystem _statSystem;
-		private DamageCalculator _damageCalculator;
 
 		private readonly List<ITickableEffect> _activeTickableEffects = new();
 		// replace this with the actual LevelUp component when we have it, this is just for
@@ -91,27 +38,35 @@ namespace Kope.Component.Combat {
 		public IHitBoxComponent HurtBox => this._hurtBox;
 
 		protected override bool OnInit() {
+			string parentHierarchy = GetParentGameObjectHeirarchyMessage();
 			if (this.ecr == null) {
-				Debug.LogError($"DamageProcessor on {gameObject.name} has no ECR assigned.");
+				Debug.LogError($"DamageProcessor on {gameObject.name} has no ECR assigned."
+				+ $"on{parentHierarchy}");
+				return false;
+			}
+			if (this.config == null) {
+				Debug.LogError($"DamageProcessor on {gameObject.name} has no DamageCalculationConfig assigned."
+				+ $"on{parentHierarchy}");
 				return false;
 			}
 
 			if (!this.ecr.ComponentRegistry.TryGetMutatableComponent(out _healthComponent)) {
-				Debug.LogError($"DamageProcessor on {gameObject.name} failed to find HealthComponent.");
+				Debug.LogError($"DamageProcessor on {gameObject.name} failed to find HealthComponent."
+				+ $"on{parentHierarchy}");
 				return false;
 			}
 
 			if (!this.ecr.ComponentRegistry.TryGetReadOnlyComponent(out _statSystem)) {
-				Debug.LogError($"DamageProcessor on {gameObject.name} failed to find IStatSystem.");
+				Debug.LogError($"DamageProcessor on {gameObject.name} failed to find IStatSystem."
+				+ $"on{parentHierarchy}");
 				return false;
 			}
 
 			if (!this.ecr.ComponentRegistry.TryGetMutatableComponent(out this._hurtBox)) {
-				Debug.LogError($"DamageProcessor on {gameObject.name} failed to find HurtBox.");
+				Debug.LogError($"DamageProcessor on {gameObject.name} failed to find HurtBox."
+				+ $"on{parentHierarchy}");
 				return false;
 			}
-			this._damageCalculator = new DamageCalculator(config);
-
 			return true;
 		}
 
@@ -126,7 +81,7 @@ namespace Kope.Component.Combat {
 
 		public float TakeHit(DamageDetail damageDetail) {
 			if (!this.IsInitialized) return 0f;
-			float finalDamage = this._damageCalculator.TakeHit(damageDetail, this._currentLevel, this._statSystem);
+			float finalDamage = this.config.TakeHit(damageDetail, this._currentLevel, this._statSystem);
 
 			this._healthComponent.ApplyDamage(finalDamage);
 			return finalDamage;

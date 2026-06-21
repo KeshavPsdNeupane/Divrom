@@ -3,6 +3,7 @@ using Kope.Component.Combat.Interface;
 using Kope.Core;
 using Kope.Core.ObjectPooling;
 using Kope.Core.ServiceLocator;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Kope.Component.Ability.Targeting {
@@ -79,7 +80,14 @@ namespace Kope.Component.Ability.Targeting {
 
 
 		protected override bool ExecuteResolution(Vector3 clickPoint) {
+			// this is a special case for the projectile strategy, where we want to use
 			Vector3 origin = this.casterContext.HitBox.Transform.position;
+
+			if (clickPoint == this.CasterPosition) {
+				Debug.Log($"Caster and click point are the same. Using fallback targeting for ProjectileTargetingStrategy." +
+				$"casterPosition: {this.CasterPosition}, clickPoint: {clickPoint}");
+				clickPoint = FindFallBackTargetPosition(origin, this.effectContext.CasterMovement.GetLookingAtDirection());
+			}
 			Vector3 direction = GetDirectionToClickPoint(clickPoint, origin);
 
 			var rotation = CalculateSpawnRotation(direction, this.effectContext.Dimension);
@@ -99,7 +107,11 @@ namespace Kope.Component.Ability.Targeting {
 			}
 			return true;
 		}
-
+		private Vector3 FindFallBackTargetPosition(Vector3 origin, Vector3 lookingDirection) {
+			var fallback = origin + lookingDirection.normalized * 5f;
+			if (this.effectContext.Dimension == AxisMode.TwoD) fallback.z = 0f;
+			return fallback;
+		}
 
 		private void CleanupProjectile(GameObject obj) {
 			if (this._universalPooler != null) {
@@ -109,6 +121,7 @@ namespace Kope.Component.Ability.Targeting {
 		}
 
 		private Vector3 GetDirectionToClickPoint(Vector3 clickPoint, Vector3 origin) {
+
 			Vector3 direction = clickPoint - origin;
 			if (this.effectContext.Dimension == AxisMode.TwoD) direction.z = 0;
 			return direction.normalized;

@@ -76,6 +76,7 @@
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/PlayerAbilityCaster.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/DamageBased/DamageOverTimeEffect.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/MovementBased/StunEffect.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/TargetingInputHandler.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Component/UI/Health/HealthBar.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/ConcreteClass/SelfTargetingStrategy.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/ConcreteClass/ProjectileTargetingStrategy.cs" />

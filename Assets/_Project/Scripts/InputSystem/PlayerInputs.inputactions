@@ -28,7 +28,16 @@
                     "name": "Fire",
                     "type": "Button",
                     "id": "13d2b8e7-cc9f-4a47-8ffe-3558c6fa5a5b",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Dodge",
+                    "type": "Button",
+                    "id": "9cc02421-18d0-4692-b5b0-205c9cb5a3e4",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -82,15 +91,6 @@
                     "name": "Ability4",
                     "type": "Button",
                     "id": "e0ec0505-26d8-4a49-bd38-ed3e15a85a87",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Dodge",
-                    "type": "Button",
-                    "id": "9cc02421-18d0-4692-b5b0-205c9cb5a3e4",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -265,17 +265,6 @@
                 },
                 {
                     "name": "",
-                    "id": "143bb1cd-cc10-4eca-a2f0-a3664166fe91",
-                    "path": "<Gamepad>/rightTrigger",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Gamepad",
-                    "action": "Fire",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "05f6913d-c316-48b2-a6bb-e225f14c7960",
                     "path": "<Mouse>/leftButton",
                     "interactions": "",
@@ -314,6 +303,28 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "XR",
+                    "action": "Fire",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "ButtonWest",
+                    "id": "7a27634e-ea4e-40f7-9c15-9dd3f2dddd04",
+                    "path": "OneModifier",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Fire",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "96dce4fe-58e8-4751-8545-a359676ff97e",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
                     "action": "Fire",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -374,6 +385,39 @@
                     "isPartOfComposite": false
                 },
                 {
+                    "name": "Controller",
+                    "id": "6e85f528-5814-4dee-913c-3338c0dd2b3c",
+                    "path": "OneModifier",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Ability1",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "modifier",
+                    "id": "28fd1d83-98a1-431e-81b0-1d1f198182bf",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Ability1",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "binding",
+                    "id": "d4c20261-a419-4fbd-ba22-7f1545e1b30c",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Ability1",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
                     "name": "",
                     "id": "047f6c52-47e6-4b82-9d61-65d518684a32",
                     "path": "<Keyboard>/2",
@@ -383,6 +427,39 @@
                     "action": "Ability2",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "Controller",
+                    "id": "fc88671a-0428-4a35-b66a-4d918904fe10",
+                    "path": "OneModifier",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Ability2",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "modifier",
+                    "id": "80ff7ced-53b8-42e3-9c84-04a4425e58e8",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Ability2",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "binding",
+                    "id": "8ce039a3-3877-4462-9d74-787e17bad478",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Ability2",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 },
                 {
                     "name": "",
@@ -396,6 +473,39 @@
                     "isPartOfComposite": false
                 },
                 {
+                    "name": "Controller",
+                    "id": "a382e6a2-0194-4ba4-b7ec-a2ee3c4dae83",
+                    "path": "OneModifier",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Ability3",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "modifier",
+                    "id": "6becd6e8-5cf6-457b-829a-b1582e3391a1",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Ability3",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "binding",
+                    "id": "84a1ed98-d577-4ed0-b7e6-e70b7f35682f",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Ability3",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
                     "name": "",
                     "id": "8bfda748-f9f8-46ae-95a9-2e0f8910b094",
                     "path": "<Keyboard>/4",
@@ -405,6 +515,39 @@
                     "action": "Ability4",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "Controller",
+                    "id": "8857bbe2-85bd-4f91-9d23-3cddfe4eba09",
+                    "path": "OneModifier",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Ability4",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "modifier",
+                    "id": "e9f88bea-2da3-49f9-8b78-2c686be605ae",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Ability4",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "binding",
+                    "id": "3cf86337-3873-4c29-a9c0-974907f3fad7",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Ability4",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 },
                 {
                     "name": "",
@@ -520,6 +663,24 @@
                     "type": "PassThrough",
                     "id": "fdb9f044-502d-418b-8899-e426c9ccd3ab",
                     "expectedControlType": "Quaternion",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "TabCycleLeft",
+                    "type": "Button",
+                    "id": "3080fe87-294f-48c6-a673-2a407914c292",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "TabCycleRight",
+                    "type": "Button",
+                    "id": "fbd22a5a-b94c-4476-afa2-cc2005da2802",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -965,60 +1126,48 @@
                     "action": "TrackedDeviceOrientation",
                     "isComposite": false,
                     "isPartOfComposite": false
-                }
-            ]
-        },
-        {
-            "name": "Menu",
-            "id": "5d839027-d6b5-4e37-92f4-63013da8a772",
-            "actions": [
-                {
-                    "name": "RemoveTopUIStack",
-                    "type": "Button",
-                    "id": "419c0d5c-2d0a-48ea-a1f6-32cd81112207",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                }
-            ],
-            "bindings": [
+                },
                 {
                     "name": "",
-                    "id": "07fcd399-c9a2-4c27-8e1b-f8223620c4a7",
-                    "path": "<Keyboard>/escape",
+                    "id": "63163016-329b-4eae-8c50-959173c448a6",
+                    "path": "<Keyboard>/q",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "RemoveTopUIStack",
+                    "action": "TabCycleLeft",
                     "isComposite": false,
                     "isPartOfComposite": false
-                }
-            ]
-        },
-        {
-            "name": "Inventory",
-            "id": "9c367ead-c1eb-4723-ab8f-b47201d49fd6",
-            "actions": [
-                {
-                    "name": "RemoveTopUIStack",
-                    "type": "Button",
-                    "id": "e2b644e7-ad35-494d-8c1b-ba1be3d4ff3c",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                }
-            ],
-            "bindings": [
+                },
                 {
                     "name": "",
-                    "id": "dbfdb7a1-79fc-4451-a8af-6dcabc87e1e7",
-                    "path": "<Keyboard>/escape",
+                    "id": "17607585-7181-4bf4-bbb9-ed1cb4b16c75",
+                    "path": "<Gamepad>/leftShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "TabCycleLeft",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "51f65b9d-1af9-433c-90cb-947355260110",
+                    "path": "<Keyboard>/e",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "RemoveTopUIStack",
+                    "action": "TabCycleRight",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "826aa8ee-b76d-4f6c-89ca-a05d4413e040",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "TabCycleRight",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

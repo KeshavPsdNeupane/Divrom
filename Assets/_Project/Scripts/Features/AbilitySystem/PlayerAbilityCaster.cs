@@ -10,6 +10,7 @@ using Kope.Core.ServiceLocator;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Kope.Component.HitBox.Interface;
+using Kope.Component.Movement;
 
 namespace Kope.Component.Ability {
 
@@ -49,7 +50,8 @@ namespace Kope.Component.Ability {
 				!registry.TryGetReadOnlyComponent(out IAttackComponent casterAttack, false) ||
 				!registry.TryGetReadOnlyComponent(out IHealthComponent casterHealth, false) ||
 				!registry.TryGetReadOnlyComponent(out IHitBoxComponent casterHitBox, false) ||
-				!registry.TryGetReadOnlyComponent(out _attackLock, false)) {
+				!registry.TryGetReadOnlyComponent(out _attackLock, false) ||
+				!registry.TryGetReadOnlyComponent(out IMovementComponent casterMovement, false)) {
 				Debug.LogError("PlayerAbilityCaster failed to initialize due to missing components in the" +
 				$" EntityComponentsRegistry.{GetParentGameObjectHeirarchyMessage()}", this);
 				return false;
@@ -62,6 +64,7 @@ namespace Kope.Component.Ability {
 				Caster = registry.EntityTransform.gameObject,
 				CasterAttack = casterAttack,
 				CasterHealth = casterHealth,
+				CasterMovement = casterMovement,
 				CasterLevel = 0
 			};
 
@@ -124,7 +127,7 @@ namespace Kope.Component.Ability {
 			}
 
 			if (this._targetingManager != null) {
-				this._targetingManager.OnTargetingCleanupRequested -= this.ClearSelectionAndUnlockInput;
+				this._targetingManager.OnTargetingCleanupRequested -= ClearSelectionAndUnlockInput;
 			}
 
 			this._inputCallbacks.Clear();

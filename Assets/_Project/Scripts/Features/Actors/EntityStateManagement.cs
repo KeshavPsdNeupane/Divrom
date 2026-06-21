@@ -228,6 +228,8 @@ namespace Kope.Actor.New {
 		[System.Serializable]
 		internal struct AnimationStateData<TProfile> {
 			public TProfile Profile;
+			[Tooltip("Optional custom logic SO. If null, the system will auto-assign a " +
+			"default fallback that simply applies the animation and speed without any additional behavior.")]
 			public EntityStateBaseSO StateSO;
 		}
 	}

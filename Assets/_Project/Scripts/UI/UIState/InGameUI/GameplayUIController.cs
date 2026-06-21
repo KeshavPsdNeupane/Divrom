@@ -36,8 +36,8 @@ public class GameplayUIController : InitializableBase {
 	}
 
 	public void OnDisable() {
-		if (this.uiStateManager != null) {
-			this.uiStateManager.CurrentUIState?.ExitState();
+		if (this.uiStateManager != null && this.uiStateManager.CurrentUIState != null) {
+			this.uiStateManager.CurrentUIState.ExitState();
 			this.uiStateManager = null;
 		}
 		Unsubscribe();
@@ -105,11 +105,10 @@ public class GameplayUIController : InitializableBase {
 
 	public void TabPressed(InputAction.CallbackContext context) {
 		if (!context.performed || context.duration > 0.05f) return;
-		// Work
+		// Work: Open inventory menu
+		// to pop the inventory player just press the Cancel button (Esc or A in controller) 
 		if (this.uiStateManager.IsEmptyStateStack()) {
 			this.uiStateManager.AddState(this.inventoryMenu, true);
-		} else {
-			this.uiStateManager.PopState();
 		}
 	}
 }

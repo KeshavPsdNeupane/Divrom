@@ -38,7 +38,6 @@ using Kope.Core.ServiceLocator;
  * =================================================================================
  */
 
-
 public enum PlayerInputActionCollection {
 	// Always reserve 0 for 'None' to detect unassigned references in the Inspector.
 	None = 0,
@@ -60,15 +59,20 @@ public enum PlayerInputDevice {
 
 public enum PlayerInputActionKey {
 	None = 0,
-	Move = 1,
-	Fire = 11,
 
+	// movement and camera controls
+	Move = 1,
+	Look = 5,
+
+	// Action buttons. Keep sequential for potential index-based logic.
+	Fire = 11,
+	Dodge = 15,
 	// Kept sequential to allow for potential index-based logic or loops.
 	Ability1 = 21,
 	Ability2 = 22,
 	Ability3 = 23,
 	Ability4 = 24,
-	Dodge = 31,
+
 }
 
 public enum UIInputActionKey {
@@ -97,7 +101,9 @@ public enum UIInputActionKey {
 	TrackedDevicePosition = 59,
 	TrackedDeviceOrientation = 60,
 
-
+	// Unified bumper tab navigation contexts
+	TabCycleLeft = 71,
+	TabCycleRight = 72
 }
 
 /// <summary>
@@ -127,12 +133,28 @@ public class InputManager : GlobalServiceBase {
 	private CustomPlayerInputs playerInput;
 	private readonly Dictionary<PlayerInputActionCollection, InputActionMap> actionMaps = new();
 
+	private float lastDeviceSwitchTime;
+	// Minimum seconds required between layout swaps
+	private const float DEVICE_SWITCH_COOLDOWN = 0.2f;
+
+	// --- AUTOMATED DEVICE DETECTION MODULE ---
+	private PlayerInputDevice currentDevice = PlayerInputDevice.None;
+
+	/// <summary> Fires dynamically the exact frame the player touches a different hardware category. </summary>
+	//	public event Action<PlayerInputDevice> OnDeviceSwitched;
+
+	/// <summary> Exposes the currently active player device classification tracking record. </summary>
+	public PlayerInputDevice CurrentDevice => this.currentDevice;
+
 	// Property to access the raw generated C# class if needed for direct polling
 	public CustomPlayerInputs PlayerInputs => this.playerInput;
 
 	protected override bool OnInitializeService() {
 		InitializeActionMaps();
-		// LoadUserRebinds(); // Implementation depends on your save system
+
+		// Hook into the global engine input processing pipeline to listen for device mutations
+		//InputSystem.onActionChange += OnGlobalActionChange;
+
 		return true;
 	}
 
@@ -155,6 +177,57 @@ public class InputManager : GlobalServiceBase {
 		EnableActionType(PlayerInputActionCollection.Player);
 	}
 
+	// /// <summary>
+	// /// Processes changes across all active action mappings to evaluate what physical control hardware generated the input event.
+	// /// </summary>
+	// // --- Add these tracking fields to the top of your InputManager class ---
+	// private void OnGlobalActionChange(object obj, InputActionChange change) {
+	// 	if (change != InputActionChange.ActionPerformed) return;
+
+	// 	var action = obj as InputAction;
+	// 	if (action == null || action.activeControl == null) return;
+
+	// 	// --- GUARDRAIL 1: TIME COOLDOWN ---
+	// 	// If we just switched layouts a split second ago, ignore fast jitter bounce
+	// 	if (Time.unscaledTime - this.lastDeviceSwitchTime < DEVICE_SWITCH_COOLDOWN) return;
+
+	// 	InputDevice device = action.activeControl.device;
+
+	// 	// --- GUARDRAIL 2: ANALOG DRIFT RESOLUTION ---
+	// 	// If the incoming action is an axis/pointer movement, verify it crossed a deliberate threshold
+	// 	if (action.activeControl.valueType == typeof(Vector2)) {
+	// 		Vector2 value = action.ReadValue<Vector2>();
+
+	// 		if (device is Mouse) {
+	// 			// For mice, look at the delta (movement speed) rather than absolute screen positioning.
+	// 			// If the mouse is just sitting there vibrating a sub-pixel, ignore it.
+	// 			Vector2 mouseDelta = Mouse.current.delta.ReadValue();
+	// 			if (mouseDelta.sqrMagnitude < 0.5f) return;
+	// 		} else if (device is Gamepad) {
+	// 			// Standard hardware thumbstick deadzone filtering
+	// 			if (value.sqrMagnitude < 0.05f) return;
+	// 		}
+	// 	}
+
+	// 	// --- ROUTE & UPDATE LAYOUT ---
+	// 	PlayerInputDevice detectedDevice = PlayerInputDevice.Unknown;
+
+	// 	if (device is Keyboard || device is Mouse) {
+	// 		detectedDevice = PlayerInputDevice.KeyboardMouse;
+	// 	} else if (device is Gamepad) {
+	// 		detectedDevice = PlayerInputDevice.Gamepad;
+	// 	} else if (device is Touchscreen) {
+	// 		detectedDevice = PlayerInputDevice.Touch;
+	// 	}
+
+	// 	if (detectedDevice != PlayerInputDevice.Unknown && detectedDevice != this.currentDevice) {
+	// 		this.currentDevice = detectedDevice;
+	// 		this.lastDeviceSwitchTime = Time.unscaledTime; // Anchor timestamp
+
+	// 		Debug.Log($"[Kope.Input] Hardware context shifted smoothly to: {this.currentDevice}");
+	// 		OnDeviceSwitched?.Invoke(this.currentDevice);
+	// 	}
+	// }
 	private InputActionMap GetActionMapByType(PlayerInputActionCollection type) {
 		return type switch {
 			PlayerInputActionCollection.Player => this.playerInput.Player,
@@ -235,37 +308,6 @@ public class InputManager : GlobalServiceBase {
 	#endregion
 
 	#region Rebinding
-	// example of how a UI button could call this to rebind the "Jump" action:
-	// public void OnClick_RebindButton() {
-	// // 1. Get the Service
-	// var input = ServiceLocator.Get<InputManager>();
-	// // 2. Visual Feedback (Optional)
-	// SetButtonText("Listening... Press any key");
-	// // 3. Initiate the Listen
-	// input.StartInteractiveRebind(
-	// PlayerInputActionMap.Player,
-	// PlayerInputActionKey.Jump,
-	// 0,
-	// () => {
-	// // This runs AFTER the player presses a key
-	// SetButtonText(input.GetBindingDisplay(PlayerInputActionMap.Player, PlayerInputActionKey.Jump));
-	// }
-	// );
-	// }
-	// example for how a ui will bind movement input:
-	// public void OnClick_RebindMoveUp() {
-	// var input = ServiceLocator.Get<InputManager>();
-	// SetButtonText("Listening for Move Up...");
-	// input.StartInteractiveRebind(
-	// PlayerInputActionMap.Player,
-	// PlayerInputActionKey.Move,
-	// 1 , // or 2 or 3 or 4, here 1,2,3,4 corresponds to up,down,left,right
-	// //respectively since it's a 2D Vector composite
-	// () => {
-	// SetButtonText(input.GetBindingDisplay(PlayerInputActionMap.Player, PlayerInputActionKey.Move, 1));
-	// }
-	// );
-	// }
 
 	/// <summary>
 	/// Initiates interactive rebind. 
@@ -298,7 +340,6 @@ public class InputManager : GlobalServiceBase {
 			.OnComplete(operation => {
 				operation.Dispose();
 				playerInput.Enable();
-				// SaveUserRebinds();
 				onComplete?.Invoke();
 			})
 			.OnCancel(operation => {
@@ -321,6 +362,9 @@ public class InputManager : GlobalServiceBase {
 	#endregion
 
 	private void OnDestroy() {
+		// Clean up global engine hooks cleanly to avoid lingering allocation leaks
+		//InputSystem.onActionChange -= OnGlobalActionChange;
+
 		if (this.playerInput != null) {
 			this.playerInput.Disable();
 			this.playerInput.Dispose();

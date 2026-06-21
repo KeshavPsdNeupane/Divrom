@@ -2,6 +2,7 @@ using System;
 using Kope.Component.Attack;
 using Kope.Component.Health.Interface;
 using Kope.Component.HitBox.Interface;
+using Kope.Component.Movement;
 using Kope.Core;
 using UnityEngine;
 
@@ -12,6 +13,7 @@ namespace Kope.Component.Combat.Interface {
 		public GameObject Caster;     // For attribution (who killed who)
 		public Vector3 HitPoint;      // For Knockback calculation
 		public IAttackComponent CasterAttack; // For scaling damage (ATK/SP)
+		public IMovementComponent CasterMovement; // For Knockback calculation
 		public IHealable CasterHealth; // For "Vampire" or "Thorn" effects
 
 		// this will be inited by the ability themself.

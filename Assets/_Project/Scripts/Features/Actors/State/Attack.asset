@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ac8af55caf20f25c8814f7e78e67f16c, type: 3}
-  m_Name: Swing
+  m_Name: Attack
   m_EditorClassIdentifier: Kope.Actor.Runtime::Kope.Actor.New.EntityAttackState
   _isInputReceptive: 0
   movementSpeedMultiplier: 0.5

@@ -114,7 +114,16 @@ public partial class @CustomPlayerInputs: IInputActionCollection2, IDisposable
                     ""name"": ""Fire"",
                     ""type"": ""Button"",
                     ""id"": ""13d2b8e7-cc9f-4a47-8ffe-3558c6fa5a5b"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Dodge"",
+                    ""type"": ""Button"",
+                    ""id"": ""9cc02421-18d0-4692-b5b0-205c9cb5a3e4"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -168,15 +177,6 @@ public partial class @CustomPlayerInputs: IInputActionCollection2, IDisposable
                     ""name"": ""Ability4"",
                     ""type"": ""Button"",
                     ""id"": ""e0ec0505-26d8-4a49-bd38-ed3e15a85a87"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Dodge"",
-                    ""type"": ""Button"",
-                    ""id"": ""9cc02421-18d0-4692-b5b0-205c9cb5a3e4"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -351,17 +351,6 @@ public partial class @CustomPlayerInputs: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""143bb1cd-cc10-4eca-a2f0-a3664166fe91"",
-                    ""path"": ""<Gamepad>/rightTrigger"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Gamepad"",
-                    ""action"": ""Fire"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""05f6913d-c316-48b2-a6bb-e225f14c7960"",
                     ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": """",
@@ -400,6 +389,28 @@ public partial class @CustomPlayerInputs: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""XR"",
+                    ""action"": ""Fire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""ButtonWest"",
+                    ""id"": ""7a27634e-ea4e-40f7-9c15-9dd3f2dddd04"",
+                    ""path"": ""OneModifier"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Fire"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""96dce4fe-58e8-4751-8545-a359676ff97e"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""Fire"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -460,6 +471,39 @@ public partial class @CustomPlayerInputs: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 },
                 {
+                    ""name"": ""Controller"",
+                    ""id"": ""6e85f528-5814-4dee-913c-3338c0dd2b3c"",
+                    ""path"": ""OneModifier"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Ability1"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""modifier"",
+                    ""id"": ""28fd1d83-98a1-431e-81b0-1d1f198182bf"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Ability1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""binding"",
+                    ""id"": ""d4c20261-a419-4fbd-ba22-7f1545e1b30c"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Ability1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
                     ""name"": """",
                     ""id"": ""047f6c52-47e6-4b82-9d61-65d518684a32"",
                     ""path"": ""<Keyboard>/2"",
@@ -469,6 +513,39 @@ public partial class @CustomPlayerInputs: IInputActionCollection2, IDisposable
                     ""action"": ""Ability2"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""Controller"",
+                    ""id"": ""fc88671a-0428-4a35-b66a-4d918904fe10"",
+                    ""path"": ""OneModifier"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Ability2"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""modifier"",
+                    ""id"": ""80ff7ced-53b8-42e3-9c84-04a4425e58e8"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Ability2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""binding"",
+                    ""id"": ""8ce039a3-3877-4462-9d74-787e17bad478"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Ability2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 },
                 {
                     ""name"": """",
@@ -482,6 +559,39 @@ public partial class @CustomPlayerInputs: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 },
                 {
+                    ""name"": ""Controller"",
+                    ""id"": ""a382e6a2-0194-4ba4-b7ec-a2ee3c4dae83"",
+                    ""path"": ""OneModifier"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Ability3"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""modifier"",
+                    ""id"": ""6becd6e8-5cf6-457b-829a-b1582e3391a1"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Ability3"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""binding"",
+                    ""id"": ""84a1ed98-d577-4ed0-b7e6-e70b7f35682f"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Ability3"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
                     ""name"": """",
                     ""id"": ""8bfda748-f9f8-46ae-95a9-2e0f8910b094"",
                     ""path"": ""<Keyboard>/4"",
@@ -491,6 +601,39 @@ public partial class @CustomPlayerInputs: IInputActionCollection2, IDisposable
                     ""action"": ""Ability4"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""Controller"",
+                    ""id"": ""8857bbe2-85bd-4f91-9d23-3cddfe4eba09"",
+                    ""path"": ""OneModifier"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Ability4"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""modifier"",
+                    ""id"": ""e9f88bea-2da3-49f9-8b78-2c686be605ae"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Ability4"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""binding"",
+                    ""id"": ""3cf86337-3873-4c29-a9c0-974907f3fad7"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Ability4"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 },
                 {
                     ""name"": """",
@@ -606,6 +749,24 @@ public partial class @CustomPlayerInputs: IInputActionCollection2, IDisposable
                     ""type"": ""PassThrough"",
                     ""id"": ""fdb9f044-502d-418b-8899-e426c9ccd3ab"",
                     ""expectedControlType"": ""Quaternion"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""TabCycleLeft"",
+                    ""type"": ""Button"",
+                    ""id"": ""3080fe87-294f-48c6-a673-2a407914c292"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""TabCycleRight"",
+                    ""type"": ""Button"",
+                    ""id"": ""fbd22a5a-b94c-4476-afa2-cc2005da2802"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -1051,60 +1212,48 @@ public partial class @CustomPlayerInputs: IInputActionCollection2, IDisposable
                     ""action"": ""TrackedDeviceOrientation"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
-                }
-            ]
-        },
-        {
-            ""name"": ""Menu"",
-            ""id"": ""5d839027-d6b5-4e37-92f4-63013da8a772"",
-            ""actions"": [
-                {
-                    ""name"": ""RemoveTopUIStack"",
-                    ""type"": ""Button"",
-                    ""id"": ""419c0d5c-2d0a-48ea-a1f6-32cd81112207"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                }
-            ],
-            ""bindings"": [
+                },
                 {
                     ""name"": """",
-                    ""id"": ""07fcd399-c9a2-4c27-8e1b-f8223620c4a7"",
-                    ""path"": ""<Keyboard>/escape"",
+                    ""id"": ""63163016-329b-4eae-8c50-959173c448a6"",
+                    ""path"": ""<Keyboard>/q"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""RemoveTopUIStack"",
+                    ""action"": ""TabCycleLeft"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
-                }
-            ]
-        },
-        {
-            ""name"": ""Inventory"",
-            ""id"": ""9c367ead-c1eb-4723-ab8f-b47201d49fd6"",
-            ""actions"": [
-                {
-                    ""name"": ""RemoveTopUIStack"",
-                    ""type"": ""Button"",
-                    ""id"": ""e2b644e7-ad35-494d-8c1b-ba1be3d4ff3c"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                }
-            ],
-            ""bindings"": [
+                },
                 {
                     ""name"": """",
-                    ""id"": ""dbfdb7a1-79fc-4451-a8af-6dcabc87e1e7"",
-                    ""path"": ""<Keyboard>/escape"",
+                    ""id"": ""17607585-7181-4bf4-bbb9-ed1cb4b16c75"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""TabCycleLeft"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""51f65b9d-1af9-433c-90cb-947355260110"",
+                    ""path"": ""<Keyboard>/e"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""RemoveTopUIStack"",
+                    ""action"": ""TabCycleRight"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""826aa8ee-b76d-4f6c-89ca-a05d4413e040"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""TabCycleRight"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1179,13 +1328,13 @@ public partial class @CustomPlayerInputs: IInputActionCollection2, IDisposable
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
         m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
+        m_Player_Dodge = m_Player.FindAction("Dodge", throwIfNotFound: true);
         m_Player_OpenInventory = m_Player.FindAction("OpenInventory", throwIfNotFound: true);
         m_Player_OpenMenu = m_Player.FindAction("OpenMenu", throwIfNotFound: true);
         m_Player_Ability1 = m_Player.FindAction("Ability1", throwIfNotFound: true);
         m_Player_Ability2 = m_Player.FindAction("Ability2", throwIfNotFound: true);
         m_Player_Ability3 = m_Player.FindAction("Ability3", throwIfNotFound: true);
         m_Player_Ability4 = m_Player.FindAction("Ability4", throwIfNotFound: true);
-        m_Player_Dodge = m_Player.FindAction("Dodge", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1198,20 +1347,14 @@ public partial class @CustomPlayerInputs: IInputActionCollection2, IDisposable
         m_UI_RightClick = m_UI.FindAction("RightClick", throwIfNotFound: true);
         m_UI_TrackedDevicePosition = m_UI.FindAction("TrackedDevicePosition", throwIfNotFound: true);
         m_UI_TrackedDeviceOrientation = m_UI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
-        // Menu
-        m_Menu = asset.FindActionMap("Menu", throwIfNotFound: true);
-        m_Menu_RemoveTopUIStack = m_Menu.FindAction("RemoveTopUIStack", throwIfNotFound: true);
-        // Inventory
-        m_Inventory = asset.FindActionMap("Inventory", throwIfNotFound: true);
-        m_Inventory_RemoveTopUIStack = m_Inventory.FindAction("RemoveTopUIStack", throwIfNotFound: true);
+        m_UI_TabCycleLeft = m_UI.FindAction("TabCycleLeft", throwIfNotFound: true);
+        m_UI_TabCycleRight = m_UI.FindAction("TabCycleRight", throwIfNotFound: true);
     }
 
     ~@CustomPlayerInputs()
     {
         UnityEngine.Debug.Assert(!m_Player.enabled, "This will cause a leak and performance issues, CustomPlayerInputs.Player.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_UI.enabled, "This will cause a leak and performance issues, CustomPlayerInputs.UI.Disable() has not been called.");
-        UnityEngine.Debug.Assert(!m_Menu.enabled, "This will cause a leak and performance issues, CustomPlayerInputs.Menu.Disable() has not been called.");
-        UnityEngine.Debug.Assert(!m_Inventory.enabled, "This will cause a leak and performance issues, CustomPlayerInputs.Inventory.Disable() has not been called.");
     }
 
     /// <summary>
@@ -1290,13 +1433,13 @@ public partial class @CustomPlayerInputs: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_Look;
     private readonly InputAction m_Player_Fire;
+    private readonly InputAction m_Player_Dodge;
     private readonly InputAction m_Player_OpenInventory;
     private readonly InputAction m_Player_OpenMenu;
     private readonly InputAction m_Player_Ability1;
     private readonly InputAction m_Player_Ability2;
     private readonly InputAction m_Player_Ability3;
     private readonly InputAction m_Player_Ability4;
-    private readonly InputAction m_Player_Dodge;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -1321,6 +1464,10 @@ public partial class @CustomPlayerInputs: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @Fire => m_Wrapper.m_Player_Fire;
         /// <summary>
+        /// Provides access to the underlying input action "Player/Dodge".
+        /// </summary>
+        public InputAction @Dodge => m_Wrapper.m_Player_Dodge;
+        /// <summary>
         /// Provides access to the underlying input action "Player/OpenInventory".
         /// </summary>
         public InputAction @OpenInventory => m_Wrapper.m_Player_OpenInventory;
@@ -1344,10 +1491,6 @@ public partial class @CustomPlayerInputs: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/Ability4".
         /// </summary>
         public InputAction @Ability4 => m_Wrapper.m_Player_Ability4;
-        /// <summary>
-        /// Provides access to the underlying input action "Player/Dodge".
-        /// </summary>
-        public InputAction @Dodge => m_Wrapper.m_Player_Dodge;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1383,6 +1526,9 @@ public partial class @CustomPlayerInputs: IInputActionCollection2, IDisposable
             @Fire.started += instance.OnFire;
             @Fire.performed += instance.OnFire;
             @Fire.canceled += instance.OnFire;
+            @Dodge.started += instance.OnDodge;
+            @Dodge.performed += instance.OnDodge;
+            @Dodge.canceled += instance.OnDodge;
             @OpenInventory.started += instance.OnOpenInventory;
             @OpenInventory.performed += instance.OnOpenInventory;
             @OpenInventory.canceled += instance.OnOpenInventory;
@@ -1401,9 +1547,6 @@ public partial class @CustomPlayerInputs: IInputActionCollection2, IDisposable
             @Ability4.started += instance.OnAbility4;
             @Ability4.performed += instance.OnAbility4;
             @Ability4.canceled += instance.OnAbility4;
-            @Dodge.started += instance.OnDodge;
-            @Dodge.performed += instance.OnDodge;
-            @Dodge.canceled += instance.OnDodge;
         }
 
         /// <summary>
@@ -1424,6 +1567,9 @@ public partial class @CustomPlayerInputs: IInputActionCollection2, IDisposable
             @Fire.started -= instance.OnFire;
             @Fire.performed -= instance.OnFire;
             @Fire.canceled -= instance.OnFire;
+            @Dodge.started -= instance.OnDodge;
+            @Dodge.performed -= instance.OnDodge;
+            @Dodge.canceled -= instance.OnDodge;
             @OpenInventory.started -= instance.OnOpenInventory;
             @OpenInventory.performed -= instance.OnOpenInventory;
             @OpenInventory.canceled -= instance.OnOpenInventory;
@@ -1442,9 +1588,6 @@ public partial class @CustomPlayerInputs: IInputActionCollection2, IDisposable
             @Ability4.started -= instance.OnAbility4;
             @Ability4.performed -= instance.OnAbility4;
             @Ability4.canceled -= instance.OnAbility4;
-            @Dodge.started -= instance.OnDodge;
-            @Dodge.performed -= instance.OnDodge;
-            @Dodge.canceled -= instance.OnDodge;
         }
 
         /// <summary>
@@ -1492,6 +1635,8 @@ public partial class @CustomPlayerInputs: IInputActionCollection2, IDisposable
     private readonly InputAction m_UI_RightClick;
     private readonly InputAction m_UI_TrackedDevicePosition;
     private readonly InputAction m_UI_TrackedDeviceOrientation;
+    private readonly InputAction m_UI_TabCycleLeft;
+    private readonly InputAction m_UI_TabCycleRight;
     /// <summary>
     /// Provides access to input actions defined in input action map "UI".
     /// </summary>
@@ -1543,6 +1688,14 @@ public partial class @CustomPlayerInputs: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "UI/TrackedDeviceOrientation".
         /// </summary>
         public InputAction @TrackedDeviceOrientation => m_Wrapper.m_UI_TrackedDeviceOrientation;
+        /// <summary>
+        /// Provides access to the underlying input action "UI/TabCycleLeft".
+        /// </summary>
+        public InputAction @TabCycleLeft => m_Wrapper.m_UI_TabCycleLeft;
+        /// <summary>
+        /// Provides access to the underlying input action "UI/TabCycleRight".
+        /// </summary>
+        public InputAction @TabCycleRight => m_Wrapper.m_UI_TabCycleRight;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1599,6 +1752,12 @@ public partial class @CustomPlayerInputs: IInputActionCollection2, IDisposable
             @TrackedDeviceOrientation.started += instance.OnTrackedDeviceOrientation;
             @TrackedDeviceOrientation.performed += instance.OnTrackedDeviceOrientation;
             @TrackedDeviceOrientation.canceled += instance.OnTrackedDeviceOrientation;
+            @TabCycleLeft.started += instance.OnTabCycleLeft;
+            @TabCycleLeft.performed += instance.OnTabCycleLeft;
+            @TabCycleLeft.canceled += instance.OnTabCycleLeft;
+            @TabCycleRight.started += instance.OnTabCycleRight;
+            @TabCycleRight.performed += instance.OnTabCycleRight;
+            @TabCycleRight.canceled += instance.OnTabCycleRight;
         }
 
         /// <summary>
@@ -1640,6 +1799,12 @@ public partial class @CustomPlayerInputs: IInputActionCollection2, IDisposable
             @TrackedDeviceOrientation.started -= instance.OnTrackedDeviceOrientation;
             @TrackedDeviceOrientation.performed -= instance.OnTrackedDeviceOrientation;
             @TrackedDeviceOrientation.canceled -= instance.OnTrackedDeviceOrientation;
+            @TabCycleLeft.started -= instance.OnTabCycleLeft;
+            @TabCycleLeft.performed -= instance.OnTabCycleLeft;
+            @TabCycleLeft.canceled -= instance.OnTabCycleLeft;
+            @TabCycleRight.started -= instance.OnTabCycleRight;
+            @TabCycleRight.performed -= instance.OnTabCycleRight;
+            @TabCycleRight.canceled -= instance.OnTabCycleRight;
         }
 
         /// <summary>
@@ -1673,198 +1838,6 @@ public partial class @CustomPlayerInputs: IInputActionCollection2, IDisposable
     /// Provides a new <see cref="UIActions" /> instance referencing this action map.
     /// </summary>
     public UIActions @UI => new UIActions(this);
-
-    // Menu
-    private readonly InputActionMap m_Menu;
-    private List<IMenuActions> m_MenuActionsCallbackInterfaces = new List<IMenuActions>();
-    private readonly InputAction m_Menu_RemoveTopUIStack;
-    /// <summary>
-    /// Provides access to input actions defined in input action map "Menu".
-    /// </summary>
-    public struct MenuActions
-    {
-        private @CustomPlayerInputs m_Wrapper;
-
-        /// <summary>
-        /// Construct a new instance of the input action map wrapper class.
-        /// </summary>
-        public MenuActions(@CustomPlayerInputs wrapper) { m_Wrapper = wrapper; }
-        /// <summary>
-        /// Provides access to the underlying input action "Menu/RemoveTopUIStack".
-        /// </summary>
-        public InputAction @RemoveTopUIStack => m_Wrapper.m_Menu_RemoveTopUIStack;
-        /// <summary>
-        /// Provides access to the underlying input action map instance.
-        /// </summary>
-        public InputActionMap Get() { return m_Wrapper.m_Menu; }
-        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
-        public void Enable() { Get().Enable(); }
-        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
-        public void Disable() { Get().Disable(); }
-        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
-        public bool enabled => Get().enabled;
-        /// <summary>
-        /// Implicitly converts an <see ref="MenuActions" /> to an <see ref="InputActionMap" /> instance.
-        /// </summary>
-        public static implicit operator InputActionMap(MenuActions set) { return set.Get(); }
-        /// <summary>
-        /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
-        /// </summary>
-        /// <param name="instance">Callback instance.</param>
-        /// <remarks>
-        /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
-        /// </remarks>
-        /// <seealso cref="MenuActions" />
-        public void AddCallbacks(IMenuActions instance)
-        {
-            if (instance == null || m_Wrapper.m_MenuActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_MenuActionsCallbackInterfaces.Add(instance);
-            @RemoveTopUIStack.started += instance.OnRemoveTopUIStack;
-            @RemoveTopUIStack.performed += instance.OnRemoveTopUIStack;
-            @RemoveTopUIStack.canceled += instance.OnRemoveTopUIStack;
-        }
-
-        /// <summary>
-        /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
-        /// </summary>
-        /// <remarks>
-        /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
-        /// </remarks>
-        /// <seealso cref="MenuActions" />
-        private void UnregisterCallbacks(IMenuActions instance)
-        {
-            @RemoveTopUIStack.started -= instance.OnRemoveTopUIStack;
-            @RemoveTopUIStack.performed -= instance.OnRemoveTopUIStack;
-            @RemoveTopUIStack.canceled -= instance.OnRemoveTopUIStack;
-        }
-
-        /// <summary>
-        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="MenuActions.UnregisterCallbacks(IMenuActions)" />.
-        /// </summary>
-        /// <seealso cref="MenuActions.UnregisterCallbacks(IMenuActions)" />
-        public void RemoveCallbacks(IMenuActions instance)
-        {
-            if (m_Wrapper.m_MenuActionsCallbackInterfaces.Remove(instance))
-                UnregisterCallbacks(instance);
-        }
-
-        /// <summary>
-        /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
-        /// </summary>
-        /// <remarks>
-        /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
-        /// </remarks>
-        /// <seealso cref="MenuActions.AddCallbacks(IMenuActions)" />
-        /// <seealso cref="MenuActions.RemoveCallbacks(IMenuActions)" />
-        /// <seealso cref="MenuActions.UnregisterCallbacks(IMenuActions)" />
-        public void SetCallbacks(IMenuActions instance)
-        {
-            foreach (var item in m_Wrapper.m_MenuActionsCallbackInterfaces)
-                UnregisterCallbacks(item);
-            m_Wrapper.m_MenuActionsCallbackInterfaces.Clear();
-            AddCallbacks(instance);
-        }
-    }
-    /// <summary>
-    /// Provides a new <see cref="MenuActions" /> instance referencing this action map.
-    /// </summary>
-    public MenuActions @Menu => new MenuActions(this);
-
-    // Inventory
-    private readonly InputActionMap m_Inventory;
-    private List<IInventoryActions> m_InventoryActionsCallbackInterfaces = new List<IInventoryActions>();
-    private readonly InputAction m_Inventory_RemoveTopUIStack;
-    /// <summary>
-    /// Provides access to input actions defined in input action map "Inventory".
-    /// </summary>
-    public struct InventoryActions
-    {
-        private @CustomPlayerInputs m_Wrapper;
-
-        /// <summary>
-        /// Construct a new instance of the input action map wrapper class.
-        /// </summary>
-        public InventoryActions(@CustomPlayerInputs wrapper) { m_Wrapper = wrapper; }
-        /// <summary>
-        /// Provides access to the underlying input action "Inventory/RemoveTopUIStack".
-        /// </summary>
-        public InputAction @RemoveTopUIStack => m_Wrapper.m_Inventory_RemoveTopUIStack;
-        /// <summary>
-        /// Provides access to the underlying input action map instance.
-        /// </summary>
-        public InputActionMap Get() { return m_Wrapper.m_Inventory; }
-        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
-        public void Enable() { Get().Enable(); }
-        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
-        public void Disable() { Get().Disable(); }
-        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
-        public bool enabled => Get().enabled;
-        /// <summary>
-        /// Implicitly converts an <see ref="InventoryActions" /> to an <see ref="InputActionMap" /> instance.
-        /// </summary>
-        public static implicit operator InputActionMap(InventoryActions set) { return set.Get(); }
-        /// <summary>
-        /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
-        /// </summary>
-        /// <param name="instance">Callback instance.</param>
-        /// <remarks>
-        /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
-        /// </remarks>
-        /// <seealso cref="InventoryActions" />
-        public void AddCallbacks(IInventoryActions instance)
-        {
-            if (instance == null || m_Wrapper.m_InventoryActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_InventoryActionsCallbackInterfaces.Add(instance);
-            @RemoveTopUIStack.started += instance.OnRemoveTopUIStack;
-            @RemoveTopUIStack.performed += instance.OnRemoveTopUIStack;
-            @RemoveTopUIStack.canceled += instance.OnRemoveTopUIStack;
-        }
-
-        /// <summary>
-        /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
-        /// </summary>
-        /// <remarks>
-        /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
-        /// </remarks>
-        /// <seealso cref="InventoryActions" />
-        private void UnregisterCallbacks(IInventoryActions instance)
-        {
-            @RemoveTopUIStack.started -= instance.OnRemoveTopUIStack;
-            @RemoveTopUIStack.performed -= instance.OnRemoveTopUIStack;
-            @RemoveTopUIStack.canceled -= instance.OnRemoveTopUIStack;
-        }
-
-        /// <summary>
-        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="InventoryActions.UnregisterCallbacks(IInventoryActions)" />.
-        /// </summary>
-        /// <seealso cref="InventoryActions.UnregisterCallbacks(IInventoryActions)" />
-        public void RemoveCallbacks(IInventoryActions instance)
-        {
-            if (m_Wrapper.m_InventoryActionsCallbackInterfaces.Remove(instance))
-                UnregisterCallbacks(instance);
-        }
-
-        /// <summary>
-        /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
-        /// </summary>
-        /// <remarks>
-        /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
-        /// </remarks>
-        /// <seealso cref="InventoryActions.AddCallbacks(IInventoryActions)" />
-        /// <seealso cref="InventoryActions.RemoveCallbacks(IInventoryActions)" />
-        /// <seealso cref="InventoryActions.UnregisterCallbacks(IInventoryActions)" />
-        public void SetCallbacks(IInventoryActions instance)
-        {
-            foreach (var item in m_Wrapper.m_InventoryActionsCallbackInterfaces)
-                UnregisterCallbacks(item);
-            m_Wrapper.m_InventoryActionsCallbackInterfaces.Clear();
-            AddCallbacks(instance);
-        }
-    }
-    /// <summary>
-    /// Provides a new <see cref="InventoryActions" /> instance referencing this action map.
-    /// </summary>
-    public InventoryActions @Inventory => new InventoryActions(this);
     private int m_KeyboardMouseSchemeIndex = -1;
     /// <summary>
     /// Provides access to the input control scheme.
@@ -1959,6 +1932,13 @@ public partial class @CustomPlayerInputs: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnFire(InputAction.CallbackContext context);
         /// <summary>
+        /// Method invoked when associated input action "Dodge" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnDodge(InputAction.CallbackContext context);
+        /// <summary>
         /// Method invoked when associated input action "OpenInventory" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
@@ -2000,13 +1980,6 @@ public partial class @CustomPlayerInputs: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnAbility4(InputAction.CallbackContext context);
-        /// <summary>
-        /// Method invoked when associated input action "Dodge" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnDodge(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.
@@ -2085,35 +2058,19 @@ public partial class @CustomPlayerInputs: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnTrackedDeviceOrientation(InputAction.CallbackContext context);
-    }
-    /// <summary>
-    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Menu" which allows adding and removing callbacks.
-    /// </summary>
-    /// <seealso cref="MenuActions.AddCallbacks(IMenuActions)" />
-    /// <seealso cref="MenuActions.RemoveCallbacks(IMenuActions)" />
-    public interface IMenuActions
-    {
         /// <summary>
-        /// Method invoked when associated input action "RemoveTopUIStack" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "TabCycleLeft" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnRemoveTopUIStack(InputAction.CallbackContext context);
-    }
-    /// <summary>
-    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Inventory" which allows adding and removing callbacks.
-    /// </summary>
-    /// <seealso cref="InventoryActions.AddCallbacks(IInventoryActions)" />
-    /// <seealso cref="InventoryActions.RemoveCallbacks(IInventoryActions)" />
-    public interface IInventoryActions
-    {
+        void OnTabCycleLeft(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "RemoveTopUIStack" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "TabCycleRight" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnRemoveTopUIStack(InputAction.CallbackContext context);
+        void OnTabCycleRight(InputAction.CallbackContext context);
     }
 }

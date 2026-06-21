@@ -6640,6 +6640,10 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6333170659724995054, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: animationStateMap._bindedValues.Array.data[1].StateSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 3d3d2a3c13a17d20abf635e60f52154f, type: 2}
     - target: {fileID: 6671984905160279280, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
       propertyPath: m_LocalPosition.x
       value: -10.73
@@ -6679,6 +6683,22 @@ PrefabInstance:
     - target: {fileID: 6671984905160279280, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6925641497687687494, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: cam
+      value: 
+      objectReference: {fileID: 1294788629}
+    - target: {fileID: 6925641497687687494, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: inputHandler.gamepadCursorSpeed
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 6925641497687687494, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: inputHandler.gamepadReturnDelay
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6925641497687687494, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: inputHandler.gamePadCursorReturnSpeed
+      value: 18.7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -7859,25 +7879,7 @@ MonoBehaviour:
     gameObjectName: SceneServiceLocator
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: AddDef
-  - typeName: EntityInitCaller
-    order: -40
     gameObjectName: EnemyNew
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: Dummy
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: Hpstore
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: AddDef (1)
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: AddSpd
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: Dummy (1)
   - typeName: EntityInitCaller
     order: -40
     gameObjectName: Hpstore (2)
@@ -7886,7 +7888,13 @@ MonoBehaviour:
     gameObjectName: Addhp (1)
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: Addhp (2)
+    gameObjectName: Hpstore
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Dummy
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: PlayerNew
   - typeName: EntityInitCaller
     order: -40
     gameObjectName: AddSpd (1)
@@ -7895,10 +7903,22 @@ MonoBehaviour:
     gameObjectName: Addhp
   - typeName: EntityInitCaller
     order: -40
+    gameObjectName: Dummy (1)
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: AddSpd
+  - typeName: EntityInitCaller
+    order: -40
     gameObjectName: Hpstore (1)
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: PlayerNew
+    gameObjectName: Addhp (2)
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: AddDef (1)
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: AddDef
   - typeName: InGameUIInitCaller
     order: -30
     gameObjectName: UI
@@ -8255,8 +8275,8 @@ MonoBehaviour:
   x: 0.575
   result: 0.6205578
   unityResult: 0.38834375
-  customEvalTime: 0.14
-  unityEvalTime: 0.0713
+  customEvalTime: 0.0006000000000000001
+  unityEvalTime: 0.0008
 --- !u!1001 &1031836800
 PrefabInstance:
   m_ObjectHideFlags: 0
