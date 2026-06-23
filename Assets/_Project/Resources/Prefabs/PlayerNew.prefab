@@ -51,8 +51,8 @@ MonoBehaviour:
   maxFrameDelayBeforeCleanup: 2
   maxRayDistance: 200
   inputHandler:
-    gamepadCursorSpeed: 15
-    gamePadCursorReturnSpeed: 8
+    gamepadCursorSpeed: 30
+    gamePadCursorReturnSpeed: 18.7
     gamepadReturnDelay: 1
 --- !u!1 &277061344693848772
 GameObject:
@@ -412,8 +412,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5f2a7e09a5e7f4dfaad5c673c86dc7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Kope.Core.Runtime::UniqueID
-  guid: 416322f9-5d1e-4260-ad16-5fe0d777ac88
-  absoluteHierarchyPath: -->PlayerNew
+  guid: c0e182bc-8af2-4188-8eb9-a7a90b3fcfa1
+  absoluteHierarchyPath: SampleScene-->PlayerNew
 --- !u!114 &5760765433560478908
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1456,7 +1456,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAttackComponent
   ecr: {fileID: 6037248722059709900}
-  equippedWeapDataSO: {fileID: 0}
+  equippedWeapDataSO: {fileID: 11400000, guid: c7b8eaed1c20bc4fba381123684cbf40, type: 2}
 --- !u!1 &7729364741673237887
 GameObject:
   m_ObjectHideFlags: 0
@@ -1619,7 +1619,7 @@ MonoBehaviour:
         _animationSpeed: 1
         _isLooping: 0
         _normalizedExitTime: 0.95
-      StateSO: {fileID: 0}
+      StateSO: {fileID: 11400000, guid: 3d3d2a3c13a17d20abf635e60f52154f, type: 2}
     - Profile:
         _durationInSeconds: 1.3333
         _animationSpeed: 1

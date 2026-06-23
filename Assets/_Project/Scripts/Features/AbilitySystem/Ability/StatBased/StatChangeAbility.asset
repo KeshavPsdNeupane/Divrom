@@ -32,7 +32,8 @@ MonoBehaviour:
       previewColor: {r: 0.24096651, g: 0.6243429, b: 0.8962264, a: 0.47058824}
       maxTargets: 16
     projectile:
-      projectilePrefab: {fileID: 0}
+      projectilePrefab: {fileID: 8495600968883564274, guid: d2977a74a15034ba7b3162b4b8159c4a, type: 3}
+      projectileLinePreviewPrefab: {fileID: 0}
       projectileSpeed: 18
       projectileLifetime: 2
       spawnOffset: {x: 0, y: 1, z: 0}

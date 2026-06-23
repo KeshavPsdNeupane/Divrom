@@ -3,13 +3,13 @@ using Kope.Component.Combat.Interface;
 using Kope.Core;
 using Kope.Core.ObjectPooling;
 using Kope.Core.ServiceLocator;
-using Unity.VisualScripting;
 using UnityEngine;
-
+using Kope.Core.Mathfx;
 namespace Kope.Component.Ability.Targeting {
 	[Serializable]
 	public sealed class ProjectileTargetingStrategyFactory : ITargetingFactory {
 		[SerializeField] private GameObject projectilePrefab;
+		[SerializeField] private GameObject projectileLinePreviewPrefab;
 		[SerializeField] private float projectileSpeed = 18f;
 		[SerializeField] private float projectileLifetime = 2f;
 		[SerializeField] private Vector3 spawnOffset = new(0f, 1f, 0f);
@@ -19,6 +19,7 @@ namespace Kope.Component.Ability.Targeting {
 		public TargetingStrategy Create() {
 			return new ProjectileTargetingStrategy(
 				this.projectilePrefab,
+				this.projectileLinePreviewPrefab,
 				this.projectileSpeed,
 				this.projectileLifetime,
 				this.spawnOffset,
@@ -50,6 +51,7 @@ namespace Kope.Component.Ability.Targeting {
        requiring a separate management task.
 */
 		private readonly GameObject _projectilePrefab;
+		private readonly GameObject _projectileLinePreviewObject;
 		private readonly float _projectileSpeed;
 		private readonly float _projectileLifetime;
 		private readonly Vector3 _spawnOffset;
@@ -57,15 +59,19 @@ namespace Kope.Component.Ability.Targeting {
 
 		private ObjectPooler _universalPooler;
 
-		public ProjectileTargetingStrategy(GameObject projectilePrefab, float projectileSpeed,
+		public ProjectileTargetingStrategy(GameObject projectilePrefab, GameObject projectileLinePreviewPrefab,
+		float projectileSpeed,
 			float projectileLifetime, Vector3 spawnOffset, int pierceCount) {
 			this._projectilePrefab = projectilePrefab;
 			this._projectileSpeed = projectileSpeed;
 			this._projectileLifetime = projectileLifetime;
 			this._spawnOffset = spawnOffset;
 			this._pierceCount = pierceCount;
+			if (projectileLinePreviewPrefab != null) {
+				this._projectileLinePreviewObject = UnityEngine.Object.Instantiate(projectileLinePreviewPrefab);
+				this._projectileLinePreviewObject.SetActive(false);
+			}
 		}
-
 		public override void Start(TargetingManager targetingManager, TargetContext casterContext, EffectContext effectContext, ITargetingReceiver onTargetResolved) {
 			Begin(targetingManager, casterContext, effectContext, onTargetResolved);
 			// Get the pooler service
@@ -135,29 +141,9 @@ namespace Kope.Component.Ability.Targeting {
 
 		private Vector3 CalculateSpawnPosition(Vector3 position, Vector3 fwd, Vector3 offset, AxisMode dimension) {
 			if (dimension == AxisMode.TwoD) {
-				/*
-                    Using projection the spawn point around the caster rather than using the Trignometic approch
-                    since arcTan2 is expensive and this method is more performant, and the slight inaccuracy 
-                    in spawn position is not noticeable for most cases, and can be adjusted with the offset values if needed.
-                    Formula Derivation:
-                    Let the forward direction be represented as a 2D vector (v.x, v.y) and the desired spawn offset
-                     as (o.x, o.y) where o.x is the perpendicular offset and o.y is the forward offset. The spawn 
-                     position can be calculated as:
-                     "In a sense we are using 2d "cross product" to get the perpendicular offset direction"
-                     spawn.x = position.x + (v.x * o.y) + (v.y * o.x) 
-                     spawn.y = position.y + (v.y * o.y) - (v.x * o.x)
-                     This formula effectively rotates the offset vector by the angle of 
-                     the forward direction and then translates it to the caster's position, giving us 
-                     the correct spawn point around the caster based on the forward direction and the specified offsets.
-                */
-				float offsetX = (fwd.x * offset.y) + (fwd.y * offset.x);
-				float offsetY = (fwd.y * offset.y) - (fwd.x * offset.x);
-				return new Vector3(position.x + offsetX, position.y + offsetY, 0f);
+				return Mathfx.GetRelativePosition2D(position, fwd, offset);
 			}
-
-			Vector3 side = Vector3.Cross(Mathf.Abs(fwd.y) > 0.9f ? Vector3.right : Vector3.up, fwd).normalized;
-			Vector3 up = Vector3.Cross(fwd, side);
-			return position + (fwd * offset.z) + (side * offset.x) + (up * offset.y);
+			return Mathfx.GetRelativePosition3D(position, fwd, offset);
 		}
 	}
 }

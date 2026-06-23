@@ -1058,7 +1058,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAttackComponent
   ecr: {fileID: 4512281911964162701}
-  equippedWeapDataSO: {fileID: 0}
+  equippedWeapDataSO: {fileID: 11400000, guid: c7b8eaed1c20bc4fba381123684cbf40, type: 2}
 --- !u!1 &5645699078238757979
 GameObject:
   m_ObjectHideFlags: 0
