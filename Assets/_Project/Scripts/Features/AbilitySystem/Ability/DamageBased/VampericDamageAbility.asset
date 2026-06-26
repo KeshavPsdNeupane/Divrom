@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ba106e680aad7b82a7f058128a2b964, type: 3}
   m_Name: VampericDamageAbility
   m_EditorClassIdentifier: Assembly-CSharp::DamageAbility
-  abilityName: 
   abilityID: abc73f1787c462740aac08f8b477e347
+  abilityName: 'Damage '
+  abilityIcon: {fileID: 0}
   castSfx: {fileID: 0}
   castVfx: {fileID: 0}
   runningVfx: {fileID: 0}
@@ -33,10 +34,12 @@ MonoBehaviour:
       maxTargets: 16
     projectile:
       projectilePrefab: {fileID: 0}
+      projectileLinePreviewPrefab: {fileID: 0}
       projectileSpeed: 18
       projectileLifetime: 2
       spawnOffset: {x: 0, y: 1, z: 0}
       pierceCount: 0
+  cooldownDuration: 5
   applicableHitTargetType: 0
   damageEffectSettings:
   - selectedType: 2

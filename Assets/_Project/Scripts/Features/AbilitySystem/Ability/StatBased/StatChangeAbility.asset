@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4b1e6135d1de209da51a542aabebb36, type: 3}
   m_Name: StatChangeAbility
   m_EditorClassIdentifier: Assembly-CSharp::StatChangeAbility
-  abilityName: StatChange
   abilityID: bc9a3576add404caa914ef5a9a60fe43
+  abilityName: StatChange
+  abilityIcon: {fileID: 0}
   castSfx: {fileID: 0}
   castVfx: {fileID: 0}
   runningVfx: {fileID: 0}
@@ -22,7 +23,7 @@ MonoBehaviour:
     area:
       includeCaster: 0
       previewPrefab: {fileID: 7065779095218578133, guid: 70e92c67214799c5082ec13689d5b7f1, type: 3}
-      radius: 5
+      radius: 3
       layerMask:
         serializedVersion: 2
         m_Bits: 192
@@ -38,6 +39,7 @@ MonoBehaviour:
       projectileLifetime: 2
       spawnOffset: {x: 0, y: 1, z: 0}
       pierceCount: 0
+  cooldownDuration: 5
   applicableHitTargetType: 0
   statChangeEffectSetting:
   - selectedType: 0

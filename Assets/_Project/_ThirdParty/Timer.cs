@@ -108,33 +108,34 @@ namespace ThirdParty {
 	}
 	/// <summary>
 	/// Timer with out the event callbacks, just a simple countdown timer that can be used for things 
-	/// like stun duration, etc.
+	/// like stun duration or ability cooldowns etc.
 	/// </summary>
 	public class BasicCountDownTimer {
-		private float Time;
+		private float time;
 		private readonly float initialTime;
 		public bool IsRunning { get; private set; }
+		public float Time => this.time;
 		public BasicCountDownTimer(float time) {
 			this.initialTime = time;
-			this.Time = time;
+			this.time = time;
 		}
 		public void Tick(float deltaTime) {
 			if (!this.IsRunning) return;
-			Time -= deltaTime;
-			if (Time <= 0) {
-				Time = 0;
+			time -= deltaTime;
+			if (time <= 0) {
+				time = 0;
 				IsRunning = false;
 			}
 		}
 		public void Start() {
-			Time = initialTime;
+			time = initialTime;
 			IsRunning = true;
 		}
 		public void Reset(float newTime) {
-			this.Time = newTime;
+			this.time = newTime;
 		}
 		public void Stop() => IsRunning = false;
-
+		public void Resume() => IsRunning = true;
 
 	}
 }

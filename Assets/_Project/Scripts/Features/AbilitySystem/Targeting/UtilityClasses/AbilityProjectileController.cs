@@ -1,6 +1,8 @@
 using System;
+using Kope.AbilitySystem;
 using Kope.Component.Combat.Interface;
 using Kope.Core.Sensor;
+using Kope.Core.Types.Extensions;
 using UnityEngine;
 
 namespace Kope.Component.Ability.Targeting {
@@ -22,7 +24,6 @@ namespace Kope.Component.Ability.Targeting {
 		private int _piercesRemaining;
 		private ITargetingReceiver _onTargetResolved;
 		private EffectContext _effectContext;
-		private Rigidbody2D _body;
 		private bool _isInitialized;
 		private bool _hasFinished;
 
@@ -32,8 +33,11 @@ namespace Kope.Component.Ability.Targeting {
 		public event Action<GameObject> OnProjectileRelease;
 
 		public override void OnStart() {
-			this._body = this.projectileRigidbody ?? GetComponent<Rigidbody2D>();
-			if (this._body != null) this._body.gravityScale = 0f;
+			if (this.projectileRigidbody == null) {
+				Debug.LogError($"Projectile Rigidbody is not assigned in {nameof(AbilityProjectileController)}" +
+				$" on {this.gameObject.name}. Please assign a Rigidbody2D component." + this.GetFullHierarchyPath(), this);
+			}
+			if (this.projectileRigidbody != null) this.projectileRigidbody.gravityScale = 0f;
 		}
 
 		public void Initialize(
@@ -50,8 +54,7 @@ namespace Kope.Component.Ability.Targeting {
 			this._hasFinished = false;
 			this._piercesRemaining = pierceCount;
 
-			if (this._body == null) this._body = GetComponent<Rigidbody2D>();
-			this._body.linearVelocity = direction.normalized * speed;
+			this.projectileRigidbody.linearVelocity = direction.normalized * speed;
 
 			this._lifetime = lifetime;
 			this._timer = 0f;
@@ -88,7 +91,9 @@ namespace Kope.Component.Ability.Targeting {
 			if (this._hasFinished) return;
 			this._hasFinished = true;
 			this._timer = 0f;
-			this._body.linearVelocity = Vector2.zero;
+			if (this.projectileRigidbody != null) {
+				this.projectileRigidbody.linearVelocity = Vector2.zero;
+			}
 			this.OnProjectileRelease?.Invoke(this.gameObject);
 		}
 	}

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Kope.AbilitySystem;
 using Kope.Component.HitBox.Interface;
 using UnityEngine;
 namespace Kope.Component.Ability.Targeting {

@@ -13,12 +13,34 @@ MonoBehaviour:
   m_Name: ExampleAbility
   m_EditorClassIdentifier: Assembly-CSharp::ExampleAbility
   abilityID: cde790912a66b29a4831790431f42fa8
+  abilityName: AoeDamage
+  abilityIcon: {fileID: 0}
   castSfx: {fileID: 0}
   castVfx: {fileID: 0}
   runningVfx: {fileID: 0}
+  targetingSettings:
+    selectedType: 0
+    area:
+      includeCaster: 0
+      previewPrefab: {fileID: 0}
+      radius: 5
+      layerMask:
+        serializedVersion: 2
+        m_Bits: 1
+      previewHeightOffset: 0.1
+      dimension: 0
+      minSearchDepth: -1
+      previewColor: {r: 1, g: 0, b: 0, a: 1}
+      maxTargets: 16
+    projectile:
+      projectilePrefab: {fileID: 0}
+      projectileLinePreviewPrefab: {fileID: 0}
+      projectileSpeed: 18
+      projectileLifetime: 2
+      spawnOffset: {x: 0, y: 1, z: 0}
+      pierceCount: 0
+  cooldownDuration: 5
   applicableHitTargetType: 0
-  targetingFactory:
-    rid: 7477298512563011688
   damageEffects: []
   healEffects:
   - rid: 7477298512563011691
@@ -27,26 +49,27 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 7477298512563011688
-      type: {class: SelfTargetingStrategy, ns: Kope.Component.Ability.Targeting, asm: Assembly-CSharp}
-      data: 
     - rid: 7477298512563011691
       type: {class: HealOverTimeEffectFactory, ns: Kope.AbilitySystem.Effect, asm: Assembly-CSharp}
       data:
         BaseData:
-          healPerInterval: 0
-          duration: 0
-          tickInterval: 0.1
-        LevelScaling:
-        - abilityUsedThreshold: 0
-          healPerInterval: 0
-          duration: 0
-          tickInterval: 0
-        - abilityUsedThreshold: 0
-          healPerInterval: 0
-          duration: 0
-          tickInterval: 0
-        - abilityUsedThreshold: 0
-          healPerInterval: 0
-          duration: 0
-          tickInterval: 0
+          FlathealPerInterval: 0
+          PercentHealPerInterval: 0
+          Duration: 0
+          DickInterval: 0
+        nextLevelScaling:
+        - AbilityUsedThreshold: 0
+          FlathealPerInterval: 0
+          PercentHealPerInterval: 0
+          Duration: 0
+          TickInterval: 0
+        - AbilityUsedThreshold: 0
+          FlathealPerInterval: 0
+          PercentHealPerInterval: 0
+          Duration: 0
+          TickInterval: 0
+        - AbilityUsedThreshold: 0
+          FlathealPerInterval: 0
+          PercentHealPerInterval: 0
+          Duration: 0
+          TickInterval: 0

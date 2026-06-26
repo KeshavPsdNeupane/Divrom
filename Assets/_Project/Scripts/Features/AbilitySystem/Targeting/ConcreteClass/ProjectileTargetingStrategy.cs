@@ -1,5 +1,6 @@
 using System;
 using Kope.Component.Combat.Interface;
+using Kope.AbilitySystem;
 using Kope.Core;
 using Kope.Core.ObjectPooling;
 using Kope.Core.ServiceLocator;
@@ -78,12 +79,22 @@ namespace Kope.Component.Ability.Targeting {
 			if (this._universalPooler == null) {
 				GlobalServiceLocator.Instance.TryGetService(out this._universalPooler);
 			}
+			// this line thingy is optinal so we don't need to throw an error if it's not assigned.
+			if (this._projectileLinePreviewObject != null) {
+				this._projectileLinePreviewObject.SetActive(true);
+			}
 
 			if (this._projectilePrefab == null || this.targetingManager == null) {
 				FinishTheStrategy();
 			}
 		}
 
+		public override void FinishTheStrategy(bool canClearOnTargetResolved = true) {
+			if (this._projectileLinePreviewObject != null) {
+				this._projectileLinePreviewObject.SetActive(false);
+			}
+			base.FinishTheStrategy(canClearOnTargetResolved);
+		}
 
 		protected override bool ExecuteResolution(Vector3 clickPoint) {
 			// this is a special case for the projectile strategy, where we want to use

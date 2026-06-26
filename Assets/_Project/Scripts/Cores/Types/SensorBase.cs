@@ -23,6 +23,8 @@ namespace Kope.Core.Sensor {
 		///  Call this on either Awake or Start or 
 		/// any initialization point before the sensor starts detecting. 
 		/// It sets up the collider and other necessary configurations for the sensor to function properly.
+		/// The awake method is not used there because the sensor might get awoke before the parent object 
+		/// is fully initialized, which could lead to issues if the sensor relies on the parent object's state.
 		/// </summary>
 		protected void Start() {
 			this._parentGOHiearchPathMessage = this.GetFullHierarchyPath();

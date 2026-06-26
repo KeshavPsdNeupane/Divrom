@@ -87,7 +87,7 @@ namespace Kope.AbilitySystem.Effect {
 			this.modifier = modifier;
 		}
 		public void Apply(IStatSystem target) {
-			Debug.Log($"Applying resistance stat modifier to {target}: {this.modifier}");
+			//Debug.Log($"Applying resistance stat modifier to {target}: {this.modifier}");
 			target.AddResistanceModifier(modifier);
 
 		}

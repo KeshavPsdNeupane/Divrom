@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Kope.AbilitySystem;
 using Kope.Component.Combat.Interface;
 using Kope.Component.HitBox.Interface;
 using Kope.Core;
@@ -93,13 +94,13 @@ namespace Kope.Component.Ability.Targeting {
 
 			// Rent preview instead of Instantiate
 			if (this._previewPrefab == null || this._universalPooler == null) return;
-			var go = this._universalPooler.Rent(this._previewPrefab);
-			this._previewInstance = go;
-			if (!go.TryGetComponent(out this._previewController)) {
+			var gameObject = this._universalPooler.Rent(this._previewPrefab);
+			this._previewInstance = gameObject;
+			if (!gameObject.TryGetComponent(out this._previewController)) {
 				Debug.LogError("AreaTargetingStrategy: Preview prefab does not have" +
 				" an AbilityAreaTargetingController component.", this._previewPrefab);
 				// Return it immediately if it doesn't have the expected component
-				this._universalPooler.Release(this._previewPrefab, go);
+				this._universalPooler.Release(this._previewPrefab, gameObject);
 				this._previewInstance = null;
 				this._previewController = null;
 				return;
@@ -111,7 +112,7 @@ namespace Kope.Component.Ability.Targeting {
 				startPoint = this.CasterPosition;
 			}
 			this.currentPoint = startPoint;
-			go.SetActive(true);
+			gameObject.SetActive(true);
 
 			this._previewController.Initialize(
 				startPoint,
@@ -129,7 +130,6 @@ namespace Kope.Component.Ability.Targeting {
 		}
 
 		public override void FinishTheStrategy(bool clearOnTargetResolved = true) {
-			base.FinishTheStrategy(clearOnTargetResolved);
 			if (this._previewController != null && this._universalPooler != null) {
 				this._previewInstance.SetActive(false);
 				this._universalPooler.Release(this._previewPrefab, this._previewInstance);
@@ -140,6 +140,7 @@ namespace Kope.Component.Ability.Targeting {
 			this._previewInstance = null;
 			this._previewController = null;
 			ClearBuffers();
+			base.FinishTheStrategy(clearOnTargetResolved);
 		}
 
 		protected override bool ExecuteResolution(Vector3 clickPoint) {

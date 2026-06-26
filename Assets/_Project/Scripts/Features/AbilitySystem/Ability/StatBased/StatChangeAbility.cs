@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Kope.AbilitySystem;
 using Kope.Character.Stats;
 using Kope.Component.Combat.Interface;
 using Kope.Component.HitBox.Interface;
@@ -12,7 +13,7 @@ public class StatChangeAbility : AbilityBase {
 	[SerializeField] private List<StatChangeEffectSetting> statChangeEffectSetting;
 	private List<IEffectFactory<IStatSystem>> _cachedStatChangeEffects = new();
 
-	protected override void Enable() {
+	public override void Initialize() {
 		this._cachedStatChangeEffects = this.statChangeEffectSetting?.AsValueEnumerable()
 			.Select((s, i) => {
 				var factory = s.GetFactory();
@@ -22,8 +23,8 @@ public class StatChangeAbility : AbilityBase {
 			})
 			.Where(f => f != null)
 			.ToList() ?? new();
-
 	}
+
 
 	public override void Execute(TargetContext target, EffectContext context) {
 		if (target.HitBox == null || context.Caster == null) return;

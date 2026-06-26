@@ -88,7 +88,7 @@ namespace Kope.AbilitySystem.Effect {
 			this.modifier = modifier;
 		}
 		public void Apply(IStatSystem target) {
-			Debug.Log($"Applying stat modifier {modifier} to target {target}");
+			//Debug.Log($"Applying stat modifier {modifier} to target {target}");
 			target.AddStatModifier(modifier);
 
 		}

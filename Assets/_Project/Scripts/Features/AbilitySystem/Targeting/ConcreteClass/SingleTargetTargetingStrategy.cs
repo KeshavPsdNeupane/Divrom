@@ -1,5 +1,6 @@
 // SingleTargetTargetingStrategy.cs
 using System;
+using Kope.AbilitySystem;
 using Kope.Component.Combat.Interface;
 using UnityEngine;
 

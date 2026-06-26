@@ -1,4 +1,5 @@
 using System;
+using Kope.AbilitySystem;
 using Kope.Component.Combat.Interface;
 using UnityEngine;
 
@@ -28,12 +29,14 @@ namespace Kope.Component.Ability.Targeting {
 			EffectContext effectContext,
 			ITargetingReceiver onTargetResolved);
 
+
+
 		public virtual void Update() { }
 
-		public virtual void FinishTheStrategy(bool clearOnTargetResolved = true) {
+		public virtual void FinishTheStrategy(bool canClearOnTargetResolved = true) {
 			if (!this._isTargeting) return;
 			this._isTargeting = false;
-			if (clearOnTargetResolved) {
+			if (canClearOnTargetResolved) {
 				this._onTargetResolved = null;
 			}
 			var manager = this.targetingManager;

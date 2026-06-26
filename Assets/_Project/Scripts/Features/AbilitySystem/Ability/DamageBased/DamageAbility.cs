@@ -4,6 +4,7 @@ using Kope.AbilitySystem.Effect.Settings;
 using Kope.Component.Combat.Interface;
 using Kope.Component.HitBox.Interface;
 using UnityEngine;
+using Kope.AbilitySystem;
 
 [CreateAssetMenu(menuName = "Scriptable Objects/Abilities/Damage Ability", fileName = "DamageAbility")]
 public class DamageAbility : AbilityBase {
@@ -13,7 +14,7 @@ public class DamageAbility : AbilityBase {
 	// the class itself is cached by the DynamicSelection, but since it's a list we need to cache
 	// each element in the list to avoid using reflection every time we execute the ability
 	private List<IEffectFactory<IDamagable>> _cachedEffectFactories = new();
-	protected override void Enable() {
+	public override void Initialize() {
 		this._cachedEffectFactories = this.damageEffectSettings?.AsValueEnumerable()
 			.Select((s, i) => {
 				var factory = s.GetFactory();

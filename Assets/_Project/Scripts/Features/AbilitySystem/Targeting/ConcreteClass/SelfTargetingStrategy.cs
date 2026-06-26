@@ -1,5 +1,6 @@
 // SelfTargetingStrategy.cs
 using System;
+using Kope.AbilitySystem;
 using Kope.Component.Combat.Interface;
 using UnityEngine;
 
@@ -11,6 +12,7 @@ namespace Kope.Component.Ability.Targeting {
 
 	[Serializable]
 	public sealed class SelfTargetingStrategy : TargetingStrategy {
+
 
 		public override void Start(
 			TargetingManager targetingManager,
@@ -28,6 +30,7 @@ namespace Kope.Component.Ability.Targeting {
 			// it is still a valid target for self-targeting abilities (e.g. self-buffs).
 			FinishTheStrategy();
 		}
+
 		protected override bool ExecuteResolution(Vector3 clickPoint) {
 			// self Targeting doesn't use clickPoint for resolution, so we can ignore it here.
 			// we call the ResolveSingleTarget directly in Start method using the caster context, 

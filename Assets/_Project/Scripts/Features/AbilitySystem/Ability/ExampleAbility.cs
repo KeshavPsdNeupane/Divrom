@@ -1,5 +1,6 @@
 // ExampleAbility.cs
 using System.Collections.Generic;
+using Kope.AbilitySystem;
 using Kope.Component.Combat.Interface;
 using Kope.Component.Health.Interface;
 using Kope.Component.HitBox.Interface;
@@ -20,6 +21,23 @@ public class ExampleAbility : AbilityBase {
 	[SerializeReference, SubclassSelector]
 	private List<IEffectFactory<IKnockbackable>> knockEffects = new();
 
+	public override void Initialize() {
+		// Use below as example to cache the effect factories from the serialized settings, if needed.
+
+		// this._cachedHealEffects = this.healEffectSetting?.AsValueEnumerable()
+		// 			.Select((s, i) => {
+		// 				var factory = s.GetFactory();
+		// 				if (factory == null)
+		// 					// 1000% not possible of being null since the whole drawer fall back to very first option if 
+		// 					// the selected one is null, but just in case to avoid null reference exception later on
+		// 					//  when executing the ability, we log a warning here.
+		// 					Debug.LogWarning($"[HealAbility] Index {i} returned null factory on '{this.name}'.", this);
+		// 				return factory;
+		// 			})
+		// 			.Where(f => f != null)
+		// 			.ToList() ?? new();
+
+	}
 
 	public override void Execute(TargetContext target, EffectContext context) {
 		if (target.HitBox == null || context.Caster == null) return;

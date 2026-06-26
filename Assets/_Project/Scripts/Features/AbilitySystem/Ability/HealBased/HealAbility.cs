@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Kope.AbilitySystem;
 using Kope.AbilitySystem.Effect.Settings;
 using Kope.Component.Combat.Interface;
 using Kope.Component.Health.Interface;
@@ -12,7 +13,7 @@ public class HealAbility : AbilityBase {
 	[SerializeField] private List<HealEffectSetting> healEffectSetting;
 	private List<IEffectFactory<IHealable>> _cachedHealEffects = new();
 
-	protected override void Enable() {
+	public override void Initialize() {
 		this._cachedHealEffects = this.healEffectSetting?.AsValueEnumerable()
 			.Select((s, i) => {
 				var factory = s.GetFactory();
@@ -25,7 +26,6 @@ public class HealAbility : AbilityBase {
 			})
 			.Where(f => f != null)
 			.ToList() ?? new();
-
 	}
 
 	public override void Execute(TargetContext target, EffectContext context) {
@@ -40,4 +40,5 @@ public class HealAbility : AbilityBase {
 		var hitbox = target.HitBox;
 		hitbox.HitHealable(context, target.HitBox.CombatType, this._cachedHealEffects);
 	}
+
 }

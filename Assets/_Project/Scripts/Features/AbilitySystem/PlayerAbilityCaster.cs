@@ -11,6 +11,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Kope.Component.HitBox.Interface;
 using Kope.Component.Movement;
+using Kope.AbilitySystem;
 
 namespace Kope.Component.Ability {
 
@@ -21,7 +22,7 @@ namespace Kope.Component.Ability {
 		[SerializeField] private AbilityBase[] abilityScriptableObjects = Array.Empty<AbilityBase>();
 		[SerializeField] private EntityComponentsRegistry ecr;
 
-		private readonly List<AbilityBase> _hotbar = new();
+		private readonly List<AbilityRuntime> _hotbar = new();
 		private readonly List<Action<InputAction.CallbackContext>> _inputCallbacks = new();
 
 		private int _selectedSlotIndex = -1;
@@ -81,6 +82,12 @@ namespace Kope.Component.Ability {
 			}
 		}
 
+		protected override void OnUpdate() {
+			foreach (var ability in this._hotbar) {
+				ability?.TickCooldowns(Time.deltaTime);
+			}
+		}
+
 		private void InitializeHotbar() {
 			this._hotbar.Clear();
 			int count = Mathf.Min(this.abilityCount, this.abilityScriptableObjects.Length);
@@ -90,8 +97,7 @@ namespace Kope.Component.Ability {
 					this._hotbar.Add(null);
 					continue;
 				}
-				var instance = Instantiate(abilityScriptableObjects[i]);
-				instance.InjectAbilityUsedCount(0);
+				AbilityRuntime instance = new(this.abilityScriptableObjects[i], 0);
 				this._hotbar.Add(instance);
 			}
 		}
@@ -106,13 +112,13 @@ namespace Kope.Component.Ability {
 
 				this._inputManager.Subscribe(new InputActionSubscriptionLifetime<PlayerInputActionKey>(
 					PlayerInputActionCollection.Player,
-					PlayerInputActionKey.Ability1 + i,
+					PlayerInputActionKey.Ability1 + index,
 					callback)
 				);
 			}
 
 			// Listen for the manager to signal that targeting has ended (Fire, Dodge, or Auto-Finish)
-			this._targetingManager.OnTargetingCleanupRequested += this.ClearSelectionAndUnlockInput;
+			this._targetingManager.OnTargetingCleanupRequested += ClearSelectionAndUnlockInput;
 			this._isSubscribed = true;
 		}
 
@@ -134,12 +140,9 @@ namespace Kope.Component.Ability {
 			this._isSubscribed = false;
 		}
 
+
 		private void OnAbilityKeyPressed(int index, InputAction.CallbackContext context) {
 			if (!context.performed) return;
-
-			// If already targeting a different ability, ignore new input
-			if (this._targetingManager.IsTargeting && this._selectedSlotIndex != index) return;
-
 			HandleAbilityActivation(index);
 		}
 
@@ -149,28 +152,36 @@ namespace Kope.Component.Ability {
 		public void HandleAbilityActivation(int index) {
 			if (index < 0 || index >= this._hotbar.Count) return;
 
-			// If re-pressing the same active ability, we do nothing (Dodge is for cancelling)
 			if (this._selectedSlotIndex == index && this._targetingManager.IsTargeting) return;
 
+			if (this._selectedSlotIndex != index &&
+				this._selectedSlotIndex >= 0 &&
+				this._selectedSlotIndex < this._hotbar.Count) {
+				this._hotbar[this._selectedSlotIndex]?.Cancel();
+			}
+
 			var ability = this._hotbar[index];
+
 			if (ability == null) {
 				ClearSelectionAndUnlockInput();
 				return;
 			}
 
-			// Lock basic attacks and mark selection
+			if (!ability.CanCast) {
+				ClearSelectionAndUnlockInput();
+				return;
+			}
+
 			this._attackLock.SetEventLock(true);
 			this._selectedSlotIndex = index;
 
-			// Execute ability cast
-			ability.Cast(this._targetingManager, this._casterContext, this._masterEffectContext);
+			ability.Cast(
+				this._targetingManager,
+				this._casterContext,
+				this._masterEffectContext
+			);
 
-			// If the ability finished instantly (e.g. Self-Cast), clean up immediately.
-			// Otherwise, we stay locked until TargetingManager triggers OnTargetingCleanupRequested.
-			// here instant cast abilities are those that don't require any additional input after pressing the key,
-			// so if the manager is not in targeting mode after casting, we can assume the ability resolved immediately
-			// and we can clean up right away.
-			if (!this._targetingManager.IsTargeting || ability.IsInstantCast) {
+			if (ability.IsInstantCast || !this._targetingManager.IsTargeting) {
 				ClearSelectionAndUnlockInput();
 			}
 		}
@@ -181,7 +192,75 @@ namespace Kope.Component.Ability {
 		}
 
 		protected override void OnShutdown() => UnsubscribeEvents();
-		private void OnEnable() { if (IsInitialized) SubscribeEvents(); }
-		private void OnDisable() { if (IsInitialized) UnsubscribeEvents(); }
+		private void OnEnable() { if (this.IsInitialized) SubscribeEvents(); }
+		private void OnDisable() { if (this.IsInitialized) UnsubscribeEvents(); }
+
+		private GUIStyle _cooldownStyle;
+
+		private void DrawAbilityBox(Rect rect, string text) {
+			this._cooldownStyle ??= new GUIStyle(GUI.skin.box) {
+				alignment = TextAnchor.MiddleCenter,
+				fontStyle = FontStyle.Bold,
+				wordWrap = false
+			};
+
+			// Start with a size based on the box height.
+			int maxFontSize = Mathf.RoundToInt(rect.height * 0.45f);
+			this._cooldownStyle.fontSize = maxFontSize;
+
+			// Measure text width at the maximum size.
+			float textWidth = this._cooldownStyle
+				.CalcSize(new GUIContent(text))
+				.x;
+
+			float availableWidth = rect.width - 10f;
+
+			// Scale font size down if the text is too wide.
+			float widthScale = textWidth > 0f
+				? availableWidth / textWidth
+				: 1f;
+
+			int finalFontSize = Mathf.FloorToInt(
+				maxFontSize * Mathf.Min(widthScale, 1f)
+			);
+
+			this._cooldownStyle.fontSize = Mathf.Clamp(
+				finalFontSize,
+				8,
+				maxFontSize
+			);
+
+			GUI.Box(rect, text, this._cooldownStyle);
+		}
+
+		private void OnGUI() {
+			const float width = 500f;
+			const float rowHeight = 60f;
+			const float padding = 10f;
+
+			float x = Screen.width - width - padding;
+			float y = Screen.height - padding - (this._hotbar.Count * rowHeight);
+
+			for (int i = 0; i < this._hotbar.Count; i++) {
+				var ability = this._hotbar[i];
+
+				if (ability == null)
+					continue;
+
+				string text = !ability.CanCast
+					? $"[{i + 1}] {ability.Config.AbilityName} : CD, {ability.CooldownRemaining:F1}s"
+					: $"[{i + 1}] {ability.Config.AbilityName} : Ready";
+
+				DrawAbilityBox(
+					new Rect(
+						x,
+						y + (i * rowHeight),
+						width,
+						rowHeight
+					),
+					text
+				);
+			}
+		}
 	}
 }
