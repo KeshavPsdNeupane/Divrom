@@ -11,6 +11,7 @@ namespace Kope.Component.Ability.Targeting {
 		[Header("Detection Settings")]
 		[SerializeField] private Camera cam;
 		[SerializeField] private LayerMask groundLayerMask = -1;
+
 		[SerializeField, Range(1, 10)] private int maxFrameDelayBeforeCleanup = 2;
 		[SerializeField, Range(10f, 1000f), Tooltip("The maximum distance for raycasting during targeting."
 		+ "Only for 3D targeting. Ignored for 2D targeting.")]
@@ -25,7 +26,7 @@ namespace Kope.Component.Ability.Targeting {
 
 		// Events
 		public event Action OnTargetingCleanupRequested;
-
+		public TargetingInputHandler InputHandler => this.inputHandler;
 		public bool IsTargeting => this._currentStrategy != null && this._currentStrategy.IsTargeting;
 		public Camera Camera => cam;
 
@@ -43,14 +44,15 @@ namespace Kope.Component.Ability.Targeting {
 			return true;
 		}
 
+		public Vector3 GetAimGroundPoint(Vector3 casterPosition, float maxTargetingDistance, bool isSnapping = false) {
+			return this.inputHandler.GetAimGroundPoint(casterPosition, this.cam,
+			this.groundLayerMask, this.maxRayDistance, maxTargetingDistance, isSnapping);
+		}
+
+
 		private void HandleConfirmInput(InputAction.CallbackContext context) {
 			if (!context.performed || this._currentStrategy == null) return;
-
-			if (TryGetAimGroundPoint(this._currentStrategy.CasterPosition, out var groundPoint)) {
-				this._currentStrategy.ProcessInput(groundPoint);
-			} else {
-				CancelTargeting();
-			}
+			this._currentStrategy.ProcessInput();
 
 			/* * ARCHITECTURAL DECISION: FRAME-BASED DEFERRAL
              * We avoid using Coroutines here to prevent unnecessary heap allocations (IEnumerator garbage) 
@@ -94,71 +96,8 @@ namespace Kope.Component.Ability.Targeting {
 			this._currentStrategy = null;
 			this.inputHandler.ResetSession(false);
 		}
-		public bool TryGetAimGroundPoint(Vector3 casterPosition, out Vector3 point) {
-			point = Vector3.zero;
 
-			// =================================================================================
-			// DETECTED GAMEPAD CONTROLLER EXECUTION BRANCH
-			// =================================================================================
-			if (this.inputHandler.IsUsingGamepad) {
-				Vector3 aimOffset = this.inputHandler.GamepadAimOffset;
 
-				if (this._axisMode == AxisMode.TwoD) {
-					point = casterPosition + aimOffset;
-					point.z = 0f;
-					return true;
-				} else {
-					Vector3 presidentialOffset = casterPosition + aimOffset;
-
-					Vector3 rayOrigin = presidentialOffset + Vector3.up * 10f;
-
-					if (Physics.Raycast(
-						rayOrigin,
-						Vector3.down,
-						out RaycastHit groundHit,
-						this.maxRayDistance,
-						this.groundLayerMask)) {
-						point = groundHit.point;
-						return true;
-					}
-
-					point = presidentialOffset;
-					return true;
-				}
-			}
-
-			// =================================================================================
-			// STANDARD MOUSE AND KEYBOARD MAPPING EXECUTION BRANCH
-			// =================================================================================
-			Vector2 mousePos = this.inputHandler.LastLookInputPosition;
-
-			if (this._axisMode == AxisMode.TwoD) {
-				float distanceToPlane = Mathf.Abs(cam.transform.position.z);
-
-				Vector3 mouseWithDepth = new(
-					mousePos.x,
-					mousePos.y,
-					distanceToPlane);
-
-				point = cam.ScreenToWorldPoint(mouseWithDepth);
-				point.z = 0f;
-
-				return true;
-			}
-
-			Ray ray = cam.ScreenPointToRay(mousePos);
-
-			if (Physics.Raycast(
-				ray,
-				out RaycastHit hit,
-				maxRayDistance,
-				this.groundLayerMask)) {
-				point = hit.point;
-				return true;
-			}
-
-			return false;
-		}
 		private void OnEnable() => this.inputHandler.SubscribeInput();
 		private void OnDisable() { this.inputHandler.UnsubscribeInput(); CancelTargeting(); }
 		protected override void OnShutdown() { base.OnShutdown(); OnDisable(); }

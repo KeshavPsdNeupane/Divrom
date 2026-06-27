@@ -11,16 +11,16 @@ namespace Kope.Component.Ability.Targeting {
 		private Collider2D[] _results;
 
 		public AreaTargetingStrategy2D(bool includeCaster, GameObject previewPrefab,
-			float radius, LayerMask layerMask, float previewHeightOffset,
+			float radius, float maxRayDistance, LayerMask layerMask, float previewHeightOffset,
 			int maxTargets, int minSearchDepth, Color previewColor)
-			: base(includeCaster, previewPrefab, radius, layerMask, previewHeightOffset, maxTargets, previewColor) {
+			: base(includeCaster, previewPrefab, radius, maxRayDistance, layerMask, previewHeightOffset, maxTargets, previewColor) {
 			this._minSearchDepth = minSearchDepth;
 			this._results = new Collider2D[maxTargets];
 		}
 
 		protected override void UpdatePreviewPosition(AbilityAreaTargetingController controller) {
 			controller.UpdatePosition(
-				new Vector3(this.currentPoint.x, this.currentPoint.y, -0.1f),
+				new Vector3(this.currentAOECirclePoint.x, this.currentAOECirclePoint.y, -0.1f),
 				Quaternion.identity);
 		}
 

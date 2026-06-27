@@ -220,7 +220,7 @@ namespace Kope.Core.Type.EnumAsset.EditorTools {
 					EditorGUILayout.BeginHorizontal();
 					GUILayout.Space(10);
 
-					var obj = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(path);
+					var obj = AssetDatabase.LoadAssetAtPath<Object>(path);
 					if (obj != null) {
 						GUIContent content = EditorGUIUtility.ObjectContent(obj, obj.GetType());
 						if (GUILayout.Button(content, EditorStyles.label, GUILayout.Height(18))) {

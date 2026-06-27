@@ -14,13 +14,13 @@ namespace Kope.Component.Ability.Targeting {
 	public sealed class SelfTargetingStrategy : TargetingStrategy {
 
 
-		public override void Start(
+		public override void Cast(
 			TargetingManager targetingManager,
 			TargetContext casterContext,
 			EffectContext effectContext,
 			ITargetingReceiver onTargetResolved) {
 
-			Begin(targetingManager, casterContext, effectContext, onTargetResolved, false);
+			Initialize(targetingManager, casterContext, effectContext, onTargetResolved, false);
 
 			if (this.casterContext.HitBox != null) {
 				ResolveSingleTarget(this.casterContext);
@@ -31,7 +31,7 @@ namespace Kope.Component.Ability.Targeting {
 			FinishTheStrategy();
 		}
 
-		protected override bool ExecuteResolution(Vector3 clickPoint) {
+		protected override bool ExecuteResolution() {
 			// self Targeting doesn't use clickPoint for resolution, so we can ignore it here.
 			// we call the ResolveSingleTarget directly in Start method using the caster context, 
 			// so we don't need to do anything here for self targeting.

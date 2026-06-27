@@ -54,6 +54,7 @@ MonoBehaviour:
     gamepadCursorSpeed: 30
     gamePadCursorReturnSpeed: 18.7
     gamepadReturnDelay: 1
+    gamepadSnappyHoldDuration: 1
 --- !u!1 &277061344693848772
 GameObject:
   m_ObjectHideFlags: 0

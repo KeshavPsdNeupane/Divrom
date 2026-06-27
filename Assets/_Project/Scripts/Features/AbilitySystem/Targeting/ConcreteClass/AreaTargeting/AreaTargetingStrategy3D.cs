@@ -11,15 +11,15 @@ namespace Kope.Component.Ability.Targeting {
 		private static readonly Quaternion PERPENDICULAR_DIRECTION = Quaternion.Euler(90f, 0f, 0f);
 
 		public AreaTargetingStrategy3D(bool includeCaster, GameObject previewPrefab,
-			float radius, LayerMask layerMask, float previewHeightOffset, int maxTargets)
-			: base(includeCaster, previewPrefab, radius, layerMask, previewHeightOffset, maxTargets, Color.red) {
+			float radius, float maxRayDistance, LayerMask layerMask, float previewHeightOffset, int maxTargets, Color previewColor)
+			: base(includeCaster, previewPrefab, radius, maxRayDistance, layerMask, previewHeightOffset, maxTargets, previewColor) {
 			this._results = new Collider[maxTargets];
 			this._results = new Collider[maxTargets];
 		}
 
 		protected override void UpdatePreviewPosition(AbilityAreaTargetingController controller) {
 			controller.UpdatePosition(
-				this.currentPoint + Vector3.up * this._previewHeightOffset,
+				this.currentAOECirclePoint + Vector3.up * this._previewHeightOffset,
 				PERPENDICULAR_DIRECTION);
 		}
 

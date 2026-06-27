@@ -9,11 +9,14 @@ using Kope.Core.Mathfx;
 namespace Kope.Component.Ability.Targeting {
 	[Serializable]
 	public sealed class ProjectileTargetingStrategyFactory : ITargetingFactory {
+		[Header("Projectile Settings")]
 		[SerializeField] private GameObject projectilePrefab;
 		[SerializeField] private GameObject projectileLinePreviewPrefab;
 		[SerializeField] private float projectileSpeed = 18f;
 		[SerializeField] private float projectileLifetime = 2f;
+		[SerializeField] float projectileRange = 5f;
 		[SerializeField] private Vector3 spawnOffset = new(0f, 1f, 0f);
+
 		[SerializeField, Tooltip("Number of enemies the projectile can pierce through.")]
 		private int pierceCount = 0;
 
@@ -24,7 +27,8 @@ namespace Kope.Component.Ability.Targeting {
 				this.projectileSpeed,
 				this.projectileLifetime,
 				this.spawnOffset,
-				this.pierceCount
+				this.pierceCount,
+				this.projectileRange
 			);
 		}
 	}
@@ -53,35 +57,49 @@ namespace Kope.Component.Ability.Targeting {
 */
 		private readonly GameObject _projectilePrefab;
 		private readonly GameObject _projectileLinePreviewObject;
+		private readonly ProjectileLineController _projectileLineController;
 		private readonly float _projectileSpeed;
 		private readonly float _projectileLifetime;
+		private readonly float _projectileRange;
 		private readonly Vector3 _spawnOffset;
 		private readonly int _pierceCount;
-
 		private ObjectPooler _universalPooler;
 
 		public ProjectileTargetingStrategy(GameObject projectilePrefab, GameObject projectileLinePreviewPrefab,
 		float projectileSpeed,
-			float projectileLifetime, Vector3 spawnOffset, int pierceCount) {
+			float projectileLifetime, Vector3 spawnOffset, int pierceCount, float projectileRange) {
 			this._projectilePrefab = projectilePrefab;
 			this._projectileSpeed = projectileSpeed;
 			this._projectileLifetime = projectileLifetime;
 			this._spawnOffset = spawnOffset;
 			this._pierceCount = pierceCount;
+			this._projectileRange = projectileRange;
+			// for now i am instantiating this later i will use pooling for this as well, 
+			// but for now i want to see if it works first.
 			if (projectileLinePreviewPrefab != null) {
 				this._projectileLinePreviewObject = UnityEngine.Object.Instantiate(projectileLinePreviewPrefab);
 				this._projectileLinePreviewObject.SetActive(false);
+				// i am not using my ecr because not all gameobject will be valid entity on the world,
+				// so for this case the class is a utility class not a fully fledged component, so i
+				// will just use the component directly.
+				if (this._projectileLinePreviewObject.TryGetComponent<ProjectileLineController>(out var controller)) {
+					this._projectileLineController = controller;
+				}
 			}
 		}
-		public override void Start(TargetingManager targetingManager, TargetContext casterContext, EffectContext effectContext, ITargetingReceiver onTargetResolved) {
-			Begin(targetingManager, casterContext, effectContext, onTargetResolved);
+		public override void Cast(TargetingManager targetingManager, TargetContext casterContext, EffectContext effectContext, ITargetingReceiver onTargetResolved) {
+			Initialize(targetingManager, casterContext, effectContext, onTargetResolved);
 			// Get the pooler service
 			if (this._universalPooler == null) {
 				GlobalServiceLocator.Instance.TryGetService(out this._universalPooler);
 			}
 			// this line thingy is optinal so we don't need to throw an error if it's not assigned.
-			if (this._projectileLinePreviewObject != null) {
-				this._projectileLinePreviewObject.SetActive(true);
+			if (this._projectileLineController != null) {
+				this._projectileLineController.gameObject.SetActive(true);
+				this._projectileLineController.SetLinePositions(
+					this.CasterPosition,
+					this.targetingManager.GetAimGroundPoint(this.CasterPosition, this._projectileRange, true)
+				);
 			}
 
 			if (this._projectilePrefab == null || this.targetingManager == null) {
@@ -89,22 +107,31 @@ namespace Kope.Component.Ability.Targeting {
 			}
 		}
 
+		public override void Update() {
+			if (!this._isTargeting) return;
+			if (this._projectileLineController != null) {
+				this._projectileLineController.SetLinePositions(
+					this.CasterPosition,
+					GetValidTargetPoint(this.CasterPosition)
+				);
+			}
+		}
+
+
+
 		public override void FinishTheStrategy(bool canClearOnTargetResolved = true) {
-			if (this._projectileLinePreviewObject != null) {
-				this._projectileLinePreviewObject.SetActive(false);
+			if (this._projectileLineController != null) {
+				this._projectileLineController.gameObject.SetActive(false);
 			}
 			base.FinishTheStrategy(canClearOnTargetResolved);
 		}
 
-		protected override bool ExecuteResolution(Vector3 clickPoint) {
+		protected override bool ExecuteResolution() {
 			// this is a special case for the projectile strategy, where we want to use
 			Vector3 origin = this.casterContext.HitBox.Transform.position;
 
-			if (clickPoint == this.CasterPosition) {
-				Debug.Log($"Caster and click point are the same. Using fallback targeting for ProjectileTargetingStrategy." +
-				$"casterPosition: {this.CasterPosition}, clickPoint: {clickPoint}");
-				clickPoint = FindFallBackTargetPosition(origin, this.effectContext.CasterMovement.GetLookingAtDirection());
-			}
+
+			Vector3 clickPoint = GetValidTargetPoint(origin);
 			Vector3 direction = GetDirectionToClickPoint(clickPoint, origin);
 
 			var rotation = CalculateSpawnRotation(direction, this.effectContext.Dimension);
@@ -124,11 +151,7 @@ namespace Kope.Component.Ability.Targeting {
 			}
 			return true;
 		}
-		private Vector3 FindFallBackTargetPosition(Vector3 origin, Vector3 lookingDirection) {
-			var fallback = origin + lookingDirection.normalized * 5f;
-			if (this.effectContext.Dimension == AxisMode.TwoD) fallback.z = 0f;
-			return fallback;
-		}
+
 
 		private void CleanupProjectile(GameObject obj) {
 			if (this._universalPooler != null) {
@@ -155,6 +178,25 @@ namespace Kope.Component.Ability.Targeting {
 				return Mathfx.GetRelativePosition2D(position, fwd, offset);
 			}
 			return Mathfx.GetRelativePosition3D(position, fwd, offset);
+		}
+
+		private Vector3 GetValidTargetPoint(Vector3 origin) {
+			Vector3 aimPoint = this.targetingManager.GetAimGroundPoint(origin, this._projectileRange, true);
+			Vector3 direction = aimPoint - origin;
+
+			// Fallback when aim point is effectively the same as origin
+			// this only runs for mouse aiming, because controller aiming will always have a direction.
+			if (direction.sqrMagnitude < Mathfx.SQUARE_DIRECTION_UPPER_EPSILON)
+				direction = this.effectContext.CasterMovement.GetLookingAtDirection();
+
+			return origin + FlattenAndNormalize(direction) * this._projectileRange;
+		}
+
+		private Vector3 FlattenAndNormalize(Vector3 direction) {
+			if (this.effectContext.Dimension == AxisMode.TwoD)
+				direction.z = 0f;
+
+			return direction.normalized;
 		}
 	}
 }

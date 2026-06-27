@@ -160,7 +160,7 @@ namespace Kope.AbilitySystem {
 			effectContext.AbilityUsedCount = this._abilityUsedCount++;
 			Config.PlayCastSfx(position);
 			Config.SpawnCastVfx(position);
-			this._currentTargetingStrategy.Start(
+			this._currentTargetingStrategy.Cast(
 				targetingManager,
 				casterContext,
 				effectContext,

@@ -14,14 +14,14 @@ namespace Kope.Component.Ability.Targeting {
 	public sealed class AreaTargetingStrategyFactory : ITargetingFactory {
 		[SerializeField] private bool includeCaster = false;
 		[SerializeField] private GameObject previewPrefab;
-		[SerializeField, Min(0.001f)] private float radius = 5f;
+		[SerializeField, Range(0.1f, 50f)] private float radius = 5f;
+		[SerializeField, Range(0.1f, 100f)] private float maxTargetingDistance = 20f;
 		[SerializeField] private LayerMask layerMask = 1;
-
 		[SerializeField] private float previewHeightOffset = 0.1f;
 		[SerializeField] private AxisMode dimension = AxisMode.TwoD;
 
 		[Header("2D Only Settings")]
-		[SerializeField, Min(-10), Tooltip("Minimum search depth for overlap checks. Only for 2D physics. Ignored for 3D physics.")]
+		[SerializeField, Range(-10, 0), Tooltip("Minimum search depth for overlap checks. Only for 2D physics. Ignored for 3D physics.")]
 		private int minSearchDepth = -1;
 		[SerializeField, Tooltip("Color of the area preview." +
 		"Just for testing purposes, will be removed or replaced with a more robust visual system later." +
@@ -30,14 +30,15 @@ namespace Kope.Component.Ability.Targeting {
 		[Header("Shared Settings")]
 		[SerializeField, Range(1, 64)] private int maxTargets = 16;
 
+
 		public TargetingStrategy Create() {
 			if (this.dimension == AxisMode.TwoD)
 				return new AreaTargetingStrategy2D(this.includeCaster, this.previewPrefab,
-					this.radius, this.layerMask, this.previewHeightOffset,
+					this.radius, this.maxTargetingDistance, this.layerMask, this.previewHeightOffset,
 					this.maxTargets, this.minSearchDepth, this.previewColor);
 
 			return new AreaTargetingStrategy3D(this.includeCaster, this.previewPrefab,
-				this.radius, this.layerMask, this.previewHeightOffset, this.maxTargets);
+				this.radius, this.maxTargetingDistance, this.layerMask, this.previewHeightOffset, this.maxTargets, this.previewColor);
 		}
 	}
 
@@ -58,6 +59,8 @@ namespace Kope.Component.Ability.Targeting {
 		protected readonly bool _includeCaster;
 		protected readonly GameObject _previewPrefab;
 		protected readonly float _radius;
+		protected readonly float _maxTargetingDistance;
+		protected readonly float _squaredMaxTargetingDistance;
 		protected readonly LayerMask _layerMask;
 		protected readonly float _previewHeightOffset;
 		protected readonly int _maxTargets;
@@ -65,27 +68,28 @@ namespace Kope.Component.Ability.Targeting {
 		private GameObject _previewInstance;
 		private AbilityAreaTargetingController _previewController;
 		private ObjectPooler _universalPooler; // Use the service instead of manual management
-
-		protected Vector3 currentPoint;
+		protected Vector3 currentAOECirclePoint;
 
 		protected AreaTargetingStrategy(bool includeCaster, GameObject previewPrefab,
-			float radius, LayerMask layerMask, float previewHeightOffset, int maxTargets, Color previewColor) {
+			float radius, float maxRayDistance, LayerMask layerMask, float previewHeightOffset, int maxTargets, Color previewColor) {
 			this._includeCaster = includeCaster;
 			this._previewPrefab = previewPrefab;
 			this._radius = radius;
+			this._maxTargetingDistance = maxRayDistance;
+			this._squaredMaxTargetingDistance = this._maxTargetingDistance * this._maxTargetingDistance;
 			this._layerMask = layerMask;
 			this._previewHeightOffset = previewHeightOffset;
 			this._maxTargets = maxTargets;
 			this._previewColor = previewColor;
 		}
 
-		public override void Start(
+		public override void Cast(
 			TargetingManager targetingManager,
 			TargetContext casterContext,
 			EffectContext effectContext,
 			ITargetingReceiver onTargetResolved) {
 
-			Begin(targetingManager, casterContext, effectContext, onTargetResolved);
+			Initialize(targetingManager, casterContext, effectContext, onTargetResolved);
 
 			// Get the pooler service
 			if (_universalPooler == null) {
@@ -105,17 +109,11 @@ namespace Kope.Component.Ability.Targeting {
 				this._previewController = null;
 				return;
 			}
-
-			if (!this.targetingManager.TryGetAimGroundPoint(
-				this.CasterPosition,
-				out Vector3 startPoint)) {
-				startPoint = this.CasterPosition;
-			}
-			this.currentPoint = startPoint;
+			this.currentAOECirclePoint = GetValidPointOnGround(this.CasterPosition);
 			gameObject.SetActive(true);
 
 			this._previewController.Initialize(
-				startPoint,
+				this.currentAOECirclePoint,
 				this._radius,
 				this._previewColor);
 
@@ -124,7 +122,8 @@ namespace Kope.Component.Ability.Targeting {
 
 		public override void Update() {
 			if (!this._isTargeting || this.targetingManager == null) return;
-			if (!this.targetingManager.TryGetAimGroundPoint(this.CasterPosition, out this.currentPoint)) return;
+			// is being used on child classes to update the preview position based on the current mouse position
+			this.currentAOECirclePoint = GetValidPointOnGround(this.CasterPosition);
 			if (this._previewController != null)
 				UpdatePreviewPosition(this._previewController);
 		}
@@ -133,7 +132,6 @@ namespace Kope.Component.Ability.Targeting {
 			if (this._previewController != null && this._universalPooler != null) {
 				this._previewInstance.SetActive(false);
 				this._universalPooler.Release(this._previewPrefab, this._previewInstance);
-
 			} else if (this._previewInstance != null) {
 				UnityEngine.Object.Destroy(this._previewInstance);
 			}
@@ -143,10 +141,10 @@ namespace Kope.Component.Ability.Targeting {
 			base.FinishTheStrategy(clearOnTargetResolved);
 		}
 
-		protected override bool ExecuteResolution(Vector3 clickPoint) {
-			var targets = GetTargetsInArea(clickPoint);
+		protected override bool ExecuteResolution() {
+			var targets = GetTargetsInArea(this.currentAOECirclePoint);
 			if (targets.Length > 0)
-				ResolveGroupOfTargets(targets, clickPoint);
+				ResolveGroupOfTargets(targets, this.currentAOECirclePoint);
 			return true;
 		}
 
@@ -161,5 +159,15 @@ namespace Kope.Component.Ability.Targeting {
 		protected abstract void UpdatePreviewPosition(AbilityAreaTargetingController controller);
 		protected abstract TargetContext[] GetTargetsInArea(Vector3 point);
 		protected abstract void ClearBuffers();
+
+		private Vector3 GetValidPointOnGround(Vector3 origin) {
+			Vector3 point = this.targetingManager.GetAimGroundPoint(origin, this._maxTargetingDistance);
+			Vector3 toPoint = point - origin;
+			if (toPoint.sqrMagnitude >= this._squaredMaxTargetingDistance) {
+				point = origin + toPoint.normalized * this._maxTargetingDistance;
+			}
+
+			return point;
+		}
 	}
 }

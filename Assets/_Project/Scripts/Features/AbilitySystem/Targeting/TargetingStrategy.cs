@@ -23,7 +23,7 @@ namespace Kope.Component.Ability.Targeting {
 		protected Vector3 Direction => this.casterContext.HitBox.Transform.TransformDirection(Vector3.forward);
 		public bool IsTargeting => this._isTargeting;
 
-		public abstract void Start(
+		public abstract void Cast(
 			TargetingManager targetingManager,
 			TargetContext casterContext,
 			EffectContext effectContext,
@@ -45,12 +45,12 @@ namespace Kope.Component.Ability.Targeting {
 		}
 
 		/// <summary>
-		/// Must be called on Start Method of the dervived class to properly initialize the
+		/// Must be called on Cast Method of the dervived class to properly initialize the
 		/// strategy and set it in the manager.
 		/// setStrategyInManager is provided for self targeting strategies that don't need to be
 		///  registered with the manager for target resolution.
 		/// </summary>
-		protected void Begin(
+		protected void Initialize(
 		TargetingManager targetingManager,
 		TargetContext casterContext,
 		EffectContext effectContext,
@@ -58,25 +58,25 @@ namespace Kope.Component.Ability.Targeting {
 		// this is so that self targeting strategies can choose to not
 		// set themselves in the manager, since they won't be using the manager 
 		// for target resolution and thus don't need to be registered with it.
-		bool setStraegyInManager = true
+		bool setStrategyInManager = true
 		) {
 			this.targetingManager = targetingManager;
 			this.casterContext = casterContext;
 			this.effectContext = effectContext;
 			this._onTargetResolved = onTargetResolved;
 			this._isTargeting = true;
-			if (setStraegyInManager && this.targetingManager != null) {
+			if (setStrategyInManager && this.targetingManager != null) {
 				this.targetingManager.SetCurrentStrategy(this);
 			}
 		}
 
 
-		public void ProcessInput(Vector3 clickPoint) {
+		public void ProcessInput() {
 			if (!this._isTargeting) return;
 			// ExecuteResolution returns false if the callback must stay alive past this call
 			// (e.g. projectile strategies defer resolution until hit or expiry).
 			// FinishTheStrategy is always called here so derived classes can't leave the strategy lingering.
-			bool shouldClearCallback = ExecuteResolution(clickPoint);
+			bool shouldClearCallback = ExecuteResolution();
 			FinishTheStrategy(shouldClearCallback);
 		}
 
@@ -90,7 +90,7 @@ namespace Kope.Component.Ability.Targeting {
 		/// asynchronously (e.g. <see cref="ProjectileTargetingStrategy"/>, which fires the callback on hit or expiry).
 		/// </returns>
 		/// <param name="clickPoint">World-space position provided by the TargetingManager.</param>
-		protected abstract bool ExecuteResolution(Vector3 clickPoint);
+		protected abstract bool ExecuteResolution();
 
 
 		protected virtual void ResolveSingleTarget(TargetContext target, Vector3? hitPoint = null) {

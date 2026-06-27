@@ -20,12 +20,12 @@ namespace Kope.Component.Ability.Targeting {
 			};
 		}
 
-		public override void Start(
+		public override void Cast(
 			TargetingManager targetingManager,
 			TargetContext casterContext,
 			EffectContext effectContext,
 			ITargetingReceiver onTargetResolved) {
-			Begin(targetingManager, casterContext, effectContext, onTargetResolved);
+			Initialize(targetingManager, casterContext, effectContext, onTargetResolved);
 
 			if (this.previewPrefab != null && this.targetingManager != null) {
 				// providing the caster position as the initial position for the preview instance
@@ -48,9 +48,8 @@ namespace Kope.Component.Ability.Targeting {
 
 		public override void Update() {
 			if (!this._isTargeting || this.previewInstance == null || this.targetingManager == null) return;
-			if (!this.targetingManager.TryGetAimGroundPoint(this.CasterPosition, out var point)) return;
-
-			this.previewInstance.transform.position = point + Vector3.up * this.previewHeightOffset;
+			// var point = this.targetingManager.GetAimGroundPoint(this.CasterPosition, this._maxTargetingDistance);
+			// this.previewInstance.transform.position = point + Vector3.up * this.previewHeightOffset;
 		}
 
 		public override void FinishTheStrategy(bool clearOnTargetResolved = true) {
@@ -72,7 +71,7 @@ namespace Kope.Component.Ability.Targeting {
 			base.FinishTheStrategy();
 		}
 
-		protected override bool ExecuteResolution(Vector3 clickPoint) {
+		protected override bool ExecuteResolution() {
 			// no op for now.
 			// but later this stragity will manage resolutution of target by using mouse click position.
 			// by itself.

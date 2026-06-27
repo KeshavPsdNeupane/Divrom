@@ -2,8 +2,11 @@ using UnityEngine;
 
 namespace Kope.Core.Mathfx {
 	public static class Mathfx {
-		const float DIRECTION_LOWER_EPSILON = 0.0001f;
-		const float DIRECTION_UPPER_EPSILON = 0.1f;
+		public const float DIRECTION_LOWER_EPSILON = 0.0001f;
+		public const float DIRECTION_UPPER_EPSILON = 0.1f;
+		public const float SQUARE_DIRECTION_LOWER_EPSILON = DIRECTION_LOWER_EPSILON * DIRECTION_LOWER_EPSILON;
+		public const float SQUARE_DIRECTION_UPPER_EPSILON = DIRECTION_UPPER_EPSILON * DIRECTION_UPPER_EPSILON;
+
 
 		/// <summary>
 		/// Projects a local 2D offset vector into world space by constructing a coordinate basis from a forward vector.
