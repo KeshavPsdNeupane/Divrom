@@ -102,6 +102,7 @@
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/TargetingSettings.cs" />
     <Compile Include="Assets/_Project/Scripts/UI/UIState/UIState.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/ConcreteClass/SingleTargetTargetingStrategy.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/UtilityClasses/ProjectileLineContrller.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/StatBased/StatChangeEffectSetting.cs" />
   </ItemGroup>
   <ItemGroup>
