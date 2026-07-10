@@ -553,10 +553,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffd0ac4ef1ba07c7fa439d5abd24b190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInitCaller
+  canSelfServe: 1
   initializables:
   - {fileID: 4512281911964162701}
   - {fileID: 1814066906529279447}
-  canCallInAwake: 1
   autoPopulate: 0
   includeChildren: 1
   traversal: 0

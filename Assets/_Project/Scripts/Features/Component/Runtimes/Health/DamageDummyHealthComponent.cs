@@ -1,8 +1,9 @@
 using Kope.Component.Health.Interface;
+using Kope.Core.LifeTimeManagement;
 using UnityEngine;
 
 namespace Kope.Component.Health {
-	public class DamageDummyHealthComponent : HealthComponentBase {
+	public class DamageDummyHealthComponent : HealthComponentBase, IUpdatable {
 		[SerializeField, Range(0f, 1f), Tooltip("The ratio at which healing starts," +
 		"Put 0 to disable healing")]
 		private float healingStartRatio = 0.5f;
@@ -18,8 +19,7 @@ namespace Kope.Component.Health {
 			}
 		}
 
-		protected override void OnUpdate() {
-			base.OnUpdate();
+		public void OnUpdate() {
 			if (this.remainingHealDelayFrames > 0) {
 				this.remainingHealDelayFrames--;
 				if (this.remainingHealDelayFrames == 0) {

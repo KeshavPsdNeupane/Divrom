@@ -9,7 +9,7 @@ using Kope.Actor.New;
 
 namespace Kope.AI {
 
-	public class AIBrain : InitializableBase {
+	public class AIBrain : InitializableBase, IUpdatable, IFixedUpdatable {
 		#region Inspector Fields
 		[SerializeField] private EntityComponentsRegistry ecr;
 		[SerializeField, Tooltip("The AI brain algorithm that defines the decision-making logic.")]
@@ -79,8 +79,7 @@ namespace Kope.AI {
 				interrupter.OnInterruptRequested -= HandleInterruptSignal;
 		}
 
-		protected override void OnUpdate() {
-			base.OnUpdate();
+		public void OnUpdate() {
 			if (!IsBrainValid()) return;
 
 			UpdateInternalTimers();
@@ -96,8 +95,7 @@ namespace Kope.AI {
 
 		}
 
-		protected override void OnFixedUpdate() {
-			base.OnFixedUpdate();
+		public void OnFixedUpdate() {
 			if (!IsBrainValid()) return;
 			if (!this._entityStateManagement.CanStateAcceptExternalCommand) return;
 

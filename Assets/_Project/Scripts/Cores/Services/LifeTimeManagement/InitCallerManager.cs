@@ -4,17 +4,22 @@ using ZLinq;
 using Kope.Core.Execution;
 
 namespace Kope.Core.LifeTimeManagement {
-	/// <summary>
-	/// Simple manager that only calls Init()/Shutdown() on listed IInitializable components.
-	/// No DI, no injection — just lifecycle ordering by the `initializables` list.
-	/// </summary>
+	public abstract class LifecycleManagerBase : InitializableBase {
+		[Header("Manager Update Settings")]
+		[Tooltip("If true, this manager hooks directly into Unity's Awake/Update/FixedUpdate loops. " +
+				 "Set to false if a parent manager is driving this manager instead.")]
+		[SerializeField] protected bool canSelfServe = true;
+	}
 
+	/// <summary>
+	/// Prefab-level manager that handles explicit initialization ordering 
+	/// and manages direct centralized update loops for registered scoped components.
+	/// </summary>
 	[CustomExecutionOrder(-30)]
-	public class InitLifecycleManager : InitializableBaseNew {
+	public class LifecycleManager : LifecycleManagerBase, IUpdatable, IFixedUpdatable {
+		[Header("Lifecycle Target Configuration")]
 		[Tooltip("Order matters: earlier items initialize first.")]
 		public List<InitializableBase> initializables = new();
-		[Tooltip("If true, Init() is called in Awake(). Otherwise, Init() must be called manually.")]
-		[SerializeField] private bool canCallInAwake = true;
 
 		[Tooltip("If true, auto-populate `initializables` from this GameObject (and optionally children) before Init runs.")]
 		[SerializeField] private bool autoPopulate = false;
@@ -36,52 +41,127 @@ namespace Kope.Core.LifeTimeManagement {
 		private readonly List<IFixedUpdatable> _fixedUpdatables = new();
 
 		protected virtual void Awake() {
-			if (this.canCallInAwake) {
+			if (this.canSelfServe) {
 				Init();
+				// check after the init to make sure all components are initialized, if not log a warning
+				CheckInit();
+				Debug.Log($"[{this.name}] InitLifecycleManager Awake completed. " +
+				$"InitCount: {_initializable.Count}, UpdateCount: {_updatables.Count}," +
+				$" FixedUpdateCount: {_fixedUpdatables.Count}", this);
+			}
+		}
+
+		protected virtual void Update() {
+			if (this.canSelfServe) {
+				OnUpdate();
+			}
+		}
+
+		protected virtual void FixedUpdate() {
+			if (this.canSelfServe) {
+				OnFixedUpdate();
+			}
+		}
+
+		/// <summary>
+		/// Centralized frame update loop. Executes pure interface iterations.
+		/// Can be called directly by parent managers if this instance is nested.
+		/// </summary>
+		public void OnUpdate() {
+			if (!this.IsInitialized) return;
+			int count = _updatables.Count;
+			for (int i = 0; i < count; i++) {
+				this._updatables[i].OnUpdate();
+
+			}
+		}
+
+		/// <summary>
+		/// Centralized fixed frame update loop. Executes pure interface iterations.
+		/// Can be called directly by parent managers if this instance is nested.
+		/// </summary>
+		public void OnFixedUpdate() {
+			if (!this.IsInitialized) return;
+			int count = _fixedUpdatables.Count;
+			for (int i = 0; i < count; i++) {
+				_fixedUpdatables[i].OnFixedUpdate();
 			}
 		}
 
 		protected override bool OnInit() {
-
 			try {
 				if (this.autoPopulate)
 					PopulateInitializables();
 
 				this._initializable.Clear();
+				this._updatables.Clear();
+				this._fixedUpdatables.Clear();
+
+				// Phase 1: Filter and extract distinct implementations (Flattening Containers)
 				foreach (var mono in this.initializables) {
 					if (mono == null) continue;
-					if (mono is IInitializable initable) {
-						if (initable.IsInitialized) {
-							Debug.LogWarning($"{mono.name} is already initialized " +
-							" and will be skipped by InitCallerManager.");
-							continue;
-						}
-						if (!this._initializable.Contains(initable)) {
-							this._initializable.Add(initable);
-							if (initable is IUpdatable updatable && !this._updatables.Contains(updatable)) {
-								this._updatables.Add(updatable);
-							}
-							if (initable is IFixedUpdatable fixedUpdatable && !this._fixedUpdatables.Contains(fixedUpdatable)) {
-								this._fixedUpdatables.Add(fixedUpdatable);
-							}
-						}
 
-					} else {
-						Debug.LogWarning($"{mono.name} does not implement IInitializable and will be skipped by InitCallerManager.");
-					}
+					// Direct Registration Pass
+					ProcessAndRegisterInitializable(mono);
 				}
 
-				// Call Init in order
+				// Phase 2: Sequence initialization across the full flattened topology
 				foreach (var item in this._initializable) {
-					try { item.Init(); } catch (System.Exception ex) {
-						Debug.LogError($"InitCallerManager: " +
-					   $"Exception in Init of {item.GetType().Name}: {ex}");
+					try {
+						if (item == null || item.IsInitialized) continue;
+						item.Init();
+						// Cache update targets ONLY if the component initialized successfully
+						if (item.IsInitialized) {
+							if (item is IUpdatable updatable) this._updatables.Add(updatable);
+							if (item is IFixedUpdatable fixedUpdatable) this._fixedUpdatables.Add(fixedUpdatable);
+
+						} else {
+							Debug.LogWarning($"[{item.GetType().Name}] failed to initialize properly and will be completely excluded from update loops.", (MonoBehaviour)item);
+						}
+					} catch (System.Exception ex) {
+						Debug.LogError($"InitLifecycleManager: Exception in Init of {item.GetType().Name}: {ex}");
 					}
 				}
+
 				return true;
 			} catch (System.Exception ex) {
-				Debug.LogError($"InitCallerManager: Exception during OnInit: {ex}" + GetParentGameObjectHeirarchyMessage());
+				Debug.LogError($"InitLifecycleManager: Exception during OnInit: {ex}" + GetParentGameObjectHeirarchyMessage());
 				return false;
+			}
+		}
+
+
+		public override void CheckInit() {
+			base.CheckInit();
+			foreach (var item in this._initializable) {
+				item.CheckInit();
+			}
+		}
+
+		/// <summary>
+		/// Registers components to the internal execution sequence. Unpacks sub-components if target is a container.
+		/// </summary>
+		private void ProcessAndRegisterInitializable(InitializableBase target) {
+			if (target is IInitializable initable) {
+				if (initable.IsInitialized) {
+					Debug.LogWarning($"{target.name} is already initialized and will be skipped by InitLifecycleManager.");
+					return;
+				}
+
+				// If it is a container (like ECR), we process the container itself first so it can register dependencies internally
+				if (!this._initializable.Contains(initable)) {
+					this._initializable.Add(initable);
+				}
+
+				// Dig out nested elements to register them to the central initialization tracking loop
+				if (target is IInitializableContainer container) {
+					foreach (var subComp in container.GetNestedComponents()) {
+						if (subComp == null) continue;
+						ProcessAndRegisterInitializable(subComp);
+					}
+				}
+			} else {
+				Debug.LogWarning($"{target.name} does not implement IInitializable and will be skipped by InitLifecycleManager.");
 			}
 		}
 
@@ -91,7 +171,6 @@ namespace Kope.Core.LifeTimeManagement {
 				? GetComponentsInChildren<InitializableBase>(false)
 				: GetComponents<InitializableBase>();
 
-			// Exclude this manager if present
 			var list = found.AsValueEnumerable().Where(c => c != this).ToList();
 			IEnumerable<InitializableBase> orderedList = this.traversal switch {
 				TraversalMode.ChildrenFirst => list.AsValueEnumerable().OrderByDescending(m =>
@@ -102,49 +181,13 @@ namespace Kope.Core.LifeTimeManagement {
 			};
 
 			this.initializables.Clear();
-			foreach (var mb in orderedList.AsValueEnumerable().OfType<InitializableBase>())
+			foreach (var mb in orderedList)
 				this.initializables.Add(mb);
 		}
 
 		[ContextMenu("Debug: Print Init Tree")]
 		public void DebugInitTree() {
-			// for not this is commented until the migration to the new InitializableBaseNew is complete and tested.
-
-			// var sb = new System.Text.StringBuilder();
-			// sb.AppendLine($"=== Init Tree: {this.gameObject.name} ===");
-			// sb.AppendLine($"CanCallInAwake: {this.canCallInAwake}");
-			// sb.AppendLine($"Initializables ({this.initializables.Count}):");
-
-			// for (int i = 0; i < this.initializables.Count; i++) {
-			// 	var item = this.initializables[i];
-			// 	if (item == null) {
-			// 		sb.AppendLine($"  [{i}] <null>");
-			// 		continue;
-			// 	}
-
-			// 	var isManager = item is InitLifecycleManager;
-			// 	string marker = isManager ? " [Manager]" : "";
-
-			// 	sb.AppendLine($"  [{i}] {item.GetType().Name} ({item.gameObject.name}){marker}");
-
-			// 	// If it's a nested manager, show its children indented
-			// 	if (isManager) {
-			// 		var nestedManager = (InitLifecycleManager)item;
-			// 		for (int j = 0; j < nestedManager.initializables.Count; j++) {
-			// 			var child = nestedManager.initializables[j];
-			// 			if (child == null) {
-			// 				sb.AppendLine($"      [{j}] <null>");
-			// 			} else {
-			// 				var isNestedManager = child is InitLifecycleManager;
-			// 				string nestedMarker = isNestedManager ? " [Manager]" : "";
-			// 				sb.AppendLine($"      [{j}] {child.GetType().Name} ({child.gameObject.name}){nestedMarker}");
-			// 			}
-			// 		}
-			// 	}
-			// }
-
-			// sb.AppendLine("===================");
-			// Debug.Log(sb.ToString());
+			// Uncomment when needed for testing tree rendering
 		}
 
 		private int GetDepth(Transform t, Transform root) {

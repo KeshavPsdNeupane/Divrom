@@ -52,7 +52,7 @@ MonoBehaviour:
   maxRayDistance: 200
   inputHandler:
     gamepadCursorSpeed: 30
-    gamePadCursorReturnSpeed: 18.7
+    gamePadCursorReturnSpeed: 19
     gamepadReturnDelay: 1
     gamepadSnappyHoldDuration: 1
 --- !u!1 &277061344693848772
@@ -542,10 +542,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffd0ac4ef1ba07c7fa439d5abd24b190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInitCaller
+  canSelfServe: 1
   initializables:
   - {fileID: 6037248722059709900}
   - {fileID: 8698070850850616}
-  canCallInAwake: 1
   autoPopulate: 0
   includeChildren: 1
   traversal: 0
@@ -633,18 +633,18 @@ MonoBehaviour:
   hasBehavioralComponents: 1
   config: {fileID: 11400000, guid: fcace0391532e5648a86e8f603e94c7d, type: 2}
   components:
-  - {fileID: 2725148965693703880}
   - {fileID: 5294357042670943928}
-  - {fileID: 3968986674516492649}
+  - {fileID: 2725148965693703880}
   - {fileID: 7100714284575033797}
   - {fileID: 9026187348811339868}
   - {fileID: 2247624721500832756}
-  - {fileID: 6333170659724995054}
-  - {fileID: 9138969578043445410}
+  - {fileID: 3968986674516492649}
   - {fileID: 8812889818776451400}
   - {fileID: 8635207160018288245}
+  - {fileID: 9138969578043445410}
   - {fileID: 6925641497687687494}
   - {fileID: 682615762668415778}
+  - {fileID: 6333170659724995054}
 --- !u!1 &3459510466178328050
 GameObject:
   m_ObjectHideFlags: 0
@@ -1779,7 +1779,7 @@ PrefabInstance:
     - target: {fileID: 1231242336225600998, guid: a3a8a13a5b0e837f2a16f09baf3d90a6, type: 3}
       propertyPath: m_SpriteLibraryAsset
       value: 
-      objectReference: {fileID: 7108339969198208228, guid: 7897cb99a9b8140e2a897c88ed64356d, type: 3}
+      objectReference: {fileID: 7108339969198208228, guid: d901f766c89fe0ad399e44518578b054, type: 3}
     - target: {fileID: 1290175588638742880, guid: a3a8a13a5b0e837f2a16f09baf3d90a6, type: 3}
       propertyPath: m_labelHash
       value: 3.0155645e-28
@@ -1839,7 +1839,11 @@ PrefabInstance:
     - target: {fileID: 2604759032030204665, guid: a3a8a13a5b0e837f2a16f09baf3d90a6, type: 3}
       propertyPath: 'equipmentAssets.Array.data[3]'
       value: 
-      objectReference: {fileID: 11400000, guid: 8d66d6282804a7979bbcb657489179e2, type: 2}
+      objectReference: {fileID: 11400000, guid: 079c04d92642502a7b7ecfc03b2d6ccb, type: 2}
+    - target: {fileID: 2604759032030204665, guid: a3a8a13a5b0e837f2a16f09baf3d90a6, type: 3}
+      propertyPath: 'equipmentAssets.Array.data[4]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 45c8845ff170547eb8fa626438ac8d9c, type: 2}
     - target: {fileID: 2604759032030204665, guid: a3a8a13a5b0e837f2a16f09baf3d90a6, type: 3}
       propertyPath: baseCharacterAssets.Array.size
       value: 6
@@ -2015,7 +2019,7 @@ PrefabInstance:
     - target: {fileID: 8852435113303930320, guid: a3a8a13a5b0e837f2a16f09baf3d90a6, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -2127780029, guid: 4f1e5b8ba06cbda55a694c1b1025d1a7, type: 3}
+      objectReference: {fileID: -790277199, guid: eee16013a3485ad6b82894bb1bca1310, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

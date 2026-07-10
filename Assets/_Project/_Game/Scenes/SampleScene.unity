@@ -221,6 +221,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Dummy
       objectReference: {fileID: 0}
+    - target: {fileID: 4513367037071607233, guid: bc31b0eecd7304ebb99aa3410d7cc3bc, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4519181188214712366, guid: bc31b0eecd7304ebb99aa3410d7cc3bc, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -836,10 +840,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffd0ac4ef1ba07c7fa439d5abd24b190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EntityInitCaller
+  canSelfServe: 1
   initializables:
   - {fileID: 155803195}
   - {fileID: 155803196}
-  canCallInAwake: 1
   autoPopulate: 0
   includeChildren: 1
   traversal: 0
@@ -6763,14 +6767,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1118928791644788329, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: -790277199, guid: eee16013a3485ad6b82894bb1bca1310, type: 3}
-    - target: {fileID: 1118928791644788329, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
-      propertyPath: m_WasSpriteAssigned
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 2033154260760698069, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
       propertyPath: m_Name
       value: PlayerNew
@@ -6783,34 +6779,6 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4203578172416337362, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: -1976043293, guid: e57d0019a56699c93bb6ff3a7e1e7da1, type: 3}
-    - target: {fileID: 4628812339733595628, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 77017084, guid: e4cf14472c3524a74b3f281b897a88b1, type: 3}
-    - target: {fileID: 4871272455601320476, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: -659143660, guid: 369a417af5b27b2d9afb5719b7c1fae0, type: 3}
-    - target: {fileID: 5870696730323562816, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
-      propertyPath: equipmentAssets.Array.size
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5870696730323562816, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
-      propertyPath: 'equipmentAssets.Array.data[3]'
-      value: 
-      objectReference: {fileID: 11400000, guid: 079c04d92642502a7b7ecfc03b2d6ccb, type: 2}
-    - target: {fileID: 5870696730323562816, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
-      propertyPath: 'equipmentAssets.Array.data[4]'
-      value: 
-      objectReference: {fileID: 11400000, guid: 45c8845ff170547eb8fa626438ac8d9c, type: 2}
-    - target: {fileID: 6553369446378874605, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: -4369906226497229518, guid: f3794dee20967e9dba8153ab2537b453, type: 3}
     - target: {fileID: 6671984905160279280, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
       propertyPath: m_LocalPosition.x
       value: -10.73
@@ -6855,34 +6823,6 @@ PrefabInstance:
       propertyPath: cam
       value: 
       objectReference: {fileID: 1294788629}
-    - target: {fileID: 6925641497687687494, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
-      propertyPath: inputHandler.gamePadCursorReturnSpeed
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 7358816911231301464, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: -855901985, guid: 780c04f42cd663241a0a2a61f37b0e0e, type: 3}
-    - target: {fileID: 7735574521479141810, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 4309644004551084477, guid: 15f0c0868164618e9b8c1c7fe7447732, type: 3}
-    - target: {fileID: 7798952480107608526, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: -8498407833611962168, guid: 14619560ade8d0221a350f84a97a2e1c, type: 3}
-    - target: {fileID: 8225534597066264464, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: -1111047886, guid: 3b3c7bb5434dfa91ea3f0fc3173faf2d, type: 3}
-    - target: {fileID: 8627556327939001407, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 1433470982, guid: 71e6c17a4099c9e80ab09029e70bf1b8, type: 3}
-    - target: {fileID: 9093045635616778328, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 4839505426810885240, guid: 9e563b88af2e71614a9cc0dda8a67022, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -7989,6 +7929,24 @@ MonoBehaviour:
     gameObjectName: SceneServiceLocator
   - typeName: EntityInitCaller
     order: -40
+    gameObjectName: Dummy
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Hpstore
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Addhp (2)
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: AddSpd (1)
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Addhp (1)
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Addhp
+  - typeName: EntityInitCaller
+    order: -40
     gameObjectName: AddDef
   - typeName: EntityInitCaller
     order: -40
@@ -7998,34 +7956,16 @@ MonoBehaviour:
     gameObjectName: Hpstore (1)
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: AddSpd (1)
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: Dummy
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: Addhp
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: Hpstore
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: Dummy (1)
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: Addhp (2)
+    gameObjectName: PlayerNew
   - typeName: EntityInitCaller
     order: -40
     gameObjectName: AddDef (1)
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: PlayerNew
-  - typeName: EntityInitCaller
-    order: -40
     gameObjectName: Hpstore (2)
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: Addhp (1)
+    gameObjectName: Dummy (1)
   - typeName: InGameUIInitCaller
     order: -30
     gameObjectName: UI
@@ -8382,8 +8322,8 @@ MonoBehaviour:
   x: 0.575
   result: 0.6205578
   unityResult: 0.38834375
-  customEvalTime: 0.0005
-  unityEvalTime: 0.0006000000000000001
+  customEvalTime: 0.0011
+  unityEvalTime: 0.0008
 --- !u!1001 &1031836800
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9054,6 +8994,53 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1178855259}
   m_CullTransparentMesh: 1
+--- !u!1 &1194808652
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1194808654}
+  - component: {fileID: 1194808653}
+  m_Layer: 0
+  m_Name: LevelDummy
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!114 &1194808653
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1194808652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11b293e4ed035fca0901ff938fb3af46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LevelSystem
+  levelSystemConfig: {fileID: 0}
+  batchCheckInterval: 0.2
+  batchInitialCheckDelay: 2
+--- !u!4 &1194808654
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1194808652}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -3.021362, y: 2.0162935, z: -12.314357}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1204414707
 GameObject:
   m_ObjectHideFlags: 0
@@ -10864,19 +10851,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1048981498321793666, guid: bc31b0eecd7304ebb99aa3410d7cc3bc, type: 3}
       propertyPath: absoluteHierarchyPath
-      value: SampleScene-->Dummy
+      value: SampleScene-->Dummy (1)
       objectReference: {fileID: 0}
     - target: {fileID: 3400886148539648344, guid: bc31b0eecd7304ebb99aa3410d7cc3bc, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 0.24
       objectReference: {fileID: 0}
     - target: {fileID: 3400886148539648344, guid: bc31b0eecd7304ebb99aa3410d7cc3bc, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4513367037071607233, guid: bc31b0eecd7304ebb99aa3410d7cc3bc, type: 3}
       propertyPath: m_Name
       value: Dummy (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4513367037071607233, guid: bc31b0eecd7304ebb99aa3410d7cc3bc, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7870155893999714083, guid: bc31b0eecd7304ebb99aa3410d7cc3bc, type: 3}
       propertyPath: m_LocalPosition.x
@@ -11678,6 +11669,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c0e75fb0b074c2519ca56b357b152da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InGameUIInitCaller
+  canSelfServe: 1
   initializables:
   - {fileID: 1650404415}
   - {fileID: 2128690284}
@@ -11685,7 +11677,6 @@ MonoBehaviour:
   - {fileID: 76764298}
   - {fileID: 1987017559}
   - {fileID: 1788062144}
-  canCallInAwake: 1
   autoPopulate: 0
   includeChildren: 1
   traversal: 0
@@ -12363,10 +12354,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffd0ac4ef1ba07c7fa439d5abd24b190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EntityInitCaller
+  canSelfServe: 1
   initializables:
   - {fileID: 1868347081}
   - {fileID: 1868347082}
-  canCallInAwake: 1
   autoPopulate: 0
   includeChildren: 1
   traversal: 0
@@ -14505,3 +14496,4 @@ SceneRoots:
   - {fileID: 1562017648}
   - {fileID: 47419341}
   - {fileID: 1664958466}
+  - {fileID: 1194808654}

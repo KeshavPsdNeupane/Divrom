@@ -7,5 +7,5 @@
 /// related to In-Game UI.
 /// </remarks>
 using Kope.Core.LifeTimeManagement;
-public class InGameUIInitCaller : InitLifecycleManager {
+public class InGameUIInitCaller : LifecycleManager {
 }

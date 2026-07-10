@@ -5,10 +5,10 @@ using UnityEngine;
 
 namespace Kope.Core.EntityComponentRegistry {
 	/// <summary>
-	/// This class takes only InitializableBase as component in inpector but we can,
-	/// bypass the InitializableBase requirement and register any component we want 
+	/// This class takes only InitializableBaseNew as component in inpector but we can,
+	/// bypass the InitializableBaseNew requirement and register any component we want 
 	/// in the ComponentRegistry during runtime just like the SaveSystem does with the EntitySaveSystem component.
-	/// Since for that Save system we dont want to force the user to add an InitializableBase component just for saving/loading purposes, we can just register the EntitySaveSystem directly in the registry during runtime and it will work just fine.
+	/// Since for that Save system we dont want to force the user to add an InitializableBaseNew component just for saving/loading purposes, we can just register the EntitySaveSystem directly in the registry during runtime and it will work just fine.
 	/// <br/>
 	/// Stores a collection of components associated with an entity and initializes them.
 	/// Components registered here do **not** need to be initialized elsewhere; 
@@ -20,7 +20,7 @@ namespace Kope.Core.EntityComponentRegistry {
 	/// <br/>
 	/// <inheritdoc cref="InitializableBase"/>
 	/// </summary>
-	public class EntityComponentsRegistry : InitializableBase {
+	public class EntityComponentsRegistry : InitializableBase, IInitializableContainer {
 		[SerializeField] private Transform entityTransform;
 		[SerializeField] private string registryName = "DefaultRegistryName";
 		[SerializeField, Tooltip("Indicates whether this EntityComponentStore contains state/AI/sensor components." +
@@ -40,6 +40,10 @@ namespace Kope.Core.EntityComponentRegistry {
 		/// Runtime registry of this EntityComponentStore.
 		/// </summary>
 		public ComponentRegistry ComponentRegistry => componentRegistry;
+
+		public IEnumerable<InitializableBase> GetNestedComponents() {
+			return this.components;
+		}
 
 		protected override bool OnInit() {
 
@@ -63,14 +67,7 @@ namespace Kope.Core.EntityComponentRegistry {
 					componentRegistry.Register(c);
 				}
 			}
-			// Then init all components, this will ensure that dependencies are resolved during Init
-			// since all components are already registered. and no runtime race conditions occur.
-			// but still order of components in the list matters anyway 
-			foreach (var c in components) {
-				if (c != null) c.Init();
-			}
 			return true;
-
 		}
 	}
 

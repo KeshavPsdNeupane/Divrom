@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 
 namespace Kope.Component.Ability.Targeting {
 
-	public class TargetingManager : InitializableBase {
+	public class TargetingManager : InitializableBase, IUpdatable {
 		[Header("Detection Settings")]
 		[SerializeField] private Camera cam;
 		[SerializeField] private LayerMask groundLayerMask = -1;
@@ -102,7 +102,7 @@ namespace Kope.Component.Ability.Targeting {
 		private void OnDisable() { this.inputHandler.UnsubscribeInput(); CancelTargeting(); }
 		protected override void OnDestroy() { base.OnDestroy(); OnDisable(); }
 
-		protected override void OnUpdate() {
+		public void OnUpdate() {
 			if (this._cleanupFrame != -1 && Time.frameCount >= this._cleanupFrame) {
 				this._cleanupFrame = -1;
 				this.OnTargetingCleanupRequested?.Invoke();

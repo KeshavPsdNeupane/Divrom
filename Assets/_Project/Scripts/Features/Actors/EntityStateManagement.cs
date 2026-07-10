@@ -42,7 +42,7 @@ namespace Kope.Actor.New {
 	/// Bridges enum-keyed animation states with their runtime logic (EntityStateBaseSO)
 	/// and data profiles. Populates an O(1) enumId-lookup table on init.
 	/// </summary>
-	public class EntityStateManagement : InitializableBase, IEntityStateManagement {
+	public class EntityStateManagement : InitializableBase, IEntityStateManagement, IUpdatable, IFixedUpdatable {
 
 		[Header("Core")]
 		[SerializeField] private EntityComponentsRegistry ecr;
@@ -130,7 +130,7 @@ namespace Kope.Actor.New {
 			this._attackComponent.OnAttackPerformed1 -= PerformAttackAnimation;
 		}
 
-		protected override void OnUpdate() {
+		public void OnUpdate() {
 			var processResult = this._stateMachine.ProcessStateChanges();
 			if (processResult == StateChangeResult.Failed) {
 				Debug.LogError($"[Kope.State] Critical failure: {this._stateMachine.CurrentState.name} failed Enter logic.");
@@ -140,7 +140,7 @@ namespace Kope.Actor.New {
 			}
 		}
 
-		protected override void OnFixedUpdate() {
+		public void OnFixedUpdate() {
 			if (this._stateMachine.CurrentState != null)
 				this._stateMachine.CurrentState.TickFixedUpdate();
 		}

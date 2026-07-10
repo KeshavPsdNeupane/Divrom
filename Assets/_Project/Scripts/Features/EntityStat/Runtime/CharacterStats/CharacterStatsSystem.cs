@@ -27,7 +27,7 @@ namespace Kope.Character.Stats {
 
 	public enum DamageType { Physical, Fire, Ice, Lightning, Poison, }
 
-	public class CharacterStatsSystem : InitializableBase, IStatSystem {
+	public class CharacterStatsSystem : InitializableBase, IStatSystem, IUpdatable {
 
 		/*
 		No need to save the base stat values because they are already defined in the ScriptableObject 
@@ -93,8 +93,7 @@ namespace Kope.Character.Stats {
 				stat?.OnDisable();
 		}
 
-		protected override void OnUpdate() {
-			base.OnUpdate();
+		public void OnUpdate() {
 			if (this.currentStats == null || this.resistanceStats == null) return;
 
 			foreach (var stat in this.currentStats.Values)

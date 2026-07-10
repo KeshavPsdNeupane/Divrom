@@ -22,7 +22,7 @@ namespace Kope.Component.Combat {
 	///  a destructible environment might just need to get destroyed on a single hit, we can just create 1HitEntityComponent.
 	/// 	which will handle that event rather than this bloat of component. <br/>
 	/// </summary>
-	public class DamageReactionProcessor : InitializableBase, IDamagable {
+	public class DamageReactionProcessor : InitializableBase, IDamagable, IUpdatable {
 		[SerializeField] private EntityComponentsRegistry ecr;
 		[SerializeField] private DamageCalculationConfig config;
 
@@ -173,7 +173,7 @@ namespace Kope.Component.Combat {
 			ClearActiveEffects();
 		}
 
-		protected override void OnUpdate() {
+		public void OnUpdate() {
 			if (this._activeTickableEffects.Count == 0) return;
 
 			float deltaTime = Time.deltaTime;

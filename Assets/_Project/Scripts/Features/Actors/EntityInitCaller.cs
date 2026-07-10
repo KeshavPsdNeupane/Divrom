@@ -7,5 +7,5 @@ using Kope.Core.LifeTimeManagement;
 
 
 [CustomExecutionOrder(-40)]
-public class EntityInitCaller : InitLifecycleManager {
+public class EntityInitCaller : LifecycleManager {
 }

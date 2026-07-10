@@ -15,7 +15,7 @@ using Kope.AbilitySystem;
 
 namespace Kope.Component.Ability {
 
-	public class PlayerAbilityCaster : InitializableBase {
+	public class PlayerAbilityCaster : InitializableBase, IUpdatable {
 		private const int MAX_HOTBAR_SLOT = 9;
 		[Header("Settings")]
 		[SerializeField, Range(1, 9)] private int abilityCount = 4;
@@ -82,7 +82,7 @@ namespace Kope.Component.Ability {
 			}
 		}
 
-		protected override void OnUpdate() {
+		public void OnUpdate() {
 			foreach (var ability in this._hotbar) {
 				ability?.TickCooldowns(Time.deltaTime);
 			}

@@ -4,7 +4,7 @@ using Kope.Core.ServiceLocator;
 using Kope.Core.LifeTimeManagement;
 using System.Collections.Generic;
 
-public class GameplayUIController : InitializableBase {
+public class GameplayUIController : InitializableBase, IUpdatable {
 
 	[SerializeField] private UIState inGameplayMenu;
 	[SerializeField] private UIState inventoryMenu;
@@ -83,8 +83,7 @@ public class GameplayUIController : InitializableBase {
 		this._isSubscribed = false;
 	}
 
-	protected override void OnUpdate() {
-		base.OnUpdate();
+	public void OnUpdate() {
 		if (this.uiStateManager == null) return;
 
 		this.uiStateManager.ProcessStateChanges();

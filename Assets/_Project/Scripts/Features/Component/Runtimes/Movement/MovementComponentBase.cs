@@ -39,7 +39,7 @@ namespace Kope.Component.Movement {
 	/// the Actor through narrow contracts without requiring a direct dependency on 
 	/// the movement logic.
 	/// </summary>
-	public class MovementComponentBase : InitializableBase,
+	public class MovementComponentBase : InitializableBase, IUpdatable,
 	IMovementComponent, ISaveable, IStunnable, IKnockbackable {
 		[Header("References")]
 		[SerializeField] protected Rigidbody2D rb;
@@ -127,7 +127,7 @@ namespace Kope.Component.Movement {
 			this._currentResponsiveness = responsiveness;
 		}
 
-		protected override void OnUpdate() {
+		public void OnUpdate() {
 			this._forceHandler.Tick(Time.deltaTime);
 			if (this._stunTimer.IsRunning) this._stunTimer.Tick(Time.deltaTime);
 		}

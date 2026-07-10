@@ -26,7 +26,7 @@ namespace Kope.Component.Health.Interface {
 	/// create 1HitEntityComponent which will handle that event rather than this bloat of component. <br/>
 	/// 	
 	/// </summary>
-	public class HealingProcessor : InitializableBase, IVitalityManager {
+	public class HealingProcessor : InitializableBase, IVitalityManager, IUpdatable {
 		[SerializeField] private EntityComponentsRegistry ecr;
 
 		private IHitBoxComponent _hurtBox;
@@ -66,7 +66,7 @@ namespace Kope.Component.Health.Interface {
 			ClearActiveEffects();
 		}
 
-		protected override void OnUpdate() {
+		public void OnUpdate() {
 			if (this._activeHealEffects.Count == 0) return;
 
 			float dt = Time.deltaTime;
