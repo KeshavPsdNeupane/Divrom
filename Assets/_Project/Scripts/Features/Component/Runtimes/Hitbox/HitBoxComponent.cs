@@ -5,7 +5,7 @@ using Kope.Component.Combat.Interface;
 using Kope.Component.Health.Interface;
 using Kope.Component.HitBox.Interface;
 using Kope.Component.Movement;
-using Kope.Core.Init;
+using Kope.Core.LifeTimeManagement;
 using UnityEngine;
 
 namespace Kope.Component.HitBox {

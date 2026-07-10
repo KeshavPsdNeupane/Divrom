@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Kope.Core.Init;
+using Kope.Core.LifeTimeManagement;
 using Kope.Component.Interfaces;
 using UnityEngine;
 using ThirdParty;
@@ -74,7 +74,7 @@ namespace Kope.AI {
 			return true;
 		}
 
-		private void OnDestroy() {
+		protected override void OnDestroy() {
 			foreach (var interrupter in this._interrupters)
 				interrupter.OnInterruptRequested -= HandleInterruptSignal;
 		}

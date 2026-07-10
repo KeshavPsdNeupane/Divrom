@@ -1,5 +1,5 @@
 using Kope.Core.Execution;
-using Kope.Core.Init;
+using Kope.Core.LifeTimeManagement;
 /// <summary>
 /// Player-specific InitCallerManager to group 
 /// Player-related Initializables separately from other Initializables
@@ -7,6 +7,5 @@ using Kope.Core.Init;
 
 
 [CustomExecutionOrder(-40)]
-public class EntityInitCaller : InitLifecycleManager
-{
+public class EntityInitCaller : InitLifecycleManager {
 }

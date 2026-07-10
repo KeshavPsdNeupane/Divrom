@@ -3,7 +3,7 @@ using Kope.Character.Stats;
 using Kope.Component.Health.Interface;
 using Kope.Core.Attribute;
 using Kope.Core.EntityComponentRegistry;
-using Kope.Core.Init;
+using Kope.Core.LifeTimeManagement;
 using Kope.SaveSystem;
 using Newtonsoft.Json;
 using UnityEngine;

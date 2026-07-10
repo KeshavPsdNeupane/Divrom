@@ -1,5 +1,5 @@
 using UnityEngine;
-using Kope.Core.Init;
+using Kope.Core.LifeTimeManagement;
 [System.Serializable]
 
 public class InventoryHolder : InitializableBase {

@@ -1,4 +1,4 @@
-using Kope.Core.Init;
+using Kope.Core.LifeTimeManagement;
 using UnityEngine;
 
 namespace Kope.Component.Health.Temp {

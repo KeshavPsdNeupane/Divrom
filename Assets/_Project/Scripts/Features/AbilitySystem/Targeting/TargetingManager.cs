@@ -1,6 +1,6 @@
 using System;
 using Kope.Core;
-using Kope.Core.Init;
+using Kope.Core.LifeTimeManagement;
 using Kope.Core.ServiceLocator;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -100,7 +100,7 @@ namespace Kope.Component.Ability.Targeting {
 
 		private void OnEnable() => this.inputHandler.SubscribeInput();
 		private void OnDisable() { this.inputHandler.UnsubscribeInput(); CancelTargeting(); }
-		protected override void OnShutdown() { base.OnShutdown(); OnDisable(); }
+		protected override void OnDestroy() { base.OnDestroy(); OnDisable(); }
 
 		protected override void OnUpdate() {
 			if (this._cleanupFrame != -1 && Time.frameCount >= this._cleanupFrame) {

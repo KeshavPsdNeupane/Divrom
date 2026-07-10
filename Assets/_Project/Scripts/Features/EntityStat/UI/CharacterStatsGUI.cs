@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using TMPro;
-using Kope.Core.Init;
+using Kope.Core.LifeTimeManagement;
 using Kope.Character.Stats;
 using Kope.Core.EntityComponentRegistry;
 using Kope.Component.Health.Interface;

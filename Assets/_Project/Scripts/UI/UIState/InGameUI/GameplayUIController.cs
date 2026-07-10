@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Kope.Core.ServiceLocator;
-using Kope.Core.Init;
+using Kope.Core.LifeTimeManagement;
 using System.Collections.Generic;
 
 public class GameplayUIController : InitializableBase {

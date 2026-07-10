@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Kope.Core.Init;
+using Kope.Core.LifeTimeManagement;
 using Kope.Core.ServiceLocator;
 using UnityEngine;
 
@@ -54,7 +54,14 @@ namespace Kope.Core.EntityComponentRegistry {
 
 			// First register all components
 			foreach (var c in components) {
-				if (c != null) componentRegistry.Register(c);
+				if (c != null) {
+					if (this == c) {
+						Debug.LogError($"EntityComponentStore {this.name} cannot register itself as a component. " +
+						"Remove it from the components list.");
+						continue;
+					}
+					componentRegistry.Register(c);
+				}
 			}
 			// Then init all components, this will ensure that dependencies are resolved during Init
 			// since all components are already registered. and no runtime race conditions occur.

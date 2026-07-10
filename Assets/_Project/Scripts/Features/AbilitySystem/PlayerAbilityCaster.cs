@@ -5,7 +5,7 @@ using Kope.Component.Combat.Interface;
 using Kope.Component.Health.Interface;
 using Kope.Component.Attack;
 using Kope.Core.EntityComponentRegistry;
-using Kope.Core.Init;
+using Kope.Core.LifeTimeManagement;
 using Kope.Core.ServiceLocator;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -191,7 +191,7 @@ namespace Kope.Component.Ability {
 			this._attackLock.SetEventLock(false);
 		}
 
-		protected override void OnShutdown() => UnsubscribeEvents();
+		protected override void OnDestroy() => UnsubscribeEvents();
 		private void OnEnable() { if (this.IsInitialized) SubscribeEvents(); }
 		private void OnDisable() { if (this.IsInitialized) UnsubscribeEvents(); }
 

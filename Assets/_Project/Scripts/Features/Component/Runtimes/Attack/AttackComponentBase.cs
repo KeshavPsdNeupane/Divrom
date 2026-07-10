@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.Events;
-using Kope.Core.Init;
+using Kope.Core.LifeTimeManagement;
 using Kope.Character.Stats;
 using Kope.Core.EntityComponentRegistry;
 using System.Collections.Generic;

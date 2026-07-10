@@ -3,7 +3,7 @@ using Kope.Component;
 using Kope.Component.Attack;
 using Kope.Component.Movement;
 using Kope.Core.EntityComponentRegistry;
-using Kope.Core.Init;
+using Kope.Core.LifeTimeManagement;
 using Kope.Core.Type.EnumAsset;
 using UnityEngine;
 

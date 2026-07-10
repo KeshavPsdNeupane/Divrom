@@ -1,7 +1,7 @@
 using Kope.Component.HitBox.Interface;
 using Kope.Component.Movement;
 using Kope.Core.EntityComponentRegistry;
-using Kope.Core.Init;
+using Kope.Core.LifeTimeManagement;
 using UnityEngine;
 
 namespace Kope.Component.HitReaction {

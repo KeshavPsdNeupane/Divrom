@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Kope.Core.Init;
+using Kope.Core.LifeTimeManagement;
 
 namespace Kope.AI {
 	/// <summary>

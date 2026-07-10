@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Kope.Core;
-using Kope.Core.Init;
+using Kope.Core.LifeTimeManagement;
 using Kope.Core.EntityComponentRegistry;
 using Kope.Character.Stats;
 using Kope.SaveSystem;

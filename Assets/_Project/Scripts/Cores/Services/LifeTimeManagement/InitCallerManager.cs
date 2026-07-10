@@ -3,14 +3,14 @@ using UnityEngine;
 using ZLinq;
 using Kope.Core.Execution;
 
-namespace Kope.Core.Init {
+namespace Kope.Core.LifeTimeManagement {
 	/// <summary>
 	/// Simple manager that only calls Init()/Shutdown() on listed IInitializable components.
 	/// No DI, no injection — just lifecycle ordering by the `initializables` list.
 	/// </summary>
 
 	[CustomExecutionOrder(-30)]
-	public class InitLifecycleManager : InitializableBase {
+	public class InitLifecycleManager : InitializableBaseNew {
 		[Tooltip("Order matters: earlier items initialize first.")]
 		public List<InitializableBase> initializables = new();
 		[Tooltip("If true, Init() is called in Awake(). Otherwise, Init() must be called manually.")]
@@ -31,7 +31,9 @@ namespace Kope.Core.Init {
 		[Tooltip("How discovered components are ordered when populating the `initializables` list.")]
 		public TraversalMode traversal = TraversalMode.ParentFirst;
 
-		private readonly List<IInitializable> ordered = new();
+		private readonly List<IInitializable> _initializable = new();
+		private readonly List<IUpdatable> _updatables = new();
+		private readonly List<IFixedUpdatable> _fixedUpdatables = new();
 
 		protected virtual void Awake() {
 			if (this.canCallInAwake) {
@@ -45,7 +47,7 @@ namespace Kope.Core.Init {
 				if (this.autoPopulate)
 					PopulateInitializables();
 
-				this.ordered.Clear();
+				this._initializable.Clear();
 				foreach (var mono in this.initializables) {
 					if (mono == null) continue;
 					if (mono is IInitializable initable) {
@@ -54,16 +56,23 @@ namespace Kope.Core.Init {
 							" and will be skipped by InitCallerManager.");
 							continue;
 						}
-						if (!this.ordered.Contains(initable)) {
-							this.ordered.Add(initable);
+						if (!this._initializable.Contains(initable)) {
+							this._initializable.Add(initable);
+							if (initable is IUpdatable updatable && !this._updatables.Contains(updatable)) {
+								this._updatables.Add(updatable);
+							}
+							if (initable is IFixedUpdatable fixedUpdatable && !this._fixedUpdatables.Contains(fixedUpdatable)) {
+								this._fixedUpdatables.Add(fixedUpdatable);
+							}
 						}
+
 					} else {
 						Debug.LogWarning($"{mono.name} does not implement IInitializable and will be skipped by InitCallerManager.");
 					}
 				}
 
 				// Call Init in order
-				foreach (var item in this.ordered) {
+				foreach (var item in this._initializable) {
 					try { item.Init(); } catch (System.Exception ex) {
 						Debug.LogError($"InitCallerManager: " +
 					   $"Exception in Init of {item.GetType().Name}: {ex}");
@@ -74,14 +83,6 @@ namespace Kope.Core.Init {
 				Debug.LogError($"InitCallerManager: Exception during OnInit: {ex}" + GetParentGameObjectHeirarchyMessage());
 				return false;
 			}
-		}
-
-		protected virtual void OnDestroy() {
-			for (int i = this.ordered.Count - 1; i >= 0; i--) {
-				var item = this.ordered[i];
-				try { item.Shutdown(); } catch (System.Exception ex) { Debug.LogError($"InitCallerManager: Exception in Shutdown of {item.GetType().Name}: {ex}"); }
-			}
-			Shutdown();
 		}
 
 		[ContextMenu("Populate Initializables")]
@@ -107,41 +108,43 @@ namespace Kope.Core.Init {
 
 		[ContextMenu("Debug: Print Init Tree")]
 		public void DebugInitTree() {
-			var sb = new System.Text.StringBuilder();
-			sb.AppendLine($"=== Init Tree: {this.gameObject.name} ===");
-			sb.AppendLine($"CanCallInAwake: {this.canCallInAwake}");
-			sb.AppendLine($"Initializables ({this.initializables.Count}):");
+			// for not this is commented until the migration to the new InitializableBaseNew is complete and tested.
 
-			for (int i = 0; i < this.initializables.Count; i++) {
-				var item = this.initializables[i];
-				if (item == null) {
-					sb.AppendLine($"  [{i}] <null>");
-					continue;
-				}
+			// var sb = new System.Text.StringBuilder();
+			// sb.AppendLine($"=== Init Tree: {this.gameObject.name} ===");
+			// sb.AppendLine($"CanCallInAwake: {this.canCallInAwake}");
+			// sb.AppendLine($"Initializables ({this.initializables.Count}):");
 
-				var isManager = item is InitLifecycleManager;
-				string marker = isManager ? " [Manager]" : "";
+			// for (int i = 0; i < this.initializables.Count; i++) {
+			// 	var item = this.initializables[i];
+			// 	if (item == null) {
+			// 		sb.AppendLine($"  [{i}] <null>");
+			// 		continue;
+			// 	}
 
-				sb.AppendLine($"  [{i}] {item.GetType().Name} ({item.gameObject.name}){marker}");
+			// 	var isManager = item is InitLifecycleManager;
+			// 	string marker = isManager ? " [Manager]" : "";
 
-				// If it's a nested manager, show its children indented
-				if (isManager) {
-					var nestedManager = (InitLifecycleManager)item;
-					for (int j = 0; j < nestedManager.initializables.Count; j++) {
-						var child = nestedManager.initializables[j];
-						if (child == null) {
-							sb.AppendLine($"      [{j}] <null>");
-						} else {
-							var isNestedManager = child is InitLifecycleManager;
-							string nestedMarker = isNestedManager ? " [Manager]" : "";
-							sb.AppendLine($"      [{j}] {child.GetType().Name} ({child.gameObject.name}){nestedMarker}");
-						}
-					}
-				}
-			}
+			// 	sb.AppendLine($"  [{i}] {item.GetType().Name} ({item.gameObject.name}){marker}");
 
-			sb.AppendLine("===================");
-			Debug.Log(sb.ToString());
+			// 	// If it's a nested manager, show its children indented
+			// 	if (isManager) {
+			// 		var nestedManager = (InitLifecycleManager)item;
+			// 		for (int j = 0; j < nestedManager.initializables.Count; j++) {
+			// 			var child = nestedManager.initializables[j];
+			// 			if (child == null) {
+			// 				sb.AppendLine($"      [{j}] <null>");
+			// 			} else {
+			// 				var isNestedManager = child is InitLifecycleManager;
+			// 				string nestedMarker = isNestedManager ? " [Manager]" : "";
+			// 				sb.AppendLine($"      [{j}] {child.GetType().Name} ({child.gameObject.name}){nestedMarker}");
+			// 			}
+			// 		}
+			// 	}
+			// }
+
+			// sb.AppendLine("===================");
+			// Debug.Log(sb.ToString());
 		}
 
 		private int GetDepth(Transform t, Transform root) {

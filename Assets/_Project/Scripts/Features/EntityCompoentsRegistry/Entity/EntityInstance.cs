@@ -1,5 +1,5 @@
 using UnityEngine;
-using Kope.Core.Init;
+using Kope.Core.LifeTimeManagement;
 using System;
 using Kope.Core.EntityComponentRegistry;
 using Kope.Core.Types.UniqueId;

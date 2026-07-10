@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using System.Collections.Generic;
 
-using Kope.Core.Init;
+using Kope.Core.LifeTimeManagement;
 
 
 namespace Kope.Character.Stats {
