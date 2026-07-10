@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 namespace Kope.Character.Stats {
 	public class CharacterStatsGUI : MonoBehaviour {
-		[SerializeField] private CharacterStatsSystem characterStats;
+		[SerializeField] private CharacterStatsSystemBase characterStats;
 		[SerializeField] private bool canShowState = true;
 		[SerializeField][Range(0.5f, 3f)] private float scale = 2f;
 
@@ -21,7 +21,7 @@ namespace Kope.Character.Stats {
 
 		private void Awake() {
 			if (characterStats == null)
-				characterStats = GetComponent<CharacterStatsSystem>();
+				characterStats = GetComponent<CharacterStatsSystemBase>();
 		}
 
 		private void Start() {

@@ -29,7 +29,7 @@ namespace Kope.Component.Attack {
 	public abstract class AttackComponentBase : InitializableBase, IAttackComponent {
 		[SerializeField] private EntityComponentsRegistry ecr;
 		[SerializeField] private WeaponSO equippedWeapDataSO;
-		protected CharacterStatsSystem _statsSystem;
+		protected CharacterStatsSystemBase _statsSystem;
 		private AnimationComponentBase _animationComponent;
 
 		// Caching dictionaries for O(1) local access

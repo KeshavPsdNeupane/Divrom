@@ -15,7 +15,7 @@ public class StatDescription : InitializableBase {
 
 	[SerializeField] private TMP_FontAsset fontAsset;
 
-	private CharacterStatsSystem _characterStats;
+	private CharacterStatsSystemBase _characterStats;
 	private IHealthComponent _healthComponent;
 
 
@@ -64,7 +64,7 @@ public class StatDescription : InitializableBase {
 		}
 		// using tryGet since this only shows the stats on UI and does not modify the stats,
 		//  so we don't need mutatable access here. so TryGetComponent is sufficient for semantic clarity.
-		if (!ecr.ComponentRegistry.TryGetReadOnlyComponent<CharacterStatsSystem>(out var statsSystem)) {
+		if (!ecr.ComponentRegistry.TryGetReadOnlyComponent<CharacterStatsSystemBase>(out var statsSystem)) {
 			Debug.LogError("No CharacterStatsSystem found in EntityComponentStore for StatDescription" + GetParentGameObjectHeirarchyMessage());
 			return false;
 

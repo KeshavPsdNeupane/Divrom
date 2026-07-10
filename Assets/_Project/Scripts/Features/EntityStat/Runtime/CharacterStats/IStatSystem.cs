@@ -24,5 +24,7 @@ namespace Kope.Character.Stats {
 		/// </summary>
 		bool AddStatModifier(BaseStatModifier modifier);
 		bool AddResistanceModifier(ResistanceStatModifier modifier);
+
+		void LevelUp(int newLevel);
 	}
 }

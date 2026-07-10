@@ -9,7 +9,7 @@ using Kope.Core.Identity;
 public class StatModifierCollector : SensorBase {
 	[SerializeField] private string StatusObjectTagName = "StatusEffect";
 	[SerializeField] private EntityComponentsRegistry ecr;
-	private CharacterStatsSystem characterStats;
+	private CharacterStatsSystemBase characterStats;
 
 
 	public override void OnStart() {
@@ -19,7 +19,7 @@ public class StatModifierCollector : SensorBase {
 			return;
 		}
 		// since we are mutating the CharacterStatsSystem by adding stat modifiers to it, we need mutatable access here. so using TryGetMutatableComponent for semantic clarity
-		if (ecr.ComponentRegistry.TryGetMutatableComponent(out CharacterStatsSystem statsSystem)) {
+		if (ecr.ComponentRegistry.TryGetMutatableComponent(out CharacterStatsSystemBase statsSystem)) {
 			this.characterStats = statsSystem;
 		} else {
 			Debug.LogError("No CharacterStatsSystem found in EntityComponentStoreConfig for StatModifierCollector" + this._parentGOHiearchPathMessage);

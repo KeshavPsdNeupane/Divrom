@@ -27,7 +27,7 @@ namespace Kope.Character.Stats {
 
 	public enum DamageType { Physical, Fire, Ice, Lightning, Poison, }
 
-	public class CharacterStatsSystem : InitializableBase, IStatSystem, IUpdatable {
+	public class CharacterStatsSystemBase : InitializableBase, IStatSystem, IUpdatable {
 
 		/*
 		No need to save the base stat values because they are already defined in the ScriptableObject 
@@ -40,14 +40,13 @@ namespace Kope.Character.Stats {
 		and as for the modifiers from armor, we can just save the currently equipped armor and when loading the game,
 		 we can just reapply the modifiers from the equipped armor.
 		*/
-
 		private Dictionary<CharacterStatType, AdvanceStat> currentStats;
 		private Dictionary<DamageType, StatBase> resistanceStats;
 		private Dictionary<CharacterStatType, float> levelIncreasingStatWithLevelingValue;
 
 		[SerializeField] private CharacterStatsSO characterStateSo;
 
-
+		private int currentLevel = 1;
 		public Dictionary<CharacterStatType, AdvanceStat> CurrentStats => this.currentStats;
 		public Dictionary<DamageType, StatBase> ResistanceStats => this.resistanceStats;
 
@@ -148,13 +147,21 @@ namespace Kope.Character.Stats {
 			return false;
 		}
 
-		public void TriggerLevelUp() {
+		public void LevelUp(int newLevel) {
+			int levelDifference = newLevel - this.currentLevel;
+			if (levelDifference <= 0) {
+				Debug.LogWarning($"LevelUp called with newLevel {newLevel} which is not greater than currentLevel {this.currentLevel}. No level up applied.");
+				return;
+			}
 			foreach (var kvp in this.levelIncreasingStatWithLevelingValue) {
 				if (this.currentStats.TryGetValue(kvp.Key, out AdvanceStat stat))
-					stat.LevelUpStat(kvp.Value);
+					for (int i = 0; i < levelDifference; i++) {
+						stat.AddPointStat(kvp.Value);
+					}
 				else
 					Debug.LogWarning($"Stat {kvp.Key} not found for leveling up!");
 			}
+			this.currentLevel = newLevel;
 		}
 
 		public void AddPointToStat(CharacterStatType type, float points) {
@@ -164,7 +171,6 @@ namespace Kope.Character.Stats {
 				Debug.LogWarning($"Stat {type} not found for adding points!");
 			}
 		}
-
 
 
 		public bool AddResistanceModifier(ResistanceStatModifier modifier) {

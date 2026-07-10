@@ -37,7 +37,7 @@ namespace Kope.Component.Health {
 		[SerializeField, ReadOnly] protected float maxHealth = 10;
 		[SerializeField, ReadOnly] protected float currentHealth = 10;
 
-		private CharacterStatsSystem characterStatsSystem;
+		private CharacterStatsSystemBase characterStatsSystem;
 
 		public float CurrentHealth => this.currentHealth;
 		public float MaxHealth => this.maxHealth;

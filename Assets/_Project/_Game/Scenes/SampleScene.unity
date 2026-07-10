@@ -7929,13 +7929,13 @@ MonoBehaviour:
     gameObjectName: SceneServiceLocator
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: Dummy
+    gameObjectName: AddSpd
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Addhp
   - typeName: EntityInitCaller
     order: -40
     gameObjectName: Hpstore
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: Addhp (2)
   - typeName: EntityInitCaller
     order: -40
     gameObjectName: AddSpd (1)
@@ -7944,28 +7944,28 @@ MonoBehaviour:
     gameObjectName: Addhp (1)
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: Addhp
+    gameObjectName: Hpstore (2)
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Addhp (2)
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Dummy (1)
   - typeName: EntityInitCaller
     order: -40
     gameObjectName: AddDef
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: AddSpd
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: Hpstore (1)
+    gameObjectName: AddDef (1)
   - typeName: EntityInitCaller
     order: -40
     gameObjectName: PlayerNew
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: AddDef (1)
+    gameObjectName: Hpstore (1)
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: Hpstore (2)
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: Dummy (1)
+    gameObjectName: Dummy
   - typeName: InGameUIInitCaller
     order: -30
     gameObjectName: UI
@@ -8322,8 +8322,8 @@ MonoBehaviour:
   x: 0.575
   result: 0.6205578
   unityResult: 0.38834375
-  customEvalTime: 0.0011
-  unityEvalTime: 0.0008
+  customEvalTime: 0.0004
+  unityEvalTime: 0.0004
 --- !u!1001 &1031836800
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8994,53 +8994,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1178855259}
   m_CullTransparentMesh: 1
---- !u!1 &1194808652
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1194808654}
-  - component: {fileID: 1194808653}
-  m_Layer: 0
-  m_Name: LevelDummy
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!114 &1194808653
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1194808652}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 11b293e4ed035fca0901ff938fb3af46, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LevelSystem
-  levelSystemConfig: {fileID: 0}
-  batchCheckInterval: 0.2
-  batchInitialCheckDelay: 2
---- !u!4 &1194808654
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1194808652}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -3.021362, y: 2.0162935, z: -12.314357}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1204414707
 GameObject:
   m_ObjectHideFlags: 0
@@ -9314,13 +9267,14 @@ GameObject:
   - component: {fileID: 1213024165}
   - component: {fileID: 1213024168}
   - component: {fileID: 1213024167}
+  - component: {fileID: 1213024169}
   m_Layer: 5
   m_Name: SimulateLevelUpPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1213024165
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9379,6 +9333,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1213024164}
   m_CullTransparentMesh: 1
+--- !u!114 &1213024169
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1213024164}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 478d1f6fbbda150139a71faaede1e1f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SimulateLevelUp
+  levelSystem: {fileID: 1352655600}
+  button: {fileID: 901993978}
 --- !u!1 &1294788625
 GameObject:
   m_ObjectHideFlags: 0
@@ -9672,6 +9640,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1148759639}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1352655600 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2250557181460402853, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+  m_PrefabInstance: {fileID: 645946236}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11b293e4ed035fca0901ff938fb3af46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Kope.ExperienceSystem.ExperienceSystem
 --- !u!4 &1361238199 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1406124916514067170, guid: df4f5b7caf3c0dd62a25a2c2b4e609c9, type: 3}
@@ -14496,4 +14475,3 @@ SceneRoots:
   - {fileID: 1562017648}
   - {fileID: 47419341}
   - {fileID: 1664958466}
-  - {fileID: 1194808654}

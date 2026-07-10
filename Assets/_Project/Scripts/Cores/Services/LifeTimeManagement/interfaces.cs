@@ -1,7 +1,9 @@
 
-namespace Kope.Core.LifeTimeManagement {
+namespace Kope.Core.LifeTimeManagement
+{
 	using System.Collections.Generic;
-	public interface IInitializable {
+	public interface IInitializable
+	{
 
 		bool IsInitialized { get; }
 		void Init();
@@ -9,13 +11,15 @@ namespace Kope.Core.LifeTimeManagement {
 
 	}
 
-	public interface IUpdatable {
+	public interface IUpdatable
+	{
 		void OnUpdate();
 	}
 	/// <summary>
 	/// Interface for components that require fixed update logic. Implementing this interface allows the component to be managed by a lifecycle manager that handles fixed updates.
 	/// </summary>
-	public interface IFixedUpdatable {
+	public interface IFixedUpdatable
+	{
 		void OnFixedUpdate();
 	}
 
@@ -23,7 +27,8 @@ namespace Kope.Core.LifeTimeManagement {
 	/// Interface for components that can contain nested InitializableBaseNew components.
 	/// This allows for hierarchical initialization and update management within a parent component.
 	/// </summary>
-	public interface IInitializableContainer {
+	public interface IInitializableContainer
+	{
 		IEnumerable<InitializableBase> GetNestedComponents();
 	}
 }

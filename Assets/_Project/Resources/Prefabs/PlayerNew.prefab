@@ -393,6 +393,7 @@ Transform:
   - {fileID: 6954758242764582700}
   - {fileID: 5136777619606114344}
   - {fileID: 2042399125604258700}
+  - {fileID: 713110113042715904}
   - {fileID: 2323630812141244706}
   - {fileID: 636012089227929340}
   - {fileID: 4677141467483066024}
@@ -634,6 +635,7 @@ MonoBehaviour:
   config: {fileID: 11400000, guid: fcace0391532e5648a86e8f603e94c7d, type: 2}
   components:
   - {fileID: 5294357042670943928}
+  - {fileID: 2250557181460402853}
   - {fileID: 2725148965693703880}
   - {fileID: 7100714284575033797}
   - {fileID: 9026187348811339868}
@@ -1321,6 +1323,55 @@ MonoBehaviour:
   - {fileID: 11400000, guid: abc73f1787c462740aac08f8b477e347, type: 2}
   - {fileID: 11400000, guid: bc9a3576add404caa914ef5a9a60fe43, type: 2}
   ecr: {fileID: 6037248722059709900}
+--- !u!1 &7233900773262344369
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 713110113042715904}
+  - component: {fileID: 2250557181460402853}
+  m_Layer: 0
+  m_Name: ExperienceSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &713110113042715904
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7233900773262344369}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 896.715, y: 457.665, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6671984905160279280}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2250557181460402853
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7233900773262344369}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11b293e4ed035fca0901ff938fb3af46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Kope.ExperienceSystem.ExperienceSystem
+  defaultLevel: 1
+  levelSystemConfig: {fileID: 11400000, guid: a99986ee4b05f01c7a207ef5668fe94c, type: 2}
+  ecr: {fileID: 6037248722059709900}
+  batchCheckInterval: 0.2
+  batchInitialCheckDelay: 2
 --- !u!1 &7369234751102343601
 GameObject:
   m_ObjectHideFlags: 0

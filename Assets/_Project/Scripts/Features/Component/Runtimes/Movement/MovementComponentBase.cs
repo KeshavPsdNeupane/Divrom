@@ -54,7 +54,7 @@ namespace Kope.Component.Movement {
 		private MovementForceHandler _forceHandler;
 
 		// State
-		private CharacterStatsSystem _readOnlycharacterStatsSystem;
+		private CharacterStatsSystemBase _readOnlycharacterStatsSystem;
 		private AxisMode _dimension;
 		private BasicCountDownTimer _stunTimer;
 		private float _currentResponsiveness = DEFAULT_RESPONSIVENESS;
@@ -72,7 +72,7 @@ namespace Kope.Component.Movement {
 		protected override bool OnInit() {
 			if (this.ecr == null || this.rb == null) return false;
 
-			if (this.ecr.ComponentRegistry.TryGetReadOnlyComponent(out CharacterStatsSystem statsSystem)) {
+			if (this.ecr.ComponentRegistry.TryGetReadOnlyComponent(out CharacterStatsSystemBase statsSystem)) {
 				this._readOnlycharacterStatsSystem = statsSystem;
 			}
 
