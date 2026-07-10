@@ -1524,6 +1524,7 @@
     <ProjectReference Include="Kope.InputSystem.csproj" />
     <ProjectReference Include="Out.ThirdParty.Stuff.csproj" />
     <ProjectReference Include="Kope.ModularSpriteAnimation.Editor.csproj" />
+    <ProjectReference Include="Kope.Logging.csproj" />
     <ProjectReference Include="Kope.ModularSpriteAnimation.Runtime.csproj" />
     <ProjectReference Include="Kope.EntityComponentSystem.Runtime.csproj" />
     <ProjectReference Include="Kope.AI.Runtime.csproj" />

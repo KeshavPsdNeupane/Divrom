@@ -327,7 +327,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b704fae97497b629a70cd2df1251f15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterStatsSystem
-  characterName: Enemy
   characterStateSo: {fileID: 11400000, guid: e08db2b6d08ad07e592eb6d9e1e0bc81, type: 2}
 --- !u!1 &4335047405112921079
 GameObject:

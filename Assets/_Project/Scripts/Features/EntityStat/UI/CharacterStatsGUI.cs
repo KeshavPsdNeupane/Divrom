@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using TMPro;
-using Kope.Core.CompilerServices;
 using Kope.Core.Init;
 using Kope.Character.Stats;
 using Kope.Core.EntityComponentRegistry;
@@ -59,34 +58,34 @@ public class StatDescription : InitializableBase {
 
 	private bool Validate() {
 		if (ecr == null) {
-			MyLogger.Error("EntityComponentStore reference was missing," +
+			Debug.LogError("EntityComponentStore reference was missing," +
 		  " unable to retrieve CharacterStatsSystem." + GetParentGameObjectHeirarchyMessage());
 			return false;
 		}
 		// using tryGet since this only shows the stats on UI and does not modify the stats,
 		//  so we don't need mutatable access here. so TryGetComponent is sufficient for semantic clarity.
 		if (!ecr.ComponentRegistry.TryGetReadOnlyComponent<CharacterStatsSystem>(out var statsSystem)) {
-			MyLogger.Error("No CharacterStatsSystem found in EntityComponentStore for StatDescription" + GetParentGameObjectHeirarchyMessage());
+			Debug.LogError("No CharacterStatsSystem found in EntityComponentStore for StatDescription" + GetParentGameObjectHeirarchyMessage());
 			return false;
 
 		}
 		this._characterStats = statsSystem;
 
 		if (!ecr.ComponentRegistry.TryGetReadOnlyComponent<IHealthComponent>(out var healthComponent)) {
-			MyLogger.Error("No IHealthComponent found in EntityComponentStore for StatDescription" + GetParentGameObjectHeirarchyMessage());
+			Debug.LogError("No IHealthComponent found in EntityComponentStore for StatDescription" + GetParentGameObjectHeirarchyMessage());
 			return false;
 
 		}
 		this._healthComponent = healthComponent;
 
 		if (this.statDescriptionUIPanel == null) {
-			MyLogger.Error("StatDescriptionUIPanel is not assigned." + GetParentGameObjectHeirarchyMessage());
+			Debug.LogError("StatDescriptionUIPanel is not assigned." + GetParentGameObjectHeirarchyMessage());
 			return false;
 		}
 		if (this._panelRect == null && this.statDescriptionUIPanel != null) {
 			this._panelRect = this.statDescriptionUIPanel.GetComponent<RectTransform>();
 			if (this._panelRect == null)
-				MyLogger.Error("Stat Panel requires RectTransform." + GetParentGameObjectHeirarchyMessage());
+				Debug.LogError("Stat Panel requires RectTransform." + GetParentGameObjectHeirarchyMessage());
 		}
 		return true;
 	}

@@ -77,7 +77,7 @@ namespace Kope.Actor.New {
 			int idleID = this.defaultIdleStateData.Profile.StatePicker.GetSelectedEnumId();
 			this._idleEnumId = idleID;
 
-			EntityStateBaseSO idleLogic = null;
+			EntityStateBaseSO idleLogic;
 			if (this.defaultIdleStateData.StateSO != null) {
 				idleLogic = Instantiate(this.defaultIdleStateData.StateSO);
 			} else {
@@ -146,10 +146,10 @@ namespace Kope.Actor.New {
 		}
 
 		public StateChangeResult ChangeState(
-	int enumId,
-	bool handleFallbackInternally = false,
-	System.Action<EntityStateBaseSO> preStateChange = null,
-	System.Action<EntityStateBaseSO> postStateChange = null) {
+		int enumId,
+		bool handleFallbackInternally = false,
+		System.Action<EntityStateBaseSO> preStateChange = null,
+		System.Action<EntityStateBaseSO> postStateChange = null) {
 			// Single lookup pass
 			if (!this._stateLookUp.TryGetValue(enumId, out var logic)) {
 				if (handleFallbackInternally) return ScheduleTransitionToIdleInternal();
@@ -186,7 +186,7 @@ namespace Kope.Actor.New {
 		}
 
 		public void TransitionToIdle() {
-			this.ScheduleTransitionToIdleInternal();
+			ScheduleTransitionToIdleInternal();
 		}
 
 		private StateChangeResult ScheduleTransitionToIdleInternal() {

@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using ZLinq;
 using Kope.Core.Execution;
-using Kope.Core.CompilerServices;
 
 namespace Kope.Core.Init {
 	/// <summary>
@@ -51,7 +50,7 @@ namespace Kope.Core.Init {
 					if (mono == null) continue;
 					if (mono is IInitializable initable) {
 						if (initable.IsInitialized) {
-							MyLogger.Warn($"{mono.name} is already initialized " +
+							Debug.LogWarning($"{mono.name} is already initialized " +
 							" and will be skipped by InitCallerManager.");
 							continue;
 						}
@@ -59,14 +58,14 @@ namespace Kope.Core.Init {
 							this.ordered.Add(initable);
 						}
 					} else {
-						MyLogger.Warn($"{mono.name} does not implement IInitializable and will be skipped by InitCallerManager.");
+						Debug.LogWarning($"{mono.name} does not implement IInitializable and will be skipped by InitCallerManager.");
 					}
 				}
 
 				// Call Init in order
 				foreach (var item in this.ordered) {
 					try { item.Init(); } catch (System.Exception ex) {
-						MyLogger.Error($"InitCallerManager: " +
+						Debug.LogError($"InitCallerManager: " +
 					   $"Exception in Init of {item.GetType().Name}: {ex}");
 					}
 				}
@@ -80,7 +79,7 @@ namespace Kope.Core.Init {
 		protected virtual void OnDestroy() {
 			for (int i = this.ordered.Count - 1; i >= 0; i--) {
 				var item = this.ordered[i];
-				try { item.Shutdown(); } catch (System.Exception ex) { MyLogger.Error($"InitCallerManager: Exception in Shutdown of {item.GetType().Name}: {ex}"); }
+				try { item.Shutdown(); } catch (System.Exception ex) { Debug.LogError($"InitCallerManager: Exception in Shutdown of {item.GetType().Name}: {ex}"); }
 			}
 			Shutdown();
 		}
@@ -142,7 +141,7 @@ namespace Kope.Core.Init {
 			}
 
 			sb.AppendLine("===================");
-			MyLogger.Log(sb.ToString());
+			Debug.Log(sb.ToString());
 		}
 
 		private int GetDepth(Transform t, Transform root) {

@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Kope.Core.ServiceLocator;
-using Kope.Core.CompilerServices;
 using Kope.Component.Movement;
 using Kope.SaveSystem;
 /// <summary>
@@ -28,7 +27,7 @@ public class PlayerMovementComponent : MovementComponentBase {
 		if (GlobalServiceLocator.Instance.TryGetService(out InputManager inputManager)) {
 			this.inputManager = inputManager;
 		} else {
-			MyLogger.Error($"{this.gameObject.name}Controller: InputManager service not found!" + GetParentGameObjectHeirarchyMessage());
+			Debug.LogError($"{this.gameObject.name}Controller: InputManager service not found!" + GetParentGameObjectHeirarchyMessage());
 			return false;
 		}
 		this._moveInputSubscription = new InputActionSubscriptionLifetime<PlayerInputActionKey>(

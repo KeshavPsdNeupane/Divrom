@@ -1,10 +1,11 @@
-using Kope.Core.CompilerServices;
+
+using UnityEngine;
 namespace Kope.Component.Attack {
 
 	public class EnemyAttackComponent : AttackComponentBase {
 		protected override float PerformAttackInternal() {
 			float damage = GetDamageValue();
-			MyLogger.Log($"Enemy Attack performed! Damage: {damage}");
+			Debug.Log($"Enemy Attack performed! Damage: {damage}");
 			return damage;
 		}
 	}

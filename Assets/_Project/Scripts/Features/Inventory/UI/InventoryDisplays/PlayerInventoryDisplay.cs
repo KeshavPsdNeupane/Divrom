@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Kope.Core.CompilerServices;
 using UnityEngine;
 using Kope.Core.EntityComponentRegistry;
 
@@ -16,20 +15,20 @@ public class PlayerInventoryDisplayUI : InventoryDisplay {
 
 		if (!base.OnInit()) return false; // impt if the base class is not InilializableBase
 		if (this.slotPrefab == null) {
-			MyLogger.Error($"PlayerInventoryDisplayUI ({this.gameObject.name}): Slot Prefab is not assigned!" + GetParentGameObjectHeirarchyMessage());
+			Debug.LogError($"PlayerInventoryDisplayUI ({this.gameObject.name}): Slot Prefab is not assigned!" + GetParentGameObjectHeirarchyMessage());
 			return false;
 		}
 		if (this.slotParent == null) {
-			MyLogger.Error($"PlayerInventoryDisplayUI ({this.gameObject.name}): Slot Parent is not assigned!" + GetParentGameObjectHeirarchyMessage());
+			Debug.LogError($"PlayerInventoryDisplayUI ({this.gameObject.name}): Slot Parent is not assigned!" + GetParentGameObjectHeirarchyMessage());
 			return false;
 		}
 
 		if (this.ecr == null) {
-			MyLogger.Error($"PlayerInventoryDisplayUI ({this.gameObject.name}): EntityComponentStore is not assigned!" + GetParentGameObjectHeirarchyMessage());
+			Debug.LogError($"PlayerInventoryDisplayUI ({this.gameObject.name}): EntityComponentStore is not assigned!" + GetParentGameObjectHeirarchyMessage());
 			return false;
 		}
 		if (this.ecr.ComponentRegistry == null) {
-			MyLogger.Error($"PlayerInventoryDisplayUI ({this.gameObject.name}): ComponentRegistry in EntityComponentStore is null!" + GetParentGameObjectHeirarchyMessage());
+			Debug.LogError($"PlayerInventoryDisplayUI ({this.gameObject.name}): ComponentRegistry in EntityComponentStore is null!" + GetParentGameObjectHeirarchyMessage());
 			return false;
 		}
 		// since we are mutating the InventoryHolder by adding items to it, 
@@ -37,12 +36,12 @@ public class PlayerInventoryDisplayUI : InventoryDisplay {
 		if (this.ecr.ComponentRegistry.TryGetMutatableComponent<InventoryHolder>(out var invHolder)) {
 			this.inventoryHolder = invHolder;
 		} else {
-			MyLogger.Error($"PlayerInventoryDisplayUI ({this.gameObject.name}): InventoryHolder not found in EntityComponentStore!" + GetParentGameObjectHeirarchyMessage());
+			Debug.LogError($"PlayerInventoryDisplayUI ({this.gameObject.name}): InventoryHolder not found in EntityComponentStore!" + GetParentGameObjectHeirarchyMessage());
 			return false;
 		}
 
 		if (this.inventoryHolder.PrimaryInventorySystem == null) {
-			MyLogger.Error($"PlayerInventoryDisplayUI ({this.gameObject.name}): PrimaryInventorySystem is null in InventoryHolder!" + GetParentGameObjectHeirarchyMessage());
+			Debug.LogError($"PlayerInventoryDisplayUI ({this.gameObject.name}): PrimaryInventorySystem is null in InventoryHolder!" + GetParentGameObjectHeirarchyMessage());
 			return false;
 		}
 

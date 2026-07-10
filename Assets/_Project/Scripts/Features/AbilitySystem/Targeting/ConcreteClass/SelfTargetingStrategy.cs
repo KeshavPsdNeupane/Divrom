@@ -2,7 +2,6 @@
 using System;
 using Kope.AbilitySystem;
 using Kope.Component.Combat.Interface;
-using UnityEngine;
 
 namespace Kope.Component.Ability.Targeting {
 	[Serializable]

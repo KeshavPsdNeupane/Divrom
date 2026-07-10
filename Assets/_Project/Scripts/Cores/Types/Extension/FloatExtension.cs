@@ -1,5 +1,4 @@
 using System;
-using UnityEngine;
 
 namespace Kope.Core.Types.Extensions {
 	public static class FloatExtension {

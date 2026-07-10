@@ -1,6 +1,5 @@
 using UnityEngine;
 using Kope.Core.ServiceLocator;
-using Kope.Core.CompilerServices;
 
 public class PanelController : UIState {
 	[SerializeField] private string panelName = "Menu";
@@ -11,25 +10,25 @@ public class PanelController : UIState {
 	protected override bool OnInit() {
 		try {
 			if (this.currentPanel == null) {
-				MyLogger.Error($"{this.panelName}Controller: {this.panelName} "
+				Debug.LogError($"{this.panelName}Controller: {this.panelName} "
 				  + "Panel reference is missing!");
 				return false;
 			}
 			if (this.inputActionMap == PlayerInputActionCollection.None) {
-				MyLogger.Error($"{this.panelName}Controller: Input Action Map is not set!");
+				Debug.LogError($"{this.panelName}Controller: Input Action Map is not set!");
 				return false;
 			}
 			this.currentPanel.SetActive(false);
 			if (GlobalServiceLocator.Instance.TryGetService(out InputManager inputManager)) {
 				this.inputManager = inputManager;
 			} else {
-				MyLogger.Error($"{this.gameObject.name}Controller: InputManager service not found!");
+				Debug.LogError($"{this.gameObject.name}Controller: InputManager service not found!");
 				return false;
 			}
 			return true;
 
 		} catch (System.Exception ex) {
-			MyLogger.Error($"{this.panelName}Controller: Initialization failed with exception: {ex}" + this.GetParentGameObjectHeirarchyMessage());
+			Debug.LogError($"{this.panelName}Controller: Initialization failed with exception: {ex}" + this.GetParentGameObjectHeirarchyMessage());
 			return false;
 
 		}

@@ -1,6 +1,6 @@
 using UnityEngine.InputSystem;
 using Kope.Core.ServiceLocator;
-using Kope.Core.CompilerServices;
+using UnityEngine;
 
 namespace Kope.Component.Attack {
 	public interface ILockablePlayerAttack {
@@ -29,7 +29,7 @@ namespace Kope.Component.Attack {
 			if (GlobalServiceLocator.Instance.TryGetService(out InputManager inputManager)) {
 				this._inputManager = inputManager;
 			} else {
-				MyLogger.Error($"{this.gameObject.name}Controller: InputManager service not found!");
+				Debug.LogError($"{this.gameObject.name}Controller: InputManager service not found!");
 				return false;
 			}
 			this._fireSubscription = new InputActionSubscriptionLifetime<PlayerInputActionKey>(

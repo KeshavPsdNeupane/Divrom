@@ -11,7 +11,8 @@ namespace Kope.AbilitySystem.Effect {
 		public int abilityUsedThreshold;
 		[Header("Modifier")]
 		public float modifierAmount;
-		[Range(-1f, 100f)]
+		[Tooltip("Duration of the stat modifier in seconds. If 0 or less, the base modifier's duration will be used.")]
+		[Min(-0.1f)]
 		public float duration;
 	}
 

@@ -1502,7 +1502,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b704fae97497b629a70cd2df1251f15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterStatsSystem
-  characterName: Player
   characterStateSo: {fileID: 11400000, guid: e06becc107dbd2a41bc1b329d3a6b6b4, type: 2}
 --- !u!1 &7816191722304450726
 GameObject:

@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Kope.Core.ServiceLocator;
-using Kope.Core.CompilerServices;
 using Kope.Core.Init;
 using System.Collections.Generic;
 
@@ -23,7 +22,7 @@ public class GameplayUIController : InitializableBase {
 		this.uiStateManager.Init();
 
 		if (!GlobalServiceLocator.Instance.TryGetService(out InputManager inputManager)) {
-			MyLogger.Error($"{this.gameObject.name}Controller: InputManager service not found!");
+			Debug.LogError($"{this.gameObject.name}Controller: InputManager service not found!");
 			return false;
 		}
 

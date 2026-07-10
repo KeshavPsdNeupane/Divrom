@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Kope.SaveSystem;
-using Kope.Core.ServiceLocator;
 using Kope.Core.EntityComponentRegistry;
 using Kope.EntityComponentSystem;
 using Kope.Core.Types.Extensions;

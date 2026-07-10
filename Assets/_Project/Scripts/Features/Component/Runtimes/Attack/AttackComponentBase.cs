@@ -1,4 +1,3 @@
-using Kope.Core.CompilerServices;
 using UnityEngine;
 using UnityEngine.Events;
 using Kope.Core.Init;
@@ -47,15 +46,15 @@ namespace Kope.Component.Attack {
 
 		protected override bool OnInit() {
 			if (this.ecr == null) {
-				MyLogger.Error("EntityComponentStore reference is missing." + GetParentGameObjectHeirarchyMessage());
+				Debug.LogError("EntityComponentStore reference is missing." + GetParentGameObjectHeirarchyMessage());
 				return false;
 			}
 			if (!this.ecr.ComponentRegistry.TryGetMutatableComponent(out this._animationComponent)) {
-				MyLogger.Error("AnimationCOmp not found not found." + GetParentGameObjectHeirarchyMessage());
+				Debug.LogError("AnimationComponent not found." + GetParentGameObjectHeirarchyMessage());
 			}
 
 			if (!this.ecr.ComponentRegistry.TryGetMutatableComponent(out this._statsSystem)) {
-				MyLogger.Error("CharacterStatsSystem not found." + GetParentGameObjectHeirarchyMessage());
+				Debug.LogError("CharacterStatsSystem not found." + GetParentGameObjectHeirarchyMessage());
 				return false;
 			}
 			if (this.equippedWeapDataSO == null) {

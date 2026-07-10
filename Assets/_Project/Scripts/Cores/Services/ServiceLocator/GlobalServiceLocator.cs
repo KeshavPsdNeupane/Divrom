@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
-using Kope.Core;
-using Kope.Core.CompilerServices;
+using Kope.Logging;
+using UnityEngine;
 
 namespace Kope.Core.ServiceLocator {
 	/// <summary>
@@ -32,27 +32,27 @@ namespace Kope.Core.ServiceLocator {
 			service = null;
 			// We do NOT search the scene or create here. 
 			// Global services MUST be registered via Bootstrapper or RegisterService.
-			MyLogger.Error($"[GlobalLocator] Critical Error: {type.Name} is not registered. Check your GlobalBootStrap!");
+			Debug.LogError($"[GlobalLocator] Critical Error: {type.Name} is not registered. Check your GlobalBootStrap!");
 			return false;
 		}
 		public void RegisterService<TService>(Func<TService> factory) where TService : GlobalServiceBase {
 			if (factory == null) {
-				MyLogger.Error($"[GlobalLocator] RegisterService failed: The factory delegate for {typeof(TService).Name} is null.");
+				KLog.LogError($"[GlobalLocator] RegisterService failed: The factory delegate for {typeof(TService).Name} is null.");
 				return;
 			}
 			if (!this._canRegister) {
-				MyLogger.Error($"[GlobalLocator] Locked. Factory for {typeof(TService).Name} will not be invoked.");
+				KLog.LogError($"[GlobalLocator] Locked. Factory for {typeof(TService).Name} will not be invoked.");
 				return;
 			}
 			var type = typeof(TService);
 			if (this.services.ContainsKey(type)) {
-				MyLogger.Warn($"[GlobalLocator] {type.Name} is already registered. Skipping factory invocation.");
+				KLog.LogWarning($"[GlobalLocator] {type.Name} is already registered. Skipping factory invocation.");
 				return;
 			}
 
 			TService service = factory.Invoke();
 			if (service == null) {
-				MyLogger.Error($"[GlobalLocator] Factory for {type.Name} returned null. Registration aborted.");
+				KLog.LogError($"[GlobalLocator] Factory for {type.Name} returned null. Registration aborted.");
 				return;
 			}
 			Register(service, "Registered_On_Bootstrap", "Bootstrapper Registration Service");
@@ -64,7 +64,7 @@ namespace Kope.Core.ServiceLocator {
 
 			service.name = $"[Global] {type.Name}_{tag}";
 			service.transform.SetParent(transform);
-			MyLogger.Log($"[Service] Initialized {type.Name}: {service.name} via {source}", service.gameObject);
+			KLog.Log($"[Service] Initialized {type.Name}: {service.name} via {source}", service.gameObject);
 
 			service.InitializeService();
 			services[type] = service;

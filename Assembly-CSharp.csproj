@@ -69,6 +69,7 @@
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/PlayerItemCollector.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Component/UI/Health/ReduceHp.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Ability/StatBased/StatChangeAbility.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/Levelup/LevelSystem.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Ability/AbilityBase.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/UtilityClasses/AbilityAreaTargetingController.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/ConcreteClass/AreaTargeting/AreaTargetingStrategy2D.cs" />
@@ -144,10 +145,6 @@
     </Reference>
     <Reference Include="UnityEngine.AccessibilityModule">
       <HintPath>/home/keshav/Unity/Hub/Editor/6000.3.10f1/Editor/Data/Managed/UnityEngine/UnityEngine.AccessibilityModule.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.AdaptivePerformanceModule">
-      <HintPath>/home/keshav/Unity/Hub/Editor/6000.3.10f1/Editor/Data/Managed/UnityEngine/UnityEngine.AdaptivePerformanceModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.AndroidJNIModule">
@@ -1523,6 +1520,7 @@
     <ProjectReference Include="Kope.InputSystem.csproj" />
     <ProjectReference Include="Out.ThirdParty.Stuff.csproj" />
     <ProjectReference Include="Kope.ModularSpriteAnimation.Editor.csproj" />
+    <ProjectReference Include="Kope.Logging.csproj" />
     <ProjectReference Include="Kope.ModularSpriteAnimation.Runtime.csproj" />
     <ProjectReference Include="Kope.EntityComponentSystem.Runtime.csproj" />
     <ProjectReference Include="Kope.AI.Runtime.csproj" />

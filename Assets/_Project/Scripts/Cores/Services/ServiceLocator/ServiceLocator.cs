@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
-using Kope.Core.CompilerServices;
+
 namespace Kope.Core.ServiceLocator {
 	public abstract class ServiceLocator<T, TBase> : MonoBehaviour
 		where T : MonoBehaviour
@@ -93,7 +93,7 @@ namespace Kope.Core.ServiceLocator {
 						// Cast to Component/MonoBehaviour to get the GameObject for destruction
 						if (foundInstance is Component comp) {
 							if (comp.gameObject != null) {
-								MyLogger.Warn($"[Global] Destroyed redundant {serviceType.Name} found in newly loaded scene.");
+								Debug.LogWarning($"[Global] Destroyed redundant {serviceType.Name} found in newly loaded scene.");
 								Destroy(comp.gameObject);
 							}
 

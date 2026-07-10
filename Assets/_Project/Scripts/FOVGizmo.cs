@@ -32,6 +32,9 @@ public class FOVGizmo : MonoBehaviour {
 
 		Vector3 lookDir;
 		try {
+			// a hacky method but hey this works and is better than nothing. 
+			// The movement component should always be present on the same object as this script, 
+			// but if it isn't, we can just default to looking downwards.
 			lookDir = mover.GetLookingAtDirection();
 
 		} catch {

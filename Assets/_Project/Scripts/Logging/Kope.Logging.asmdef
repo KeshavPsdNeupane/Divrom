@@ -1,10 +1,7 @@
 {
-    "name": "Kope.Core.Runtime",
-    "rootNamespace": "Kope.Core",
-    "references": [
-        "GUID:815402b415daa9c298856ab850cef985",
-        "GUID:f43c5292278591af6a4576ac59722e24"
-    ],
+    "name": "Kope.Logging",
+    "rootNamespace": "Kope.Logging",
+    "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

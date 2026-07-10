@@ -126,7 +126,7 @@ namespace Kope.Actor.New {
 			// Evaluates the backing animation layer against configured profile markers (e.g., normalized time thresholds)
 			if (this._animationComponent.IsAnimationFinished(this._profileData)) {
 				// Relinquishes control back to the baseline routing state (Idle) without external intervention
-				this.RequestTransitionToIdle();
+				RequestTransitionToIdle();
 			}
 		}
 	}

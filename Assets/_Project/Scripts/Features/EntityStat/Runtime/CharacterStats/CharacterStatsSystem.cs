@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 using System.Collections.Generic;
-using Kope.Core.CompilerServices;
+
 using Kope.Core.Init;
 
 
@@ -40,7 +40,7 @@ namespace Kope.Character.Stats {
 		and as for the modifiers from armor, we can just save the currently equipped armor and when loading the game,
 		 we can just reapply the modifiers from the equipped armor.
 		*/
-		[SerializeField] private string characterName = "DefaultCharacter";
+
 		private Dictionary<CharacterStatType, AdvanceStat> currentStats;
 		private Dictionary<DamageType, StatBase> resistanceStats;
 		private Dictionary<CharacterStatType, float> levelIncreasingStatWithLevelingValue;
@@ -48,24 +48,19 @@ namespace Kope.Character.Stats {
 		[SerializeField] private CharacterStatsSO characterStateSo;
 
 
-		public string CharacterName => this.characterName;
 		public Dictionary<CharacterStatType, AdvanceStat> CurrentStats => this.currentStats;
 		public Dictionary<DamageType, StatBase> ResistanceStats => this.resistanceStats;
 
 		protected override bool OnInit() {
-			try {
-				this.currentStats ??= new Dictionary<CharacterStatType, AdvanceStat>();
-				this.resistanceStats ??= new Dictionary<DamageType, StatBase>();
-				this.levelIncreasingStatWithLevelingValue ??= new Dictionary<CharacterStatType, float>();
 
-				// setting the default values from the ScriptableObject just as a fallback/default,
-				// but later will be overridden by the save data if there is any.
-				SetDefault();
-				return true;
-			} catch (System.Exception ex) {
-				MyLogger.Error($"CharacterStatsSystem initialization failed: {ex.Message}" + GetParentGameObjectHeirarchyMessage());
-				return false;
-			}
+			this.currentStats ??= new Dictionary<CharacterStatType, AdvanceStat>();
+			this.resistanceStats ??= new Dictionary<DamageType, StatBase>();
+			this.levelIncreasingStatWithLevelingValue ??= new Dictionary<CharacterStatType, float>();
+
+			// setting the default values from the ScriptableObject just as a fallback/default,
+			// but later will be overridden by the save data if there is any.
+			SetDefault();
+			return true;
 
 		}
 
@@ -134,7 +129,7 @@ namespace Kope.Character.Stats {
 			if (this.currentStats.TryGetValue(type, out AdvanceStat stat))
 				return stat.GetValue();
 
-			MyLogger.Warn($"Stat {type} not found!");
+			Debug.LogWarning($"Stat {type} not found!");
 			return 0f;
 		}
 
@@ -142,7 +137,7 @@ namespace Kope.Character.Stats {
 			if (this.resistanceStats.TryGetValue(type, out StatBase stat))
 				return stat.GetValue();
 
-			MyLogger.Warn($"Resistance {type} not found!");
+			Debug.LogWarning($"Resistance {type} not found!");
 			return 0f;
 		}
 
@@ -150,7 +145,7 @@ namespace Kope.Character.Stats {
 			if (this.currentStats.TryGetValue(effect.statType, out AdvanceStat stat))
 				return stat.AddStatusEffect(effect);
 
-			MyLogger.Warn($"Stat {effect.statType} not found for adding modifier!");
+			Debug.LogWarning($"Stat {effect.statType} not found for adding modifier!");
 			return false;
 		}
 
@@ -159,7 +154,7 @@ namespace Kope.Character.Stats {
 				if (this.currentStats.TryGetValue(kvp.Key, out AdvanceStat stat))
 					stat.LevelUpStat(kvp.Value);
 				else
-					MyLogger.Warn($"Stat {kvp.Key} not found for leveling up!");
+					Debug.LogWarning($"Stat {kvp.Key} not found for leveling up!");
 			}
 		}
 
@@ -167,7 +162,7 @@ namespace Kope.Character.Stats {
 			if (this.currentStats.TryGetValue(type, out AdvanceStat stat)) {
 				stat.AddPointStat(points);
 			} else {
-				MyLogger.Warn($"Stat {type} not found for adding points!");
+				Debug.LogWarning($"Stat {type} not found for adding points!");
 			}
 		}
 
@@ -177,7 +172,7 @@ namespace Kope.Character.Stats {
 			if (this.resistanceStats.TryGetValue(modifier.statType, out StatBase stat))
 				return stat.AddModifier(modifier);
 
-			MyLogger.Warn($"Resistance {modifier.statType} not found for adding modifier!");
+			Debug.LogWarning($"Resistance {modifier.statType} not found for adding modifier!");
 			return false;
 		}
 

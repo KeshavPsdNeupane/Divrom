@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 using System.Diagnostics.CodeAnalysis;
-using Kope.Core.CompilerServices;
+
 using Kope.Core.Execution;
 
 namespace Kope.Core.ServiceLocator {
@@ -38,7 +38,7 @@ namespace Kope.Core.ServiceLocator {
 			var type = service.GetType();
 			if (services.ContainsKey(type)) {
 				if (!ReferenceEquals(services[type], service)) {
-					MyLogger.Warn($"[Locator] Duplicate {type.Name} detected. The secondary instance will be destroyed to maintain the Singleton pattern.");
+					Debug.LogWarning($"[Locator] Duplicate {type.Name} detected. The secondary instance will be destroyed to maintain the Singleton pattern.");
 					Destroy(service.gameObject);
 				}
 				return;
@@ -69,7 +69,7 @@ namespace Kope.Core.ServiceLocator {
 				return true;
 			}
 
-			MyLogger.Error($"[ServiceLocator] {type.Name} requested but not found! It must be in the Scene or Inspector list.");
+			Debug.LogError($"[ServiceLocator] {type.Name} requested but not found! It must be in the Scene or Inspector list.");
 			return false;
 		}
 

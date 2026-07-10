@@ -1,5 +1,5 @@
 using UnityEngine;
-using Kope.Core.CompilerServices;
+
 
 namespace Kope.Core.ServiceLocator {
 	public class ServiceBase : MonoBehaviour {
@@ -26,7 +26,7 @@ namespace Kope.Core.ServiceLocator {
 			var instances = FindObjectsByType(type, FindObjectsSortMode.None);
 
 			if (instances.Length > 1) {
-				MyLogger.Warn($"[ServiceLocator] Multiple instances of <b>{type.Name}</b> found on scene! For now Game will use first one...", this.gameObject);
+				Debug.LogWarning($"[ServiceLocator] Multiple instances of <b>{type.Name}</b> found on scene! For now Game will use first one...", this.gameObject);
 			}
 		}
 

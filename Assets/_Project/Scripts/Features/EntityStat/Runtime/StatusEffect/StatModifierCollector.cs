@@ -1,6 +1,5 @@
 using UnityEngine;
 using Kope.Character.Stats;
-using Kope.Core.CompilerServices;
 using Kope.Core.EntityComponentRegistry;
 using Kope.Core.Sensor;
 using Kope.Core.Identity;
@@ -16,14 +15,14 @@ public class StatModifierCollector : SensorBase {
 	public override void OnStart() {
 
 		if (ecr == null) {
-			MyLogger.Error("No EntityComponentStore assigned to StatModifierCollector" + this._parentGOHiearchPathMessage);
+			Debug.LogError("No EntityComponentStore assigned to StatModifierCollector" + this._parentGOHiearchPathMessage);
 			return;
 		}
 		// since we are mutating the CharacterStatsSystem by adding stat modifiers to it, we need mutatable access here. so using TryGetMutatableComponent for semantic clarity
 		if (ecr.ComponentRegistry.TryGetMutatableComponent(out CharacterStatsSystem statsSystem)) {
 			this.characterStats = statsSystem;
 		} else {
-			MyLogger.Error("No CharacterStatsSystem found in EntityComponentStoreConfig for StatModifierCollector" + this._parentGOHiearchPathMessage);
+			Debug.LogError("No CharacterStatsSystem found in EntityComponentStoreConfig for StatModifierCollector" + this._parentGOHiearchPathMessage);
 			return;
 		}
 	}
@@ -36,7 +35,7 @@ public class StatModifierCollector : SensorBase {
 			//  gracefully by logging an error message and returning early, rather than having an unhandled exception
 			//  that could disrupt the game flow.
 			if (!other.TryGetComponent(out EntityInstance mgr)) {
-				MyLogger.Error("No EntityManager found on detected object with tag " + StatusObjectTagName + ". Please ensure the object has an EntityManager component." + this._parentGOHiearchPathMessage);
+				Debug.LogError("No EntityManager found on detected object with tag " + StatusObjectTagName + ". Please ensure the object has an EntityManager component." + this._parentGOHiearchPathMessage);
 				return;
 			}
 
@@ -51,7 +50,7 @@ public class StatModifierCollector : SensorBase {
 			// a StatusEffectContainer component. so if we don't find it, it means something is
 			//  wrong with the setup of the detected object, and we log an error to notify the developer to fix it.
 			if (!mgr.EntityDetail.ComponentRegistry.TryGetReadOnlyComponent(out StatModifierContainer effect)) {
-				MyLogger.Error("No StatusEffectContainer found on detected object with tag " + StatusObjectTagName + ". Please ensure the object has a StatusEffectContainer component." + this._parentGOHiearchPathMessage);
+				Debug.LogError("No StatusEffectContainer found on detected object with tag " + StatusObjectTagName + ". Please ensure the object has a StatusEffectContainer component." + this._parentGOHiearchPathMessage);
 				return;
 			}
 			if (effect != null && effect.StatusEffect != null && this.characterStats != null) {
