@@ -1,4 +1,5 @@
 using Kope.Component.Movement;
+using Kope.Core.Mathfx;
 using Kope.Core.Type.EnumAsset;
 using UnityEngine;
 
@@ -26,7 +27,7 @@ namespace Kope.Actor.New {
 		/// </summary>
 		public override void TickUpdate() {
 			// MOVEMENT_EPSILON prevents precision jitter from accidentally triggering state changes
-			if (this._movementComponent.Direction.sqrMagnitude >= MovementComponentBase.MOVEMENT_EPSILON) {
+			if (this._movementComponent.Direction.sqrMagnitude >= Mathfx.SQUARE_DIRECTION_UPPER_EPSILON) {
 				int movementEnumId = this.movementStateEnum.GetSelectedEnumId();
 
 				// CRITICAL ARCHITECTURAL CHOICE: Because Idle is the root baseline,

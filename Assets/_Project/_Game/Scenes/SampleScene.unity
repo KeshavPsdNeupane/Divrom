@@ -161,82 +161,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 52776286001874330, guid: bc31b0eecd7304ebb99aa3410d7cc3bc, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: -1090274858, guid: 95a16fdd7b6603e60a9484aed56aedc9, type: 3}
-    - target: {fileID: 224507018146361962, guid: bc31b0eecd7304ebb99aa3410d7cc3bc, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: -659143660, guid: 369a417af5b27b2d9afb5719b7c1fae0, type: 3}
-    - target: {fileID: 1048981498321793666, guid: bc31b0eecd7304ebb99aa3410d7cc3bc, type: 3}
-      propertyPath: guid
-      value: d095cbcf-373d-42b7-b9ae-e35cee66a0cb
-      objectReference: {fileID: 0}
-    - target: {fileID: 1048981498321793666, guid: bc31b0eecd7304ebb99aa3410d7cc3bc, type: 3}
-      propertyPath: absoluteHierarchyPath
-      value: SampleScene-->Dummy
-      objectReference: {fileID: 0}
-    - target: {fileID: 2781082107745990446, guid: bc31b0eecd7304ebb99aa3410d7cc3bc, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: -855901985, guid: 780c04f42cd663241a0a2a61f37b0e0e, type: 3}
-    - target: {fileID: 3223687248713611704, guid: bc31b0eecd7304ebb99aa3410d7cc3bc, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: -8498407833611962168, guid: 14619560ade8d0221a350f84a97a2e1c, type: 3}
-    - target: {fileID: 3400886148539648344, guid: bc31b0eecd7304ebb99aa3410d7cc3bc, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3400886148539648344, guid: bc31b0eecd7304ebb99aa3410d7cc3bc, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3648302375881592806, guid: bc31b0eecd7304ebb99aa3410d7cc3bc, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: -1111047886, guid: 3b3c7bb5434dfa91ea3f0fc3173faf2d, type: 3}
-    - target: {fileID: 4512281911964162701, guid: bc31b0eecd7304ebb99aa3410d7cc3bc, type: 3}
-      propertyPath: components.Array.size
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4512281911964162701, guid: bc31b0eecd7304ebb99aa3410d7cc3bc, type: 3}
-      propertyPath: 'components.Array.data[1]'
-      value: 
-      objectReference: {fileID: 221121077}
-    - target: {fileID: 4512281911964162701, guid: bc31b0eecd7304ebb99aa3410d7cc3bc, type: 3}
-      propertyPath: 'components.Array.data[2]'
-      value: 
-      objectReference: {fileID: 1414410751}
-    - target: {fileID: 4512281911964162701, guid: bc31b0eecd7304ebb99aa3410d7cc3bc, type: 3}
-      propertyPath: 'components.Array.data[3]'
-      value: 
-      objectReference: {fileID: 591191796}
-    - target: {fileID: 4512281911964162701, guid: bc31b0eecd7304ebb99aa3410d7cc3bc, type: 3}
-      propertyPath: 'components.Array.data[4]'
-      value: 
-      objectReference: {fileID: 1707725495}
     - target: {fileID: 4513367037071607233, guid: bc31b0eecd7304ebb99aa3410d7cc3bc, type: 3}
       propertyPath: m_Name
       value: Dummy
       objectReference: {fileID: 0}
-    - target: {fileID: 4513367037071607233, guid: bc31b0eecd7304ebb99aa3410d7cc3bc, type: 3}
-      propertyPath: m_IsActive
-      value: 1
+    - target: {fileID: 6611203586646119595, guid: bc31b0eecd7304ebb99aa3410d7cc3bc, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4519181188214712366, guid: bc31b0eecd7304ebb99aa3410d7cc3bc, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 4839505426810885240, guid: 9e563b88af2e71614a9cc0dda8a67022, type: 3}
-    - target: {fileID: 5692721736420759071, guid: bc31b0eecd7304ebb99aa3410d7cc3bc, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: -2127780029, guid: 4f1e5b8ba06cbda55a694c1b1025d1a7, type: 3}
-    - target: {fileID: 6751365814346717457, guid: bc31b0eecd7304ebb99aa3410d7cc3bc, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: -430818935684523939, guid: 94aa57f43bbc4073ca98f79d12e80c42, type: 3}
+    - target: {fileID: 6611203586646119595, guid: bc31b0eecd7304ebb99aa3410d7cc3bc, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7870155893999714083, guid: bc31b0eecd7304ebb99aa3410d7cc3bc, type: 3}
       propertyPath: m_LocalPosition.x
       value: -6.460524
@@ -277,10 +213,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8850061035441677732, guid: bc31b0eecd7304ebb99aa3410d7cc3bc, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: -1976043293, guid: e57d0019a56699c93bb6ff3a7e1e7da1, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1048,17 +980,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 182458104}
   m_CullTransparentMesh: 1
---- !u!114 &221121077 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8172152211638158505, guid: bc31b0eecd7304ebb99aa3410d7cc3bc, type: 3}
-  m_PrefabInstance: {fileID: 47419341}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c21e7b4d7bb1b00ca3bc5575b465e21, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Kope.Components::Kope.Component.Health.DamageDummyHealthComponent
 --- !u!1 &223750729
 GameObject:
   m_ObjectHideFlags: 0
@@ -6634,17 +6555,6 @@ MonoBehaviour:
   panelName: Inventory
   currentPanel: {fileID: 1335616151}
   inputActionMap: 11
---- !u!114 &591191796 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 9032542264227806970, guid: bc31b0eecd7304ebb99aa3410d7cc3bc, type: 3}
-  m_PrefabInstance: {fileID: 47419341}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2852b6552a8f1b13eab1e803be094c5b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Kope.Components::Kope.Component.Combat.DamageReactionProcessor
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
@@ -6770,6 +6680,10 @@ PrefabInstance:
     - target: {fileID: 2033154260760698069, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
       propertyPath: m_Name
       value: PlayerNew
+      objectReference: {fileID: 0}
+    - target: {fileID: 2250557181460402853, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: defaultLevel
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2741082705423238104, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
       propertyPath: m_AnchorMax.x
@@ -7929,43 +7843,43 @@ MonoBehaviour:
     gameObjectName: SceneServiceLocator
   - typeName: EntityInitCaller
     order: -40
+    gameObjectName: Dummy (1)
+  - typeName: EntityInitCaller
+    order: -40
     gameObjectName: AddSpd
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: Addhp
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: Hpstore
   - typeName: EntityInitCaller
     order: -40
     gameObjectName: AddSpd (1)
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: Addhp (1)
+    gameObjectName: Addhp
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: Hpstore (2)
+    gameObjectName: PlayerNew
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: Addhp (2)
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: Dummy (1)
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: AddDef
+    gameObjectName: Hpstore
   - typeName: EntityInitCaller
     order: -40
     gameObjectName: AddDef (1)
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: PlayerNew
+    gameObjectName: Addhp (1)
   - typeName: EntityInitCaller
     order: -40
     gameObjectName: Hpstore (1)
   - typeName: EntityInitCaller
     order: -40
     gameObjectName: Dummy
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: AddDef
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Hpstore (2)
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Addhp (2)
   - typeName: InGameUIInitCaller
     order: -30
     gameObjectName: UI
@@ -8322,8 +8236,8 @@ MonoBehaviour:
   x: 0.575
   result: 0.6205578
   unityResult: 0.38834375
-  customEvalTime: 0.0004
-  unityEvalTime: 0.0004
+  customEvalTime: 0.2452
+  unityEvalTime: 0.11460000000000001
 --- !u!1001 &1031836800
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9844,17 +9758,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0203bd80da2ff4146ae95634b9d96dcc, type: 3}
---- !u!114 &1414410751 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4790525821007680954, guid: bc31b0eecd7304ebb99aa3410d7cc3bc, type: 3}
-  m_PrefabInstance: {fileID: 47419341}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8454376a5eb301491924cb36f8eba028, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Kope.Components::Kope.Component.HitBox.HitBoxComponent
 --- !u!4 &1423524849
 Transform:
   m_ObjectHideFlags: 0
@@ -11014,17 +10917,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1698547943}
   m_CullTransparentMesh: 1
---- !u!114 &1707725495 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 133449266573284797, guid: bc31b0eecd7304ebb99aa3410d7cc3bc, type: 3}
-  m_PrefabInstance: {fileID: 47419341}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f525ffbe0dde5890bd67b77fbe56607, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Kope.Components::Kope.Component.Health.Interface.HealingProcessor
 --- !u!1 &1734368558
 GameObject:
   m_ObjectHideFlags: 0

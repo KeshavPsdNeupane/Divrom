@@ -40,16 +40,16 @@ namespace Kope.Core.Types.UniqueId {
 
 		public HashedTag HashedTag {
 			get {
-				if (string.IsNullOrEmpty(guid)) GenerateId();
-				if (_hashedTag.ToString() != guid) {
-					_hashedTag = new HashedTag(guid);
+				if (string.IsNullOrEmpty(this.guid)) this.GenerateId();
+				if (this._hashedTag.ToString() != this.guid) {
+					this._hashedTag = new HashedTag(this.guid);
 				}
-				return _hashedTag;
+				return this._hashedTag;
 			}
 		}
 
-		public string Id => guid;
-		public string Path => absoluteHierarchyPath;
+		public string Id => this.guid;
+		public string Path => this.absoluteHierarchyPath;
 
 		private static readonly Dictionary<HashedTag, GameObject> AllIds = new();
 
@@ -72,8 +72,8 @@ namespace Kope.Core.Types.UniqueId {
 				}
 			}
 
-			guid = savedId;
-			_hashedTag = new HashedTag(guid);
+			this.guid = savedId;
+			this._hashedTag = new HashedTag(guid);
 			UpdateHierarchyPath(); // Refresh path to match current scene state
 			RegisterId();
 		}

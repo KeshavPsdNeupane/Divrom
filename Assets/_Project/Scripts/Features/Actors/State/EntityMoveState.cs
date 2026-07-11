@@ -1,5 +1,5 @@
 using Kope.Actor.New;
-using Kope.Component.Movement;
+using Kope.Core.Mathfx;
 using UnityEngine;
 
 namespace Kope.Actor {
@@ -12,7 +12,7 @@ namespace Kope.Actor {
 
 
 		public override void TickUpdate() {
-			if (this._movementComponent.Direction.sqrMagnitude <= MovementComponentBase.MOVEMENT_EPSILON) {
+			if (this._movementComponent.Direction.sqrMagnitude <= Mathfx.SQUARE_DIRECTION_UPPER_EPSILON) {
 				this._stateManagement.TransitionToIdle();
 				return;
 			}

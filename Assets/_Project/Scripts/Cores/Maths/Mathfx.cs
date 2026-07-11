@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Kope.Core.Mathfx {
@@ -6,6 +7,42 @@ namespace Kope.Core.Mathfx {
 		public const float DIRECTION_UPPER_EPSILON = 0.1f;
 		public const float SQUARE_DIRECTION_LOWER_EPSILON = DIRECTION_LOWER_EPSILON * DIRECTION_LOWER_EPSILON;
 		public const float SQUARE_DIRECTION_UPPER_EPSILON = DIRECTION_UPPER_EPSILON * DIRECTION_UPPER_EPSILON;
+		public const float DEFAULT_RESPONSIVENESS = 0.7f;
+		public static bool IsEven(int value) {
+			// Bitwise check: If the least significant bit is 0, the number is even.
+			// Works perfectly for both positive and negative integers in two's complement.
+			return (value & 1) == 0;
+		}
+
+		/// <summary>
+		/// Statistical Banker's Rounding (Round to Nearest, Tie-Breaker to Even).
+		/// Rounds normally, but if the fractional part is exactly 0.5, 
+		/// it deterministically chooses the nearest even integer to eliminate statistical bias.
+		/// </summary>
+		public static int RoundBankers(float value) {
+			// MathF handles floats directly, and ToEven is the holy grail default!
+			return (int)MathF.Round(value, MidpointRounding.ToEven);
+		}
+
+		/// <summary>
+		/// Accumulates a floating-point value into an integer accumulator, rounding to the nearest whole 
+		/// number while preserving fractional precision.
+		/// This is useful for scenarios where you want to increment an integer value by fractional amounts 
+		/// over time, ensuring that the total accumulated value is accurate and unbiased.
+		/// The accumulator retains any leftover fractional value after rounding, allowing for 
+		/// precise accumulation across multiple calls.
+		/// Example:
+		/// </summary>
+		/// <param name="value"></param>
+		/// <param name="accumulator"></param>
+		/// <returns></returns>
+		public static int AccumulatorRound(float value, ref float accumulator) {
+			accumulator += value;
+			int rounded = RoundBankers(accumulator);
+			accumulator -= rounded;
+			return rounded;
+		}
+
 
 
 		/// <summary>
@@ -17,14 +54,14 @@ namespace Kope.Core.Mathfx {
 		/// <param name="localOffset">The local coordinate vector (x = right/perpendicular, y = forward).</param>
 		public static Vector2 TransformOffset2D(Vector2 forward, Vector2 localOffset) {
 			/*
-                Linear Algebra Basis Transformation:
-                We reconstruct the local coordinate system axes directly from the forward unit vector:
-                    Local Y (Forward Axis) = (forward.x, forward.y)
-                    Local X (Right Axis)   = (forward.y, -forward.x) -> Perpendicular 2D vector
-                
-                The world space vector is calculated by scaling these basis axes by the local components:
-                    World Vector = (Right Axis * localOffset.x) + (Forward Axis * localOffset.y)
-            */
+				Linear Algebra Basis Transformation:
+				We reconstruct the local coordinate system axes directly from the forward unit vector:
+					Local Y (Forward Axis) = (forward.x, forward.y)
+					Local X (Right Axis)   = (forward.y, -forward.x) -> Perpendicular 2D vector
+				
+				The world space vector is calculated by scaling these basis axes by the local components:
+					World Vector = (Right Axis * localOffset.x) + (Forward Axis * localOffset.y)
+			*/
 			float worldX = (forward.x * localOffset.y) + (forward.y * localOffset.x);
 			float worldY = (forward.y * localOffset.y) - (forward.x * localOffset.x);
 			return new Vector2(worldX, worldY);

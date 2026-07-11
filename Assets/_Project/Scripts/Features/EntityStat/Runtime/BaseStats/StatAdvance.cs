@@ -45,7 +45,11 @@ namespace Kope.Character.Stats {
 			this.currentStat.Update();
 		}
 
-		public void LevelUpStat(float increaseValue) {
+		public void SetBaseValue(float newValue) {
+			this.levelingStat.SetBaseValue(newValue);
+		}
+
+		public void LevelUp(float increaseValue) {
 			this.levelingStat.LevelUp(increaseValue);
 		}
 		public void AddPointStat(float value) {

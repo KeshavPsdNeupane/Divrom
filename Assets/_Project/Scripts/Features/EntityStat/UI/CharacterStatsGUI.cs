@@ -47,8 +47,8 @@ public class StatDescription : InitializableBase {
 
 	void OnDisable() {
 		if (!this.IsInitialized) return;
-		this._healthComponent.OnCurrentHealthChanged -= SetCurrentHp;
-		this._healthComponent.OnMaxHealthChanged -= SetCurrentHp;
+		this._healthComponent.OnHealthChange -= SetCurrentHp;
+		this._healthComponent.OnHealthChange -= SetCurrentHp;
 
 		foreach (var kvp in this._statsCallbacksDict)
 			this._characterStats.StatsUnsubscribe(kvp.Key, kvp.Value);
@@ -133,9 +133,9 @@ public class StatDescription : InitializableBase {
 		// initial setup and fetching current/max health to display on UI, and subscribe to 
 		// changes to update the display when health changes.
 		var currentHealth = this._healthComponent.CurrentHealth;
-		this._healthComponent.OnCurrentHealthChanged += SetCurrentHp;
+		this._healthComponent.OnHealthChange += SetCurrentHp;
 		var maxHealth = this._healthComponent.MaxHealth;
-		this._healthComponent.OnMaxHealthChanged += SetCurrentHp;
+		this._healthComponent.OnHealthChange += SetCurrentHp;
 		ResolveHpDisplay(currentHealth, maxHealth);
 
 

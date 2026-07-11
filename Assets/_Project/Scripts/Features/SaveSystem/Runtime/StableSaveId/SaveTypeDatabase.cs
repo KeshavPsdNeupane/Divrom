@@ -19,8 +19,8 @@ namespace Kope.SaveSystem {
 		}
 
 		public void RebuildRuntimeCache() {
-			_idToType = new Dictionary<string, Type>(StringComparer.Ordinal);
-			_typeToId = new Dictionary<Type, string>();
+			this._idToType = new Dictionary<string, Type>(StringComparer.Ordinal);
+			this._typeToId = new Dictionary<Type, string>();
 
 			foreach (var entry in this.entries) {
 				if (entry == null || string.IsNullOrWhiteSpace(entry.Id)) continue;
@@ -28,19 +28,19 @@ namespace Kope.SaveSystem {
 				var resolvedType = entry.ResolveType();
 				if (resolvedType == null) continue;
 
-				_idToType[entry.Id] = resolvedType;
-				_typeToId[resolvedType] = entry.Id;
+				this._idToType[entry.Id] = resolvedType;
+				this._typeToId[resolvedType] = entry.Id;
 			}
 		}
 
 		public bool TryGetType(string id, out Type type) {
-			if (_idToType == null) RebuildRuntimeCache();
-			return _idToType.TryGetValue(id, out type);
+			if (this._idToType == null) RebuildRuntimeCache();
+			return this._idToType.TryGetValue(id, out type);
 		}
 
 		public bool TryGetId(Type type, out string id) {
-			if (_typeToId == null) RebuildRuntimeCache();
-			return _typeToId.TryGetValue(type, out id);
+			if (this._typeToId == null) RebuildRuntimeCache();
+			return this._typeToId.TryGetValue(type, out id);
 		}
 
 #if UNITY_EDITOR

@@ -1,0 +1,145 @@
+using Kope.Character.Stats;
+using Kope.Component.ExperienceSystem.Config;
+using Kope.Component.ExperienceSystem.Interface;
+using Kope.Core.EntityComponentRegistry;
+using Kope.Core.LifeTimeManagement;
+using Kope.Core.Types;
+using UnityEngine;
+
+namespace Kope.Component.ExperienceSystem {
+	public class ExperienceSystem : InitializableBase, IExperienceSystem {
+		[Header("Level System Config")]
+		[SerializeField, Min(1)] private int defaultLevel = 1;
+		[SerializeField] private ExperienceSystemConfig experienceSystemConfig;
+		[SerializeField] private EntityComponentsRegistry ecr;
+
+		[Header("Batching Settings")]
+		[SerializeField, Tooltip("How often to check for level-ups (in seconds)")]
+		private float batchCheckInterval = 0.2f;
+		[SerializeField, Tooltip("Delay before the first level-up check (in seconds)")]
+		private float batchInitialCheckDelay = 2f;
+
+		private IStatSystem _statsSystem;
+
+		/// <summary>
+		/// Single source of truth tracking total cumulative lifetime experience.
+		/// Utilizes an AccumulatorInt to safely process floating-point micro-rewards 
+		/// via a residual buffer while storing an unshakeable whole integer.
+		/// Bypasses high-level 32-bit float precision degradation bugs completely.
+		/// </summary>
+		private AccumulatorInt _currentExp = AccumulatorInt.Default;
+
+		private int _currentLevel = 1;
+		private int _lastCheckedExp = 0;
+
+		public event System.Action<int> OnLevelChanged;
+
+		// Implicit operators inside AccumulatorInt map these automatically to clear ints
+		public int CurrentExp => this._currentExp;
+		public int CurrentLevel => this._currentLevel;
+
+
+		protected override bool OnInit() {
+			if (this.experienceSystemConfig == null) {
+				Debug.LogError($"ExperienceSystemConfig is not assigned in ExperienceSystem.+{GetParentGameObjectHeirarchyMessage()}");
+				return false;
+			}
+			if (this.ecr == null) {
+				Debug.LogError($"EntityComponentsRegistry is not assigned in ExperienceSystem.+{GetParentGameObjectHeirarchyMessage()}");
+				return false;
+			}
+			if (!this.ecr.ComponentRegistry.TryGetReadOnlyComponent(out this._statsSystem)) {
+				Debug.LogError($"Failed to find IStatSystem in EntityComponentsRegistry.+{GetParentGameObjectHeirarchyMessage()}");
+				return false;
+			}
+
+			Default();
+			this._statsSystem.InitialLevelSetup(this._currentLevel);
+			// Runs a low-frequency heart-beat loop for performance. Keeps expensive level-up math and 
+			// string/UI events separated from frame-rate performance entirely.
+			InvokeRepeating(nameof(HandleLevelUpBatching), this.batchInitialCheckDelay, this.batchCheckInterval);
+			return true;
+		}
+
+
+		private void Default() {
+			this._currentLevel = this.defaultLevel;
+			// Seed the accumulator cleanly using the absolute configuration milestone milestone requirement
+			this._currentExp = new AccumulatorInt(this.experienceSystemConfig.GetCumulativeXpForLevel(this._currentLevel));
+		}
+
+		private void OnEnable() {
+			OnLevelChangeEvent(this._statsSystem.LevelUp, true);
+		}
+		private void OnDisable() {
+			OnLevelChangeEvent(this._statsSystem.LevelUp, false);
+		}
+
+		/// <summary>
+		/// Adds experience points to the running total. Supports fractional values.
+		/// The overloaded operators in AccumulatorInt automatically catch fractions, 
+		/// process thresholds with Banker's Rounding, and retain leftovers under the hood.
+		/// Actual progression shifts are batched to prevent mid-frame calculation stutter.
+		/// </summary>
+		/// <param name="amount">The quantity of experience to offer (fractions supported).</param>
+		public void AddExperience(float amount) {
+			if (amount <= 0f) return;
+			this._currentExp += amount;
+		}
+
+
+		/// <summary>
+		/// Evaluates progression state at set intervals. If cumulative integer changes are 
+		/// detected, uses a rapid Binary Search lookup against the ScriptableObject table 
+		/// to check if a valid Level shift occurred.
+		/// </summary>
+		private void HandleLevelUpBatching() {
+			// Early out if the integer representation hasn't altered since the last tick
+			if (this._currentExp == this._lastCheckedExp) return;
+
+			this._lastCheckedExp = this._currentExp;
+
+			int newLevel = this.experienceSystemConfig.GetLevelFromCumulativeXp(this._currentExp);
+			if (newLevel != this._currentLevel) {
+				this._currentLevel = newLevel;
+				this.OnLevelChanged?.Invoke(this._currentLevel);
+			}
+		}
+
+		/// <summary>
+		/// Subscribes or unsubscribes a callback to the level change event.
+		/// </summary>
+		/// <remarks>
+		/// Reuses a single method with a boolean toggle to simplify event lifecycle management. 
+		/// To ensure safe event handling and prevent duplicate registrations, it automatically 
+		/// unsubscribes the callback before performing a new subscription.
+		/// </remarks>
+		/// <param name="callback">The method to invoke with the new level value when a level change occurs.</param>
+		/// <param name="isSubscribe">True to register the callback; False to remove it.</param>
+		public void OnLevelChangeEvent(System.Action<int> callback, bool isSubscribe) {
+			if (isSubscribe) {
+				this.OnLevelChanged -= callback;
+				this.OnLevelChanged += callback;
+			} else {
+				this.OnLevelChanged -= callback;
+			}
+		}
+
+
+		protected override void OnDestroy() {
+			CancelInvoke(nameof(HandleLevelUpBatching));
+			base.OnDestroy();
+		}
+
+
+		/// <summary>
+		/// Forces an exact progression shift to the next level milestone.
+		/// Adds the precise delta required to clear the current bracket via AddExperience 
+		/// to ensure all native underlying structures register the advancement reliably.
+		/// </summary>
+		public void SimulateLevelUp() {
+			int newLevelExp = this.experienceSystemConfig.GetCumulativeXpForLevel(this._currentLevel + 1) + 1;
+			AddExperience(newLevelExp - this._currentExp);
+		}
+	}
+}

@@ -132,21 +132,6 @@ public readonly struct InputActionSubscriptionLifetime<TEnum> where TEnum : Enum
 public class InputManager : GlobalServiceBase {
 	private CustomPlayerInputs playerInput;
 	private readonly Dictionary<PlayerInputActionCollection, InputActionMap> actionMaps = new();
-
-	private float lastDeviceSwitchTime;
-	// Minimum seconds required between layout swaps
-	private const float DEVICE_SWITCH_COOLDOWN = 0.2f;
-
-	// --- AUTOMATED DEVICE DETECTION MODULE ---
-	private PlayerInputDevice currentDevice = PlayerInputDevice.None;
-
-	/// <summary> Fires dynamically the exact frame the player touches a different hardware category. </summary>
-	//	public event Action<PlayerInputDevice> OnDeviceSwitched;
-
-	/// <summary> Exposes the currently active player device classification tracking record. </summary>
-	public PlayerInputDevice CurrentDevice => this.currentDevice;
-
-	// Property to access the raw generated C# class if needed for direct polling
 	public CustomPlayerInputs PlayerInputs => this.playerInput;
 
 	protected override bool OnInitializeService() {
@@ -177,57 +162,6 @@ public class InputManager : GlobalServiceBase {
 		EnableActionType(PlayerInputActionCollection.Player);
 	}
 
-	// /// <summary>
-	// /// Processes changes across all active action mappings to evaluate what physical control hardware generated the input event.
-	// /// </summary>
-	// // --- Add these tracking fields to the top of your InputManager class ---
-	// private void OnGlobalActionChange(object obj, InputActionChange change) {
-	// 	if (change != InputActionChange.ActionPerformed) return;
-
-	// 	var action = obj as InputAction;
-	// 	if (action == null || action.activeControl == null) return;
-
-	// 	// --- GUARDRAIL 1: TIME COOLDOWN ---
-	// 	// If we just switched layouts a split second ago, ignore fast jitter bounce
-	// 	if (Time.unscaledTime - this.lastDeviceSwitchTime < DEVICE_SWITCH_COOLDOWN) return;
-
-	// 	InputDevice device = action.activeControl.device;
-
-	// 	// --- GUARDRAIL 2: ANALOG DRIFT RESOLUTION ---
-	// 	// If the incoming action is an axis/pointer movement, verify it crossed a deliberate threshold
-	// 	if (action.activeControl.valueType == typeof(Vector2)) {
-	// 		Vector2 value = action.ReadValue<Vector2>();
-
-	// 		if (device is Mouse) {
-	// 			// For mice, look at the delta (movement speed) rather than absolute screen positioning.
-	// 			// If the mouse is just sitting there vibrating a sub-pixel, ignore it.
-	// 			Vector2 mouseDelta = Mouse.current.delta.ReadValue();
-	// 			if (mouseDelta.sqrMagnitude < 0.5f) return;
-	// 		} else if (device is Gamepad) {
-	// 			// Standard hardware thumbstick deadzone filtering
-	// 			if (value.sqrMagnitude < 0.05f) return;
-	// 		}
-	// 	}
-
-	// 	// --- ROUTE & UPDATE LAYOUT ---
-	// 	PlayerInputDevice detectedDevice = PlayerInputDevice.Unknown;
-
-	// 	if (device is Keyboard || device is Mouse) {
-	// 		detectedDevice = PlayerInputDevice.KeyboardMouse;
-	// 	} else if (device is Gamepad) {
-	// 		detectedDevice = PlayerInputDevice.Gamepad;
-	// 	} else if (device is Touchscreen) {
-	// 		detectedDevice = PlayerInputDevice.Touch;
-	// 	}
-
-	// 	if (detectedDevice != PlayerInputDevice.Unknown && detectedDevice != this.currentDevice) {
-	// 		this.currentDevice = detectedDevice;
-	// 		this.lastDeviceSwitchTime = Time.unscaledTime; // Anchor timestamp
-
-	// 		Debug.Log($"[Kope.Input] Hardware context shifted smoothly to: {this.currentDevice}");
-	// 		OnDeviceSwitched?.Invoke(this.currentDevice);
-	// 	}
-	// }
 	private InputActionMap GetActionMapByType(PlayerInputActionCollection type) {
 		return type switch {
 			PlayerInputActionCollection.Player => this.playerInput.Player,
@@ -360,15 +294,4 @@ public class InputManager : GlobalServiceBase {
 	}
 
 	#endregion
-
-	private void OnDestroy() {
-		// Clean up global engine hooks cleanly to avoid lingering allocation leaks
-		//InputSystem.onActionChange -= OnGlobalActionChange;
-
-		if (this.playerInput != null) {
-			this.playerInput.Disable();
-			this.playerInput.Dispose();
-			this.playerInput = null;
-		}
-	}
 }

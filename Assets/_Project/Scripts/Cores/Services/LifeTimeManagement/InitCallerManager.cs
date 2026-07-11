@@ -45,9 +45,12 @@ namespace Kope.Core.LifeTimeManagement {
 				Init();
 				// check after the init to make sure all components are initialized, if not log a warning
 				CheckInit();
-				Debug.Log($"[{this.name}] InitLifecycleManager Awake completed. " +
-				$"InitCount: {_initializable.Count}, UpdateCount: {_updatables.Count}," +
-				$" FixedUpdateCount: {_fixedUpdatables.Count}", this);
+				// Debug.Log($"[{this.name}] InitLifecycleManager Awake completed. " +
+				// $"InitCount: {_initializable.Count}, UpdateCount: {_updatables.Count}," +
+				// $" FixedUpdateCount: {_fixedUpdatables.Count}", this);
+				// foreach (var init in _initializable) {
+				// 	Debug.Log($"[{init.GetType().Name}] IsInitialized: {init.IsInitialized}", (MonoBehaviour)init);
+				// }
 			}
 		}
 
