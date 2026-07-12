@@ -95,14 +95,14 @@ namespace Kope.Component.Movement {
 
 		private void SubscribeToStats() {
 			if (this._readOnlycharacterStatsSystem.CurrentStats != null) {
-				this._readOnlycharacterStatsSystem.StatsSubscribe(CharacterStatType.AGI, SetDefaultMovementSpeed);
-				SetDefaultMovementSpeed(this._readOnlycharacterStatsSystem.CurrentStats[CharacterStatType.AGI].GetValue());
+				this._readOnlycharacterStatsSystem.StatsSubscribe(CharacterStatType.SPD, SetDefaultMovementSpeed);
+				SetDefaultMovementSpeed(this._readOnlycharacterStatsSystem.CurrentStats[CharacterStatType.SPD].GetValue());
 			}
 		}
 
 		private void UnsubscribeFromStats() {
 			if (this._readOnlycharacterStatsSystem.CurrentStats != null) {
-				this._readOnlycharacterStatsSystem.StatsUnsubscribe(CharacterStatType.AGI, SetDefaultMovementSpeed);
+				this._readOnlycharacterStatsSystem.StatsUnsubscribe(CharacterStatType.SPD, SetDefaultMovementSpeed);
 			}
 		}
 

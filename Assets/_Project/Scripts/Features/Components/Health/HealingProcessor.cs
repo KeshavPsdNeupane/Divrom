@@ -79,7 +79,7 @@ namespace Kope.Component.Health.Interface {
 			if (!IsInitialized) return;
 
 			// Example of Logic: Increase healing based on a "Recovery" stat or SP
-			float sp = this._statSystem.GetStatValue(CharacterStatType.SP);
+			float sp = this._statSystem.GetStatValue(CharacterStatType.INT);
 			float bonusMult = 1f + (sp * 0.01f); // 1% extra healing per SP
 
 			this._health.Heal(flat * bonusMult, percent);

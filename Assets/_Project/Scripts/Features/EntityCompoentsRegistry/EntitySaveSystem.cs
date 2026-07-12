@@ -3,8 +3,8 @@ using UnityEngine;
 using Kope.SaveSystem;
 using Kope.Core.EntityComponentRegistry;
 using Kope.EntityComponentSystem;
-using Kope.Core.Types.Extensions;
-using Kope.Core.Types.Hashes;
+using Kope.Core.Collections.Extensions;
+using Kope.Core.Collections.Hashes;
 
 namespace Kope.Core.Identity {
 	public class EntitySaveSystem : MonoBehaviour, IEntitySavePacketProvider {

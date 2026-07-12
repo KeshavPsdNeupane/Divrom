@@ -49,7 +49,7 @@ namespace Kope.Component.ExperienceSystem.Config.Editor {
 				EditorGUILayout.Space(2);
 				string resultText = $"Result: An EXP of <b>{testXpInput:N0}</b> puts the player at <b>Lv. {testResultLevel}</b>";
 
-				GUIStyle richLabelStyle = new GUIStyle(EditorStyles.label) { richText = true };
+				GUIStyle richLabelStyle = new(EditorStyles.label) { richText = true };
 				EditorGUILayout.LabelField(resultText, richLabelStyle);
 			}
 			EditorGUILayout.EndVertical();
@@ -139,7 +139,7 @@ namespace Kope.Component.ExperienceSystem.Config.Editor {
 		}
 
 		private void CopyTableToClipboard(int[] tableData) {
-			StringBuilder sb = new StringBuilder();
+			StringBuilder sb = new();
 
 			if (showDelta) {
 				sb.AppendLine("| NextLevel | ExpNeed | Growth Δ | CumulativeExp |");

@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Kope.Core.Types.Hashes;
+using Kope.Core.Collections.Hashes;
 using UnityEngine;
 
 namespace Kope.Core.EntityComponentRegistry {

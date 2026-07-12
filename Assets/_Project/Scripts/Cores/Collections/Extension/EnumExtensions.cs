@@ -1,4 +1,4 @@
-namespace Kope.Core.Types.Extensions {
+namespace Kope.Core.Collections.Extensions {
 	public static class EnumExtensions {
 		/// <summary>
 		/// Converts the enum value to a lowercase string suitable for use as an ID part.

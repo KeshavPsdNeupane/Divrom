@@ -2,8 +2,8 @@ using UnityEngine;
 using Kope.Core.LifeTimeManagement;
 using System;
 using Kope.Core.EntityComponentRegistry;
-using Kope.Core.Types.UniqueId;
-using Kope.Core.Types.Hashes;
+using Kope.Core.Collections.UniqueId;
+using Kope.Core.Collections.Hashes;
 
 namespace Kope.Core.Identity {
 

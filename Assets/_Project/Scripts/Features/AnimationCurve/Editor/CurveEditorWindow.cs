@@ -8,7 +8,7 @@ namespace Kope.AI.Editor {
 		private CurveAsset _target;
 		private int _dragIdx = -1;
 		private int _dragType = 0; // 0: Main, 1: In, 2: Out
-		private Vector2 _viewPan = new Vector2(50, 50);
+		private Vector2 _viewPan = new(50, 50);
 		private float _zoom = 1f;
 		private bool _showBakePreview = true;
 
@@ -25,7 +25,7 @@ namespace Kope.AI.Editor {
 			DrawTopToolbar();
 
 			// Layout accounting for toolbar and status bar
-			Rect canvas = new Rect(0, 40, position.width, position.height - 65);
+			Rect canvas = new(0, 40, position.width, position.height - 65);
 			DrawCanvas(canvas);
 
 			DrawBottomStatus();
@@ -57,10 +57,10 @@ namespace Kope.AI.Editor {
 			HandleZoomPan(canvas);
 
 			float size = Mathf.Min(canvas.width, canvas.height) * 0.85f * _zoom;
-			Rect graph = new Rect(_viewPan.x, _viewPan.y, size, size);
+			Rect graph = new(_viewPan.x, _viewPan.y, size, size);
 
 			GUI.BeginGroup(canvas);
-			Rect localG = new Rect(graph.position - canvas.position, graph.size);
+			Rect localG = new(graph.position - canvas.position, graph.size);
 
 			DrawGrid(localG);
 
@@ -153,11 +153,11 @@ namespace Kope.AI.Editor {
 
 		private void DrawWireRectangle(Rect r) {
 			Vector3[] corners = new Vector3[] {
-				new Vector3(r.x, r.y, 0),
-				new Vector3(r.xMax, r.y, 0),
-				new Vector3(r.xMax, r.yMax, 0),
-				new Vector3(r.x, r.yMax, 0),
-				new Vector3(r.x, r.y, 0)
+				new(r.x, r.y, 0),
+				new(r.xMax, r.y, 0),
+				new(r.xMax, r.yMax, 0),
+				new(r.x, r.yMax, 0),
+				new(r.x, r.y, 0)
 			};
 			Handles.DrawPolyLine(corners);
 		}
@@ -238,8 +238,8 @@ namespace Kope.AI.Editor {
 			}
 		}
 
-		private Vector2 ToScreen(Rect r, Vector2 n) => new Vector2(r.x + n.x * r.width, r.y + (1f - n.y) * r.height);
-		private Vector2 ToNormalized(Rect r, Vector2 s) => new Vector2((s.x - r.x) / r.width, 1f - (s.y - r.y) / r.height);
+		private Vector2 ToScreen(Rect r, Vector2 n) => new(r.x + n.x * r.width, r.y + (1f - n.y) * r.height);
+		private Vector2 ToNormalized(Rect r, Vector2 s) => new((s.x - r.x) / r.width, 1f - (s.y - r.y) / r.height);
 	}
 }
 #endif

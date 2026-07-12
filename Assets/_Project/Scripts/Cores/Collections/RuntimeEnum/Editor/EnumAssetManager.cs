@@ -297,7 +297,7 @@ namespace Kope.Core.Type.EnumAsset.EditorTools {
 				var asset = AssetDatabase.LoadAssetAtPath<EnumAsset>(AssetDatabase.GUIDToAssetPath(guid));
 				if (!asset) continue;
 
-				SerializedObject so = new SerializedObject(asset);
+				SerializedObject so = new(asset);
 				int id = so.FindProperty("_enumAssetId").intValue;
 				bool isManual = so.FindProperty("_isManualId").boolValue;
 

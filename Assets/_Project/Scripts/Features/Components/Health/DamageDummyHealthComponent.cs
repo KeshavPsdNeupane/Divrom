@@ -34,14 +34,12 @@ namespace Kope.Component.Health {
 		protected override void OnEnable() {
 			base.OnEnable();
 			if (this.healingStartRatio > 0f) {
-				this.OnHealthChange += ResetTheHealth;
-				this.OnHealthChange += ResetTheHealth;
+				OnHealthChange(ResetTheHealth, true);
 			}
 		}
 		protected override void OnDisable() {
 			base.OnDisable();
-			this.OnHealthChange -= ResetTheHealth;
-			this.OnHealthChange -= ResetTheHealth;
+			OnHealthChange(ResetTheHealth, false);
 		}
 	}
 }

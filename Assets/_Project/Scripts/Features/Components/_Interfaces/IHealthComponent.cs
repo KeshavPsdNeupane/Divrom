@@ -23,13 +23,15 @@ namespace Kope.Component.Health.Interface {
 			ChangeType = changeType;
 			this.ShowFloatingText = showFloatingText;
 		}
+
+		public override string ToString() {
+			return $"HealthChangeInfo(PreviousHealth: {PreviousHealth}, CurrentHealth: {CurrentHealth}, MaxHealth: {MaxHealth}, ChangeType: {ChangeType}, ShowFloatingText: {ShowFloatingText})";
+		}
 	}
 	public interface IHealthComponent : IHealable {
 		float CurrentHealth { get; }
 		float MaxHealth { get; }
-
-		event Action<HealthChangeInfo> OnHealthChange;
-
+		void OnHealthChange(Action<HealthChangeInfo> action, bool subscribe);
 
 		void ApplyDamage(float amount);
 	}

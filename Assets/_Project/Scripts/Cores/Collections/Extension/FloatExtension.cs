@@ -1,6 +1,6 @@
 using System;
 
-namespace Kope.Core.Types.Extensions {
+namespace Kope.Core.Collections.Extensions {
 	public static class FloatExtension {
 		/// <summary>
 		/// Applies a compensation to the utility score based on the number of considerations.

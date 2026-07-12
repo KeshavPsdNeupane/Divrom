@@ -24,6 +24,7 @@ MonoBehaviour:
       includeCaster: 0
       previewPrefab: {fileID: 0}
       radius: 5
+      maxTargetingDistance: 20
       layerMask:
         serializedVersion: 2
         m_Bits: 1
@@ -32,7 +33,6 @@ MonoBehaviour:
       minSearchDepth: -1
       previewColor: {r: 1, g: 0, b: 0, a: 1}
       maxTargets: 16
-      controllerMomentumMultiplier: 1
     projectile:
       projectilePrefab: {fileID: 8495600968883564274, guid: d2977a74a15034ba7b3162b4b8159c4a, type: 3}
       projectileLinePreviewPrefab: {fileID: 1672277495898474315, guid: 163862dc04ac07dafbaad2c9a3e74ffb, type: 3}
@@ -41,8 +41,7 @@ MonoBehaviour:
       projectileRange: 5
       spawnOffset: {x: 0, y: 1, z: 0}
       pierceCount: 0
-      controllerMomentumMultiplier: 4
-  cooldownDuration: 5
+  cooldownDuration: 0.5
   applicableHitTargetType: 0
   damageEffectSettings:
   - selectedType: 1

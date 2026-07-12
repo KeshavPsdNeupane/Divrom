@@ -1,4 +1,4 @@
-using Kope.Core.Types.Extensions;
+using Kope.Core.Collections.Extensions;
 using UnityEngine;
 namespace Kope.Core.LifeTimeManagement {
 

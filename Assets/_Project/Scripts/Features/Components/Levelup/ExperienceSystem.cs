@@ -3,14 +3,14 @@ using Kope.Component.ExperienceSystem.Config;
 using Kope.Component.ExperienceSystem.Interface;
 using Kope.Core.EntityComponentRegistry;
 using Kope.Core.LifeTimeManagement;
-using Kope.Core.Types;
+using Kope.Core.Collections;
 using UnityEngine;
 
 namespace Kope.Component.ExperienceSystem {
 	public class ExperienceSystem : InitializableBase, IExperienceSystem {
 		[Header("Level System Config")]
 		[SerializeField, Min(1)] private int defaultLevel = 1;
-		[SerializeField] private ExperienceSystemConfig experienceSystemConfig;
+		[SerializeField] private ExperienceSystemConfig config;
 		[SerializeField] private EntityComponentsRegistry ecr;
 
 		[Header("Batching Settings")]
@@ -40,7 +40,7 @@ namespace Kope.Component.ExperienceSystem {
 
 
 		protected override bool OnInit() {
-			if (this.experienceSystemConfig == null) {
+			if (this.config == null) {
 				Debug.LogError($"ExperienceSystemConfig is not assigned in ExperienceSystem.+{GetParentGameObjectHeirarchyMessage()}");
 				return false;
 			}
@@ -55,6 +55,7 @@ namespace Kope.Component.ExperienceSystem {
 
 			Default();
 			this._statsSystem.InitialLevelSetup(this._currentLevel);
+			// invoke the level changed event to ensure any subscribers are aware of the initial level state
 			// Runs a low-frequency heart-beat loop for performance. Keeps expensive level-up math and 
 			// string/UI events separated from frame-rate performance entirely.
 			InvokeRepeating(nameof(HandleLevelUpBatching), this.batchInitialCheckDelay, this.batchCheckInterval);
@@ -65,7 +66,7 @@ namespace Kope.Component.ExperienceSystem {
 		private void Default() {
 			this._currentLevel = this.defaultLevel;
 			// Seed the accumulator cleanly using the absolute configuration milestone milestone requirement
-			this._currentExp = new AccumulatorInt(this.experienceSystemConfig.GetCumulativeXpForLevel(this._currentLevel));
+			this._currentExp = new AccumulatorInt(this.config.GetCumulativeXpForLevel(this._currentLevel) + 1);
 		}
 
 		private void OnEnable() {
@@ -99,7 +100,7 @@ namespace Kope.Component.ExperienceSystem {
 
 			this._lastCheckedExp = this._currentExp;
 
-			int newLevel = this.experienceSystemConfig.GetLevelFromCumulativeXp(this._currentExp);
+			int newLevel = this.config.GetLevelFromCumulativeXp(this._currentExp);
 			if (newLevel != this._currentLevel) {
 				this._currentLevel = newLevel;
 				this.OnLevelChanged?.Invoke(this._currentLevel);
@@ -138,7 +139,7 @@ namespace Kope.Component.ExperienceSystem {
 		/// to ensure all native underlying structures register the advancement reliably.
 		/// </summary>
 		public void SimulateLevelUp() {
-			int newLevelExp = this.experienceSystemConfig.GetCumulativeXpForLevel(this._currentLevel + 1) + 1;
+			int newLevelExp = this.config.GetCumulativeXpForLevel(this._currentLevel + 1) + 1;
 			AddExperience(newLevelExp - this._currentExp);
 		}
 	}

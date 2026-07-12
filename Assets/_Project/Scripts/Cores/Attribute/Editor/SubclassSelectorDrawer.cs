@@ -57,7 +57,7 @@ namespace Kope.Core.Attributes.Editor {
 					do {
 						if (SerializedProperty.EqualContents(iterator, endProperty)) break;
 						float height = EditorGUI.GetPropertyHeight(iterator, true);
-						Rect childRect = new Rect(position.x, position.y + yOffset, position.width, height);
+						Rect childRect = new(position.x, position.y + yOffset, position.width, height);
 						EditorGUI.PropertyField(childRect, iterator, true);
 						yOffset += height + EditorGUIUtility.standardVerticalSpacing;
 					} while (iterator.NextVisible(false));
@@ -91,7 +91,7 @@ namespace Kope.Core.Attributes.Editor {
 		}
 
 		private void ShowTypeMenu(SerializedProperty property, System.Type targetType) {
-			GenericMenu menu = new GenericMenu();
+			GenericMenu menu = new();
 			menu.AddItem(new GUIContent("Null"), false, () => {
 				property.serializedObject.Update();
 				property.managedReferenceValue = null;

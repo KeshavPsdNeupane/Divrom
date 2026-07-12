@@ -109,7 +109,7 @@ namespace Kope.Core.Type.EnumAsset {
 		/// and moves since Unity preserves the GUID through those operations.
 		/// </summary>
 		private static int GuidToAssetPrefix(string guid) {
-			return Types.Hashes.FnvHash.ComputeInRange(guid, MIN_ASSET_PREFIX, MAX_ASSET_PREFIX);
+			return Collections.Hashes.FnvHash.ComputeInRange(guid, MIN_ASSET_PREFIX, MAX_ASSET_PREFIX);
 		}
 
 		public void ManualUpdateId(int newPrefix) {

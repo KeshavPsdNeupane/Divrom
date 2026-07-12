@@ -17,7 +17,7 @@ namespace Kope.AI {
 		[SerializeField, ReadOnly] public double unityEvalTime;
 
 		private Curve _curve;
-		private Stopwatch _sw = new Stopwatch();
+		private Stopwatch _sw = new();
 
 #if UNITY_EDITOR
 		void OnValidate() {

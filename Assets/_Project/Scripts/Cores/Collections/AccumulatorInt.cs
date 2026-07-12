@@ -1,7 +1,7 @@
 using System;
 using Newtonsoft.Json;
 
-namespace Kope.Core.Types {
+namespace Kope.Core.Collections {
 	/// <summary>
 	/// A high-performance, memory-efficient value type that encapsulates a continuous progression pipeline.
 	/// It accumulates high-frequency floating-point inputs into a robust, unshakeable integer backbone while

@@ -1372,7 +1372,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Kope.ExperienceSystem.ExperienceSystem
   defaultLevel: 1
-  experienceSystemConfig: {fileID: 11400000, guid: a99986ee4b05f01c7a207ef5668fe94c, type: 2}
+  config: {fileID: 11400000, guid: a99986ee4b05f01c7a207ef5668fe94c, type: 2}
   ecr: {fileID: 6037248722059709900}
   batchCheckInterval: 0.2
   batchInitialCheckDelay: 2

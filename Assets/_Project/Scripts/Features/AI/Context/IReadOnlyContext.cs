@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Kope.Component;
 using Kope.Core.EntityComponentRegistry;
-using Kope.Core.Types.Hashes;
+using Kope.Core.Collections.Hashes;
 
 
 /// <summary>

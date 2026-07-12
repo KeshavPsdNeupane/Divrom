@@ -3,7 +3,7 @@ using Kope.Component.Health.Temp;
 using Kope.Core.Sensor;
 using UnityEngine;
 using Kope.Core.Identity;
-using Kope.Core.Types.Extensions;
+using Kope.Core.Collections.Extensions;
 
 namespace Kope.Component {
 	public class HpRestorationCollector : SensorBase {

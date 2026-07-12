@@ -1,10 +1,10 @@
+using Kope.Component.ExperienceSystem;
 using Kope.Component.Health;
 using Kope.Component.Health.Interface;
+using Kope.Core.Collections.Extensions;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Kope.Core.Types.Extensions;
-using Kope.Component.ExperienceSystem;
-using TMPro;
 
 public class HealthBar : MonoBehaviour {
 	[SerializeField] private HealthComponentBase healthComponent;
@@ -12,50 +12,72 @@ public class HealthBar : MonoBehaviour {
 	[SerializeField] private Slider healthBarFill;
 	[SerializeField] private TextMeshProUGUI levelUpText;
 
-
 	private void Start() {
 		if (!ValidateReferences()) return;
 
-		this.healthComponent.OnHealthChange += RefreshHpBar;
-		this.healthComponent.OnHealthChange += RefreshHpBar;
-		this.experienceSystem.OnLevelChangeEvent(LevelUpHandler, true);
-		UpdateVisuals(this.healthComponent.CurrentHealth, this.healthComponent.MaxHealth);
+		// Initialize values to current state
+		UpdateHealthVisuals(this.healthComponent.CurrentHealth, this.healthComponent.MaxHealth);
+		UpdateLevelVisuals(this.experienceSystem.CurrentLevel);
+
+		// Bind events cleanly
+		ToggleEventSubscriptions(true);
 	}
-
-	private void RefreshHpBar(HealthChangeInfo hpInfo) {
-		UpdateVisuals(hpInfo.CurrentHealth, hpInfo.MaxHealth);
-	}
-
-	private void UpdateVisuals(float current, float max) {
-		if (this.healthBarFill == null) return;
-		this.healthBarFill.value = (max <= 0) ? 0 : current / max;
-	}
-
-
-
-	private bool ValidateReferences() {
-		if (this.healthComponent == null || this.healthBarFill == null) {
-			Debug.LogError($"HealthBar is missing references! {this.GetFullHierarchyPath()}", this);
-			return false;
-		}
-		if (this.experienceSystem == null || this.levelUpText == null) {
-			Debug.LogError($"HealthBar is missing references! {this.GetFullHierarchyPath()}", this);
-			return false;
-		}
-		return true;
-	}
-
 
 	private void OnDestroy() {
+		ToggleEventSubscriptions(false);
+	}
+
+	/// <summary>
+	/// Centralized switch to easily register or unregister event listeners,
+	/// preventing double-subscriptions and memory leaks.
+	/// </summary>
+	private void ToggleEventSubscriptions(bool subscribe) {
 		if (this.healthComponent != null) {
-			this.healthComponent.OnHealthChange -= RefreshHpBar;
-			this.healthComponent.OnHealthChange -= RefreshHpBar;
+			if (subscribe) {
+				this.healthComponent.OnHealthChange(OnHealthChanged, true);
+			} else {
+				this.healthComponent.OnHealthChange(OnHealthChanged, false);
+			}
 		}
+
 		if (this.experienceSystem != null) {
-			this.experienceSystem.OnLevelChangeEvent(LevelUpHandler, false);
+			this.experienceSystem.OnLevelChangeEvent(OnLevelChanged, subscribe);
 		}
 	}
-	private void LevelUpHandler(int newLevel) {
-		this.levelUpText.text = $"{newLevel}";
+
+	// ── Event Handlers ────────────────────────────────────────────────────────
+
+	private void OnHealthChanged(HealthChangeInfo hpInfo) {
+		UpdateHealthVisuals(hpInfo.CurrentHealth, hpInfo.MaxHealth);
+	}
+
+	private void OnLevelChanged(int newLevel) {
+		UpdateLevelVisuals(newLevel);
+	}
+
+	// ── Visual Updates ────────────────────────────────────────────────────────
+
+	private void UpdateHealthVisuals(float current, float max) {
+		if (this.healthBarFill == null) return;
+		this.healthBarFill.value = (max <= 0f) ? 0f : current / max;
+	}
+
+	private void UpdateLevelVisuals(int level) {
+		if (this.levelUpText == null) return;
+		this.levelUpText.text = level.ToString(); // ToString() is cleaner and faster than string interpolation here
+	}
+
+	// ── Validation ────────────────────────────────────────────────────────────
+
+	private bool ValidateReferences() {
+		bool isValid = true;
+		string path = this.GetFullHierarchyPath();
+
+		if (this.healthComponent == null) { Debug.LogError($"[HealthBar] Missing field '{nameof(healthComponent)}' at {path}", this); isValid = false; }
+		if (this.experienceSystem == null) { Debug.LogError($"[HealthBar] Missing field '{nameof(experienceSystem)}' at {path}", this); isValid = false; }
+		if (this.healthBarFill == null) { Debug.LogError($"[HealthBar] Missing field '{nameof(healthBarFill)}' at {path}", this); isValid = false; }
+		if (this.levelUpText == null) { Debug.LogError($"[HealthBar] Missing field '{nameof(levelUpText)}' at {path}", this); isValid = false; }
+
+		return isValid;
 	}
 }

@@ -42,11 +42,14 @@ namespace Kope.Component.Health {
 		public float CurrentHealth => this.currentHealth;
 		public float MaxHealth => this.maxHealth;
 
-		public event Action<HealthChangeInfo> OnHealthChange;
+		private event Action<HealthChangeInfo> _onHealthChange;
 
 		protected void InvokeHpChange(HealthChangeInfo info) {
-			this.OnHealthChange?.Invoke(info);
+			Debug.Log($"HealthChangeEvent Invoked: {info}");
+			this._onHealthChange?.Invoke(info);
 		}
+
+
 
 		protected override bool OnInit() {
 			if (ecr == null) return false;
@@ -58,6 +61,23 @@ namespace Kope.Component.Health {
 
 		protected virtual void OnEnable() => SubscribeToStats();
 		protected virtual void OnDisable() => UnsubscribeToStats();
+
+
+		/// <summary>
+		/// Toggles the registration of a listener callback for health change updates.
+		/// </summary>
+		/// <param name="action">The listener callback to register or unregister.</param>
+		/// <param name="subscribe">Pass <c>true</c> to subscribe the listener, or <c>false</c> to unsubscribe it.</param>
+		/// <remarks>
+		/// To prevent memory leaks and accidental double-subscriptions, this method completely removes the 
+		/// callback from the underlying invocation list before re-adding it if <paramref name="subscribe"/> is true.
+		/// </remarks>
+		public void OnHealthChange(Action<HealthChangeInfo> action, bool subscribe) {
+			this._onHealthChange -= action;
+			if (subscribe) {
+				this._onHealthChange += action;
+			}
+		}
 
 		private void SubscribeToStats() {
 			// now IsInitialized garuntte the characterStatSyste internal is fully configured, so we 
@@ -74,30 +94,46 @@ namespace Kope.Component.Health {
 			}
 		}
 
+		/// <summary>
+		/// Updates the maximum health threshold and adjusts current health accordingly.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// When max health increases, the current health is boosted by the difference 
+		/// to reward the player instantly (e.g., equipping a health item).
+		/// </para>
+		/// <para>
+		/// When max health decreases, current health is not penalized or reduced, 
+		/// unless it exceeds the new maximum cap, in which case it is safely clamped.
+		/// </para>
+		/// </remarks>
+		/// <param name="newMaxHealth">The target maximum health value to apply.</param>
 		private void SetMaxHealth(float newMaxHealth) {
-
 			float previousCurrentHealth = this.currentHealth;
 			float previousMaxHealth = this.maxHealth;
 
 			float maxHealthDifference = newMaxHealth - previousMaxHealth;
-
 			this.maxHealth = newMaxHealth;
-			this.currentHealth += maxHealthDifference;
-			this.currentHealth = Mathf.Clamp(this.currentHealth, 0, this.maxHealth);
-			this.OnHealthChange?.Invoke(
-			new HealthChangeInfo(
+
+			// Only heal on increase; do not penalize current health on decrease.
+			if (maxHealthDifference > 0) {
+				this.currentHealth += maxHealthDifference;
+			}
+
+			this.currentHealth = Mathf.Clamp(this.currentHealth, 0f, this.maxHealth);
+
+			this._onHealthChange?.Invoke(new HealthChangeInfo(
 				previousCurrentHealth,
 				this.currentHealth,
 				this.maxHealth,
 				HealthChangeType.MaxHealthChanged
-			)
-		);
+			));
 		}
 		public void Heal(float amount) {
 			if (!this.IsInitialized) return;
 			float previousHealth = this.currentHealth;
 			this.currentHealth = Mathf.Clamp(this.currentHealth + amount, 0, this.maxHealth);
-			this.OnHealthChange?.Invoke(
+			this._onHealthChange?.Invoke(
 				new HealthChangeInfo(previousHealth, this.currentHealth, this.maxHealth,
 				HealthChangeType.Heal
 				)
@@ -117,7 +153,7 @@ namespace Kope.Component.Health {
 
 			float previousHealth = this.currentHealth;
 			this.currentHealth = Mathf.Clamp(this.currentHealth - amount, 0, this.maxHealth);
-			this.OnHealthChange?.Invoke(
+			this._onHealthChange?.Invoke(
 				new HealthChangeInfo(previousHealth, this.currentHealth, this.maxHealth,
 				HealthChangeType.Damage
 				)
@@ -132,7 +168,7 @@ namespace Kope.Component.Health {
 		public void LoadFromSaveData(ISaveData data) {
 			if (data is HealthComponentSaveData healthData) {
 				this.currentHealth = healthData.CurrentHealth;
-				this.OnHealthChange?.Invoke(
+				this._onHealthChange?.Invoke(
 					new HealthChangeInfo(0, this.currentHealth, this.maxHealth, HealthChangeType.LoadFromSave)
 				);
 			}

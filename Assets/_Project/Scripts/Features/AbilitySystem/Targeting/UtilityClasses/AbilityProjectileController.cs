@@ -2,7 +2,7 @@ using System;
 using Kope.AbilitySystem;
 using Kope.Component.Combat.Interface;
 using Kope.Core.Sensor;
-using Kope.Core.Types.Extensions;
+using Kope.Core.Collections.Extensions;
 using UnityEngine;
 
 namespace Kope.Component.Ability.Targeting {

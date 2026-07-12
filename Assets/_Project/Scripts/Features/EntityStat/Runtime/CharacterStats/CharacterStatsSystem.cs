@@ -8,13 +8,42 @@ using System;
 
 namespace Kope.Character.Stats {
 	public enum CharacterStatType : short {
-		HP, // Health Points
-		ATK, // Attack Power
-		DEF, // Defense
-		SP, // Spell Power, affects magic damage and healing power
-		AGI, // Agility, affects movement speed and attack speed(just give minor/negligible boost to attack speed, main purpose is to increase movement speed)
-		CRATE, // Critical Hit Rate
-		CDMG, // Critical Hit Damage
+		/// <summary>
+		/// Health Points. Determines maximum life capacity. 
+		/// The character is defeated when this value hits zero.
+		/// </summary>
+		HP = 0,
+
+		/// <summary>
+		/// Attack Power. Dictates the raw base damage dealt by physical abilities and basic attacks.
+		/// </summary>
+		ATK = 1,
+
+		/// <summary>
+		/// Defense. Provides flat or percentage mitigation to reduce incoming physical damage.
+		/// </summary>
+		DEF = 2,
+
+		/// <summary>
+		/// Intelligence. Scales the effectiveness of magical damage spells and healing output.
+		/// </summary>
+		INT = 3,
+
+		/// <summary>
+		/// Speed. Primarily increases tactical movement velocity, with a minor, secondary influence on attack rate.
+		/// </summary>
+		SPD = 4,
+
+		/// <summary>
+		/// Critical Hit Rate. The percentile probability (0% to 100%) of an attack landing a critical strike.
+		/// </summary>
+		CRATE = 5,
+
+		/// <summary>
+		/// Critical Hit Damage. An additive percentage multiplier applied to successful critical strikes.
+		/// <para>Formula: Total Damage = Base Damage * (1.0 + (CDMG / 100)). Example: 50% CDMG increases 100 base damage to 150.</para>
+		/// </summary>
+		CDMG = 6,
 	}
 	// these are hidden stat that are not directly shown to the player but 
 	// can affect gameplay in various ways, such as increasing healing received, 

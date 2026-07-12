@@ -2,7 +2,7 @@ using UnityEngine;
 using Kope.AI.Utility;
 using Kope.Core.EntityComponentRegistry;
 using Kope.Component.Movement;
-using Kope.Core.Types.Hashes;
+using Kope.Core.Collections.Hashes;
 
 
 [CreateAssetMenu(fileName = "TargetDistanceConsideration", menuName = "Scriptable Objects/AI/Utility/Considerations/TargetDistanceConsideration")]

@@ -1,5 +1,5 @@
 using System;
-namespace Kope.Core.Types.Hashes {
+namespace Kope.Core.Collections.Hashes {
 
 	public static class FnvHash {
 		private const int FNV_PRIME = 16777619;

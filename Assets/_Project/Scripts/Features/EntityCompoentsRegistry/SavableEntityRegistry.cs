@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Kope.Core.Identity;
-using Kope.Core.Types.Hashes;
+using Kope.Core.Collections.Hashes;
 using Kope.SaveSystem;
 using Kope.Core.ServiceLocator;
 using UnityEngine;

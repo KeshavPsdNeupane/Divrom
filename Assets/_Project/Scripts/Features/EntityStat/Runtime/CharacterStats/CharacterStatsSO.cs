@@ -1,5 +1,5 @@
 using UnityEngine;
-using ThirdParty.SerializableDictionary;
+using Kope.Core.Collections;
 using System;
 using System.Collections.Generic;
 
@@ -12,6 +12,7 @@ namespace Kope.Character.Stats {
 		[SerializeField] private SerializableDictionary<DamageType, float> resistanceStats = new();
 
 		[SerializeField] private SerializableDictionary<CharacterStatType, float> levelIncreasingStatWithLevelingValue = new();
+
 
 		public SerializableDictionary<CharacterStatType, float> BasestatsDict => Basestats;
 		public SerializableDictionary<DamageType, float> ResistanceStatsDict => resistanceStats;
@@ -35,8 +36,8 @@ namespace Kope.Character.Stats {
 				CharacterStatType.HP => 100f,
 				CharacterStatType.DEF => 10f,
 				CharacterStatType.ATK => 15f,
-				CharacterStatType.SP => 12f,
-				CharacterStatType.AGI => 5f,
+				CharacterStatType.INT => 12f,
+				CharacterStatType.SPD => 5f,
 				CharacterStatType.CRATE => 5f,
 				CharacterStatType.CDMG => 100f,
 				_ => 0f

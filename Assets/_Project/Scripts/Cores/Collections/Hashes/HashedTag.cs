@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel;
 using Newtonsoft.Json;
-namespace Kope.Core.Types.Hashes {
+namespace Kope.Core.Collections.Hashes {
 	public interface IHashTagProvider {
 		HashedTag HashedTag { get; }
 	}

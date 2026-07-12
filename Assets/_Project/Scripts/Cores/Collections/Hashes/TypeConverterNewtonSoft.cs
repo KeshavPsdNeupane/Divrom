@@ -1,7 +1,7 @@
 using System.ComponentModel;
 using System.Globalization;
 
-namespace Kope.Core.Types.Hashes {
+namespace Kope.Core.Collections.Hashes {
 	public class HashedTagTypeConverter : TypeConverter {
 		public override bool CanConvertFrom(ITypeDescriptorContext context, System.Type sourceType)
 			=> sourceType == typeof(string) || base.CanConvertFrom(context, sourceType);

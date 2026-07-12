@@ -2,15 +2,15 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Kope.Core.Attribute;
-using Kope.Core.Types.Extensions;
-using Kope.Core.Types.Hashes;
+using Kope.Core.Collections.Extensions;
+using Kope.Core.Collections.Hashes;
 
 
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.SceneManagement;
 #endif
-namespace Kope.Core.Types.UniqueId {
+namespace Kope.Core.Collections.UniqueId {
 	/// <summary>
 	/// Always place at the very root of current GameObject since this Id defines the very identity of the entire entity.
 	/// If this component is missing, the system will generate a new ID on Awake,

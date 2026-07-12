@@ -93,7 +93,7 @@ namespace Kope.Core.Type.EnumAsset.EditorTools {
 
 			if (assetIdProp != null) {
 				string labelPrefix = manualProp.boolValue ? "[MANUAL] " : "[AUTO] ";
-				GUIContent idLabel = new GUIContent(labelPrefix + "Asset ID",
+				GUIContent idLabel = new(labelPrefix + "Asset ID",
 					"Check the 'Enum Asset Manager' (Tools > Kope) before creating/modifying Enums.");
 
 				EditorGUILayout.PropertyField(assetIdProp, idLabel);

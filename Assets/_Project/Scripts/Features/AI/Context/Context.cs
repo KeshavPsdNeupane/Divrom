@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using ZLinq;
 using Kope.Component;
 using Kope.Core.EntityComponentRegistry;
-using Kope.Core.Types.Hashes;
+using Kope.Core.Collections.Hashes;
 
 /// <summary>
 /// Stores the operational context of an entity and its collection of targets.

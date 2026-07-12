@@ -1,4 +1,4 @@
-namespace Kope.Core.Types.Extensions {
+namespace Kope.Core.Collections.Extensions {
 	public static class StringExtension {
 		/// <summary>
 		/// Removes the specified postfix from the string if it exists.

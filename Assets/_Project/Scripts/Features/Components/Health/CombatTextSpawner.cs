@@ -33,13 +33,13 @@ namespace Kope.Component.Health {
 
 		private void OnEnable() {
 			if (healthComponent != null) {
-				healthComponent.OnHealthChange += HandleHealthChange;
+				healthComponent.OnHealthChange(HandleHealthChange, true);
 			}
 		}
 
 		private void OnDisable() {
 			if (healthComponent != null) {
-				healthComponent.OnHealthChange -= HandleHealthChange;
+				healthComponent.OnHealthChange(HandleHealthChange, false);
 			}
 		}
 
