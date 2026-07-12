@@ -10,24 +10,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 42f9dda0e75ef7c449713f6cb0a52716, type: 3}
-  m_Name: PlayerStats
-  m_EditorClassIdentifier: Assembly-CSharp::CharacterStatsSO
+  m_Name: PlayerStat
+  m_EditorClassIdentifier: Kope.Character.Stats.Runtime::Kope.Character.Stats.CharacterStatsSO
   Basestats:
     keys: 0000010002000300040005000600
     values:
     - 100
     - 15
     - 10
-    - 7
-    - 10
+    - 12
+    - 5
     - 5
     - 100
   resistanceStats:
     keys: 0000000001000000020000000300000004000000
     values:
     - 0.05
-    - 0.03
-    - 0
+    - 0.05
+    - 0.05
     - 0.05
     - 0.05
   levelIncreasingStatWithLevelingValue:

@@ -79,12 +79,6 @@ public enum UIInputActionKey {
 	None = 0,
 	OpenMenu = 11,
 	OpenInventory = 21,
-
-	/* RemoveTopUIStack is intended for a 'Back' button or Escape key functionality.
-     * It allows UI panels to close without needing to know which specific 
-     * panel is currently active. */
-	RemoveTopUIStack = 31,
-
 	Navigate = 51,
 	// Submit button for ui either Enter or A on a controller, this is the "Confirm" button in many UI contexts
 	Submit = 52,
@@ -134,19 +128,26 @@ public class InputManager : GlobalServiceBase {
 	private readonly Dictionary<PlayerInputActionCollection, InputActionMap> actionMaps = new();
 	public CustomPlayerInputs PlayerInputs => this.playerInput;
 
+	/// <summary>
+	/// Excludes mouse position and delta from rebindable controls to prevent accidental
+	/// binding of these controls during interactive rebinding.
+	/// Making a top-level property to avoid repeated allocations of the array during rebind operations.
+	/// </summary>
+	private string[] ExcludeMouseControlBindings => new[] {
+		"<Mouse>/position",
+		"<Mouse>/delta"
+	};
+
+
+
 	protected override bool OnInitializeService() {
 		InitializeActionMaps();
-
-		// Hook into the global engine input processing pipeline to listen for device mutations
-		//InputSystem.onActionChange += OnGlobalActionChange;
-
 		return true;
 	}
 
 	private void InitializeActionMaps() {
 		this.playerInput = new CustomPlayerInputs();
 
-		// Dynamically link our Enum keys to the physical Action Maps in the Asset
 		foreach (PlayerInputActionCollection type in Enum.GetValues(typeof(PlayerInputActionCollection))) {
 			if (type == PlayerInputActionCollection.None) continue;
 
@@ -263,9 +264,10 @@ public class InputManager : GlobalServiceBase {
 		// Disable all input during the listening phase to prevent unintended actions
 		playerInput.Disable();
 
-		var rebindOp = action.PerformInteractiveRebinding(bindingIndex)
-			.WithControlsExcluding("<Mouse>/position")
-			.WithControlsExcluding("<Mouse>/delta");
+		var rebindOp = action.PerformInteractiveRebinding(bindingIndex);
+		foreach (string excludeBinding in ExcludeMouseControlBindings) {
+			rebindOp.WithControlsExcluding(excludeBinding);
+		}
 
 		string group = GetGroupFromDevice(deviceLimit);
 		if (!string.IsNullOrEmpty(group)) rebindOp.WithBindingGroup(group);

@@ -6,12 +6,11 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HealthBar : MonoBehaviour {
+public class CharacterOverViewDisplay : MonoBehaviour {
 	[SerializeField] private HealthComponentBase healthComponent;
 	[SerializeField] private ExperienceSystem experienceSystem;
 	[SerializeField] private Slider healthBarFill;
 	[SerializeField] private TextMeshProUGUI levelUpText;
-
 	private void Start() {
 		if (!ValidateReferences()) return;
 
@@ -77,7 +76,6 @@ public class HealthBar : MonoBehaviour {
 		if (this.experienceSystem == null) { Debug.LogError($"[HealthBar] Missing field '{nameof(experienceSystem)}' at {path}", this); isValid = false; }
 		if (this.healthBarFill == null) { Debug.LogError($"[HealthBar] Missing field '{nameof(healthBarFill)}' at {path}", this); isValid = false; }
 		if (this.levelUpText == null) { Debug.LogError($"[HealthBar] Missing field '{nameof(levelUpText)}' at {path}", this); isValid = false; }
-
 		return isValid;
 	}
 }

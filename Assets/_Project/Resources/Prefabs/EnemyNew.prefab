@@ -439,7 +439,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b704fae97497b629a70cd2df1251f15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterStatsSystem
-  characterStateSo: {fileID: 11400000, guid: 3fa16491f1d935845b253ff3d4586e7a, type: 2}
+  config: {fileID: 11400000, guid: 03987f45d0f2db1d8b21acadaa05215e, type: 2}
 --- !u!1 &4335047405112921079
 GameObject:
   m_ObjectHideFlags: 0
@@ -1487,7 +1487,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Kope.Component.Health.HealthBar
   healthComponent: {fileID: 1099055355600047168}
+  experienceSystem: {fileID: 0}
   healthBarFill: {fileID: 8276904272175114692}
+  levelUpText: {fileID: 0}
+  healthComponentReference:
+    underlyingObject: {fileID: 0}
 --- !u!1 &8468679303110247825
 GameObject:
   m_ObjectHideFlags: 0

@@ -6639,6 +6639,98 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1299538}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &621426544
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 621426546}
+  - component: {fileID: 621426545}
+  m_Layer: 0
+  m_Name: Spline
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &621426545
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 621426544}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dab5c7d4c32e743048dfca98e2d5914f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Splines::UnityEngine.Splines.SplineContainer
+  m_Spline:
+    m_EditModeType: 1
+    m_Knots: []
+    m_MetaData: []
+    m_Closed: 0
+    m_IntData:
+      m_Data: []
+    m_FloatData:
+      m_Data: []
+    m_Float4Data:
+      m_Data: []
+    m_ObjectData:
+      m_Data: []
+  m_Splines:
+  - m_EditModeType: 1
+    m_Knots:
+    - Position:
+        x: 0
+        y: 0
+        z: 0
+      TangentIn:
+        x: -0
+        y: -0
+        z: -0
+      TangentOut:
+        x: 0
+        y: 0
+        z: 0
+      Rotation:
+        value:
+          x: -0.70710665
+          y: 0
+          z: -0
+          w: 0.7071068
+    m_MetaData:
+    - Mode: 0
+      Tension: 0.5
+    m_Closed: 0
+    m_IntData:
+      m_Data: []
+    m_FloatData:
+      m_Data: []
+    m_Float4Data:
+      m_Data: []
+    m_ObjectData:
+      m_Data: []
+  m_Knots:
+    m_KnotsLink: []
+--- !u!4 &621426546
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 621426544}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -13.424409, y: 5.241345, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &625582977
 Transform:
   m_ObjectHideFlags: 0
@@ -6677,6 +6769,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1313878789767907726, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: healthComponentReference.underlyingObject
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 2033154260760698069, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
       propertyPath: m_Name
       value: PlayerNew
@@ -7843,43 +7939,43 @@ MonoBehaviour:
     gameObjectName: SceneServiceLocator
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: Dummy (1)
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: AddSpd
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: AddSpd (1)
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: Addhp
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: PlayerNew
-  - typeName: EntityInitCaller
-    order: -40
     gameObjectName: Hpstore
   - typeName: EntityInitCaller
     order: -40
     gameObjectName: AddDef (1)
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: Addhp (1)
+    gameObjectName: Addhp (2)
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: Hpstore (1)
+    gameObjectName: PlayerNew
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: Dummy
+    gameObjectName: AddSpd (1)
   - typeName: EntityInitCaller
     order: -40
     gameObjectName: AddDef
   - typeName: EntityInitCaller
     order: -40
+    gameObjectName: Addhp
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: AddSpd
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Dummy (1)
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Dummy
+  - typeName: EntityInitCaller
+    order: -40
     gameObjectName: Hpstore (2)
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: Addhp (2)
+    gameObjectName: Addhp (1)
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Hpstore (1)
   - typeName: InGameUIInitCaller
     order: -30
     gameObjectName: UI
@@ -8236,8 +8332,8 @@ MonoBehaviour:
   x: 0.575
   result: 0.6205578
   unityResult: 0.38834375
-  customEvalTime: 0.2452
-  unityEvalTime: 0.11460000000000001
+  customEvalTime: 0.23620000000000002
+  unityEvalTime: 0.109
 --- !u!1001 &1031836800
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14367,3 +14463,4 @@ SceneRoots:
   - {fileID: 1562017648}
   - {fileID: 47419341}
   - {fileID: 1664958466}
+  - {fileID: 621426546}
