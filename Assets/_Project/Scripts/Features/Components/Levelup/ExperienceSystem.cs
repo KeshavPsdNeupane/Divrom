@@ -48,8 +48,7 @@ namespace Kope.Component.ExperienceSystem {
 				Debug.LogError($"EntityComponentsRegistry is not assigned in ExperienceSystem.+{this.HieararchyPath}");
 				return false;
 			}
-			if (!this.ecr.ComponentRegistry.TryGetReadOnly(out this._statsSystem)) {
-				Debug.LogError($"Failed to find IStatSystem in EntityComponentsRegistry.+{this.HieararchyPath}");
+			if (!this.ecr.TryFetchReadOnly(this, this.HieararchyPath, out this._statsSystem)) {
 				return false;
 			}
 

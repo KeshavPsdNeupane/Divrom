@@ -53,10 +53,10 @@ namespace Kope.Component.Health {
 
 		protected override bool OnInit() {
 			if (ecr == null) return false;
-			if (ecr.ComponentRegistry.TryGetMutable(out characterStatsSystem)) {
-				return true;
+			if (!this.ecr.TryFetchMutable(this, this.HieararchyPath, out characterStatsSystem)) {
+				return false;
 			}
-			return false;
+			return true;
 		}
 
 		protected virtual void OnEnable() => SubscribeToStats();

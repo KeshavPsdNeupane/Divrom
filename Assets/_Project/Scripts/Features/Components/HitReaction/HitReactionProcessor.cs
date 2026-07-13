@@ -30,13 +30,12 @@ namespace Kope.Component.HitReaction {
 				return false;
 			}
 
-			if (!this.ecr.ComponentRegistry.TryGetMutable(out this.hurtBox)) {
-				Debug.LogError($"HitReactionProcessor on {gameObject.name} failed to find HurtBox.");
+			if (!this.ecr.TryFetchMutable(this, this.HieararchyPath, out this.hurtBox)) {
 				return false;
 			}
 
-			this.ecr.ComponentRegistry.TryGetMutable(out this.stunnable);
-			this.ecr.ComponentRegistry.TryGetMutable(out this.knockbackable);
+			this.ecr.TryFetchMutable(this, this.HieararchyPath, out this.stunnable);
+			this.ecr.TryFetchMutable(this, this.HieararchyPath, out this.knockbackable);
 
 			return true;
 		}

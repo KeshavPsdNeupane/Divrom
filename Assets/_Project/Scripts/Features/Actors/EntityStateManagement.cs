@@ -206,7 +206,6 @@ namespace Kope.Actor.New {
 			if (!reg.TryGetMutable(out this._movementComponent) ||
 				!reg.TryGetMutable(out this._attackComponent) ||
 				!reg.TryGetMutable(out this._animationComponent)) {
-				Debug.LogError($"[Kope] Missing required component(s) in registry on {this.gameObject.name}" + this.HieararchyPath);
 				return false;
 			}
 			return true;

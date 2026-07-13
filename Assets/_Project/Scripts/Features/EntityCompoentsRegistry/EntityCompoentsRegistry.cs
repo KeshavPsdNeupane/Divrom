@@ -73,13 +73,27 @@ namespace Kope.Core.EntityComponentRegistry {
 		}
 
 
+
+
+
+		/// <summary>
+		/// Formats a detailed, pre-allocated error message for failed component fetch operations.
+		/// </summary>
+		/// <typeparam name="TCaller">The Unity Object type executing the fetch request.</typeparam>
+		/// <typeparam name="TComponent">The type of the component or interface being requested.</typeparam>
+		/// <param name="caller">The active instance attempting the fetch, used to extract context names.</param>
+		/// <param name="hierarchyPath">The scene hierarchy path tracking the target entity's location.</param>
+		/// <param name="isReadOnly">Determines if additional contextual failure reasons for read-only lookups should be appended.</param>
+		/// <returns>A fully structured, scannable error string.</returns>
+		[HideInCallstack]
 		public string FormattedMessage<TCaller, TComponent>(TCaller caller, string hierarchyPath, bool isReadOnly = true)
-		where TCaller : UnityEngine.Object
-		where TComponent : class {
+				where TCaller : UnityEngine.Object
+				where TComponent : class {
 			string target = typeof(TComponent).Name;
-			// Pre-allocate space to avoid internal re-allocations
+
+			// Pre-allocate space to avoid internal string allocations on the heap
 			StringBuilder sb = new(256);
-			sb.Append($"[{caller.GetType().Name}]")
+			sb.Append('[').Append(caller.GetType().Name).Append(']')
 			  .Append(" failed to fetch '").Append(target).Append("' from '").Append(this.name).Append("'.\n")
 			  .Append("Reason: '").Append(target).Append("' (or any child class / interface implementer) is not registered, or '")
 			  .Append(this.name).Append("' is uninitialized.\n");
@@ -91,21 +105,54 @@ namespace Kope.Core.EntityComponentRegistry {
 			return sb.ToString();
 		}
 
+		/// <summary>
+		/// Attempts to safely retrieve a mutatable component reference from the system registry.
+		/// </summary>
+		/// <remarks>
+		/// Uses <see cref="HideInCallstackAttribute"/> to strip this helper frame from the Unity Console output,
+		/// ensuring that double-clicking the error log directly navigates the user to the original gameplay 
+		/// script line that initiated the failed fetch.
+		/// </remarks>
+		/// <typeparam name="TCaller">The Unity Object type executing the fetch request.</typeparam>
+		/// <typeparam name="TComponent">The type of the mutatable component being requested.</typeparam>
+		/// <param name="caller">The source object initiating the call; passed to the logger context to enable instant Inspector selection highlighting upon console selection.</param>
+		/// <param name="hierarchyPath">The scene hierarchy path tracking the target entity's location.</param>
+		/// <param name="component">The resulting out reference of the requested component, or null if lookups fail.</param>
+		/// <returns>True if the component was found and registered successfully; otherwise, false.</returns>
+		[HideInCallstack]
 		public bool TryFetchMutable<TCaller, TComponent>(TCaller caller, string hierarchyPath, out TComponent component)
-			where TCaller : UnityEngine.Object
-			where TComponent : class {
+							where TCaller : UnityEngine.Object
+							where TComponent : class {
 			if (!this.componentRegistry.TryGetMutable(out component)) {
+				// Passing 'caller' as the second parameter enables frame context picking inside the Inspector
 				Debug.LogError(FormattedMessage<TCaller, TComponent>(caller, hierarchyPath, false), caller);
 				return false;
 			}
 			return true;
 		}
 
+		/// <summary>
+		/// Attempts to safely retrieve a read-only component reference from the system registry.
+		/// </summary>
+		/// <remarks>
+		/// Uses <see cref="HideInCallstackAttribute"/> to strip this helper frame from the Unity Console output,
+		/// ensuring that double-clicking the error log directly navigates the user to the original gameplay 
+		/// script line that initiated the failed fetch.
+		/// </remarks>
+		/// <typeparam name="TCaller">The Unity Object type executing the fetch request.</typeparam>
+		/// <typeparam name="TComponent">The type of the read-only component or interface being requested.</typeparam>
+		/// <param name="caller">The source object initiating the call; passed to the logger context to enable instant Inspector selection highlighting upon console selection.</param>
+		/// <param name="hierarchyPath">The scene hierarchy path tracking the target entity's location.</param>
+		/// <param name="component">The resulting out reference of the requested component, or null if lookups fail.</param>
+		/// <param name="logTheError">Controls whether a failure emits an automated descriptive message directly to the console.</param>
+		/// <returns>True if the component was found and registered successfully; otherwise, false.</returns>
+		[HideInCallstack]
 		public bool TryFetchReadOnly<TCaller, TComponent>(TCaller caller, string hierarchyPath, out TComponent component, bool logTheError = true)
 			where TCaller : UnityEngine.Object
 			where TComponent : class {
 			if (!this.componentRegistry.TryGetReadOnly(out component)) {
 				if (logTheError) {
+					// Passing 'caller' as the second parameter enables frame context picking inside the Inspector
 					Debug.LogError(FormattedMessage<TCaller, TComponent>(caller, hierarchyPath, true), caller);
 				}
 				return false;

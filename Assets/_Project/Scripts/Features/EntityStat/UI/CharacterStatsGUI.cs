@@ -63,15 +63,13 @@ public class StatDescription : InitializableBase {
 		}
 		// using tryGet since this only shows the stats on UI and does not modify the stats,
 		//  so we don't need mutatable access here. so TryGetComponent is sufficient for semantic clarity.
-		if (!ecr.ComponentRegistry.TryGetReadOnly<CharacterStatsSystemBase>(out var statsSystem)) {
-			Debug.LogError("No CharacterStatsSystem found in EntityComponentStore for StatDescription" + this.HieararchyPath);
+		if (!this.ecr.TryFetchReadOnly(this, this.HieararchyPath, out CharacterStatsSystemBase statsSystem)) {
 			return false;
 
 		}
 		this._characterStats = statsSystem;
 
-		if (!ecr.ComponentRegistry.TryGetReadOnly<IHealthComponent>(out var healthComponent)) {
-			Debug.LogError("No IHealthComponent found in EntityComponentStore for StatDescription" + this.HieararchyPath);
+		if (!this.ecr.TryFetchReadOnly(this, this.HieararchyPath, out IHealthComponent healthComponent)) {
 			return false;
 
 		}

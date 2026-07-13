@@ -52,17 +52,15 @@ namespace Kope.Component.Attack {
 				Debug.LogError("EntityComponentStore reference is missing." + this.HieararchyPath);
 				return false;
 			}
-			if (!this.ecr.ComponentRegistry.TryGetMutable(out this._animationComponent)) {
-				Debug.LogError("AnimationComponent not found." + this.HieararchyPath);
-			}
-
-			if (!this.ecr.ComponentRegistry.TryGetMutable(out this._statsSystem)) {
-				Debug.LogError("CharacterStatsSystem not found." + this.HieararchyPath);
-				return false;
-			}
 			if (this.equippedWeapDataSO == null) {
 				Debug.LogError($"WeaponSo is null {this.HieararchyPath}");
 			}
+
+			if (!this.ecr.TryFetchMutable(this, this.HieararchyPath, out this._animationComponent) ||
+			!this.ecr.TryFetchMutable(this, this.HieararchyPath, out this._statsSystem)) {
+				return false;
+			}
+
 			InitializeStatCache();
 			SubscribeToStats();
 

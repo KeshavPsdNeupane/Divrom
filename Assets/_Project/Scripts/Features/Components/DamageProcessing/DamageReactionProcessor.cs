@@ -50,25 +50,15 @@ namespace Kope.Component.Combat {
 				return false;
 			}
 
-			if (!this.ecr.ComponentRegistry.TryGetMutable(out _healthComponent)) {
-				Debug.LogError($"DamageProcessor on {gameObject.name} failed to find HealthComponent."
-				+ $"on{parentHierarchy}");
-				return false;
-			}
-
-			if (!this.ecr.ComponentRegistry.TryGetReadOnly(out _statSystem)) {
-				Debug.LogError($"DamageProcessor on {gameObject.name} failed to find IStatSystem."
-				+ $"on{parentHierarchy}");
-				return false;
-			}
-
-			if (!this.ecr.ComponentRegistry.TryGetMutable(out this._hurtBox)) {
-				Debug.LogError($"DamageProcessor on {gameObject.name} failed to find HurtBox."
-				+ $"on{parentHierarchy}");
+			if (!this.ecr.TryFetchMutable(this, this.HieararchyPath, out _healthComponent)
+			|| !this.ecr.TryFetchReadOnly(this, this.HieararchyPath, out _statSystem)
+			|| !this.ecr.TryFetchMutable(this, this.HieararchyPath, out _hurtBox)) {
+				// the error logging is being handled inside the TryFetch methods, so we just return false here.
 				return false;
 			}
 			return true;
 		}
+
 		private void OnEnable() {
 			if (this._hurtBox == null) return;
 			this._hurtBox.OnHitCombatible += HandleHurtBoxHit;

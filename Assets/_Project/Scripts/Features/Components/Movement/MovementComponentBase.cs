@@ -72,7 +72,7 @@ namespace Kope.Component.Movement {
 		protected override bool OnInit() {
 			if (this.ecr == null || this.rb == null) return false;
 
-			if (this.ecr.ComponentRegistry.TryGetReadOnly(out CharacterStatsSystemBase statsSystem)) {
+			if (this.ecr.TryFetchReadOnly(this, this.HieararchyPath, out CharacterStatsSystemBase statsSystem)) {
 				this._readOnlycharacterStatsSystem = statsSystem;
 			}
 

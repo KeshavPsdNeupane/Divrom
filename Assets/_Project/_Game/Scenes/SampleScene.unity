@@ -5445,6 +5445,17 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!114 &284714855 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2247624721500832756, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+  m_PrefabInstance: {fileID: 645946236}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2dcc3c998b5f98b6891e422fd5e29ded, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAttackComponent
 --- !u!1 &330635339
 GameObject:
   m_ObjectHideFlags: 0
@@ -6789,6 +6800,50 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6037248722059709900, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: components.Array.size
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 6037248722059709900, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: 'components.Array.data[3]'
+      value: 
+      objectReference: {fileID: 815513495}
+    - target: {fileID: 6037248722059709900, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: 'components.Array.data[4]'
+      value: 
+      objectReference: {fileID: 1874105459}
+    - target: {fileID: 6037248722059709900, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: 'components.Array.data[5]'
+      value: 
+      objectReference: {fileID: 284714855}
+    - target: {fileID: 6037248722059709900, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: 'components.Array.data[6]'
+      value: 
+      objectReference: {fileID: 1192293131}
+    - target: {fileID: 6037248722059709900, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: 'components.Array.data[7]'
+      value: 
+      objectReference: {fileID: 867498687}
+    - target: {fileID: 6037248722059709900, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: 'components.Array.data[8]'
+      value: 
+      objectReference: {fileID: 1305458246}
+    - target: {fileID: 6037248722059709900, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: 'components.Array.data[9]'
+      value: 
+      objectReference: {fileID: 1399163594}
+    - target: {fileID: 6037248722059709900, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: 'components.Array.data[10]'
+      value: 
+      objectReference: {fileID: 1663593856}
+    - target: {fileID: 6037248722059709900, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: 'components.Array.data[11]'
+      value: 
+      objectReference: {fileID: 948896688}
+    - target: {fileID: 6037248722059709900, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: 'components.Array.data[12]'
+      value: 
+      objectReference: {fileID: 1321976493}
     - target: {fileID: 6671984905160279280, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
       propertyPath: m_LocalPosition.x
       value: -10.73
@@ -7878,6 +7933,17 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &815513495 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9026187348811339868, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+  m_PrefabInstance: {fileID: 645946236}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fe1d21f7fb59cceda28d19a5a07d928, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Kope.Components::Kope.Component.Animation.AnimationComponentBaseNew
 --- !u!114 &833085104 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6037248722059709900, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
@@ -7889,6 +7955,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0ec1ce75969574c18af1816b31cb755, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EntityComponentStore
+--- !u!114 &867498687 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8812889818776451400, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+  m_PrefabInstance: {fileID: 645946236}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2852b6552a8f1b13eab1e803be094c5b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Kope.Components::Kope.Component.Combat.DamageReactionProcessor
 --- !u!1 &898564458
 GameObject:
   m_ObjectHideFlags: 0
@@ -7939,43 +8016,43 @@ MonoBehaviour:
     gameObjectName: SceneServiceLocator
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: Hpstore
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: AddDef (1)
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: Addhp (2)
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: PlayerNew
-  - typeName: EntityInitCaller
-    order: -40
     gameObjectName: AddSpd (1)
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: AddDef
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: Addhp
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: AddSpd
   - typeName: EntityInitCaller
     order: -40
     gameObjectName: Dummy (1)
   - typeName: EntityInitCaller
     order: -40
+    gameObjectName: PlayerNew
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: AddSpd
+  - typeName: EntityInitCaller
+    order: -40
     gameObjectName: Dummy
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: Hpstore (2)
+    gameObjectName: Addhp (2)
   - typeName: EntityInitCaller
     order: -40
     gameObjectName: Addhp (1)
   - typeName: EntityInitCaller
     order: -40
+    gameObjectName: Hpstore (2)
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: AddDef (1)
+  - typeName: EntityInitCaller
+    order: -40
     gameObjectName: Hpstore (1)
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Addhp
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: AddDef
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Hpstore
   - typeName: InGameUIInitCaller
     order: -30
     gameObjectName: UI
@@ -8332,8 +8409,19 @@ MonoBehaviour:
   x: 0.575
   result: 0.6205578
   unityResult: 0.38834375
-  customEvalTime: 0.23620000000000002
-  unityEvalTime: 0.109
+  customEvalTime: 0.0005
+  unityEvalTime: 0.0007
+--- !u!114 &948896688 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 682615762668415778, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+  m_PrefabInstance: {fileID: 645946236}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e875135d43356003bef9467a323c5ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Kope.Component.Ability.PlayerAbilityCaster
 --- !u!1001 &1031836800
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9004,6 +9092,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1178855259}
   m_CullTransparentMesh: 1
+--- !u!114 &1192293131 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3968986674516492649, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+  m_PrefabInstance: {fileID: 645946236}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6381daa293f31947b53a57c89b0cb0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Kope.Component.Health.HealthComponentBase
 --- !u!1 &1204414707
 GameObject:
   m_ObjectHideFlags: 0
@@ -9527,6 +9626,17 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
   CustomBlends: {fileID: 0}
+--- !u!114 &1305458246 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8635207160018288245, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+  m_PrefabInstance: {fileID: 645946236}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f525ffbe0dde5890bd67b77fbe56607, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Kope.Components::Kope.Component.Health.Interface.HealingProcessor
 --- !u!1 &1311151927
 GameObject:
   m_ObjectHideFlags: 0
@@ -9558,6 +9668,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1321976493 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6333170659724995054, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+  m_PrefabInstance: {fileID: 645946236}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49737d9be5326955c905d27711b5235d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Kope.Actor.Runtime::Kope.Actor.New.EntityStateManagement
 --- !u!1 &1335616151
 GameObject:
   m_ObjectHideFlags: 0
@@ -9766,6 +9887,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1399163594 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9138969578043445410, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+  m_PrefabInstance: {fileID: 645946236}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8454376a5eb301491924cb36f8eba028, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Kope.Components::Kope.Component.HitBox.HitBoxComponent
 --- !u!1 &1406489389
 GameObject:
   m_ObjectHideFlags: 0
@@ -10815,6 +10947,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1655667943}
   m_CullTransparentMesh: 1
+--- !u!114 &1663593856 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6925641497687687494, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+  m_PrefabInstance: {fileID: 645946236}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50e1b418435375eb4b112f04612881b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Kope.Component.Ability.Targeting.TargetingManager
 --- !u!1001 &1664958466
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12364,6 +12507,17 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.1
+--- !u!114 &1874105459 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7100714284575033797, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+  m_PrefabInstance: {fileID: 645946236}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 267923a9716b04b4088ffa3a650266e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerMovementComponent
 --- !u!1 &1881736878
 GameObject:
   m_ObjectHideFlags: 0
