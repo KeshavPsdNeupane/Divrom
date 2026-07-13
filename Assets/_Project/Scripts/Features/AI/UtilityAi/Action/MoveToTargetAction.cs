@@ -61,7 +61,7 @@ public class MoveTowardAction : ActionSO {
 		var selfComponentRegistry = ctx.CurrentMutableEntityContext;
 		this._readOnlyTargetTransform = readOnlyTargetComponentRegistry.EntityTransform;
 
-		if (!selfComponentRegistry.TryGetReadOnlyComponent(out this._selfMovementComponent)) {
+		if (!selfComponentRegistry.TryGetReadOnly(out this._selfMovementComponent)) {
 			Debug.LogError($"RangeAction Error: Self does not have a MovementComponent on {this.name}");
 			SetComplete();
 			return;

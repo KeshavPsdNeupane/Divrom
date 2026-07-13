@@ -24,7 +24,7 @@ namespace Kope.Component {
 				return;
 			}
 
-			if (!mgr.EntityDetail.ComponentRegistry.TryGetReadOnlyComponent(out HpRestoration healthComp)) {
+			if (!mgr.EntityDetail.ComponentRegistry.TryGetReadOnly(out HpRestoration healthComp)) {
 				Debug.LogWarning($"[HpRestorationCollector] Detected collider {other.name} does not have an HpRestoration component. Cannot restore HP." + this._parentGOHiearchPathMessage, other.gameObject);
 				return;
 			}

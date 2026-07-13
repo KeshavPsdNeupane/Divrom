@@ -41,15 +41,15 @@ namespace Kope.Component.ExperienceSystem {
 
 		protected override bool OnInit() {
 			if (this.config == null) {
-				Debug.LogError($"ExperienceSystemConfig is not assigned in ExperienceSystem.+{GetParentGameObjectHeirarchyMessage()}");
+				Debug.LogError($"ExperienceSystemConfig is not assigned in ExperienceSystem.+{this.HieararchyPath}");
 				return false;
 			}
 			if (this.ecr == null) {
-				Debug.LogError($"EntityComponentsRegistry is not assigned in ExperienceSystem.+{GetParentGameObjectHeirarchyMessage()}");
+				Debug.LogError($"EntityComponentsRegistry is not assigned in ExperienceSystem.+{this.HieararchyPath}");
 				return false;
 			}
-			if (!this.ecr.ComponentRegistry.TryGetReadOnlyComponent(out this._statsSystem)) {
-				Debug.LogError($"Failed to find IStatSystem in EntityComponentsRegistry.+{GetParentGameObjectHeirarchyMessage()}");
+			if (!this.ecr.ComponentRegistry.TryGetReadOnly(out this._statsSystem)) {
+				Debug.LogError($"Failed to find IStatSystem in EntityComponentsRegistry.+{this.HieararchyPath}");
 				return false;
 			}
 

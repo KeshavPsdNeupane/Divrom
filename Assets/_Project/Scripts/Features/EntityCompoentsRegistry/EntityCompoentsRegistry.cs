@@ -3,6 +3,8 @@ using Kope.Core.LifeTimeManagement;
 using Kope.Core.ServiceLocator;
 using UnityEngine;
 
+using System.Text;
+
 namespace Kope.Core.EntityComponentRegistry {
 	/// <summary>
 	/// This class takes only InitializableBaseNew as component in inpector but we can,
@@ -69,6 +71,46 @@ namespace Kope.Core.EntityComponentRegistry {
 			}
 			return true;
 		}
-	}
 
+
+		public string FormattedMessage<TCaller, TComponent>(TCaller caller, string hierarchyPath, bool isReadOnly = true)
+		where TCaller : UnityEngine.Object
+		where TComponent : class {
+			string target = typeof(TComponent).Name;
+			// Pre-allocate space to avoid internal re-allocations
+			StringBuilder sb = new(256);
+			sb.Append($"[{caller.GetType().Name}]")
+			  .Append(" failed to fetch '").Append(target).Append("' from '").Append(this.name).Append("'.\n")
+			  .Append("Reason: '").Append(target).Append("' (or any child class / interface implementer) is not registered, or '")
+			  .Append(this.name).Append("' is uninitialized.\n");
+
+			if (isReadOnly) {
+				sb.Append("Or you tried to fetch a component from a target entity which doesn't have it registered, or doesn't have it at all.\n");
+			}
+			sb.Append("Path: ").Append(hierarchyPath);
+			return sb.ToString();
+		}
+
+		public bool TryFetchMutable<TCaller, TComponent>(TCaller caller, string hierarchyPath, out TComponent component)
+			where TCaller : UnityEngine.Object
+			where TComponent : class {
+			if (!this.componentRegistry.TryGetMutable(out component)) {
+				Debug.LogError(FormattedMessage<TCaller, TComponent>(caller, hierarchyPath, false), caller);
+				return false;
+			}
+			return true;
+		}
+
+		public bool TryFetchReadOnly<TCaller, TComponent>(TCaller caller, string hierarchyPath, out TComponent component, bool logTheError = true)
+			where TCaller : UnityEngine.Object
+			where TComponent : class {
+			if (!this.componentRegistry.TryGetReadOnly(out component)) {
+				if (logTheError) {
+					Debug.LogError(FormattedMessage<TCaller, TComponent>(caller, hierarchyPath, true), caller);
+				}
+				return false;
+			}
+			return true;
+		}
+	}
 }

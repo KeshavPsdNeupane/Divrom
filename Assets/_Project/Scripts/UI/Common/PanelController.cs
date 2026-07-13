@@ -28,7 +28,7 @@ public class PanelController : UIState {
 			return true;
 
 		} catch (System.Exception ex) {
-			Debug.LogError($"{this.panelName}Controller: Initialization failed with exception: {ex}" + this.GetParentGameObjectHeirarchyMessage());
+			Debug.LogError($"{this.panelName}Controller: Initialization failed with exception: {ex}" + this.HieararchyPath);
 			return false;
 
 		}
@@ -39,7 +39,7 @@ public class PanelController : UIState {
 		// This ensures the developer sees the error in the inspector immediately
 		if (!System.Enum.IsDefined(typeof(PlayerInputActionCollection), this.inputActionMap)) {
 			Debug.LogError($"<color=red>CRITICAL:</color> {gameObject.name} has an invalid Enum index for InputMap! " +
-						   $"Please reset it in the inspector. {this.GetParentGameObjectHeirarchyMessage()}", this);
+						   $"Please reset it in the inspector. {this.HieararchyPath}", this);
 		}
 	}
 #endif

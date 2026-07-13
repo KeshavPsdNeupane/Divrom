@@ -29,22 +29,35 @@ namespace Kope.Core.LifeTimeManagement {
 		/// <summary>
 		/// Cached string representation of the full GameObject transform tree route to this component.
 		/// </summary>
-		private string parentGameObjectStackTrace = string.Empty;
-
+		private string _hiearchyPath = string.Empty;
 		/// <summary>
-		/// Generates or retrieves a formatted string representing the deep transform hierarchy path of this GameObject.
-		/// Used primarily to make debugging and lifecycle mismatch tracking easy in complex scenes.
+		/// Returns a formatted string representing the full GameObject transform hierarchy 
+		/// path to this component.
+		/// This is primarily used for debugging and logging purposes, especially when tracking down 
+		/// initialization issues in complex scenes with many nested GameObjects.
 		/// </summary>
-		public string GetParentGameObjectHeirarchyMessage() {
-			if (string.IsNullOrEmpty(this.parentGameObjectStackTrace)) {
-				this.parentGameObjectStackTrace = this.GetGameObjectHierarchyPath();
-				if (string.IsNullOrEmpty(this.parentGameObjectStackTrace)) {
-					this.parentGameObjectStackTrace = "Could not determine GameObject hierarchy.";
+		public string HieararchyPath {
+			get {
+				if (string.IsNullOrEmpty(this._hiearchyPath)) {
+					GeneratePath();
+					if (string.IsNullOrEmpty(this._hiearchyPath)) {
+						this._hiearchyPath = "Could not determine GameObject hierarchy.";
+					}
 				}
+				return this._hiearchyPath;
 			}
-			return $" (GameObjectPath): {this.parentGameObjectStackTrace}";
 		}
 
+
+		#region Lifecycle Management
+		protected virtual void OnDestroy() {
+			if (!this.IsInitialized) return;
+			this.IsInitialized = false;
+			this._hiearchyPath = string.Empty;
+		}
+		#endregion
+
+		#region IInitializable Implementation
 		/// <summary>
 		/// Directly updates the underlying initialization boolean state.
 		/// Primarily utilized by external custom lifecycle configurations or unit tests. Use with caution.
@@ -59,7 +72,7 @@ namespace Kope.Core.LifeTimeManagement {
 		public void Init() {
 			try {
 				if (this.IsInitialized) return;
-				this.parentGameObjectStackTrace = this.GetGameObjectHierarchyPath();
+				GeneratePath();
 				this.IsInitialized = OnInit();
 			} catch (System.Exception ex) {
 				Debug.LogError($"Exception during Init of {this.GetType().Name} on GameObject {gameObject.name}: {ex}");
@@ -74,11 +87,13 @@ namespace Kope.Core.LifeTimeManagement {
 		public virtual void CheckInit() {
 			if (!this.IsInitialized) {
 				Debug.LogWarning($"[The component {this.GetType().Name}] has not been initialized. " +
-				$"Call Init() on {this.GetParentGameObjectHeirarchyMessage()}." +
+				$"Call Init() on {this.HieararchyPath}." +
 				$" Is it registered in InitLifecycleManager?", this);
 			}
 		}
+		#endregion
 
+		#region  Template Method Hook
 		/// <summary>
 		/// Framework Template Method hook. Child classes should override this method to perform their custom setup logic.
 		/// Defaults to returning true, which marks the component initialization sequence as successful.
@@ -87,13 +102,14 @@ namespace Kope.Core.LifeTimeManagement {
 		protected virtual bool OnInit() {
 			return true;
 		}
+		#endregion
 
 
-		protected virtual void OnDestroy() {
-			if (!this.IsInitialized) return;
-			this.IsInitialized = false;
-			this.parentGameObjectStackTrace = string.Empty;
+		#region  Helper Methods
+		private void GeneratePath() {
+			this._hiearchyPath = $"(GameObject):{this.GetGameObjectHierarchyPath()}";
 		}
+		#endregion
 	}
 }
 

@@ -14,7 +14,7 @@ public class RandomWanderActionSO : ActionSO {
 
 	protected override void OnInitialize(Context ctx) {
 		var entityctx = ctx.CurrentMutableEntityContext;
-		if (!entityctx.TryGetMutatableComponent(out this.mc)) {
+		if (!entityctx.TryGetMutable(out this.mc)) {
 			Debug.LogError("RandomWanderActionSO Initialization failed: MovementComponentBase not found.");
 			return;
 		}

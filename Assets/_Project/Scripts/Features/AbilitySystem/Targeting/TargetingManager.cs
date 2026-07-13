@@ -33,7 +33,7 @@ namespace Kope.Component.Ability.Targeting {
 		protected override bool OnInit() {
 			if (this.cam == null) {
 				Debug.LogError($"[{this.GetType().Name}] Initialization failed: Camera reference is missing." +
-				$"on{GetParentGameObjectHeirarchyMessage()}", this);
+				$"on{this.HieararchyPath}", this);
 				return false;
 			}
 			if (!GlobalServiceLocator.Instance.TryGetService(out this._inputManager)) return false;

@@ -20,7 +20,7 @@ namespace Kope.Component.Animation
 		{
 			if (this.anim == null)
 			{
-				Debug.LogError("Animator component is not assigned in AnimationComponent." + GetParentGameObjectHeirarchyMessage());
+				Debug.LogError("Animator component is not assigned in AnimationComponent." + this.HieararchyPath);
 				return false;
 			}
 			/// Defaulting to faceing down on init

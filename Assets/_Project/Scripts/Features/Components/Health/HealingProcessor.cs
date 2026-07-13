@@ -41,15 +41,15 @@ namespace Kope.Component.Health.Interface {
 				Debug.LogError($"HealingProcessor on {gameObject.name} is missing an EntityComponentsRegistry.");
 				return false;
 			}
-			if (!ecr.ComponentRegistry.TryGetReadOnlyComponent(out this._health)) {
+			if (!ecr.ComponentRegistry.TryGetReadOnly(out this._health)) {
 				Debug.LogError($"HealingProcessor on {gameObject.name} could not find an IHealable component in the EntityComponentsRegistry.");
 				return false;
 			}
-			if (!ecr.ComponentRegistry.TryGetReadOnlyComponent(out this._statSystem)) {
+			if (!ecr.ComponentRegistry.TryGetReadOnly(out this._statSystem)) {
 				Debug.LogError($"HealingProcessor on {gameObject.name} could not find an IStatSystem component in the EntityComponentsRegistry.");
 				return false;
 			}
-			if (!ecr.ComponentRegistry.TryGetMutatableComponent(out this._hurtBox)) {
+			if (!ecr.ComponentRegistry.TryGetMutable(out this._hurtBox)) {
 				Debug.LogError($"HealingProcessor on {gameObject.name} could not find an IHurtBoxComponent component in the EntityComponentsRegistry.");
 				return false;
 			}

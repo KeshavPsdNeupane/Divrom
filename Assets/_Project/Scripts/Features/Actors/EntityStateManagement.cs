@@ -56,7 +56,7 @@ namespace Kope.Actor.New {
 		// Cached component refs resolved from the ECR on init.
 		private IMovementComponent _movementComponent;
 		private IAttackComponent _attackComponent;
-		private IAnimationComponentNew _animationComponent;
+		private IAnimationComponent _animationComponent;
 
 		private int _idleEnumId;
 		private readonly EntityStateMachine _stateMachine = new();
@@ -199,14 +199,14 @@ namespace Kope.Actor.New {
 
 		private bool ValidateDependencies() {
 			if (this.ecr == null) {
-				Debug.LogError($"[Kope] Registry missing on {this.gameObject.name}" + GetParentGameObjectHeirarchyMessage());
+				Debug.LogError($"[Kope] Registry missing on {this.gameObject.name}" + this.HieararchyPath);
 				return false;
 			}
 			var reg = this.ecr.ComponentRegistry;
-			if (!reg.TryGetMutatableComponent(out this._movementComponent) ||
-				!reg.TryGetMutatableComponent(out this._attackComponent) ||
-				!reg.TryGetMutatableComponent(out this._animationComponent)) {
-				Debug.LogError($"[Kope] Missing required component(s) in registry on {this.gameObject.name}" + GetParentGameObjectHeirarchyMessage());
+			if (!reg.TryGetMutable(out this._movementComponent) ||
+				!reg.TryGetMutable(out this._attackComponent) ||
+				!reg.TryGetMutable(out this._animationComponent)) {
+				Debug.LogError($"[Kope] Missing required component(s) in registry on {this.gameObject.name}" + this.HieararchyPath);
 				return false;
 			}
 			return true;

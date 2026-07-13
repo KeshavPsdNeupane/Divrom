@@ -2,7 +2,7 @@ using Kope.Actor.New;
 using UnityEngine;
 
 namespace Kope.Component {
-	public interface IAnimationComponentNew {
+	public interface IAnimationComponent {
 
 		AnimationStatus EvaluateTransitionFeasibility(AnimationStateProfileData animState);
 		AnimationStatus PlayAnimation(AnimationStateProfileData animState, bool alreadyChecked = false);

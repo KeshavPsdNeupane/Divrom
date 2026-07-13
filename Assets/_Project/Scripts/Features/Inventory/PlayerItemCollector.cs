@@ -22,7 +22,7 @@ public class PlayerItemCollector : SensorBase {
 		}
 		// since we are mutating the InventoryHolder by adding items to it, 
 		// we need mutatable access here. so using TryGetMutatableComponent for semantic clarity
-		if (this.ecr.ComponentRegistry.TryGetMutatableComponent<InventoryHolder>(out var invHolder)) {
+		if (this.ecr.ComponentRegistry.TryGetMutable<InventoryHolder>(out var invHolder)) {
 			this.inventoryHolder = invHolder;
 		} else {
 			Debug.LogError("No InventoryHolder found in EntityComponentStoreConfig for PlayerItemCollector" + this._parentGOHiearchPathMessage);

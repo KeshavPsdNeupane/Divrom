@@ -47,14 +47,14 @@ namespace Kope.Component.Ability {
 			if (registry == null) return false;
 
 			// Resolve required components from the entity registry
-			if (!registry.TryGetReadOnlyComponent(out _targetingManager, false) ||
-				!registry.TryGetReadOnlyComponent(out IAttackComponent casterAttack, false) ||
-				!registry.TryGetReadOnlyComponent(out IHealthComponent casterHealth, false) ||
-				!registry.TryGetReadOnlyComponent(out IHitBoxComponent casterHitBox, false) ||
-				!registry.TryGetReadOnlyComponent(out _attackLock, false) ||
-				!registry.TryGetReadOnlyComponent(out IMovementComponent casterMovement, false)) {
+			if (!registry.TryGetReadOnly(out _targetingManager) ||
+				!registry.TryGetReadOnly(out IAttackComponent casterAttack) ||
+				!registry.TryGetReadOnly(out IHealthComponent casterHealth) ||
+				!registry.TryGetReadOnly(out IHitBoxComponent casterHitBox) ||
+				!registry.TryGetReadOnly(out _attackLock) ||
+				!registry.TryGetReadOnly(out IMovementComponent casterMovement)) {
 				Debug.LogError("PlayerAbilityCaster failed to initialize due to missing components in the" +
-				$" EntityComponentsRegistry.{GetParentGameObjectHeirarchyMessage()}", this);
+				$" EntityComponentsRegistry.{this.HieararchyPath}", this);
 				return false;
 			}
 

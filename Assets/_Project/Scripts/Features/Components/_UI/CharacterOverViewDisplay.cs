@@ -63,10 +63,8 @@ public class CharacterOverViewDisplay : MonoBehaviour {
 
 	private void UpdateLevelVisuals(int level) {
 		if (this.levelUpText == null) return;
-		this.levelUpText.text = level.ToString(); // ToString() is cleaner and faster than string interpolation here
+		this.levelUpText.text = level.ToString();
 	}
-
-	// ── Validation ────────────────────────────────────────────────────────────
 
 	private bool ValidateReferences() {
 		bool isValid = true;

@@ -40,15 +40,12 @@ namespace Kope.AI {
 		protected override bool OnInit() {
 			if (this.ecr == null || this.planner == null) {
 				Debug.LogError($"AIBrain Error: Missing ECS or Planner on {gameObject.name}" +
-				 GetParentGameObjectHeirarchyMessage());
+				 this.HieararchyPath);
 				return false;
 			}
 
-
-			if (!this.ecr.ComponentRegistry.TryGetMutatableComponent(out this._entityStateManagement)) {
-				Debug.LogError($"AIBrain Error: EntityStateController not found on {gameObject.name}" +
-				 GetParentGameObjectHeirarchyMessage());
-				return false;
+			if (!this.ecr.TryFetchMutable(this, this.HieararchyPath, out this._entityStateManagement)) {
+				return false; // error is being logged inside TryFetchMutable
 			}
 			this._ctx = new Context(this.ecr.ComponentRegistry);
 

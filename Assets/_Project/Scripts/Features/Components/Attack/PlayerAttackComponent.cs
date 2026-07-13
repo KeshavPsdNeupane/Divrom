@@ -17,7 +17,7 @@ namespace Kope.Component.Attack {
 		public bool IsEventLocked { get; protected set; } = false;
 		public void SetEventLock(bool isLocked) => this.IsEventLocked = isLocked;
 
-
+		#region Init and Unity Lifecycle
 		protected override bool OnInit() {
 			// Call base.OnInit() first to initialize stats and animation references.
 			// on base class AttackComponentBase, we need to initialize the reference to
@@ -52,15 +52,19 @@ namespace Kope.Component.Attack {
 			this._isEventSubscribed = true;
 
 		}
-
 		protected override void OnDisable() {
 			base.OnDisable();
-			Unsubscribe();
-		}
-
-		private void Unsubscribe() {
 			this._inputManager.UnSubscribe(this._fireSubscription);
 		}
+		#endregion
+
+		#region  AttackComponentBase Overrides
+		protected override float PerformAttackInternal() {
+			float damage = GetDamageValue();
+			return damage;
+		}
+		#endregion
+
 
 		private void AttackForInputSystem(InputAction.CallbackContext context) {
 			// this will prevent the attack to be performed by this component and 
@@ -75,9 +79,6 @@ namespace Kope.Component.Attack {
 			}
 		}
 
-		protected override float PerformAttackInternal() {
-			float damage = GetDamageValue();
-			return damage;
-		}
+
 	}
 }

@@ -91,7 +91,7 @@ namespace Kope.Character.Stats {
 
 		protected override bool OnInit() {
 			if (this.config == null) {
-				Debug.LogError($"CharacterStatsSO is not assigned in CharacterStatsSystem.+{GetParentGameObjectHeirarchyMessage()}");
+				Debug.LogError($"CharacterStatsSO is not assigned in CharacterStatsSystem.+{this.HieararchyPath}");
 				return false;
 			}
 

@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 using Kope.Core;
 using Kope.Core.LifeTimeManagement;
@@ -12,7 +11,7 @@ using Kope.Core.Mathfx;
 
 namespace Kope.Component.Movement {
 
-	#region Supporting Data Types
+	#region ISavable Supporting datatype
 
 	[Serializable]
 	[SaveId("player_movement_data")]
@@ -58,7 +57,8 @@ namespace Kope.Component.Movement {
 		private BasicCountDownTimer _stunTimer;
 		private float _currentResponsiveness = Mathfx.DEFAULT_RESPONSIVENESS;
 
-		// Public API
+
+		#region Public Properties
 		public float Mass => this.rb.mass;
 		public Vector3 Direction => this._intentHandler.Current.Direction;
 		public Vector3 Position => this.rb.position;
@@ -66,12 +66,13 @@ namespace Kope.Component.Movement {
 		public Rigidbody2D Rigidbody => this.rb;
 		public bool IsStunned => this._stunTimer != null && this._stunTimer.IsRunning;
 
-		#region Initialization & Stats
+		#endregion
 
+		#region Init and Unity Lifecycle
 		protected override bool OnInit() {
 			if (this.ecr == null || this.rb == null) return false;
 
-			if (this.ecr.ComponentRegistry.TryGetReadOnlyComponent(out CharacterStatsSystemBase statsSystem)) {
+			if (this.ecr.ComponentRegistry.TryGetReadOnly(out CharacterStatsSystemBase statsSystem)) {
 				this._readOnlycharacterStatsSystem = statsSystem;
 			}
 
@@ -92,25 +93,24 @@ namespace Kope.Component.Movement {
 			UnsubscribeFromStats();
 			SetMovementIntent(MovementIntent.Default);
 		}
-
-		private void SubscribeToStats() {
-			if (this._readOnlycharacterStatsSystem.CurrentStats != null) {
-				this._readOnlycharacterStatsSystem.StatsSubscribe(CharacterStatType.SPD, SetDefaultMovementSpeed);
-				SetDefaultMovementSpeed(this._readOnlycharacterStatsSystem.CurrentStats[CharacterStatType.SPD].GetValue());
-			}
+		public void OnUpdate() {
+			this._forceHandler.Tick(Time.deltaTime);
+			if (this._stunTimer.IsRunning) this._stunTimer.Tick(Time.deltaTime);
 		}
-
-		private void UnsubscribeFromStats() {
-			if (this._readOnlycharacterStatsSystem.CurrentStats != null) {
-				this._readOnlycharacterStatsSystem.StatsUnsubscribe(CharacterStatType.SPD, SetDefaultMovementSpeed);
-			}
-		}
-
-		protected virtual void SetDefaultMovementSpeed(float speed) => this.defaultMovementSpeed = speed;
-
 		#endregion
 
-		#region Movement Logic
+		#region IMovementComponent Implementation
+		/// <summary>
+		/// Provides a context-agnostic "looking at" direction for the actor. In 2D, 
+		/// this is derived from the last movement intent; in 3D, it defaults to 
+		/// the Rigidbody's forward vector.
+		/// </summary>
+		/// <returns></returns>
+		public virtual Vector3 GetLookingAtDirection() {
+			return this._dimension == AxisMode.TwoD
+				? new Vector3(this._intentHandler.LastDirection.x, this._intentHandler.LastDirection.y, 0f)
+				: this.rb.transform.forward;
+		}
 
 		/// <summary>
 		/// Sets the current movement intent based on input or AI decisions.
@@ -121,16 +121,9 @@ namespace Kope.Component.Movement {
 		public virtual void SetMovementIntent(MovementIntent intent) {
 			this._intentHandler.TrySetIntent(intent, IsStunned);
 		}
-
 		public virtual void SetResponsiveness(float responsiveness = Mathfx.DEFAULT_RESPONSIVENESS) {
 			this._currentResponsiveness = responsiveness;
 		}
-
-		public void OnUpdate() {
-			this._forceHandler.Tick(Time.deltaTime);
-			if (this._stunTimer.IsRunning) this._stunTimer.Tick(Time.deltaTime);
-		}
-
 		/// <summary>
 		/// Applies the integrated Physics and Intent layers.
 		/// Should be called from FixedUpdate via a Physics Controller or directly if this component manages its own ticks.
@@ -155,33 +148,20 @@ namespace Kope.Component.Movement {
 			this.rb.linearVelocity = (this.rb.linearVelocity * (1f - this._currentResponsiveness)) +
 			(Vector2)(targetVelocity * this._currentResponsiveness);
 		}
-
-		public virtual void ApplyKnockback(Vector3 hitPoint, float duration, float impulse = 1f, bool isPulling = false) {
-			Vector2 origin = this.rb.position;
-			Vector3 direction = isPulling ? ((Vector3)origin - hitPoint) : (hitPoint - (Vector3)origin);
-			this._forceHandler.AddForce(direction.normalized * impulse, duration);
-		}
-
-		public virtual Vector3 GetLookingAtDirection() {
-			return this._dimension == AxisMode.TwoD
-				? new Vector3(this._intentHandler.LastDirection.x, this._intentHandler.LastDirection.y, 0f)
-				: this.rb.transform.forward;
-		}
-
 		#endregion
 
-		#region Persistence & Stun
-
+		#region ISaveable Implementation 
 		public ISaveData GetSaveData() => new MovementComponentSaveData(this.rb.position);
 		public void LoadFromSaveData(ISaveData data) {
 			if (data is MovementComponentSaveData s) this.rb.position = s.Position.ToVector3();
 		}
+		#endregion
 
+		#region IStunnable Implementation
 		public void Stun(float duration) {
 			this._stunTimer.Reset(duration);
 			this._stunTimer.Start();
 		}
-
 		/// <summary>
 		/// A more severe form of stun that not only applies the stun duration but also immediately clears 
 		/// all active forces and prevents new movement intents from taking effect during the stun. 
@@ -199,129 +179,41 @@ namespace Kope.Component.Movement {
 
 		public void ForceCancellStun() => this._stunTimer?.Stop();
 
+		#endregion
 
+		#region  IKnockbackable Implementation
+		/// <summary>
+		/// Applies a directional knockback or pull effect to the actor. The direction is calculated based on the hit point relative to the actor's current position. If isPulling is true, the actor will be pulled towards the hit point; otherwise, it will be pushed away.
+		/// The impulse parameter controls the strength of the force applied, and the duration parameter determines
+		/// </summary>
+		/// <param name="hitPoint">The point of impact relative to the actor's position.</param>
+		/// <param name="duration">The duration of the knockback effect.</param>
+		/// <param name="impulse">The strength of the force applied.</param>
+		/// <param name="isPulling">Indicates whether the actor should be pulled towards the hit point.</param>
+		public virtual void ApplyKnockback(Vector3 hitPoint, float duration, float impulse = 1f, bool isPulling = false) {
+			Vector2 origin = this.rb.position;
+			Vector3 direction = isPulling ? ((Vector3)origin - hitPoint) : (hitPoint - (Vector3)origin);
+			this._forceHandler.AddForce(direction.normalized * impulse, duration);
+		}
 
+		#endregion
+
+		#region Private Helpers
+		private void SubscribeToStats() {
+			if (this._readOnlycharacterStatsSystem.CurrentStats != null) {
+				this._readOnlycharacterStatsSystem.StatsSubscribe(CharacterStatType.SPD, SetDefaultMovementSpeed);
+				SetDefaultMovementSpeed(this._readOnlycharacterStatsSystem.CurrentStats[CharacterStatType.SPD].GetValue());
+			}
+		}
+
+		private void UnsubscribeFromStats() {
+			if (this._readOnlycharacterStatsSystem.CurrentStats != null) {
+				this._readOnlycharacterStatsSystem.StatsUnsubscribe(CharacterStatType.SPD, SetDefaultMovementSpeed);
+			}
+		}
+
+		protected virtual void SetDefaultMovementSpeed(float speed) => this.defaultMovementSpeed = speed;
 		#endregion
 	}
 
-
-
-
-
-
-
-	#region  Intent Handling & Force Management
-	public class ForceInstance {
-		public readonly Vector3 Force;
-		public readonly CountdownTimer Timer;
-		private Action<ForceInstance> _onExpired;
-
-		public bool IsExpired => this.Timer.IsFinished;
-
-		public ForceInstance(Vector3 force, float duration, Action<ForceInstance> onExpiredCallback) {
-			this.Force = force;
-			this._onExpired = onExpiredCallback;
-			this.Timer = new CountdownTimer(duration);
-			this.Timer.OnTimerStop += HandleTimerStop;
-			this.Timer.Start();
-		}
-
-		private void HandleTimerStop() => this._onExpired?.Invoke(this);
-		public void Tick(float deltaTime) => this.Timer.Tick(deltaTime);
-		public void Dispose() {
-			this.Timer.OnTimerStop -= HandleTimerStop;
-			this._onExpired = null;
-			this.Timer.Stop();
-		}
-	}
-
-	// --- Sub Classes ---
-
-	/// <summary>
-	/// Handles the accumulation and recalculation of physical forces (Knockbacks, Impulses).
-	/// </summary>
-	public class MovementForceHandler {
-		private readonly List<ForceInstance> _activeForces = new();
-		private Vector3 _cachedNetForce = Vector3.zero;
-		private readonly Vector3 _dimMask;
-
-		public Vector3 NetForce => _cachedNetForce;
-
-		public MovementForceHandler(Vector3 dimensionMask) {
-			this._dimMask = dimensionMask;
-		}
-
-		public void AddForce(Vector3 force, float duration) {
-			ForceInstance instance = new(force, duration, HandleForceExpiration);
-			this._activeForces.Add(instance);
-			Recalculate();
-		}
-
-		public void Tick(float deltaTime) {
-			for (int i = this._activeForces.Count - 1; i >= 0; i--) {
-				this._activeForces[i].Tick(deltaTime);
-			}
-		}
-
-		public void ClearAllForces() {
-			foreach (var force in this._activeForces) force.Dispose();
-			this._activeForces.Clear();
-			Recalculate();
-		}
-
-		private void HandleForceExpiration(ForceInstance instance) {
-			if (this._activeForces.Remove(instance)) {
-				instance.Dispose();
-				Recalculate();
-			}
-		}
-
-		private void Recalculate() {
-			this._cachedNetForce = Vector3.zero;
-			foreach (var f in this._activeForces) this._cachedNetForce += f.Force;
-			this._cachedNetForce = Vector3.Scale(this._cachedNetForce, this._dimMask);
-		}
-	}
-
-	/// <summary>
-	/// Encapsulates movement intent state and priority-based filtering logic.
-	/// </summary>
-	public class MovementIntentHandler {
-		private MovementIntent _currentIntent;
-		private Vector3 _lastDirection;
-
-		public MovementIntent Current => _currentIntent;
-		public Vector3 LastDirection => _lastDirection;
-
-		public MovementIntentHandler(Vector3 initialFacing) {
-			this._currentIntent = MovementIntent.Default;
-			this._lastDirection = initialFacing;
-		}
-
-		public bool TrySetIntent(MovementIntent intent, bool isStunned) {
-			if (isStunned) return false;
-
-			if (this._currentIntent.Priority != MovementIntentPriority.UnlockNext) {
-				if (intent.Priority < this._currentIntent.Priority) return false;
-			}
-
-			if (intent.Direction.sqrMagnitude > Mathfx.SQUARE_DIRECTION_UPPER_EPSILON) {
-				intent.Direction.Normalize();
-				this._lastDirection = intent.Direction;
-			} else {
-				intent.Direction = Vector3.zero;
-			}
-
-			this._currentIntent = intent;
-			return true;
-		}
-
-		public void ForceIntent(MovementIntent intent) {
-			this._currentIntent = intent;
-			if (intent.Direction.sqrMagnitude > Mathfx.SQUARE_DIRECTION_UPPER_EPSILON) {
-				this._lastDirection = intent.Direction.normalized;
-			}
-		}
-	}
 }
-	#endregion

@@ -74,9 +74,9 @@ namespace Kope.Component.Movement {
 		Vector3 Position { get; }
 		AxisMode Dimension { get; }
 
+		Vector3 GetLookingAtDirection();
 		void SetResponsiveness(float responsiveness);
 		void SetMovementIntent(MovementIntent intent);
-		Vector3 GetLookingAtDirection();
 		void ApplyPhysics(float stateSpeedMultiplier = 1f);
 	}
 

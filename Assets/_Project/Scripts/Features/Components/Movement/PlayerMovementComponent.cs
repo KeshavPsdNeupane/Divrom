@@ -19,6 +19,8 @@ public class PlayerMovementComponent : MovementComponentBase {
 	private InputManager inputManager;
 	bool _isEventSystemSubscribed = false;
 	private InputActionSubscriptionLifetime<PlayerInputActionKey> _moveInputSubscription;
+
+	#region Init and Unity Lifecycle
 	protected override bool OnInit() {
 		// we need to check if we already sub to the stats
 		// since base is not InitializableBase, we need to call it to make sure
@@ -27,13 +29,13 @@ public class PlayerMovementComponent : MovementComponentBase {
 		if (GlobalServiceLocator.Instance.TryGetService(out InputManager inputManager)) {
 			this.inputManager = inputManager;
 		} else {
-			Debug.LogError($"{this.gameObject.name}Controller: InputManager service not found!" + GetParentGameObjectHeirarchyMessage());
+			Debug.LogError($"{this.gameObject.name}Controller: InputManager service not found!" + this.HieararchyPath);
 			return false;
 		}
 		this._moveInputSubscription = new InputActionSubscriptionLifetime<PlayerInputActionKey>(
 			PlayerInputActionCollection.Player,
 			PlayerInputActionKey.Move,
-			MoveForInputSystem,
+			SetDirectionIntent,
 			true
 		);
 		return true;
@@ -48,7 +50,9 @@ public class PlayerMovementComponent : MovementComponentBase {
 		base.OnDisable();
 		Unsubscribe();
 	}
+	#endregion
 
+	#region Private Helpers
 	private void Subscribe() {
 		if (!this.IsInitialized || this._isEventSystemSubscribed) return;
 		this.inputManager.Subscribe(this._moveInputSubscription);
@@ -63,7 +67,7 @@ public class PlayerMovementComponent : MovementComponentBase {
 	}
 
 
-	public void MoveForInputSystem(InputAction.CallbackContext context)
+	private void SetDirectionIntent(InputAction.CallbackContext context)
 	=> SetMovementIntent(new MovementIntent(context.ReadValue<Vector2>(), MovementIntentType.Move));
-
+	#endregion
 }

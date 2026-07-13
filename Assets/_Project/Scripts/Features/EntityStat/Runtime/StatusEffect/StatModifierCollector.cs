@@ -19,7 +19,7 @@ public class StatModifierCollector : SensorBase {
 			return;
 		}
 		// since we are mutating the CharacterStatsSystem by adding stat modifiers to it, we need mutatable access here. so using TryGetMutatableComponent for semantic clarity
-		if (ecr.ComponentRegistry.TryGetMutatableComponent(out CharacterStatsSystemBase statsSystem)) {
+		if (ecr.ComponentRegistry.TryGetMutable(out CharacterStatsSystemBase statsSystem)) {
 			this.characterStats = statsSystem;
 		} else {
 			Debug.LogError("No CharacterStatsSystem found in EntityComponentStoreConfig for StatModifierCollector" + this._parentGOHiearchPathMessage);
@@ -49,7 +49,7 @@ public class StatModifierCollector : SensorBase {
 			//  and we have a convention that any object with that tag must have 
 			// a StatusEffectContainer component. so if we don't find it, it means something is
 			//  wrong with the setup of the detected object, and we log an error to notify the developer to fix it.
-			if (!mgr.EntityDetail.ComponentRegistry.TryGetReadOnlyComponent(out StatModifierContainer effect)) {
+			if (!mgr.EntityDetail.ComponentRegistry.TryGetReadOnly(out StatModifierContainer effect)) {
 				Debug.LogError("No StatusEffectContainer found on detected object with tag " + StatusObjectTagName + ". Please ensure the object has a StatusEffectContainer component." + this._parentGOHiearchPathMessage);
 				return;
 			}

@@ -29,6 +29,6 @@ namespace Kope.Core.EntityComponentRegistry {
 		/// <typeparam name="T"></typeparam>
 		/// <param name="component"></param>
 		/// <returns></returns>
-		bool TryGetReadOnlyComponent<T>([MaybeNullWhen(false)] out T component, bool logWarning = true);
+		bool TryGetReadOnly<T>([MaybeNullWhen(false)] out T component);
 	}
 }

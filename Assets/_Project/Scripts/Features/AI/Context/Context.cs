@@ -54,16 +54,16 @@ public class Context : IReadOnlyContext {
 		var targetContext = entityDetail.ComponentRegistry;
 
 		// Ensure the common category exists
-		if (!_targetEntityContexts.TryGetValue(commonTag, out var innerDict)) {
+		if (!this._targetEntityContexts.TryGetValue(commonTag, out var innerDict)) {
 			innerDict = new Dictionary<HashedTag, IReadOnlyComponentRegistry>();
-			_targetEntityContexts[commonTag] = innerDict;
-			_listCache[commonTag] = new List<IReadOnlyComponentRegistry>();
+			this._targetEntityContexts[commonTag] = innerDict;
+			this._listCache[commonTag] = new List<IReadOnlyComponentRegistry>();
 		}
 
 		// Only add if it's a new individual entity
 		if (!innerDict.ContainsKey(individualTag)) {
 			innerDict[individualTag] = targetContext;
-			_listCache[commonTag].Add(targetContext);
+			this._listCache[commonTag].Add(targetContext);
 			// only subscribe to the entity's death/pooled event if it's a new entry to prevent multiple subscriptions
 			// for the same entity
 			entityDetail.EventProvider.OnEntityDiedOrPooled += RemoveEntityDueToSignal;
@@ -73,11 +73,11 @@ public class Context : IReadOnlyContext {
 	public void RemoveTargetEntityContext(EntityDetail entityDetail) {
 		var commonTag = entityDetail.CommonEntityHashedTag;
 		var individualTag = entityDetail.UniqueID;
-		if (_targetEntityContexts.TryGetValue(commonTag, out var innerDict)) {
+		if (this._targetEntityContexts.TryGetValue(commonTag, out var innerDict)) {
 			var individualHashedTag = individualTag.HashedTag;
 			if (innerDict.TryGetValue(individualHashedTag, out var IReadOnlyEntityRegistry)) {
 				// Remove from cache list
-				if (_listCache.TryGetValue(commonTag, out var cacheList)) {
+				if (this._listCache.TryGetValue(commonTag, out var cacheList)) {
 					cacheList.Remove(IReadOnlyEntityRegistry);
 					//Debug.Log($"[Context] Removed target entity from cache: CommonTag={commonTag}, IndividualTag={individualTag}");
 				}
@@ -85,8 +85,8 @@ public class Context : IReadOnlyContext {
 				innerDict.Remove(individualHashedTag);
 				if (innerDict.Count == 0) {
 					//	Debug.Log($"[Context] All entities removed from category: CommonTag={commonTag}");
-					_targetEntityContexts.Remove(commonTag);
-					_listCache.Remove(commonTag);
+					this._targetEntityContexts.Remove(commonTag);
+					this._listCache.Remove(commonTag);
 
 				}
 				// Unsubscribe from the entity's death/pooled event to prevent memory leaks and unintended callbacks
@@ -121,7 +121,6 @@ public class Context : IReadOnlyContext {
 
 
 	private void RemoveEntityDueToSignal(EntityDetail entityDetail) {
-		//Debug.Log($"[Context] Received signal to remove entity: UniqueID={entityDetail.UniqueID}, CommonTag={entityDetail.CommonEntityHashedTag}");
 		RemoveTargetEntityContext(entityDetail);
 	}
 }

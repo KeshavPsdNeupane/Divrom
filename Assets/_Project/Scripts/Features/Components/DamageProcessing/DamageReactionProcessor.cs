@@ -36,9 +36,9 @@ namespace Kope.Component.Combat {
 		private readonly float _currentLevel = 0;
 
 		public IHitBoxComponent HurtBox => this._hurtBox;
-
+		#region  Init And Unity Lifecycle
 		protected override bool OnInit() {
-			string parentHierarchy = GetParentGameObjectHeirarchyMessage();
+			string parentHierarchy = this.HieararchyPath;
 			if (this.ecr == null) {
 				Debug.LogError($"DamageProcessor on {gameObject.name} has no ECR assigned."
 				+ $"on{parentHierarchy}");
@@ -50,27 +50,48 @@ namespace Kope.Component.Combat {
 				return false;
 			}
 
-			if (!this.ecr.ComponentRegistry.TryGetMutatableComponent(out _healthComponent)) {
+			if (!this.ecr.ComponentRegistry.TryGetMutable(out _healthComponent)) {
 				Debug.LogError($"DamageProcessor on {gameObject.name} failed to find HealthComponent."
 				+ $"on{parentHierarchy}");
 				return false;
 			}
 
-			if (!this.ecr.ComponentRegistry.TryGetReadOnlyComponent(out _statSystem)) {
+			if (!this.ecr.ComponentRegistry.TryGetReadOnly(out _statSystem)) {
 				Debug.LogError($"DamageProcessor on {gameObject.name} failed to find IStatSystem."
 				+ $"on{parentHierarchy}");
 				return false;
 			}
 
-			if (!this.ecr.ComponentRegistry.TryGetMutatableComponent(out this._hurtBox)) {
+			if (!this.ecr.ComponentRegistry.TryGetMutable(out this._hurtBox)) {
 				Debug.LogError($"DamageProcessor on {gameObject.name} failed to find HurtBox."
 				+ $"on{parentHierarchy}");
 				return false;
 			}
 			return true;
 		}
+		private void OnEnable() {
+			if (this._hurtBox == null) return;
+			this._hurtBox.OnHitCombatible += HandleHurtBoxHit;
+			this._hurtBox.OnHitStatChange += HandleStatChangeHit;
+		}
 
+		private void OnDisable() {
+			if (this._hurtBox != null) {
+				this._hurtBox.OnHitCombatible -= HandleHurtBoxHit;
+				this._hurtBox.OnHitStatChange -= HandleStatChangeHit;
+			}
+			ClearActiveEffects();
+		}
 
+		public void OnUpdate() {
+			if (this._activeTickableEffects.Count == 0) return;
+
+			float deltaTime = Time.deltaTime;
+			for (int i = this._activeTickableEffects.Count - 1; i >= 0; i--) {
+				this._activeTickableEffects[i]?.Tick(deltaTime);
+			}
+		}
+		#endregion
 
 		#region IDamagable Implementation
 
@@ -159,30 +180,15 @@ namespace Kope.Component.Combat {
 		}
 
 
-		private void OnEnable() {
-			if (this._hurtBox == null) return;
-			this._hurtBox.OnHitCombatible += HandleHurtBoxHit;
-			this._hurtBox.OnHitStatChange += HandleStatChangeHit;
-		}
 
-		private void OnDisable() {
-			if (this._hurtBox != null) {
-				this._hurtBox.OnHitCombatible -= HandleHurtBoxHit;
-				this._hurtBox.OnHitStatChange -= HandleStatChangeHit;
+		private bool ValidateComponent<T>(T component, string componentName) where T : class {
+			if (component == null) {
+				Debug.LogError($"DamageProcessor on {gameObject.name} failed to find {componentName}."
+				+ $"on{this.HieararchyPath}");
+				return false;
 			}
-			ClearActiveEffects();
+			return true;
 		}
-
-		public void OnUpdate() {
-			if (this._activeTickableEffects.Count == 0) return;
-
-			float deltaTime = Time.deltaTime;
-			for (int i = this._activeTickableEffects.Count - 1; i >= 0; i--) {
-				this._activeTickableEffects[i]?.Tick(deltaTime);
-			}
-		}
-
-
 
 	}
 }

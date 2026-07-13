@@ -58,33 +58,33 @@ public class StatDescription : InitializableBase {
 	private bool Validate() {
 		if (ecr == null) {
 			Debug.LogError("EntityComponentStore reference was missing," +
-		  " unable to retrieve CharacterStatsSystem." + GetParentGameObjectHeirarchyMessage());
+		  " unable to retrieve CharacterStatsSystem." + this.HieararchyPath);
 			return false;
 		}
 		// using tryGet since this only shows the stats on UI and does not modify the stats,
 		//  so we don't need mutatable access here. so TryGetComponent is sufficient for semantic clarity.
-		if (!ecr.ComponentRegistry.TryGetReadOnlyComponent<CharacterStatsSystemBase>(out var statsSystem)) {
-			Debug.LogError("No CharacterStatsSystem found in EntityComponentStore for StatDescription" + GetParentGameObjectHeirarchyMessage());
+		if (!ecr.ComponentRegistry.TryGetReadOnly<CharacterStatsSystemBase>(out var statsSystem)) {
+			Debug.LogError("No CharacterStatsSystem found in EntityComponentStore for StatDescription" + this.HieararchyPath);
 			return false;
 
 		}
 		this._characterStats = statsSystem;
 
-		if (!ecr.ComponentRegistry.TryGetReadOnlyComponent<IHealthComponent>(out var healthComponent)) {
-			Debug.LogError("No IHealthComponent found in EntityComponentStore for StatDescription" + GetParentGameObjectHeirarchyMessage());
+		if (!ecr.ComponentRegistry.TryGetReadOnly<IHealthComponent>(out var healthComponent)) {
+			Debug.LogError("No IHealthComponent found in EntityComponentStore for StatDescription" + this.HieararchyPath);
 			return false;
 
 		}
 		this._healthComponent = healthComponent;
 
 		if (this.statDescriptionUIPanel == null) {
-			Debug.LogError("StatDescriptionUIPanel is not assigned." + GetParentGameObjectHeirarchyMessage());
+			Debug.LogError("StatDescriptionUIPanel is not assigned." + this.HieararchyPath);
 			return false;
 		}
 		if (this._panelRect == null && this.statDescriptionUIPanel != null) {
 			this._panelRect = this.statDescriptionUIPanel.GetComponent<RectTransform>();
 			if (this._panelRect == null)
-				Debug.LogError("Stat Panel requires RectTransform." + GetParentGameObjectHeirarchyMessage());
+				Debug.LogError("Stat Panel requires RectTransform." + this.HieararchyPath);
 		}
 		return true;
 	}

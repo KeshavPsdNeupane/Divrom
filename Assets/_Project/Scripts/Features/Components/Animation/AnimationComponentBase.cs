@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Kope.Component.Animation {
 
-	public class AnimationComponentBase : InitializableBase, IAnimationComponentNew {
+	public class AnimationComponentBase : InitializableBase, IAnimationComponent {
 		[SerializeField] protected Animator animator;
 
 		[Header("Enter the name of the string of direction \nfloat from the animator")]
@@ -13,6 +13,7 @@ namespace Kope.Component.Animation {
 
 		private Vector2Int _directionStringHashes;
 
+		#region  Init and Unity Lifecycle
 		protected override bool OnInit() {
 			if (!this.animator) return false;
 			this._directionStringHashes.x = Animator.StringToHash(this.directionX);
@@ -20,6 +21,8 @@ namespace Kope.Component.Animation {
 			SetDirection(Vector2.down);
 			return true;
 		}
+		#endregion
+		#region IAnimationComponent Implementation
 		/// <summary>
 		/// Executes a state change on the underlying Animator using the provided profile data.
 		/// </summary>
@@ -97,5 +100,6 @@ namespace Kope.Component.Animation {
 		public bool CanTransitionToNextAnimation(int hash) =>
 			!this.animator.IsInTransition(0) &&
 			this.animator.GetCurrentAnimatorStateInfo(0).shortNameHash != hash;
+		#endregion
 	}
 }

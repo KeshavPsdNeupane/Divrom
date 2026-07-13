@@ -29,13 +29,13 @@ namespace Kope.Component.Attack {
 	public abstract class AttackComponentBase : InitializableBase, IAttackComponent {
 		[SerializeField] private EntityComponentsRegistry ecr;
 		[SerializeField] private WeaponSO equippedWeapDataSO;
-		protected CharacterStatsSystemBase _statsSystem;
-		private AnimationComponentBase _animationComponent;
 
+		private AnimationComponentBase _animationComponent;
 		// Caching dictionaries for O(1) local access
 		private readonly Dictionary<CharacterStatType, float> _cachedStats = new();
 		private readonly Dictionary<CharacterStatType, UnityAction<float>> _statCallbacks = new();
 
+		protected CharacterStatsSystemBase _statsSystem;
 		protected float _normalizedCriticalChance;
 		protected float _normalizedCriticalDamage;
 
@@ -43,72 +43,44 @@ namespace Kope.Component.Attack {
 		public event System.Action<WeaponData> OnAttackPerformed1;
 
 
+		protected abstract float PerformAttackInternal();
 
+
+		#region  Init And Unity 
 		protected override bool OnInit() {
 			if (this.ecr == null) {
-				Debug.LogError("EntityComponentStore reference is missing." + GetParentGameObjectHeirarchyMessage());
+				Debug.LogError("EntityComponentStore reference is missing." + this.HieararchyPath);
 				return false;
 			}
-			if (!this.ecr.ComponentRegistry.TryGetMutatableComponent(out this._animationComponent)) {
-				Debug.LogError("AnimationComponent not found." + GetParentGameObjectHeirarchyMessage());
+			if (!this.ecr.ComponentRegistry.TryGetMutable(out this._animationComponent)) {
+				Debug.LogError("AnimationComponent not found." + this.HieararchyPath);
 			}
 
-			if (!this.ecr.ComponentRegistry.TryGetMutatableComponent(out this._statsSystem)) {
-				Debug.LogError("CharacterStatsSystem not found." + GetParentGameObjectHeirarchyMessage());
+			if (!this.ecr.ComponentRegistry.TryGetMutable(out this._statsSystem)) {
+				Debug.LogError("CharacterStatsSystem not found." + this.HieararchyPath);
 				return false;
 			}
 			if (this.equippedWeapDataSO == null) {
-				Debug.LogError($"WeaponSo is null {GetParentGameObjectHeirarchyMessage()}");
+				Debug.LogError($"WeaponSo is null {this.HieararchyPath}");
 			}
 			InitializeStatCache();
 			SubscribeToStats();
 
 			return true;
 		}
-
-		private void InitializeStatCache() {
-			// Pre-fill cache for all stats to avoid "KeyNotFound" errors
-			foreach (CharacterStatType type in System.Enum.GetValues(typeof(CharacterStatType))) {
-				this._cachedStats[type] = this._statsSystem.GetStatValue(type);
-
-				// Create a persistent callback for each stat
-				this._statCallbacks[type] = (val) => {
-					this._cachedStats[type] = val;
-					// Special handling for crit which is used in every CalculateDamage call
-					if (type == CharacterStatType.CRATE) CriticalRateCallBack(val);
-					if (type == CharacterStatType.CDMG) CriticalDamageCallBack(val);
-				};
-			}
-		}
-
 		protected virtual void OnEnable() => SubscribeToStats();
 		protected virtual void OnDisable() => UnsubscribeFromStats();
+		#endregion
 
-		protected void SubscribeToStats() {
-			if (!this.IsInitialized || this._statsSystem == null) return;
 
-			foreach (var kvp in this._statCallbacks) {
-				this._statsSystem.StatsSubscribe(kvp.Key, kvp.Value);
-				// Forcing the callback to populate the cache with current values on subscribe
-				// this is necessary because some stats might not change for a long time, and
-				// we want to ensure our cache is always up to date without having to wait for a stat change.
-				// like critical chance the rate of this stat changing is very low, and it's used in
-				//  every damage calculation, so we want to ensure it's always accurate in our cache.
-				kvp.Value.Invoke(this._statsSystem.GetStatValue(kvp.Key));
-			}
+		#region  IAttackComponent Implementation
+		public float PerformAttack() {
+			if (!CanPerformAttack()) return 0f;
+			float dmg = PerformAttackInternal();
+			this.OnAttackPerformed?.Invoke();
+			this.OnAttackPerformed1?.Invoke(this.equippedWeapDataSO.CurrentWeaponData);
+			return dmg;
 		}
-
-		protected void UnsubscribeFromStats() {
-			if (this._statsSystem == null) return;
-
-			foreach (var kvp in this._statCallbacks) {
-				this._statsSystem.StatsUnsubscribe(kvp.Key, kvp.Value);
-			}
-		}
-
-		protected virtual void CriticalRateCallBack(float value) => this._normalizedCriticalChance = value * 0.01f;
-		protected virtual void CriticalDamageCallBack(float value) => this._normalizedCriticalDamage = 1 + value * 0.01f;
-
 		/// <summary>
 		/// The simplest way to calculate damage based on a single stat type and multiplier. 
 		/// This is useful for most basic attacks that scale off a single stat, like a sword attack that scales off ATK.
@@ -150,6 +122,52 @@ namespace Kope.Component.Attack {
 			return CalculateDamage(totalBase);
 		}
 
+		#endregion
+
+
+		private void InitializeStatCache() {
+			// Pre-fill cache for all stats to avoid "KeyNotFound" errors
+			foreach (CharacterStatType type in System.Enum.GetValues(typeof(CharacterStatType))) {
+				this._cachedStats[type] = this._statsSystem.GetStatValue(type);
+
+				// Create a persistent callback for each stat
+				this._statCallbacks[type] = (val) => {
+					this._cachedStats[type] = val;
+					// Special handling for crit which is used in every CalculateDamage call
+					if (type == CharacterStatType.CRATE) CriticalRateCallBack(val);
+					if (type == CharacterStatType.CDMG) CriticalDamageCallBack(val);
+				};
+			}
+		}
+
+
+
+		protected void SubscribeToStats() {
+			if (!this.IsInitialized || this._statsSystem == null) return;
+
+			foreach (var kvp in this._statCallbacks) {
+				this._statsSystem.StatsSubscribe(kvp.Key, kvp.Value);
+				// Forcing the callback to populate the cache with current values on subscribe
+				// this is necessary because some stats might not change for a long time, and
+				// we want to ensure our cache is always up to date without having to wait for a stat change.
+				// like critical chance the rate of this stat changing is very low, and it's used in
+				//  every damage calculation, so we want to ensure it's always accurate in our cache.
+				kvp.Value.Invoke(this._statsSystem.GetStatValue(kvp.Key));
+			}
+		}
+
+		protected void UnsubscribeFromStats() {
+			if (this._statsSystem == null) return;
+
+			foreach (var kvp in this._statCallbacks) {
+				this._statsSystem.StatsUnsubscribe(kvp.Key, kvp.Value);
+			}
+		}
+
+		protected virtual void CriticalRateCallBack(float value) => this._normalizedCriticalChance = value * 0.01f;
+		protected virtual void CriticalDamageCallBack(float value) => this._normalizedCriticalDamage = 1 + value * 0.01f;
+
+
 		/// <summary>
 		/// Calculates the final damage after applying critical hit modifiers. The baseScalingStat parameter is
 		/// the result of the GetDamageValue methods, which already takes into account the relevant stats
@@ -186,19 +204,13 @@ namespace Kope.Component.Attack {
 		// so this method will only be responsible for performing the attack and triggering the animation
 		// and damage calculation, while the ability system will handle the specific logic for different 
 		// types of attacks and their effects.
-		public float PerformAttack() {
-			if (!CanPerformAttack()) return 0f;
-			float dmg = PerformAttackInternal();
-			this.OnAttackPerformed?.Invoke();
-			this.OnAttackPerformed1?.Invoke(this.equippedWeapDataSO.CurrentWeaponData);
-			return dmg;
-		}
+
 
 		private bool CanPerformAttack() =>
 			this._animationComponent.CanTransitionToNextAnimation(
 				this.equippedWeapDataSO.CurrentWeaponData.AttackAnimationHash
 			);
 
-		protected abstract float PerformAttackInternal();
+
 	}
 }

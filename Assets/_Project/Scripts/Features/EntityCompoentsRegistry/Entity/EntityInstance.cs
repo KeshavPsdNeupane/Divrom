@@ -96,14 +96,14 @@ namespace Kope.Core.Identity {
 			if (registry == null) {
 				Debug.LogError($"[EntityManager] there is an issue , 'the component registry is not initialized yet', for {this.gameObject.name}" +
 				"Please check the InitManager and make sure the EntityComponentRegistry is placed on list" +
-				$"And the EntityManager is placed after the EntityComponentRegistry in the execution order, and that the EntityComponentRegistry is properly initialized in its OnInit method.{GetParentGameObjectHeirarchyMessage()}", this.gameObject);
+				$"And the EntityManager is placed after the EntityComponentRegistry in the execution order, and that the EntityComponentRegistry is properly initialized in its OnInit method.{this.HieararchyPath}", this.gameObject);
 				return false;
 			}
 			return true;
 
 		}
 		private bool EditorOnlyValidate() {
-			string parentStackTraceMessage = GetParentGameObjectHeirarchyMessage();
+			string parentStackTraceMessage = this.HieararchyPath;
 			if (!ValidateIdentity(parentStackTraceMessage)) return false;
 
 			if (this.entityComponentRegistry == null) {

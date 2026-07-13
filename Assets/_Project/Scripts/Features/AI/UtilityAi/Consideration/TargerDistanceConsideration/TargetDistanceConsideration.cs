@@ -111,7 +111,7 @@ public class TargetDistanceConsideration : ConsiderationSO {
 			return null;
 		}
 
-		if (!context.SelfReadOnlyEntityContext.TryGetReadOnlyComponent<MovementComponentBase>(out var movementComponent)) {
+		if (!context.SelfReadOnlyEntityContext.TryGetReadOnly<MovementComponentBase>(out var movementComponent)) {
 			Debug.LogError($"[{this.considerationName}] The entity does not have a MovementComponentBase. Please ensure it is added to the entity.", this);
 			return null;
 		}

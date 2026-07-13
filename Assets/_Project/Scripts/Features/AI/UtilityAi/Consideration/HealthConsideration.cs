@@ -37,7 +37,7 @@ public class HealthConsideration : ConsiderationSO {
 		if (this.entityCommonNameConfig == null) return (0.0f, 0);
 
 		var selfContext = context.SelfReadOnlyEntityContext;
-		if (!selfContext.TryGetReadOnlyComponent<IHealthComponent>(out var healthComponent)) {
+		if (!selfContext.TryGetReadOnly<IHealthComponent>(out var healthComponent)) {
 			Debug.LogError($"[{this.considerationName}] The entity does not have a HealthComponent. Please ensure it is added to the entity.", this);
 			return (0.0f, 0);
 		}

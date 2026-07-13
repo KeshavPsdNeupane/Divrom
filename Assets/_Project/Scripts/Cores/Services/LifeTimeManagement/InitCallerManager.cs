@@ -128,7 +128,7 @@ namespace Kope.Core.LifeTimeManagement {
 
 				return true;
 			} catch (System.Exception ex) {
-				Debug.LogError($"InitLifecycleManager: Exception during OnInit: {ex}" + GetParentGameObjectHeirarchyMessage());
+				Debug.LogError($"InitLifecycleManager: Exception during OnInit: {ex}-{this.HieararchyPath}");
 				return false;
 			}
 		}

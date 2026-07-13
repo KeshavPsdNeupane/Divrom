@@ -13,7 +13,7 @@ namespace Kope.Actor.New {
 	/// per entity instance on initialization, converting static asset blueprints into autonomous, stateful 
 	/// logic processors that maintain isolated data tracking.</para>
 	/// <para><b>Decoupling Strategy:</b> Communicates entirely through abstracted component interfaces 
-	/// (<see cref="IMovementComponent"/>, <see cref="IAnimationComponentNew"/>) resolved from a central runtime registry.</para>
+	/// (<see cref="IMovementComponent"/>, <see cref="IAnimationComponent"/>) resolved from a central runtime registry.</para>
 	/// </remarks>
 	public abstract class EntityStateBaseSO : ScriptableObject {
 
@@ -26,7 +26,7 @@ namespace Kope.Actor.New {
 		protected AnimationStateProfileData _profileData;
 
 		protected IMovementComponent _movementComponent;
-		protected IAnimationComponentNew _animationComponent;
+		protected IAnimationComponent _animationComponent;
 		protected IEntityStateManagement _stateManagement;
 
 		/// <summary> Indicates if higher-level input routing systems can override or interrupt this active state. </summary>
@@ -40,7 +40,7 @@ namespace Kope.Actor.New {
 		/// </summary>
 		public void Init(IEntityStateManagement stateManagement,
 			IMovementComponent movementComponent,
-			IAnimationComponentNew animationComponent,
+			IAnimationComponent animationComponent,
 			AnimationStateProfileData? profileData = default) {
 			this._stateManagement = stateManagement;
 			this._movementComponent = movementComponent;

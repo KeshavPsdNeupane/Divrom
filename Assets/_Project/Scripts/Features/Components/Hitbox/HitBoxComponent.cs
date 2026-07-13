@@ -27,7 +27,7 @@ namespace Kope.Component.HitBox {
 		protected override bool OnInit() {
 			if (this.hurtBoxCollider == null) {
 				Debug.LogError($"HurtBoxComponent on {gameObject.name} has no Collider assigned." +
-				GetParentGameObjectHeirarchyMessage());
+				this.HieararchyPath);
 				return false;
 			}
 			this.hurtBoxCollider.isTrigger = true;
