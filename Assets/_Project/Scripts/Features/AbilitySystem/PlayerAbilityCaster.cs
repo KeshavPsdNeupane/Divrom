@@ -12,10 +12,11 @@ using UnityEngine.InputSystem;
 using Kope.Component.HitBox.Interface;
 using Kope.Component.Movement;
 using Kope.AbilitySystem;
+using Kope.EntityComponentSystem;
 
 namespace Kope.Component.Ability {
 
-	public class PlayerAbilityCaster : InitializableBase, IUpdatable {
+	public class PlayerAbilityCaster : ComponentBase, IUpdatable {
 		private const int MAX_HOTBAR_SLOT = 9;
 		[Header("Settings")]
 		[SerializeField, Range(1, 9)] private int abilityCount = 4;

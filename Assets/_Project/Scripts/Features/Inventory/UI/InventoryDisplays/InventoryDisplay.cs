@@ -7,7 +7,12 @@ public abstract class InventoryDisplay : InitializableBase {
 	public InventorySystem PrimaryInventorySystem => this.primaryInventorySystem;
 	public abstract void AssignSlot(InventorySystem invToDisplay);
 
-	protected virtual void Start() { }
+	/// <summary>
+	/// Overrides the base <c>Initializable</c> lifecycle method to establish <c>OnStart</c> 
+	/// as the specific start-up function for children of this class. 
+	/// Subclasses can override this method to implement their own custom initialization.
+	/// </summary>
+	protected override void OnStart() { }
 
 	protected virtual void UpdateSlot(ItemSlot updatedSlot) {
 		if (updatedSlot == null || this.slotDictionary == null || !this.slotDictionary.ContainsKey(updatedSlot))

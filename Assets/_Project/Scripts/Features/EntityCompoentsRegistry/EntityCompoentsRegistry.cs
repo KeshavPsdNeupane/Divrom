@@ -4,6 +4,7 @@ using Kope.Core.ServiceLocator;
 using UnityEngine;
 
 using System.Text;
+using Kope.EntityComponentSystem;
 
 namespace Kope.Core.EntityComponentRegistry {
 	/// <summary>
@@ -20,9 +21,8 @@ namespace Kope.Core.EntityComponentRegistry {
 	/// However, using EntityComponentStore is recommended for better organization and management of entity components.
 	/// Centralizes initialization logic and avoids duplicate registration/Init calls.
 	/// <br/>
-	/// <inheritdoc cref="InitializableBase"/>
 	/// </summary>
-	public class EntityComponentsRegistry : InitializableBase, IInitializableContainer {
+	public class EntityComponentsRegistry : ComponentBase, IInitializableContainer {
 		[SerializeField] private Transform entityTransform;
 		[SerializeField] private string registryName = "DefaultRegistryName";
 		[SerializeField, Tooltip("Indicates whether this EntityComponentStore contains state/AI/sensor components." +
@@ -33,18 +33,12 @@ namespace Kope.Core.EntityComponentRegistry {
 		/// The list of components stored in this EntityComponentStore.
 		/// </summary>
 		[SerializeField, Tooltip("Order matters! \n\nIf you can't avoid circular dependencies (#skillIssue), refactor your life choices.")]
-		private List<InitializableBase> components = new();
+		private List<ComponentBase> components = new();
 		private ComponentRegistry componentRegistry;
-
-
-
 
 		public ComponentRegistry ComponentRegistry => this.componentRegistry;
 
-		public IEnumerable<InitializableBase> GetNestedComponents() {
-			return this.components;
-		}
-
+		#region  Init and Unity Lifecycle
 		protected override bool OnInit() {
 
 			var dimension = GlobalServiceLocator.Dimension;
@@ -69,6 +63,17 @@ namespace Kope.Core.EntityComponentRegistry {
 			}
 			return true;
 		}
+		#endregion
+
+		#region IInitializableContainer Implementation
+		public IEnumerable<InitializableBase> GetNestedComponents() {
+			return this.components;
+		}
+		#endregion
+
+
+
+
 		/// <summary>
 		/// Register a component to the registry. This is useful for components that 
 		/// are not serialized in the inspector, but are added at runtime.

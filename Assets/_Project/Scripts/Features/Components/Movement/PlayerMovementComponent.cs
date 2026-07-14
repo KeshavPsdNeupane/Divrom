@@ -23,7 +23,8 @@ public class PlayerMovementComponent : MovementComponentBase {
 	#region Init and Unity Lifecycle
 	protected override bool OnInit() {
 		// we need to check if we already sub to the stats
-		// since base is not InitializableBase, we need to call it to make sure
+		// since base is not InitializableBase or its abstract class child ,
+		//  we need to call it to make sure
 		//  we get the stat value from the stats
 		if (!base.OnInit()) return false; // impt if the base class is not InilializableBase
 		if (GlobalServiceLocator.Instance.TryGetService(out InputManager inputManager)) {

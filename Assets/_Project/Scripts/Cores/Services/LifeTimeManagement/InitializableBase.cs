@@ -50,6 +50,23 @@ namespace Kope.Core.LifeTimeManagement {
 
 
 		#region Lifecycle Management
+		/// <summary>
+		/// Public entry point for the component's startup lifecycle. 
+		/// This executes one-time initialization validation and then triggers the virtual <see cref="OnStart"/> hook.
+		/// </summary>
+		/// <remarks>
+		/// Because this is executed exactly once per component lifecycle, it is the safest place to run 
+		/// validation (<see cref="CheckInit"/>) without incurring any recurring runtime or performance overhead.
+		/// </remarks>
+		public void Start() {
+			CheckInit();
+
+			// Execute the custom startup hook for subclasses. This is called even if initialization 
+			// validation fails, ensuring subclasses can run fallback logic or clean up gracefully.
+			OnStart();
+		}
+
+
 		protected virtual void OnDestroy() {
 			if (!this.IsInitialized) return;
 			this.IsInitialized = false;
@@ -102,8 +119,16 @@ namespace Kope.Core.LifeTimeManagement {
 		protected virtual bool OnInit() {
 			return true;
 		}
-		#endregion
 
+		/// <summary>
+		/// Framework Template Method hook. Child classes should override this method to perform 
+		/// their custom start-up logic.
+		/// Defaults to an empty implementation, which allows the component to start without 
+		/// any additional setup.
+		/// Overriding this method is entirely optional.
+		/// </summary>
+		protected virtual void OnStart() { }
+		#endregion
 
 		#region  Helper Methods
 		private void GeneratePath() {

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 using Kope.Core.LifeTimeManagement;
 using System;
+using Kope.EntityComponentSystem;
 
 
 namespace Kope.Character.Stats {
@@ -66,7 +67,7 @@ namespace Kope.Character.Stats {
 
 	public enum DamageType { Physical, Fire, Ice, Lightning, Poison, }
 
-	public class CharacterStatsSystemBase : InitializableBase, IStatSystem, IUpdatable {
+	public class CharacterStatsSystemBase : ComponentBase, IStatSystem, IUpdatable {
 
 		/*
 		No need to save the base stat values because they are already defined in the ScriptableObject 

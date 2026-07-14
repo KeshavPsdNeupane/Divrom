@@ -5,12 +5,12 @@ using Kope.Component.Combat.Interface;
 using Kope.Component.Health.Interface;
 using Kope.Component.HitBox.Interface;
 using Kope.Component.Movement;
-using Kope.Core.LifeTimeManagement;
+using Kope.EntityComponentSystem;
 using UnityEngine;
 
 namespace Kope.Component.HitBox {
 	[RequireComponent(typeof(Collider2D))]
-	public class HitBoxComponent : InitializableBase, IHitBoxComponent {
+	public class HitBoxComponent : ComponentBase, IHitBoxComponent {
 		[SerializeField] private HitTargetType combatType = HitTargetType.Entity;
 		[SerializeField] private Collider2D hurtBoxCollider;
 		[SerializeField] private bool isInvulnerable;

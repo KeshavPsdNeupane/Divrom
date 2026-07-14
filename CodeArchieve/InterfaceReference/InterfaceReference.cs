@@ -1,27 +1,39 @@
 using UnityEngine;
 
-namespace Kope.Core.Collections.Serialization {
+namespace Kope.Core.Collections.Serialization
+{
+	/// <summary>
+	/// A refactor-safe wrapper that enables robust serialization of interfaces 
+	/// in the Unity Inspector for both MonoBehaviours and ScriptableObjects.
+	/// </summary>
+	/// <typeparam name="TInterface">The explicit contract type required by systems.</typeparam>
 	[System.Serializable]
-	public class InterfaceReference<TInterface> where TInterface : class {
+	public class InterfaceReference<TInterface> where TInterface : class
+	{
 		[SerializeField] private Object underlyingObject;
+
 		/// <summary>
-		/// Gets the resolved interface implementation. 
-		/// Even if the name of TInterface changes, Unity preserves the underlying object reference.
+		/// Gets the resolved interface implementation from either a GameObject component or an asset.
 		/// </summary>
-		public TInterface Value {
-			get {
+		public TInterface Value
+		{
+			get
+			{
 				if (underlyingObject == null) return null;
 
-				// If it's a GameObject, grab the component implementing the interface
-				if (underlyingObject is GameObject go) {
+				// Handle MonoBehaviour cases via GameObject translation layer
+				if (underlyingObject is GameObject go)
+				{
 					return go.GetComponent<TInterface>();
 				}
 
+				// Handle ScriptableObject or raw object interface extraction
 				return underlyingObject as TInterface;
 			}
 		}
-		// Implicit operator allows you to treat the reference like the interface directly in code
-		public static implicit operator TInterface(InterfaceReference<TInterface> reference) {
+
+		public static implicit operator TInterface(InterfaceReference<TInterface> reference)
+		{
 			return reference?.Value;
 		}
 	}

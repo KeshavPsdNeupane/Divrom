@@ -3,7 +3,7 @@ using Kope.Character.Stats;
 using Kope.Component.Health.Interface;
 using Kope.Core.Attribute;
 using Kope.Core.EntityComponentRegistry;
-using Kope.Core.LifeTimeManagement;
+using Kope.EntityComponentSystem;
 using Kope.SaveSystem;
 using Newtonsoft.Json;
 using UnityEngine;
@@ -31,7 +31,7 @@ namespace Kope.Component.Health {
 	}
 
 	[SaveId("health")]
-	public class HealthComponentBase : InitializableBase, IHealthComponent, ISaveable, IHealable {
+	public class HealthComponentBase : ComponentBase, IHealthComponent, ISaveable, IHealable {
 		[SerializeField] EntityComponentsRegistry ecr;
 
 		[SerializeField, ReadOnly] protected float maxHealth = 10;

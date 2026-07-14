@@ -62,7 +62,7 @@ public class PlayerInventoryDisplayUI : InventoryDisplay {
 		this.prewarmed = true;
 	}
 
-	protected override void Start() {
+	protected override void OnStart() {
 		this.primaryInventorySystem = this.inventoryHolder.PrimaryInventorySystem;
 		this.primaryInventorySystem.onInventoryShotChanged += UpdateSlot;
 		AssignSlot(this.primaryInventorySystem);

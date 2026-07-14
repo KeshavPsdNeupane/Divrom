@@ -2,120 +2,149 @@ using System.Collections.Generic;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
+using System.Collections.ObjectModel;
 
 namespace Kope.Core.EntityComponentRegistry {
 	/// <summary>
-	/// This class takes any class(either it is mono, c# class or interface or the InitializableBase itself) 
-	/// as a component. but the caller must inforce the type safety by only registering components
-	/// of the expected types and checking for those types when retrieving.
+	/// This class takes any class (either a MonoBehaviour, pure C# class, interface, 
+	/// or custom component bases) and registers it as a component. 
+	/// The caller must enforce type safety by registering components of expected types 
+	/// and checking for those types when retrieving. <br/>
 	/// Stores the context of a single entity. <br/>
 	/// <inheritdoc cref="IReadOnlyComponentRegistry"/>
 	/// </summary>
 	[Serializable]
 	public class ComponentRegistry : IReadOnlyComponentRegistry {
 		private readonly string registryName;
+
 		/// <summary>
-		/// Indicate whether this EntityContext contains Behavioral components like state machines, AI, sensors etc.
-		/// this is used to differentiate between entities that have state machines and those that do not.
-		/// so we dont have to check for null state machine references everywhere.
-		/// and we can reuse this context for entities without state machines.
-		/// like static objects, pickups, decorations etc.
+		/// Indicates whether this EntityContext contains behavioral components like state machines, AI, sensors, etc.
+		/// Used to differentiate between entities that have state machines and those that do not, 
+		/// avoiding null-checks on state machine references and allowing reuse of contexts for static/non-behavioral entities.
 		/// </summary>
-		private readonly AxisMode dimension = AxisMode.TwoD;
 		private readonly bool hasBehavioralComponents = false;
+		private readonly AxisMode dimension = AxisMode.TwoD;
 		private readonly Transform entityTransform;
 		private readonly Dictionary<System.Type, object> components = new();
 
-		private readonly HashSet<System.Type> excludedTypes = new()
-	{
-		typeof(MonoBehaviour),
-		typeof(Behaviour),
-		typeof(Component),
-		typeof(ScriptableObject)
-	};
+		/// <summary>
+		/// Global hard limits where reflection must completely halt while climbing the base-type inheritance chain.
+		/// Keeping these framework base classes out of the registry prevents clutter and unexpected lookup collisions.
+		/// </summary>
+		private static readonly HashSet<System.Type> fullStopType = new() {
+			typeof(MonoBehaviour),
+			typeof(Component),
+			typeof(Behaviour),
+			typeof(ScriptableObject),
+			typeof(UnityEngine.Object)
+		};
 
-		//<inheritdoc/>
+		/// <summary>
+		/// Returns true if the type is a core framework type where inheritance-climbing must stop.
+		/// </summary>
+		private static bool ShouldStop(System.Type type) {
+			return fullStopType.Contains(type);
+		}
+
+		/// <summary>
+		/// Dynamic, instance-specific list of types to exclude from registration.
+		/// Pass these through the constructor to prevent registration under specific interfaces or base classes.
+		/// </summary>
+		private readonly HashSet<System.Type> _excludeType = new();
+
+		// <inheritdoc/>
 		public Transform EntityTransform => this.entityTransform;
 		public string RegistryName => this.registryName;
 		public AxisMode Dimension => this.dimension;
-
 		public Dictionary<System.Type, object> Components => this.components;
 
 		/// <summary>
 		/// Indicates whether this EntityContext contains a state machine context.
-		/// this is used to differentiate between entities that have state machines and those that do not.
-		/// so we dont have to check for null state machine references everywhere.
-		/// and we can reuse this context for entities without state machines.
-		/// like static objects, pickups, decorations etc.
 		/// </summary>
 		public bool HasBehavioralComponents => hasBehavioralComponents;
 
 		/// <summary>
-		/// Initializes a new instance of the EntityContext class without state machine.
-		/// Provide types in excludedTypes to prevent those types from being registered.
-		/// Since reflection is used to register base types and interfaces, excluding framework types like MonoBehaviour and Component
-		/// prevents unnecessary registrations and potential conflicts.
+		/// Initializes a new instance of the ComponentRegistry.
+		/// Provide types in <paramref name="excludedTypes"/> to prevent specific base types or interfaces from registering.
 		/// </summary>
-		/// <param name="entityTransform"></param>
-		/// <param name="excludedTypes"></param>
-		public ComponentRegistry(AxisMode dimension, string registryName, Transform entityTransform, bool hasBehavioralComponents, HashSet<System.Type> excludedTypes = null) {
+		public ComponentRegistry(
+			AxisMode dimension,
+			string registryName,
+			Transform entityTransform,
+			bool hasBehavioralComponents,
+			HashSet<System.Type> excludedTypes = null
+		) {
 			this.dimension = dimension;
 			this.registryName = registryName;
 			this.entityTransform = entityTransform;
 			this.hasBehavioralComponents = hasBehavioralComponents;
+
 			if (excludedTypes != null) {
-				this.excludedTypes.UnionWith(excludedTypes);
+				this._excludeType.UnionWith(excludedTypes);
 			}
 		}
 
 		/// <summary>
-		/// Registers a component in the EntityContext for later retrieval.
-		/// Components are registered under their concrete type, all base types (excluding framework types),
-		/// and implemented interfaces, allowing lookups by any of these types via TryGetComponent.
-		/// Example: EnemyMovementComponent can be retrieved as MovementComponentBase.
+		/// Registers a component in the registry for later retrieval.
+		/// <para>
+		/// The component instance is registered under its concrete type, its parent classes (up until 
+		/// <see cref="System.Object"/> or any <see cref="fullStopType"/> framework bases), and all implemented interfaces.
+		/// </para>
 		/// </summary>
 		/// <typeparam name="Tcomponent">The type of the component being added.</typeparam>
 		/// <param name="component">The component instance to register.</param>
 		public void Register<Tcomponent>(Tcomponent component) {
 			if (component == null) {
-				Debug.LogError("Cannot add a null component to the EntityContext.");
+				Debug.LogError("[ComponentRegistry] Cannot add a null component to the registry.");
 				return;
 			}
 
-			void Register(System.Type type) {
+			void RegisterType(System.Type type) {
 				if (this.components.ContainsKey(type)) return;
 				this.components[type] = component;
 			}
 
-			bool ShouldStop(System.Type type) {
-				return this.excludedTypes.Contains(type);
+			bool ShouldExclude(System.Type type) {
+				return this._excludeType.Contains(type);
 			}
 
 			var concreteType = component.GetType();
-			Register(concreteType);
 
-			// Register all base types up to but not including System.Object, excluding 
-			// prohibited types like MonoBehaviour, Component, and ScriptableObject
-			// and the types provided on the constructor's excludedTypes parameter.
+			// 1. Register the concrete type itself (as long as it isn't explicitly excluded)
+			if (!ShouldExclude(concreteType)) {
+				RegisterType(concreteType);
+			}
+
+			// 2. Register all valid base classes up the inheritance chain
 			var baseType = concreteType.BaseType;
-			while (baseType != null && baseType != typeof(object) && !ShouldStop(baseType)) {
-				Register(baseType);
+			while (baseType != null && baseType != typeof(object)) {
+				// Completely stop climbing if we hit a framework-level stop type (MonoBehaviour, Component, etc.)
+				if (ShouldStop(baseType)) {
+					break;
+				}
+
+				// If not explicitly excluded by the registry configuration, register this base class
+				if (!ShouldExclude(baseType)) {
+					RegisterType(baseType);
+				}
+
 				baseType = baseType.BaseType;
 			}
 
-			// Register all implemented interfaces, excluding prohibited types and those 
-			// provided on the constructor's excludedTypes parameter.
+			// 3. Register all implemented interfaces, ignoring any in the exclusion list
 			foreach (var iface in concreteType.GetInterfaces()) {
-				if (!ShouldStop(iface)) {
-					Register(iface);
+				if (!ShouldExclude(iface)) {
+					RegisterType(iface);
 				}
 			}
-
 		}
 
+		/// <summary>
+		/// Attempts to retrieve a component by its registered type. 
+		/// Recommended for cross-entity requests to preserve clean boundaries.
+		/// </summary>
 		public bool TryGetReadOnly<Tcomponent>([MaybeNullWhen(false)] out Tcomponent component) {
 			var type = typeof(Tcomponent);
-			// Try to get the component by type
 			if (components.TryGetValue(type, out var comp) && comp is Tcomponent typedComp) {
 				component = typedComp;
 				return true;
@@ -123,6 +152,7 @@ namespace Kope.Core.EntityComponentRegistry {
 			component = default;
 			return false;
 		}
+
 		/// <summary>
 		/// Convenience method for TryGetComponent when you want to get a mutable reference to the component.
 		/// Since the components are stored as objects, TryGetComponent already returns a reference to 
@@ -141,6 +171,5 @@ namespace Kope.Core.EntityComponentRegistry {
 		public bool TryGetMutable<Tcomponent>([MaybeNullWhen(false)] out Tcomponent component) where Tcomponent : class {
 			return TryGetReadOnly(out component);
 		}
-
 	}
 }

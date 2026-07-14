@@ -1,9 +1,9 @@
 using UnityEngine;
-using Kope.Core.LifeTimeManagement;
 using System;
 using Kope.Core.EntityComponentRegistry;
 using Kope.Core.Collections.UniqueId;
 using Kope.Core.Collections.Hashes;
+using Kope.Core.LifeTimeManagement;
 
 namespace Kope.Core.Identity {
 
@@ -60,7 +60,7 @@ namespace Kope.Core.Identity {
 		/// for passing around the Entity's details, including the UniqueID, CommonEntityHashedTag, and EntityComponentRegistry,
 		/// which can be useful for systems that need to access this information when reacting to Entity death or pooling events.
 		/// </summary>
-		public event Action<EntityDetail> OnEntityDiedOrPooled;
+		private event Action<EntityDetail> OnEntityDiedOrPooled;
 
 		public EntityDetail EntityDetail => this._entityDetail;
 
@@ -84,6 +84,14 @@ namespace Kope.Core.Identity {
 
 		public void NotifyEntityDiedOrPooled() {
 			OnEntityDiedOrPooled?.Invoke(this._entityDetail);
+		}
+
+
+		public void OnEntityDiedOrPooledEvent(Action<EntityDetail> callback, bool isSubscribe) {
+			this.OnEntityDiedOrPooled -= callback;
+			if (isSubscribe) {
+				this.OnEntityDiedOrPooled += callback;
+			}
 		}
 
 		void OnValidate() {

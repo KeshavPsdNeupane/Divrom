@@ -5,6 +5,7 @@ using Kope.Component.Movement;
 using Kope.Core.EntityComponentRegistry;
 using Kope.Core.LifeTimeManagement;
 using Kope.Core.Type.EnumAsset;
+using Kope.EntityComponentSystem;
 using UnityEngine;
 
 namespace Kope.Actor.New {
@@ -42,7 +43,8 @@ namespace Kope.Actor.New {
 	/// Bridges enum-keyed animation states with their runtime logic (EntityStateBaseSO)
 	/// and data profiles. Populates an O(1) enumId-lookup table on init.
 	/// </summary>
-	public class EntityStateManagement : InitializableBase, IEntityStateManagement, IUpdatable, IFixedUpdatable {
+	public class EntityStateManagement : ComponentBase, IEntityStateManagement,
+	IUpdatable, IFixedUpdatable {
 
 		[Header("Core")]
 		[SerializeField] private EntityComponentsRegistry ecr;

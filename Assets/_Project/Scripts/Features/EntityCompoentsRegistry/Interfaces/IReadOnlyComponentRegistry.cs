@@ -1,6 +1,8 @@
 
 using UnityEngine;
 using System.Diagnostics.CodeAnalysis;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Kope.Core.EntityComponentRegistry {
 	/// <summary>
@@ -20,6 +22,7 @@ namespace Kope.Core.EntityComponentRegistry {
 		/// it is your responsibility since you opted into this contract.
 		/// </summary>
 		Transform EntityTransform { get; }
+
 		/// <summary>
 		/// Gives "Read-Only" access to the entity's State Machine.
 		/// Since the is a reference type, the underlying data can still be mutated via this reference.

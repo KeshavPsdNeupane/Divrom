@@ -19,6 +19,6 @@ namespace Kope.Core.EntityComponentRegistry {
 		///  or deactivated and returned to pool (pooled), but in both cases the entity is no 
 		/// longer active in the game world and needs to be handled similarly by subscribers.
 		/// </summary>
-		event Action<EntityDetail> OnEntityDiedOrPooled;
+		public void OnEntityDiedOrPooledEvent(Action<EntityDetail> callback, bool isSubscribe);
 	}
 }

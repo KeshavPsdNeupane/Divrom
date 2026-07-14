@@ -6,16 +6,17 @@ using ThirdParty;
 using System;
 using Kope.Core.EntityComponentRegistry;
 using Kope.Actor.New;
+using Kope.EntityComponentSystem;
 
 namespace Kope.AI {
 
-	public class AIBrain : InitializableBase, IUpdatable, IFixedUpdatable {
+	public class AIBrain : ComponentBase, IUpdatable, IFixedUpdatable {
 		#region Inspector Fields
 		[SerializeField] private EntityComponentsRegistry ecr;
 		[SerializeField, Tooltip("The AI brain algorithm that defines the decision-making logic.")]
 		private AIBrainAlgorithm planner;
 		[SerializeField, Tooltip("Components used for context. Only those implementing IInterruptOther will be subscribed.")]
-		private List<InitializableBase> components;
+		private List<ComponentBase> components;
 
 		[SerializeField, Range(0f, 20f), Tooltip("Interval to force the brain to refresh its plan periodically. Set to 0 to disable.")]
 		private float refreshInterval = 1.0f;

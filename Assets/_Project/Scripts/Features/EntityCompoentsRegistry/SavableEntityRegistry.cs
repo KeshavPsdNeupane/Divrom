@@ -64,7 +64,6 @@ namespace Kope.EntityComponentSystem {
 
 		void Update() {
 			if (this._saveAbleEntityes.Count != tempCounter) {
-				//				Debug.Log($"[EntityRegistrySaveDataManager] Current registered savable entities count: {this._saveAbleEntityes.Count}");
 				tempCounter = this._saveAbleEntityes.Count;
 			}
 			foreach (var kvp in this._saveAbleEntityes) {

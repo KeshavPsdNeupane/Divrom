@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Kope.Core.LifeTimeManagement;
+using Kope.EntityComponentSystem;
 
 namespace Kope.AI {
 	/// <summary>
@@ -18,7 +18,7 @@ namespace Kope.AI {
 	/// <br/>
 	/// </summary>
 
-	public abstract class AIBrainAlgorithm : InitializableBase {
+	public abstract class AIBrainAlgorithm : ComponentBase {
 
 		public abstract string AlgorithmName { get; }
 

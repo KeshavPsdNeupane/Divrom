@@ -1,9 +1,9 @@
 using Kope.Character.Stats;
-using Kope.Core.LifeTimeManagement;
+using Kope.EntityComponentSystem;
 using UnityEngine;
 
 [RequireComponent(typeof(CircleCollider2D))]
-public class StatModifierContainer : InitializableBase
+public class StatModifierContainer : ComponentBase
 // needed so it can be put on ECR prefab and have the stat modifier data set in the inspector
 {
 	[Header("Info")]

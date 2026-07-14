@@ -4,7 +4,7 @@ using Kope.Component.Movement;
 using Kope.Component.Attack;
 using Kope.Component.Animation;
 
-public class EntityStateController : InitializableBase
+public class EntityStateController : ComponentBase
 {
 	[SerializeField] private MovementComponentBase movementComponent;
 	[SerializeField] private AnimationComponentBase animationComponent;

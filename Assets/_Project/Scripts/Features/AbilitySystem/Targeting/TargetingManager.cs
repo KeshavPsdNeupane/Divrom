@@ -2,12 +2,13 @@ using System;
 using Kope.Core;
 using Kope.Core.LifeTimeManagement;
 using Kope.Core.ServiceLocator;
+using Kope.EntityComponentSystem;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace Kope.Component.Ability.Targeting {
 
-	public class TargetingManager : InitializableBase, IUpdatable {
+	public class TargetingManager : ComponentBase, IUpdatable {
 		[Header("Detection Settings")]
 		[SerializeField] private Camera cam;
 		[SerializeField] private LayerMask groundLayerMask = -1;

@@ -2,12 +2,12 @@ using Kope.Character.Stats;
 using Kope.Component.ExperienceSystem.Config;
 using Kope.Component.ExperienceSystem.Interface;
 using Kope.Core.EntityComponentRegistry;
-using Kope.Core.LifeTimeManagement;
 using Kope.Core.Collections;
 using UnityEngine;
+using Kope.EntityComponentSystem;
 
 namespace Kope.Component.ExperienceSystem {
-	public class ExperienceSystem : InitializableBase, IExperienceSystem {
+	public class ExperienceSystem : ComponentBase, IExperienceSystem {
 		[Header("Level System Config")]
 		[SerializeField, Min(1)] private int defaultLevel = 1;
 		[SerializeField] private ExperienceSystemConfig config;

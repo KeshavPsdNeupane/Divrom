@@ -4,13 +4,13 @@ using Kope.Component.Combat.Interface;
 using Kope.Component.HitBox.Interface;
 using Kope.Core.EntityComponentRegistry;
 using Kope.Core.LifeTimeManagement;
+using Kope.EntityComponentSystem;
 using UnityEngine;
 
 
 namespace Kope.Component.Health.Interface {
 	public interface IVitalityManager {
 		void Heal(float flat, float percent);
-
 		void ApplyEffect(IEffect<IHealable> effect);
 	}
 
@@ -26,7 +26,7 @@ namespace Kope.Component.Health.Interface {
 	/// create 1HitEntityComponent which will handle that event rather than this bloat of component. <br/>
 	/// 	
 	/// </summary>
-	public class HealingProcessor : InitializableBase, IVitalityManager, IUpdatable {
+	public class HealingProcessor : ComponentBase, IVitalityManager, IUpdatable {
 		[SerializeField] private EntityComponentsRegistry ecr;
 
 		private IHitBoxComponent _hurtBox;

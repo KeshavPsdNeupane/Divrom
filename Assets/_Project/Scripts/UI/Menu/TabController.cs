@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
-using Kope.Core.LifeTimeManagement;
 using TMPro;
+using Kope.Core.LifeTimeManagement;
 [System.Serializable]
 public class Tab {
 	public Image tabImage;
@@ -20,7 +20,7 @@ public class TabController : InitializableBase {
 		return true;
 	}
 
-	void Start() {
+	protected override void OnStart() {
 		int firstTabIndex = 0;
 		ActivateTab(firstTabIndex);
 	}

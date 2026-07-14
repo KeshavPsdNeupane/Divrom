@@ -7,20 +7,41 @@ using Kope.Core.Collections.Extensions;
 using Kope.Core.Collections.Hashes;
 
 namespace Kope.Core.Identity {
+	/// <summary>
+	/// Manages the save and load states of a single entity, serving as a centralized system 
+	/// for serializing, deserializing, and tracking the entity's overall state.
+	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// This system maintains a registry of saveable components and their state providers, 
+	/// enabling fast lookups and state management when saving or restoring the entity. It interacts 
+	/// directly with the scene-level save system to coordinate individual entity serialization 
+	/// with global save files.
+	/// </para>
+	/// <para>
+	/// <b>Lifecycle &amp; Architecture Note:</b><br/>
+	/// This class intentionally does not inherit from <c>InitializableBase</c> or <c>ComponentBase</c>. 
+	/// Base components are processed and initialized *before* the parent <c>EntityInstance</c> is fully established. 
+	/// To bypass this timing conflict, this class registers itself directly with the entity's component registry 
+	/// during its own <c>Awake</c> cycle, ensuring the <c>EntityInstance</c> is fully ready when registration occurs.
+	/// </para>
+	/// </remarks>
 	public class EntitySaveSystem : MonoBehaviour, IEntitySavePacketProvider {
 		[SerializeField] private EntityInstance identity;
 		private readonly Dictionary<System.Type, ISaveable> _saveableComponents = new();
-
 
 		private SavableEntityRegistry _savableEntityRegistry;
 
 		public HashedTag UniqueID => identity.EntityDetail.UniqueID.HashedTag;
 
-		private void Awake() {
-			if (identity == null) this.identity = GetComponent<EntityInstance>();
+		protected void Awake() {
+			if (identity == null) {
+				Debug.LogError($"[EntitySaveSystem] EntityInstance reference is not set on" +
+				$" {this.GetFullHierarchyPath()}. Please assign the EntityInstance in the inspector.");
+				return;
+			}
 
-			var registry = this.identity.ComponentsRegistryForSaveSystemOnly;
-
+			var registry = identity.ComponentsRegistryForSaveSystemOnly;
 			registry.Register(this);
 
 			if (!ServiceLocator.SceneServiceLocator.Instance.TryGetService<SavableEntityRegistry>(out var savableEntityRegistry)) {
@@ -32,25 +53,15 @@ namespace Kope.Core.Identity {
 			}
 			RegisterSaveDataChunk();
 			this._savableEntityRegistry = savableEntityRegistry;
-
-			// registering on Awake is still debatable, since we need to solve the mental mapping,
-			// of which type of entity can be registered to the save system, and when should they register,
-			// do we have disabled entity that can be registered to the save system? if so, 
-			// then we need to make sure they register on Awake, since they will never have chance 
-			// to register if they are disabled at the start of the game.
-			// so this 1 line of code need more thought and refinement, but for now we will just 
-			// register the entity on Awake to make sure all the entities are registered to the save system 
-			// before the player can interact with them, and we can refine this logic in the future if needed.
 			this._savableEntityRegistry.RegisterEntity(this);
-
 			return;
 		}
 
 		// Register to event on Enable and Unregister on Disable to ensure that we properly unregister 
 		//  entity from the global save system when the entity is destroyed or pooled,
 		//  preventing potential memory leaks or stale references in the save system.
-		void OnEnable() => this.identity.OnEntityDiedOrPooled += UnRegisterTheEntity;
-		void OnDisable() => this.identity.OnEntityDiedOrPooled -= UnRegisterTheEntity;
+		void OnEnable() => this.identity.OnEntityDiedOrPooledEvent(UnRegisterTheEntity, true);
+		void OnDisable() => this.identity.OnEntityDiedOrPooledEvent(UnRegisterTheEntity, false);
 
 		/// <summary>
 		/// Scans the component registry and caches everything that implements ISaveable.

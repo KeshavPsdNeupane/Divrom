@@ -7,6 +7,7 @@ using Kope.Core.EntityComponentRegistry;
 using Kope.Core.LifeTimeManagement;
 using UnityEngine;
 using Kope.Component.Health;
+using Kope.EntityComponentSystem;
 
 namespace Kope.Component.Combat {
 	/// <summary>
@@ -22,7 +23,7 @@ namespace Kope.Component.Combat {
 	///  a destructible environment might just need to get destroyed on a single hit, we can just create 1HitEntityComponent.
 	/// 	which will handle that event rather than this bloat of component. <br/>
 	/// </summary>
-	public class DamageReactionProcessor : InitializableBase, IDamagable, IUpdatable {
+	public class DamageReactionProcessor : ComponentBase, IDamagable, IUpdatable {
 		[SerializeField] private EntityComponentsRegistry ecr;
 		[SerializeField] private DamageCalculationConfig config;
 

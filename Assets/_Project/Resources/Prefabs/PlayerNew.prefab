@@ -368,7 +368,6 @@ GameObject:
   - component: {fileID: 5760765433560478908}
   - component: {fileID: 3817346171218316597}
   - component: {fileID: 5028322666046906755}
-  - component: {fileID: 5346917504542330858}
   - component: {fileID: 8698070850850616}
   - component: {fileID: 6069060705174550741}
   m_Layer: 3
@@ -392,6 +391,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6954758242764582700}
+  - {fileID: 4629897108049674397}
   - {fileID: 5136777619606114344}
   - {fileID: 2042399125604258700}
   - {fileID: 713110113042715904}
@@ -503,19 +503,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
---- !u!114 &5346917504542330858
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2033154260760698069}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e453a741eea4817adb4a6b2f4a29954a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Kope.EntityComponentSystem.Runtime::Kope.Core.Identity.EntitySaveSystem
-  identity: {fileID: 8698070850850616}
 --- !u!114 &8698070850850616
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -743,6 +730,51 @@ MonoBehaviour:
   combatType: 0
   hurtBoxCollider: {fileID: 2715053819161219042}
   isInvulnerable: 0
+--- !u!1 &3469105770304524330
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4629897108049674397}
+  - component: {fileID: 4921500641368086038}
+  m_Layer: 0
+  m_Name: SaveSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4629897108049674397
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3469105770304524330}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 3.1662447, y: -0.71595, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6671984905160279280}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4921500641368086038
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3469105770304524330}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e453a741eea4817adb4a6b2f4a29954a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Kope.EntityComponentSystem.Runtime::Kope.Core.Identity.EntitySaveSystem
+  identity: {fileID: 8698070850850616}
 --- !u!1 &3512450001767581797
 GameObject:
   m_ObjectHideFlags: 0

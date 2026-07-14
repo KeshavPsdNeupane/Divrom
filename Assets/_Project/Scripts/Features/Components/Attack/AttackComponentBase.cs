@@ -1,10 +1,10 @@
 using UnityEngine;
 using UnityEngine.Events;
-using Kope.Core.LifeTimeManagement;
 using Kope.Character.Stats;
 using Kope.Core.EntityComponentRegistry;
 using System.Collections.Generic;
 using Kope.Component.Animation;
+using Kope.EntityComponentSystem;
 
 
 namespace Kope.Component.Attack {
@@ -26,7 +26,7 @@ namespace Kope.Component.Attack {
 		float GetDamageValue(List<DamageBaseStatComposition> composition);
 	}
 
-	public abstract class AttackComponentBase : InitializableBase, IAttackComponent {
+	public abstract class AttackComponentBase : ComponentBase, IAttackComponent {
 		[SerializeField] private EntityComponentsRegistry ecr;
 		[SerializeField] private WeaponSO equippedWeapDataSO;
 

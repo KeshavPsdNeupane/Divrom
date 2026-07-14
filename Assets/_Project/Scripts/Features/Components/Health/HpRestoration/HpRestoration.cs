@@ -1,4 +1,4 @@
-using Kope.Core.LifeTimeManagement;
+using Kope.EntityComponentSystem;
 using UnityEngine;
 
 namespace Kope.Component.Health.Temp {
@@ -8,7 +8,7 @@ namespace Kope.Component.Health.Temp {
 	/// The restore amount can be set in the inspector.
 	/// </summary>
 	[RequireComponent(typeof(CircleCollider2D))]
-	public class HpRestoration : InitializableBase {
+	public class HpRestoration : ComponentBase {
 		[SerializeField, Tooltip("If this is true then restoreAmount will be treated as a percentage")]
 		private bool isPercentage = false;
 		[SerializeField, Min(1.0f)] private float restoreAmount = 10f;

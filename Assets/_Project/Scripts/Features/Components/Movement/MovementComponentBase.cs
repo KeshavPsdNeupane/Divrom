@@ -8,6 +8,7 @@ using Kope.SaveSystem;
 using Newtonsoft.Json;
 using ThirdParty;
 using Kope.Core.Mathfx;
+using Kope.EntityComponentSystem;
 
 namespace Kope.Component.Movement {
 
@@ -39,7 +40,7 @@ namespace Kope.Component.Movement {
 	/// the Actor through narrow contracts without requiring a direct dependency on 
 	/// the movement logic.
 	/// </summary>
-	public class MovementComponentBase : InitializableBase, IUpdatable,
+	public class MovementComponentBase : ComponentBase, IUpdatable,
 	IMovementComponent, ISaveable, IStunnable, IKnockbackable {
 		[Header("References")]
 		[SerializeField] protected Rigidbody2D rb;

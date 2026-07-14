@@ -1,8 +1,8 @@
 using UnityEngine;
-using Kope.Core.LifeTimeManagement;
+using Kope.EntityComponentSystem;
 [System.Serializable]
 
-public class InventoryHolder : InitializableBase {
+public class InventoryHolder : ComponentBase {
 	[SerializeField] private int primaryInventorySize;
 
 	// this is not a InitiazableBase so no need for the ECS reference

@@ -1,7 +1,7 @@
 using Kope.Component.HitBox.Interface;
 using Kope.Component.Movement;
 using Kope.Core.EntityComponentRegistry;
-using Kope.Core.LifeTimeManagement;
+using Kope.EntityComponentSystem;
 using UnityEngine;
 
 namespace Kope.Component.HitReaction {
@@ -17,7 +17,7 @@ namespace Kope.Component.HitReaction {
 	///  a destructible environment might just need to get destroyed on a single hit, we can just create 1HitEntityComponent.
 	/// 	which will handle that event rather than this bloat of component. <br/>
 	/// </summary>
-	public class HitReactionProcessor : InitializableBase {
+	public class HitReactionProcessor : ComponentBase {
 		[SerializeField] private EntityComponentsRegistry ecr;
 
 		private IHitBoxComponent hurtBox;

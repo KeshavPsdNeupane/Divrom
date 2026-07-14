@@ -1,10 +1,10 @@
 using Kope.Actor.New;
-using Kope.Core.LifeTimeManagement;
+using Kope.EntityComponentSystem;
 using UnityEngine;
 
 namespace Kope.Component.Animation {
 
-	public class AnimationComponentBase : InitializableBase, IAnimationComponent {
+	public class AnimationComponentBase : ComponentBase, IAnimationComponent {
 		[SerializeField] protected Animator animator;
 
 		[Header("Enter the name of the string of direction \nfloat from the animator")]

@@ -66,7 +66,7 @@ public class Context : IReadOnlyContext {
 			this._listCache[commonTag].Add(targetContext);
 			// only subscribe to the entity's death/pooled event if it's a new entry to prevent multiple subscriptions
 			// for the same entity
-			entityDetail.EventProvider.OnEntityDiedOrPooled += RemoveEntityDueToSignal;
+			entityDetail.EventProvider.OnEntityDiedOrPooledEvent(RemoveEntityDueToSignal, true);
 		}
 		// If it exists, the reference is already shared. Do nothing.
 	}
@@ -90,7 +90,7 @@ public class Context : IReadOnlyContext {
 
 				}
 				// Unsubscribe from the entity's death/pooled event to prevent memory leaks and unintended callbacks
-				entityDetail.EventProvider.OnEntityDiedOrPooled -= RemoveEntityDueToSignal;
+				entityDetail.EventProvider.OnEntityDiedOrPooledEvent(RemoveEntityDueToSignal, false);
 			}
 		}
 	}
