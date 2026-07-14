@@ -74,7 +74,7 @@ namespace Kope.Core.Identity {
 			if (!Validate()) return false;
 
 			// After validation, we can be sure that the EntityComponentStore and its ComponentRegistry are properly initialized and ready to use.
-			this.entityComponentRegistry.ComponentRegistry.Register(this.entityComponentRegistry);
+			//this.entityComponentRegistry.ComponentRegistry.Register(this.entityComponentRegistry);
 			this._entityDetail = new EntityDetail(
 				this.uniqueID, this._commonEntityHashedTag,
 				 this.entityComponentRegistry.ComponentRegistry, this, this.category);

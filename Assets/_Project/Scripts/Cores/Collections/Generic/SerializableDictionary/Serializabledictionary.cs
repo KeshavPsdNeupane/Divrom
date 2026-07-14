@@ -133,7 +133,7 @@ namespace Kope.Core.Collections {
 			int count = Mathf.Min(this.keys.Count, this.values.Count);
 
 			if (this.keys.Count != this.values.Count) {
-				UnityEngine.Debug.LogWarning(
+				Debug.LogWarning(
 					$"SerializableDictionary<{typeof(TKey).Name}, {typeof(TValue).Name}> key/value " +
 					$"count mismatch ({this.keys.Count} keys, {this.values.Count} values). Using the first " +
 					$"{count} pairs; the rest are discarded this load.");

@@ -23,7 +23,7 @@ namespace Kope.Core.Identity {
 
 			registry.Register(this);
 
-			if (!Kope.Core.ServiceLocator.SceneServiceLocator.Instance.TryGetService<SavableEntityRegistry>(out var savableEntityRegistry)) {
+			if (!ServiceLocator.SceneServiceLocator.Instance.TryGetService<SavableEntityRegistry>(out var savableEntityRegistry)) {
 				Debug.LogError($"[EntitySaveSystem] No SavableEntityRegistry found in the scene." +
 				" Please ensure that a SavableEntityRegistry is present and properly initialized " +
 				$"in the scene for EntitySaveSystem to function correctly.{this.GetFullHierarchyPath()}"
@@ -57,7 +57,6 @@ namespace Kope.Core.Identity {
 		/// Called during initialization by the identity or global system.
 		/// </summary>
 		public void RegisterSaveDataChunk() {
-			//			Debug.Log($"[EntitySaveSystem] Registering save data chunk for entity with ID {this.UniqueID}. Scanning components for ISaveable implementations.");
 			var registry = this.identity.ComponentsRegistryForSaveSystemOnly;
 			if (registry == null) return;
 

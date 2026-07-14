@@ -38,10 +38,8 @@ namespace Kope.Core.EntityComponentRegistry {
 
 
 
-		/// <summary>
-		/// Runtime registry of this EntityComponentStore.
-		/// </summary>
-		public ComponentRegistry ComponentRegistry => componentRegistry;
+
+		public ComponentRegistry ComponentRegistry => this.componentRegistry;
 
 		public IEnumerable<InitializableBase> GetNestedComponents() {
 			return this.components;
@@ -71,7 +69,18 @@ namespace Kope.Core.EntityComponentRegistry {
 			}
 			return true;
 		}
-
+		/// <summary>
+		/// Register a component to the registry. This is useful for components that 
+		/// are not serialized in the inspector, but are added at runtime.
+		/// Somecomponent like EntitySaveSystem is not serialized in the inspector, 
+		/// but is added at runtime, so we need to register it to the registry.
+		/// This method is for runtime registration of components that are not 
+		/// serialized in the inspector.
+		/// </summary>
+		/// <param name="component"></param>
+		public void RegisterComponent(InitializableBase component) {
+			componentRegistry.Register(component);
+		}
 
 
 

@@ -190,7 +190,7 @@ namespace Kope.Component.Attack {
 			// SCENARIOS WHERE CRIT CHANCE IS 0 OR 100%.
 			if (this._normalizedCriticalChance <= 0f) return baseScalingStat;
 			if (this._normalizedCriticalChance >= 1f) return baseScalingStat * this._normalizedCriticalDamage;
-			if (UnityEngine.Random.value <= this._normalizedCriticalChance) {
+			if (Random.value <= this._normalizedCriticalChance) {
 				return baseScalingStat * this._normalizedCriticalDamage;
 			}
 			return baseScalingStat;
