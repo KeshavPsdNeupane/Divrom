@@ -68,6 +68,7 @@
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/HealBased/InstantHealEffect.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/PlayerItemCollector.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Ability/StatBased/StatChangeAbility.cs" />
+    <Compile Include="Assets/_Project/Scripts/EntityIdentity/EntityIdentity.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Ability/AbilityBase.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/UtilityClasses/AbilityAreaTargetingController.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/ConcreteClass/AreaTargeting/AreaTargetingStrategy2D.cs" />
@@ -1265,16 +1266,16 @@
       <HintPath>Library/ScriptAssemblies/Unity.EditorCoroutines.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Unity.2D.Tooling.Editor">
-      <HintPath>Library/ScriptAssemblies/Unity.2D.Tooling.Editor.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Unity.2D.Animation.Runtime">
       <HintPath>Library/ScriptAssemblies/Unity.2D.Animation.Runtime.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.RenderPipelines.Core.Runtime.Shared">
       <HintPath>Library/ScriptAssemblies/Unity.RenderPipelines.Core.Runtime.Shared.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.2D.Tooling.Editor">
+      <HintPath>Library/ScriptAssemblies/Unity.2D.Tooling.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.RenderPipelines.Universal.2D.Runtime">
@@ -1508,10 +1509,10 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Kope.InventorySystem.Runtime.csproj" />
-    <ProjectReference Include="Kope.Actor.Runtime.csproj" />
-    <ProjectReference Include="Kope.Character.Stats.Runtime.csproj" />
     <ProjectReference Include="Kope.Logging.csproj" />
+    <ProjectReference Include="Kope.Actor.Runtime.csproj" />
     <ProjectReference Include="Kope.InputSystem.csproj" />
+    <ProjectReference Include="Kope.Character.Stats.Runtime.csproj" />
     <ProjectReference Include="Out.ThirdParty.Stuff.csproj" />
     <ProjectReference Include="Kope.ModularSpriteAnimation.Editor.csproj" />
     <ProjectReference Include="Kope.ModularSpriteAnimation.Runtime.csproj" />
