@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: female_leg_pants_blue
   m_EditorClassIdentifier: myAnimation::EquipmentAnimationLibraryAsset
   spriteLibraryAsset: {fileID: 7108339969198208228, guid: 6b9c9edd90477bdcb95deda3da19f61b, type: 3}
-  variantName: pants
-  applicableGender: 2
+  applicableGender: 1
   applicablePart: 400
+  variantName: pants
   applicableColorPermutation: 5
   applicableRaces: 0f27
+  _libraryId: female_leg_pants_blue

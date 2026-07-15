@@ -1,11 +1,7 @@
 {
-    "name": "Kope.ModularSpriteAnimation.Runtime",
-    "rootNamespace": "Kope.SpriteComposer",
-    "references": [
-        "GUID:1415229ac17d9d804afb5a91176856c4",
-        "GUID:41524c21c95e5fe4dbc5b48bd21995a4",
-        "GUID:aa67368eaeed06ecb9fe08f2cff3ec6e"
-    ],
+    "name": "Kope.EntityIdentity",
+    "rootNamespace": "Kope.EntityIdentity",
+    "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

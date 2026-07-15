@@ -1,6 +1,4 @@
-using UnityEngine;
-
-namespace Kope.Entity.Identity {
+namespace Kope.EntityIdentity {
 
 	/// <summary>
 	/// High-level classification used by manager systems to route entities
@@ -71,14 +69,14 @@ namespace Kope.Entity.Identity {
 	/// and easy to reason about.
 	/// </summary>
 	public enum GenderEnum : byte {
-		male = 0,
-		female = 1,
+		MALE = 0,
+		FEMALE = 1,
 		/// <summary>
 		/// Indicates that an asset is compatible with both male and female
 		/// characters. This value is intended only for asset definitions and
 		/// should not be used as a character gender. 
 		/// </summary>
-		neutral = 2,
+		NEUTRAL = 2,
 	}
 
 	/// <summary>
@@ -88,7 +86,7 @@ namespace Kope.Entity.Identity {
 	/// offering enough headroom to dynamically introduce dozens of sub-races without overlapping IDs.
 	/// </summary>
 	public enum RaceEnum : short {
-		none = 0,
+
 		/// <summary>
 		/// Special wildcard for asset definitions that are compatible with all races. Should not be used 
 		/// for character identities, as it would break the 1:1 equippable compatibility check and introduce
@@ -96,32 +94,32 @@ namespace Kope.Entity.Identity {
 		/// </summary>
 		All = 9999,
 
-		// Humans (1 - 499)
-		human = 1,
-		barbarian = 10,
+		// Humans (0 - 499)
+		HUMAN = 0,
+		BARBARIAN = 10,
 
 		// Half-humans (500 - 999)
-		halfelf = 500,
-		halfwolf = 510,
-		halfcat = 520,
+		HALFELF = 500,
+		HALFWOLF = 510,
+		HALFCAT = 520,
 
 		// Humanoids (1000 - 1999)
-		elf = 1000,
-		orc = 1020,
-		goblin = 1040,
-		troll = 1060,
-		lizard = 1080,
+		ELF = 1000,
+		ORC = 1020,
+		GOBLIN = 1040,
+		TROLL = 1060,
+		LIZARD = 1080,
 
 		// Angels / Light (2000 - 2999)
-		angel = 2000,
-		spirit = 2020,
-		fairy = 2040,
+		ANGEL = 2000,
+		SPIRIT = 2020,
+		FAIRY = 2040,
 
 		// Demons / Dark (3000 - 3999)
-		demon = 3000,
-		vampire = 3020,
-		werewolf = 3040,
-		undead = 3060,
+		DEMON = 3000,
+		VAMPIRE = 3020,
+		WEREWOLF = 3040,
+		UNDEAD = 3060,
 	}
 
 	/// <summary>
@@ -159,7 +157,7 @@ namespace Kope.Entity.Identity {
 			}
 			this.RaceEnum = raceEnum;
 
-			if (genderEnum == GenderEnum.neutral) {
+			if (genderEnum == GenderEnum.NEUTRAL) {
 				throw new System.ArgumentException(GenderErrorMessage);
 			}
 			this.GenderEnum = genderEnum;

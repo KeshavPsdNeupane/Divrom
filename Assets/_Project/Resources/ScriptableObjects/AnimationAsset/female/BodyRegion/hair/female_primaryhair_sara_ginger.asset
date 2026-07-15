@@ -10,11 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2e08966eac7a0119594a7271f350fa3c, type: 3}
-  m_Name: female_hairp1_sara_ginger
+  m_Name: female_primaryhair_sara_ginger
   m_EditorClassIdentifier: Kope.ModularSpriteAnimation.Runtime::Kope.ModularSpriteAnimation.BodyRegionAnimationLibraryAsset
   spriteLibraryAsset: {fileID: 7108339969198208228, guid: 8f22d073cc004bb07a019c7aa393e36f, type: 3}
+  applicableGender: 1
+  applicablePart: 0
   variantName: sara
-  applicableGender: 2
-  applicablePart: 1
   applicableColorPermutation: 2002
-  applicableRaces: 01000a00f401fe010802cc0b
+  applicableRaces: 00000a00f401fe010802cc0b
+  _libraryId: female_primaryhair_sara_ginger

@@ -47,13 +47,6 @@ namespace Kope.SpriteComposer2D {
 		private void OnValidate() {
 			if (defaultSpriteLibraryAsset == null)
 				Debug.LogWarning($"Default Sprite Library Asset is not assigned on {name}.");
-
-			if (EqualityComparer<TGender>.Default.Equals(gender, default))
-				Debug.LogWarning($"Gender is set to default on {name}. May cause wrong asset resolution.");
-
-			if (EqualityComparer<TRace>.Default.Equals(race, default))
-				Debug.LogWarning($"Race is set to default on {name}. May cause wrong asset resolution.");
-
 			EditorApplication.delayCall += () => RefreshPreview();
 		}
 #endif

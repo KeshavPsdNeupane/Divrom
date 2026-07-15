@@ -10,11 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2e08966eac7a0119594a7271f350fa3c, type: 3}
-  m_Name: both_tail_cattail_yellow
+  m_Name: neutral_wing_feather_white
   m_EditorClassIdentifier: myAnimation::BodyRegionAnimationLibraryAsset
-  spriteLibraryAsset: {fileID: 7108339969198208228, guid: fc9b19ec7c7baec7baf20a3216b0de4c, type: 3}
-  variantName: cattail
-  applicableGender: 3
-  applicablePart: 400
-  applicableColorPermutation: 4
-  applicableRaces: 0802
+  spriteLibraryAsset: {fileID: 7108339969198208228, guid: 1f7883dc543a5a8728378897e75fc1b7, type: 3}
+  applicableGender: 2
+  applicablePart: 600
+  variantName: feather
+  applicableColorPermutation: 2
+  applicableRaces: 0f27
+  _libraryId: neutral_wings_feather_white

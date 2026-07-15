@@ -41,7 +41,7 @@ MonoBehaviour:
       projectileRange: 5
       spawnOffset: {x: 0, y: 1, z: 0}
       pierceCount: 0
-  cooldownDuration: 0.5
+  cooldownDuration: 5
   applicableHitTargetType: 0
   damageEffectSettings:
   - selectedType: 1

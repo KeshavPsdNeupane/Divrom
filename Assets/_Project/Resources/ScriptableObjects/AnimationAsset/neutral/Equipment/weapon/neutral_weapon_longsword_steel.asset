@@ -10,11 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7060264c2db7a533cb485c78aa1bfb83, type: 3}
-  m_Name: both_neck_chainnecklace_caremic
+  m_Name: neutral_weapon_longsword_steel
   m_EditorClassIdentifier: myAnimation::EquipmentAnimationLibraryAsset
-  spriteLibraryAsset: {fileID: 7108339969198208228, guid: a98ef0810c5fb6b94a50269a3d1af89f, type: 3}
-  variantName: chainnecklace
-  applicableGender: 3
-  applicablePart: 100
-  applicableColorPermutation: 1000
+  spriteLibraryAsset: {fileID: 7108339969198208228, guid: d34f4ab4b0bf52374aa9eedae8b461ae, type: 3}
+  applicableGender: 2
+  applicablePart: 600
+  variantName: longsword
+  applicableColorPermutation: 1004
   applicableRaces: 0f27
+  _libraryId: neutral_weapon_longsword_steel

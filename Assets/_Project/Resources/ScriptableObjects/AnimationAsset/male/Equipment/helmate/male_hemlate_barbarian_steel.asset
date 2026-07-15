@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: male_hemlate_barbarian_steel
   m_EditorClassIdentifier: myAnimation::EquipmentAnimationLibraryAsset
   spriteLibraryAsset: {fileID: 7108339969198208228, guid: ba721fa84884d6080ae0563084146b28, type: 3}
+  applicableGender: 0
+  applicablePart: 0
   variantName: barbarian
-  applicableGender: 1
-  applicablePart: 1
   applicableColorPermutation: 1004
-  applicableRaces: 01000a00
+  applicableRaces: 00000a00
+  _libraryId: male_helmet_barbarian_steel

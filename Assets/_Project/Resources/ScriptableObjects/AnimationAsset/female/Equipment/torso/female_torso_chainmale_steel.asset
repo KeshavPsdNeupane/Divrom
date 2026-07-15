@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: female_torso_chainmale_steel
   m_EditorClassIdentifier: Kope.ModularSpriteAnimation.Runtime::EquipmentAnimationLibraryAsset
   spriteLibraryAsset: {fileID: 7108339969198208228, guid: 48840cb83179b575fae320da1192e9a0, type: 3}
-  variantName: chainmale
-  applicableGender: 2
+  applicableGender: 1
   applicablePart: 300
+  variantName: chainmale
   applicableColorPermutation: 1004
   applicableRaces: 0f27
+  _libraryId: female_torso_chainmale_steel

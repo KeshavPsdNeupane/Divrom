@@ -1528,6 +1528,7 @@
     <ProjectReference Include="Kope.EntityComponentSystem.Runtime.csproj" />
     <ProjectReference Include="Kope.Components.csproj" />
     <ProjectReference Include="Kope.AI.Runtime.csproj" />
+    <ProjectReference Include="Kope.EntityIdentity.csproj" />
     <ProjectReference Include="Kope.Core.Runtime.csproj" />
     <ProjectReference Include="Kope.SaveSystem.Runtime.csproj" />
   </ItemGroup>

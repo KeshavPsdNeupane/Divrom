@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: male_arm_armor_steel
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentAnimationLibraryAsset
   spriteLibraryAsset: {fileID: 7108339969198208228, guid: c6aeeca7ff71a98cf8e8e25ba2900a02, type: 3}
-  variantName: armor
-  applicableGender: 1
+  applicableGender: 0
   applicablePart: 200
+  variantName: armor
   applicableColorPermutation: 1004
   applicableRaces: 0f27
+  _libraryId: male_arm_armor_steel

@@ -10,11 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2e08966eac7a0119594a7271f350fa3c, type: 3}
-  m_Name: both_shadow_shadow_black
+  m_Name: neutral_tail_cattail_yellow
   m_EditorClassIdentifier: myAnimation::BodyRegionAnimationLibraryAsset
-  spriteLibraryAsset: {fileID: 7108339969198208228, guid: 794f836811584b7ddacf006029871833, type: 3}
-  variantName: shadow
-  applicableGender: 3
-  applicablePart: 500
-  applicableColorPermutation: 1
-  applicableRaces: 0f27
+  spriteLibraryAsset: {fileID: 7108339969198208228, guid: fc9b19ec7c7baec7baf20a3216b0de4c, type: 3}
+  variantName: cattail
+  applicableGender: 2
+  applicablePart: 400
+  applicableColorPermutation: 4
+  applicableRaces: 0802
+  _libraryId: neutral_tail_cattail_yellow

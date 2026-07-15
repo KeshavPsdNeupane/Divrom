@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: male_torso_belt_leather
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentAnimationLibraryAsset
   spriteLibraryAsset: {fileID: 7108339969198208228, guid: ac7266fd15d3d98f8a69d0713b5d0fdb, type: 3}
-  variantName: belt
-  applicableGender: 1
+  applicableGender: 0
   applicablePart: 400
+  variantName: belt
   applicableColorPermutation: 2000
   applicableRaces: 0f27
+  _libraryId: male_leg_belt_leather

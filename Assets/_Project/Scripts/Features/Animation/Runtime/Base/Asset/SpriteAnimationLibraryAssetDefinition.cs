@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using ZLinq;
 using Kope.Core.Collections.Extensions;
+using Kope.Core.Attribute;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -32,27 +34,27 @@ namespace Kope.SpriteComposer2D {
 	where TColorPermutation : System.Enum
 	where TPart : System.Enum {
 		[SerializeField] protected SpriteLibraryAsset spriteLibraryAsset;
-		[SerializeField] protected string variantName;
 		[SerializeField] protected TGender applicableGender = default;
 		[SerializeField] protected TPart applicablePart = default;
+		[SerializeField] protected string variantName;
 		[SerializeField] protected TColorPermutation applicableColorPermutation = default;
 
 		// only for editor selection convenience, not used at runtime, hashset used for runtime checks
 		[SerializeField] protected List<TRace> applicableRaces = new() { default };
-
+		[SerializeField, ReadOnly] private string _libraryId;
 		protected HashSet<TRace> _applicableRacesSet; // for faster lookup and caching
 
-		private string _cachedId;
 
 		public TPart ApplicablePart => applicablePart;
+
 		public virtual string LibraryId {
 			get {
-				if (string.IsNullOrEmpty(this._cachedId)) {
-					this._cachedId = this.applicableGender.ToIdPart() + "_" +
+				if (string.IsNullOrEmpty(this._libraryId)) {
+					this._libraryId = this.applicableGender.ToIdPart() + "_" +
 									this.applicablePart.ToIdPart() + "_" +
 									this.variantName + "_" + this.applicableColorPermutation.ToIdPart();
 				}
-				return this._cachedId;
+				return this._libraryId;
 			}
 		}
 
@@ -67,31 +69,15 @@ namespace Kope.SpriteComposer2D {
 			if (PrefabUtility.IsPartOfPrefabAsset(this)) return;
 #endif
 			this._applicableRacesSet = this.applicableRaces.AsValueEnumerable().ToHashSet();
-
-			if (EqualityComparer<TGender>.Default.Equals(this.applicableGender, default)) {
-				Debug.LogWarning($"SpriteAnimationLibraryAssetDefinition '{this.name}' has applicableGender set to 'none'");
-			}
-			if (EqualityComparer<TColorPermutation>.Default.Equals(this.applicableColorPermutation, default)) {
-				Debug.LogWarning($"SpriteAnimationLibraryAssetDefinition '{this.name}' has applicableColorPermutation set to 'none'");
-			}
-			if ((this._applicableRacesSet.Count == 1 && this._applicableRacesSet.AsValueEnumerable().First().Equals(default)) ||
-			 this._applicableRacesSet.Contains(default)) {
-				Debug.Log("races = " + string.Join(", ", this.applicableRaces));
-				Debug.LogWarning($"SpriteAnimationLibraryAssetDefinition '{this.name}' has no applicableRaces defined or has 'none' in the list");
-			}
-
-			this._cachedId = null;
-			if (this.applicablePart.Equals(default)) {
-				Debug.LogWarning($"SpriteAnimationLibraryAssetDefinition '{this.name}' has applicablePart set to 'none'");
-			}
+			// to force the libraryId to be recalculated and updated in the inspector
+			this._libraryId = null;
+			var str = this.LibraryId;
 		}
 
 		/// <summary>
 		/// Unique ID for this library definition
 		/// Useful for lookups and caching while reading from disk using Ad dressables
 		/// </summary>
-
-
 		protected virtual bool IsApplicable(TGender gender, TPart tpart, TRace race) {
 			// Lazy initialize the hashset here, so child classes don't have to worry about it
 			// since the ??= operator makes sure its only initialized once
@@ -101,9 +87,9 @@ namespace Kope.SpriteComposer2D {
 			bool partOk = PartOk(tpart);
 			bool raceOk = RaceOk(race);
 
-			if (!genderOk) Debug.LogError($"Gender mismatch: {gender} != {this.applicableGender} on library {this.LibraryId}");
-			if (!partOk) Debug.LogError($"EquipingPart mismatch: {tpart} != {this.applicablePart} on library {this.LibraryId}");
-			if (!raceOk) Debug.LogError($"Race mismatch: {race} not in {string.Join(", ", this.applicableRaces)} on library {this.LibraryId}");
+			if (!genderOk) Debug.LogError($"Gender mismatch: {gender} != {this.applicableGender} on library {this.LibraryId}", this);
+			if (!partOk) Debug.LogError($"EquipingPart mismatch: {tpart} != {this.applicablePart} on library {this.LibraryId}", this);
+			if (!raceOk) Debug.LogError($"Race mismatch: {race} not in {string.Join(", ", this.applicableRaces)} on library {this.LibraryId}", this);
 
 			return genderOk && partOk && raceOk;
 		}
@@ -146,7 +132,6 @@ namespace Kope.SpriteComposer2D {
 		/// <param name="tpart"></param>
 		/// <returns></returns>
 		protected virtual bool PartOk(TPart tpart) {
-			if (EqualityComparer<TPart>.Default.Equals(tpart, default)) return false;
 			return EqualityComparer<TPart>.Default.Equals(this.applicablePart, tpart);
 		}
 

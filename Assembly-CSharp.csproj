@@ -68,7 +68,6 @@
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/HealBased/InstantHealEffect.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/PlayerItemCollector.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Ability/StatBased/StatChangeAbility.cs" />
-    <Compile Include="Assets/_Project/Scripts/EntityIdentity/EntityIdentity.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Ability/AbilityBase.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/UtilityClasses/AbilityAreaTargetingController.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/ConcreteClass/AreaTargeting/AreaTargetingStrategy2D.cs" />
@@ -1519,6 +1518,7 @@
     <ProjectReference Include="Kope.EntityComponentSystem.Runtime.csproj" />
     <ProjectReference Include="Kope.Components.csproj" />
     <ProjectReference Include="Kope.AI.Runtime.csproj" />
+    <ProjectReference Include="Kope.EntityIdentity.csproj" />
     <ProjectReference Include="Kope.Core.Runtime.csproj" />
     <ProjectReference Include="Kope.SaveSystem.Runtime.csproj" />
   </ItemGroup>

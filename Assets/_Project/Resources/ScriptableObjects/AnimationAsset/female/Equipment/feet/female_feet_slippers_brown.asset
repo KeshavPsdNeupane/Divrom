@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: female_feet_slippers_brown
   m_EditorClassIdentifier: myAnimation::EquipmentAnimationLibraryAsset
   spriteLibraryAsset: {fileID: 7108339969198208228, guid: 2d53ddf69f2cb5a9ebd01ce1e3fc85cc, type: 3}
-  variantName: slippers
-  applicableGender: 2
+  applicableGender: 1
   applicablePart: 500
+  variantName: slippers
   applicableColorPermutation: 8
   applicableRaces: 0f27
+  _libraryId: female_feet_slippers_brown

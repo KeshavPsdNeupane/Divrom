@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: male_feet_basicshoes_brown
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentAnimationLibraryAsset
   spriteLibraryAsset: {fileID: 7108339969198208228, guid: b51e30f19a71f39c78652c3efa98261c, type: 3}
-  variantName: basicshoes
-  applicableGender: 1
+  applicableGender: 0
   applicablePart: 500
+  variantName: basicshoes
   applicableColorPermutation: 8
   applicableRaces: 0f27
+  _libraryId: male_feet_basicshoes_brown

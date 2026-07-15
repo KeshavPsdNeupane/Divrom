@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: female_arm_kimono_bluegrey
   m_EditorClassIdentifier: myAnimation::EquipmentAnimationLibraryAsset
   spriteLibraryAsset: {fileID: 7108339969198208228, guid: 0271fb688dc71e1e0ada464059d110d2, type: 3}
-  variantName: kimono
-  applicableGender: 2
+  applicableGender: 1
   applicablePart: 200
+  variantName: kimono
   applicableColorPermutation: 9
   applicableRaces: 0f27
+  _libraryId: female_arm_kimono_bluegrey

@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: male_head_base_lime
   m_EditorClassIdentifier: Assembly-CSharp::BodyRegionAnimationLibraryAsset
   spriteLibraryAsset: {fileID: 7108339969198208228, guid: a92ad91282f4a8c4e8742a48412a5cb1, type: 3}
-  variantName: base
-  applicableGender: 1
+  applicableGender: 0
   applicablePart: 100
+  variantName: base
   applicableColorPermutation: 3
   applicableRaces: 01000a00f401fe010802e803
+  _libraryId: male_head_base_lime

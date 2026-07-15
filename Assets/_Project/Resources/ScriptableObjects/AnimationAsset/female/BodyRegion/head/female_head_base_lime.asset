@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: female_head_base_lime
   m_EditorClassIdentifier: myAnimation::BodyRegionAnimationLibraryAsset
   spriteLibraryAsset: {fileID: 7108339969198208228, guid: a9c7a62fa4f38f46db6d92549d656c0a, type: 3}
-  variantName: base
-  applicableGender: 2
+  applicableGender: 1
   applicablePart: 100
+  variantName: base
   applicableColorPermutation: 3
-  applicableRaces: 01000a00f401fe010802e803
+  applicableRaces: 00000a00f401fe010802e803
+  _libraryId: female_head_base_lime

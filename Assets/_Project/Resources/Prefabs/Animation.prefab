@@ -731,7 +731,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentSpriteLibrary
   m_Library: []
   m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: 1fd486b84ee5dd11390d58724e865054, type: 3}
-  partType: 1
+  partType: 0
   resolver: {fileID: 5851198802960128052}
 --- !u!1 &2553156435447062855
 GameObject:
@@ -955,7 +955,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd58547d6afbea33dbb57a19770b9380, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Kope.ModularSpriteAnimation.Runtime::StaticCharacterLibraryResolver
-  gender: 2
+  gender: 1
   race: 510
   defaultSpriteLibraryAsset: {fileID: 7108339969198208228, guid: 1fd486b84ee5dd11390d58724e865054, type: 3}
   baseCharacterLibraries:
@@ -987,8 +987,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 77dcaaa2cef5fea7d9aed68b4dbc341a, type: 2}
   - {fileID: 11400000, guid: 4ff7cddd8e2405da2a8ddb2dda3659a1, type: 2}
   - {fileID: 11400000, guid: 45c8845ff170547eb8fa626438ac8d9c, type: 2}
-  - {fileID: 11400000, guid: 079c04d92642502a7b7ecfc03b2d6ccb, type: 2}
   - {fileID: 11400000, guid: 18ce1016f5028ee3b93b5aa9eef7244a, type: 2}
+  - {fileID: 11400000, guid: 079c04d92642502a7b7ecfc03b2d6ccb, type: 2}
 --- !u!1 &4893634328063666916
 GameObject:
   m_ObjectHideFlags: 0
@@ -1126,7 +1126,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BodyRegionSpriteLibrary
   m_Library: []
   m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: 911c270a3408708d28bea5180aeeea02, type: 3}
-  partType: 1
+  partType: 0
   resolver: {fileID: 7121043095632084342}
 --- !u!1 &5307645063569339120
 GameObject:
@@ -1543,7 +1543,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BodyRegionSpriteLibrary
   m_Library: []
   m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: 1fd486b84ee5dd11390d58724e865054, type: 3}
-  partType: 2
+  partType: 1
   resolver: {fileID: 1544861726327990890}
 --- !u!1 &6161002798951276132
 GameObject:

@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: female_torso_kimono_bluegrey
   m_EditorClassIdentifier: myAnimation::EquipmentAnimationLibraryAsset
   spriteLibraryAsset: {fileID: 7108339969198208228, guid: d901f766c89fe0ad399e44518578b054, type: 3}
-  variantName: kimono
-  applicableGender: 2
+  applicableGender: 1
   applicablePart: 300
+  variantName: kimono
   applicableColorPermutation: 9
   applicableRaces: 0f27
+  _libraryId: female_torso_kimono_bluegrey

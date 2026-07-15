@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: female_torso_slashdress_blue
   m_EditorClassIdentifier: myAnimation::EquipmentAnimationLibraryAsset
   spriteLibraryAsset: {fileID: 7108339969198208228, guid: f3e7931c04df30d3bb3dfef0e54c3d93, type: 3}
-  variantName: slashdress
-  applicableGender: 2
+  applicableGender: 1
   applicablePart: 300
+  variantName: slashdress
   applicableColorPermutation: 5
   applicableRaces: 0f27
+  _libraryId: female_torso_slashdress_blue

@@ -70,7 +70,7 @@ namespace Kope.Core.Type.EnumAsset.EditorTools {
 				int newLocalId = EditorGUI.IntField(new Rect(rect.x + nameWidth + 5, rect.y, valueWidth, EditorGUIUtility.singleLineHeight), displayId);
 
 				if (EditorGUI.EndChangeCheck()) {
-					int prefix = (fullId / multiplier) * multiplier;
+					int prefix = fullId / multiplier * multiplier;
 					valueProp.intValue = prefix + Mathf.Clamp(newLocalId, 0, multiplier - 1);
 				}
 				GUI.backgroundColor = Color.white;

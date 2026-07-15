@@ -9,6 +9,7 @@
   <Project Path="Kope.Actor.Runtime.csproj" />
   <Project Path="Kope.SaveSystem.Runtime.csproj" />
   <Project Path="Kope.Logging.csproj" />
+  <Project Path="Kope.EntityIdentity.csproj" />
   <Project Path="Kope.ModularSpriteAnimation.Editor.csproj" />
   <Project Path="Kope.InventorySystem.Runtime.csproj" />
   <Project Path="Assembly-CSharp-Editor.csproj" />

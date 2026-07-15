@@ -1,6 +1,6 @@
 using UnityEngine;
 using Kope.SpriteComposer2D;
-
+using Kope.EntityIdentity;
 
 
 /// <summary>
@@ -10,16 +10,14 @@ using Kope.SpriteComposer2D;
 /// For example, if we want to add "gloves" later, we can put it at 250 without breaking existing numbering.
 /// and similar grouping will be as 1s difference like helmale = 0 so helmate1 =1 and similarly for rest.
 /// </summary>
-public enum EquipmentPartEnum : short
-{
-    none = 0,
-    helmet = 1,
-    necklace = 100,
-    arm = 200,
-    torso = 300,
-    leg = 400,
-    feet = 500,
-    weapon = 600
+public enum EquipmentPartEnum : short {
+	HELMET = 0,
+	NECKLACE = 100,
+	ARM = 200,
+	TORSO = 300,
+	LEG = 400,
+	FEET = 500,
+	WEAPON = 600
 }
 
 /// <summary>
@@ -29,18 +27,13 @@ public enum EquipmentPartEnum : short
 /// </summary>
 [CreateAssetMenu(fileName = "New Animation Library", menuName = "Animation/EquipmentAsset")]
 public class EquipmentAnimationLibraryAsset
-: SpriteAnimationLibraryAssetDefinition<GenderEnum, RacesEnum, ItemColorPermutationEnum, EquipmentPartEnum>
-{
-    protected override bool GenderOk(GenderEnum gender)
-    {
-        return gender != GenderEnum.none
-            && (this.applicableGender == GenderEnum.both || this.applicableGender == gender);
-    }
+: SpriteAnimationLibraryAssetDefinition<GenderEnum, RaceEnum, ItemColorPermutationEnum, EquipmentPartEnum> {
+	protected override bool GenderOk(GenderEnum gender) {
+		return this.applicableGender == GenderEnum.NEUTRAL || this.applicableGender == gender;
+	}
 
-    protected override bool RaceOk(RacesEnum race)
-    {
-        if (race == RacesEnum.none) return false;
-        // Lazy Initialization: is already handled in the base class IsApplicable method
-        return this._applicableRacesSet.Contains(RacesEnum.All) || this._applicableRacesSet.Contains(race);
-    }
+	protected override bool RaceOk(RaceEnum race) {
+		// Lazy Initialization: is already handled in the base class IsApplicable method
+		return this._applicableRacesSet.Contains(RaceEnum.All) || this._applicableRacesSet.Contains(race);
+	}
 }

@@ -10,11 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7060264c2db7a533cb485c78aa1bfb83, type: 3}
-  m_Name: both_weapon_simplestaff_wood
+  m_Name: neutral_weapon_simplestaff_wood
   m_EditorClassIdentifier: myAnimation::EquipmentAnimationLibraryAsset
   spriteLibraryAsset: {fileID: 7108339969198208228, guid: 8200f0bcab2236c33bf77c1e41c126a1, type: 3}
-  variantName: simplestaff
-  applicableGender: 3
+  applicableGender: 2
   applicablePart: 600
+  variantName: simplestaff
   applicableColorPermutation: 1006
   applicableRaces: 0f27
+  _libraryId: neutral_weapon_simplestaff_wood

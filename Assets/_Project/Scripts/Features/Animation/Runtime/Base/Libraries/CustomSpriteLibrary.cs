@@ -30,19 +30,6 @@ namespace Kope.SpriteComposer2D {
 			RefreshSpriteResolvers();
 		}
 
-
-		protected virtual void OnValidate() {
-#if UNITY_EDITOR
-			// Skip this warning if the object is still prefab default or not yet serialized
-			if (PrefabUtility.IsPartOfPrefabAsset(this)) return;
-#endif
-			if (EqualityComparer<Tpart>.Default.Equals(this.partType, default)) {
-				Debug.LogWarning(
-					$"BodyRegionSpriteLibrary '{name}' has bodyRegion set to 'none'"
-				);
-			}
-		}
-
 		public void SetActiveLabel(string category, string label) {
 			if (this.resolver != null) {
 				this.resolver.SetCategoryAndLabel(category, label);
