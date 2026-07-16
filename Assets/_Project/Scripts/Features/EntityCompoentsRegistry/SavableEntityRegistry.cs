@@ -7,16 +7,12 @@ using UnityEngine;
 
 namespace Kope.EntityComponentSystem {
 
-	public class SavableEntityRegistry : SceneServiceBase, ISceneSaveProvider, ISceneSaveProviderNew {
+	public class SavableEntityRegistry : SceneServiceBase, ISceneSaveProvider {
 
 		[SerializeField]
-		private SceneDataProviderTypeEnum providerType
-		= SceneDataProviderTypeEnum.EntityRegistry;
+		private SceneDataProviderTypeEnum providerType = SceneDataProviderTypeEnum.EntityRegistry;
 
-		// --- OLD SYSTEM ---
-		private readonly Dictionary<HashedTag, IEntitySavePacketProvider> _saveAbleEntityes = new();
-
-		// --- NEW SPECIALIZED SYSTEMS ---
+		// --- SPECIALIZED SYSTEMS ---
 		private readonly Dictionary<HashedTag, IMobEntitySavePacketProvider> _saveAbleMobEntityes = new();
 		private readonly Dictionary<HashedTag, IPropEntitySavePacketProvider> _saveAblePropEntityes = new();
 
@@ -29,21 +25,12 @@ namespace Kope.EntityComponentSystem {
 				Debug.LogError("SceneSaveSystem is not registered in SceneServiceLocator. Please check your SceneBootStrap!");
 				return false;
 			}
-			// Note: If your SceneSaveSystem only accepts one provider type interface,
-			// make sure it supports registering both or maps to the new system accordingly.
+
 			this._sceneSaveSystem.RegisterProvider(this);
-			this._sceneSaveSystem.RegisterProviderNew(this);
 			return true;
 		}
 
 		// --- REGISTRATION HOOKS ---
-		public void RegisterEntity(EntitySaveSystem entity) {
-			if (entity == null) return;
-			var id = entity.UniqueID;
-			if (this._saveAbleEntityes.ContainsKey(id)) return;
-			this._saveAbleEntityes.Add(id, entity);
-		}
-
 		public void RegisterMobEntity(MobEntitySaveSystem entity) {
 			if (entity == null) return;
 			var id = entity.UniqueID;
@@ -59,57 +46,35 @@ namespace Kope.EntityComponentSystem {
 		}
 
 		public void UnregisterEntity(HashedTag entityId) {
-			if (this._saveAbleEntityes.ContainsKey(entityId)) {
-				this._saveAbleEntityes.Remove(entityId);
-			}
-			// Safely drop from the new tracking tables as well
+			// Safely drop from the tracked runtime tables
 			this._saveAbleMobEntityes.Remove(entityId);
 			this._saveAblePropEntityes.Remove(entityId);
 		}
 
 		private int tempCounter = 0;
 		void Update() {
-			if (this._saveAbleEntityes.Count != tempCounter) {
-				tempCounter = this._saveAbleEntityes.Count;
+			int currentCount = this._saveAbleMobEntityes.Count + this._saveAblePropEntityes.Count;
+			if (currentCount != tempCounter) {
+				tempCounter = currentCount;
 			}
-			foreach (var kvp in this._saveAbleEntityes) {
-				var entityId = kvp.Key;
-				var provider = kvp.Value;
-				if (provider == null) {
-					Debug.LogWarning($"[EntityRegistrySaveDataManager] Found a null save packet provider for entity ID {entityId}.");
+
+			foreach (var kvp in this._saveAbleMobEntityes) {
+				if (kvp.Value == null) {
+					Debug.LogWarning($"[SavableEntityRegistry] Found a null save packet provider for Mob ID {kvp.Key}.");
+				}
+			}
+
+			foreach (var kvp in this._saveAblePropEntityes) {
+				if (kvp.Value == null) {
+					Debug.LogWarning($"[SavableEntityRegistry] Found a null save packet provider for Prop ID {kvp.Key}.");
 				}
 			}
 		}
 
 		// ==========================================
-		// OLD MONOLITHIC EXECUTION PIPELINE
+		// SPECIALIZED SPLIT EXECUTION PIPELINE
 		// ==========================================
-		public SceneSaveDataContainer OnSave() {
-			var entitySavePackets = new Dictionary<HashedTag, EntitySavePacket>();
-			foreach (var kvp in this._saveAbleEntityes) {
-				var provider = kvp.Value;
-				var packet = provider.GetEntitySavePacket();
-				entitySavePackets[kvp.Key] = packet;
-			}
-			return new SceneSaveDataContainer(this.ProviderType, entitySavePackets);
-		}
-
-		public void OnLoad(SceneSaveDataContainer data) {
-			foreach (var kvp in data.EntitySavePackets) {
-				var entityId = kvp.Key;
-				var packet = kvp.Value;
-				if (this._saveAbleEntityes.TryGetValue(entityId, out var provider)) {
-					provider.LoadEntitySavePacket(packet);
-				} else {
-					Debug.LogWarning($"No save packet provider found for entity ID {entityId}. Skipping loading for this entity.");
-				}
-			}
-		}
-
-		// ==========================================
-		// NEW SPECIALIZED SPLIT EXECUTION PIPELINE
-		// ==========================================
-		public SceneSaveDataContainerNew OnSaveNew() {
+		public SceneSaveDataContainer OnSaveNew() {
 			var mobPackets = new Dictionary<HashedTag, MobEntitySavePacket>();
 			foreach (var kvp in this._saveAbleMobEntityes) {
 				if (kvp.Value != null) {
@@ -124,10 +89,10 @@ namespace Kope.EntityComponentSystem {
 				}
 			}
 
-			return new SceneSaveDataContainerNew(this.ProviderType, mobPackets, propPackets);
+			return new SceneSaveDataContainer(this.ProviderType, mobPackets, propPackets);
 		}
 
-		public void OnLoadNew(SceneSaveDataContainerNew data) {
+		public void OnLoadNew(SceneSaveDataContainer data) {
 			if (data.MobEntitySavePackets != null) {
 				foreach (var kvp in data.MobEntitySavePackets) {
 					if (this._saveAbleMobEntityes.TryGetValue(kvp.Key, out var provider)) {

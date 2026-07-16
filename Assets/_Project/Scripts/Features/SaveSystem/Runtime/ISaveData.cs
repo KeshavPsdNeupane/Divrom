@@ -1,240 +1,156 @@
 using System;
 using System.Collections.Generic;
-using Kope.Core.Identity;
 using Kope.Core.Collections.Hashes;
-using Newtonsoft.Json;
 using Kope.EntityIdentity;
-/* --- KOPE SAVE SYSTEM Point for future	 ---
- * * 1. AVOID BOXING: Use the class for the ISavaData interface, instead of struct, 
- 	 to avoid the boxing/unboxing overhead when using the interface as a dictionary value or
-	 in other contexts where it might be boxed. 
- *
- * 2. DECOUPLE FIELDS: Use [JsonProperty("id")] to divorce JSON from C# names.
- * WHY: Allows you to rename 'Position' to 'WorldPos' in C# without breaking old saves.
- * EXAMPLE: 
- * [JsonProperty("p")] public Vec3 Position; // JSON will always show "p"
- *
- * 3. DECOUPLE TYPES: Use a ScriptableObject Registry to divorce JSON from Namespaces.
- * WHY: Maps a stable ID (int/string) to a System.Type. 
- * Prevents "Missing Type" errors if you move files or change namespaces.
- * EXAMPLE: 
- * // In JSON: "T": 101 
- * // In SO: 101 => typeof(MoveSaveData)
- */
+using Newtonsoft.Json;
 
+/* --- KOPE SAVE SYSTEM ARCHITECTURAL GUIDELINES ---
+ * 
+ * 1. AVOID BOXING OVERHEAD: 
+ *    Implementations of the ISaveData interface MUST be declared as reference types (classes). 
+ *    Using structs introduces severe boxing/unboxing overhead when passing payloads through 
+ *    the component identity data maps or tracking state allocations within runtime collections.
+ *
+ * 2. DECOUPLE PERSISTENCE STRUCTS FROM REFLECTION NAMES:
+ *    Always use explicit [JsonProperty("id")] tokens to divorce saved file states from C# identifiers. 
+ *    This allows you to rename 'Position' to 'WorldPos' inside structural scripts safely without 
+ *    invalidating legacy serialized save data.
+ *    EXAMPLE: [JsonProperty("p")] public Vec3 Position; // JSON layout always preserves "p"
+ *
+ * 3. DECOUPLE RUNTIME COMPONENT TYPES FROM STRING MATCHES:
+ *    Component identifiers inside the serialization map are processed through a mapping registry.
+ *    This ensures that changing namespaces or moving target scripts to alternative assembly definitions 
+ *    will not corrupt save payloads.
+ */
 
 namespace Kope.SaveSystem {
 
-	// ----------------------------------GLOBAL SAVE SYSTEM RELATED INTERFACES AND CLASSES----------------------------------
-	#region  Scene Save System Related Interfaces and Classes
+	// ==================================================================================
+	// GLOBAL & SCENE SAVE SYSTEM ARCHITECTURE
+	// ==================================================================================
+	#region Scene Save System Core Contracts
 
 	/*
-    Core interaction between GlobalSaveSystem (GSS) and SceneSaveSystem (SSS):
-
-		1. Each SSS holds a reference to GSS.
-		2. SSS does NOT register itself into GSS (no ownership coupling).
-		3. SSS decides *when* a save/load should happen and calls:
-			- GSS.SaveTheScene(sceneData)
-			- GSS.LoadTheScene(sceneId)
-		passing or receiving a SceneSaveDataContainer.
-
-		→ Control flow is inverted:
-			SSS drives execution timing,
-			GSS only provides persistence logic.
-
-		4. On save:
-			SSS builds and passes a SceneSaveDataContainer to GSS.
-		On load:
-			SSS requests data (by index/name),
-			GSS returns the container,
-			SSS applies it to the scene.
-
-		Result:
-		- Clear separation of responsibilities:
-			SSS → lifecycle & timing
-			GSS → storage & retrieval
-		- No tight coupling or registration overhead
-		- Easily extensible for multiple scenes sharing one global system
-	*/
+     * INTERACTION MODEL: GlobalSaveSystem (GSS) <-> SceneSaveSystem (SSS)
+     *
+     * 1. SSS manages room/scene lifecycle timing and structural instantiation scopes.
+     * 2. SSS does NOT couple state management to the GSS runtime layout via tight lifecycle registration.
+     * 3. SSS drives execution flow, determining when transitions occur via explicit execution calls:
+     *    - GSS.SaveTheScene(sceneDataAggregate)
+     *    - GSS.LoadTheScene(sceneId)
+     *
+     * Inversion of Control:
+     * - SSS maps local component context, lifecycle conditions, and execution timing.
+     * - GSS purely handles disk persistence logic, data stream formatting, and cache retrieval.
+     */
 
 	/// <summary>
-	/// Aggregate structure for scene save data, containing the scene index, name, and a dictionary of 
-	/// save data containers categorized by provider type.
-	/// This struct serves as a comprehensive package of all the save data related to a specific scene, 
-	/// allowing for organized storage and retrieval of scene data during the save and load processes.
-	/// The SceneSaveDataAggregate can be used to encapsulate all the necessary information about a scene's 
-	/// save state, making it easier to manage and maintain the save data for different scenes in a structured way. 
-	/// By categorizing the save data by provider type, it allows for efficient access to specific types of data when needed, and
-	/// provides a clear structure for how scene data is organized and stored in the save system.
+	/// Aggregate data capsule housing metadata and functional data blocks belonging to a target scene layout.
 	/// </summary>
 	[Serializable]
 	public readonly struct SceneSaveDataAggregate {
-		// why using the JsonProperty attribute here? because we want to make sure that the 
-		// field names in the JSON are consistent and not affected by any potential renaming
-		// or refactoring of the C# code, which can help prevent issues with loading old save data
-		// if the code changes. By using JsonProperty, we can ensure that the JSON structure remains 
-		// stable even if we change the C# field names in the future.
 		[JsonProperty("sIndex")]
 		public readonly int SceneIndex;
+
 		[JsonProperty("sName")]
 		public readonly string SceneName;
+
 		[JsonProperty("sD")]
 		public readonly Dictionary<SceneDataProviderTypeEnum, SceneSaveDataContainer> SceneDataByProvider;
+
 		[JsonConstructor]
-		public SceneSaveDataAggregate(int sceneIndex, string sceneName, Dictionary<SceneDataProviderTypeEnum, SceneSaveDataContainer> sceneDataByProvider) {
-			SceneIndex = sceneIndex;
-			SceneName = sceneName;
-			SceneDataByProvider = sceneDataByProvider;
+		public SceneSaveDataAggregate(
+			int sceneIndex,
+			string sceneName,
+			Dictionary<SceneDataProviderTypeEnum, SceneSaveDataContainer> sceneDataByProvider) {
+
+			this.SceneIndex = sceneIndex;
+			this.SceneName = sceneName;
+			this.SceneDataByProvider = sceneDataByProvider;
 		}
 	}
 
-
-
 	/// <summary>
-	/// Defines the types of scene data providers that can be used in the save system.
-	/// This enum can be used to categorize different types of data providers, allowing the save system to
-	/// handle different types of save data in a structured way. For example,
-	/// the EntityRegistry provider type can be used to identify providers that are responsible for saving 
-	/// and loading entity-related data in the scene, while other provider types can be added in the future 
-	/// to handle different aspects of the scene data as needed.
-	/// for now we only have 1 provider type, but we can easily add more in the future if we need to 
-	/// support more types of data providers in the save system.
+	/// Identifies the explicit category designation for functional save data handlers.
+	/// Enables downstream optimization loops to partition execution paths safely.
 	/// </summary>
 	public enum SceneDataProviderTypeEnum {
 		None = 0,
 		EntityRegistry = 1,
 	}
 
-
-
 	/// <summary>
-	/// Used by EntityRegistry to provide the save data for each entity in the scene,
+	/// Contract implemented by scene-level data persistence coordinators to compile or distribute state changes.
 	/// </summary>
 	public interface ISceneSaveProvider {
 		SceneDataProviderTypeEnum ProviderType { get; }
-		SceneSaveDataContainer OnSave();
-		void OnLoad(SceneSaveDataContainer data);
-	}
-
-	public interface ISceneSaveProviderNew {
-		SceneDataProviderTypeEnum ProviderType { get; }
-		SceneSaveDataContainerNew OnSaveNew();
-		void OnLoadNew(SceneSaveDataContainerNew data);
+		SceneSaveDataContainer OnSaveNew();
+		void OnLoadNew(SceneSaveDataContainer data);
 	}
 
 	/// <summary>
-	/// This struct serves as a container for the save data provided by a scene data provider, 
-	/// encapsulating the provider type and a dictionary of entity save packets.
-	/// The SceneSaveDataContainer is designed to hold the save data for a specific provider type, 
-	/// allowing for organized storage and retrieval of save data related to that provider during the save and load processes.
-	/// By categorizing the save data by provider type, it allows for efficient access to specific
-	///  types of data when needed, and provides a clear structure for how scene data is organized and stored in
+	/// Data structure enclosing compiled entity serialization packets mapped by their specific layout variations.
 	/// </summary>
 	[Serializable]
 	public struct SceneSaveDataContainer {
 		[JsonProperty("provType")]
 		public SceneDataProviderTypeEnum ProviderType { get; private set; }
-		[JsonProperty("esPackets")]
-		public Dictionary<HashedTag, EntitySavePacket> EntitySavePackets { get; private set; }
 
-		[JsonConstructor]
-		public SceneSaveDataContainer(
-			SceneDataProviderTypeEnum providerType,
-			Dictionary<HashedTag, EntitySavePacket> entitySavePackets) {
-			this.ProviderType = providerType;
-			EntitySavePackets = entitySavePackets;
-		}
-	}
-
-	[Serializable]
-	public struct SceneSaveDataContainerNew {
-		[JsonProperty("provType")]
-		public SceneDataProviderTypeEnum ProviderType { get; private set; }
 		[JsonProperty("mobPackets")]
 		public Dictionary<HashedTag, MobEntitySavePacket> MobEntitySavePackets { get; private set; }
+
 		[JsonProperty("propPackets")]
 		public Dictionary<HashedTag, PropEntitySavePacket> PropEntitySavePackets { get; private set; }
 
 		[JsonConstructor]
-		public SceneSaveDataContainerNew(
+		public SceneSaveDataContainer(
 			SceneDataProviderTypeEnum providerType,
 			Dictionary<HashedTag, MobEntitySavePacket> mobEntitySavePackets,
 			Dictionary<HashedTag, PropEntitySavePacket> propEntitySavePackets) {
+
 			this.ProviderType = providerType;
-			MobEntitySavePackets = mobEntitySavePackets;
-			PropEntitySavePackets = propEntitySavePackets;
+			this.MobEntitySavePackets = mobEntitySavePackets;
+			this.PropEntitySavePackets = propEntitySavePackets;
 		}
 	}
 
 	#endregion
 
-	// ----------------------------------Scene SAVE SYSTEM RELATED INTERFACES AND CLASSES----------------------------------
-
-	#region Entity Save System Related Interfaces and Classes
+	// ==================================================================================
+	// ENTITY CORE PROVIDER AND SERIALIZATION LAYOUT
+	// ==================================================================================
+	#region Entity Save System Contracts
 
 	/// <summary>
-	/// Defines interfaces for save data and identity providers in the context of a save system.
-	/// <para>
-	/// The IIdentityProvider interface is implemented by entities that can provide a common name hash tag and
-	/// a unique ID hash tag, which can be used for identification and organization in the save system.
-	/// The ISaveData interface is a marker interface for classes that represent save data, allowing for type safety and organization of save-related data structures.
-	/// The ISaveable interface is implemented by ECS components (MonoBehaviours) that can be saved and loaded, providing methods to get save data and load from save data.
-	/// </para>
+	/// Agnostic infrastructure interface allowing structural storage systems to poll 
+	/// basic registration lifecycles without coupling to generic packet arguments.
 	/// </summary>
-	public interface IEntitySavePacketProvider {
+	public interface ISavableEntityProvider {
 		HashedTag UniqueID { get; }
-		EntitySavePacket GetEntitySavePacket();
-		void LoadEntitySavePacket(EntitySavePacket packet);
-		[Obsolete("This method is only for validating the identity during development. " +
-		"It is not intended to be used in production code. Please ensure that the" +
-		" entity's identity is valid before using it in the save system.")]
-		bool ValidateIdentity(string callerInfo = null);
 		void RegisterSaveDataChunk();
 	}
 
-
-	public interface IMobEntitySavePacketProvider {
-		HashedTag UniqueID { get; }
-		MobEntitySavePacket GetEntitySavePacket();
-		void LoadEntitySavePacket(MobEntitySavePacket packet);
-		void RegisterSaveDataChunk();
-
-	}
-	public interface IPropEntitySavePacketProvider {
-		HashedTag UniqueID { get; }
-		PropEntitySavePacket GetEntitySavePacket();
-		void LoadEntitySavePacket(PropEntitySavePacket packet);
-		void RegisterSaveDataChunk();
-
+	/// <summary>
+	/// Unified generic provider contract managing entity state capture and allocation loops.
+	/// </summary>
+	public interface ISavableEntityProvider<TPacket> : ISavableEntityProvider {
+		TPacket GetEntitySavePacket();
+		void LoadEntitySavePacket(TPacket packet);
 	}
 
-	[Serializable]
-	public struct EntitySavePacket {
-		[JsonProperty("grpTag")]
-		public HashedTag CommonNameHashTag { get; private set; }
-		[JsonProperty("cate")]
-		public EntityIdentityCategoryEnum Category { get; private set; }
-		[JsonProperty("id")]
-		public HashedTag UniqueID { get; private set; }
+	/// <summary>
+	/// Interface signature specifically handling data mapping hooks for Mob architectures.
+	/// </summary>
+	public interface IMobEntitySavePacketProvider : ISavableEntityProvider<MobEntitySavePacket> { }
 
-		// the type will be used to identify the source of the save data, 
-		// and the save system will use the type to find the corresponding provider to load the data.
-		[JsonProperty("data")]
-		public Dictionary<string, ISaveData> Data;
+	/// <summary>
+	/// Interface signature specifically handling data mapping hooks for Prop architectures.
+	/// </summary>
+	public interface IPropEntitySavePacketProvider : ISavableEntityProvider<PropEntitySavePacket> { }
 
-		[JsonConstructor]
-		public EntitySavePacket(
-		HashedTag commonNameHashTag,
-		EntityIdentityCategoryEnum category,
-		HashedTag uniqueID,
-		Dictionary<string, ISaveData> Data) {
-			this.CommonNameHashTag = commonNameHashTag;
-			this.Category = category;
-			this.UniqueID = uniqueID;
-			this.Data = Data;
-		}
-	}
-
+	/// <summary>
+	/// Serialization packet containing discrete component state modifications and configuration metadata for a Mob.
+	/// </summary>
 	[Serializable]
 	public struct MobEntitySavePacket {
 		[JsonProperty("uid")]
@@ -243,94 +159,66 @@ namespace Kope.SaveSystem {
 		[JsonProperty("identity")]
 		public MobConfig Config { get; private set; }
 
-		// the type will be used to identify the source of the save data, 
-		// and the save system will use the type to find the corresponding provider to load the data.
 		[JsonProperty("data")]
 		public Dictionary<string, ISaveData> Data;
 
 		[JsonConstructor]
-		public MobEntitySavePacket(
-		HashedTag uniqueID,
-		MobConfig config,
-		Dictionary<string, ISaveData> Data) {
+		public MobEntitySavePacket(HashedTag uniqueID, MobConfig config, Dictionary<string, ISaveData> data) {
 			this.UniqueID = uniqueID;
 			this.Config = config;
-			this.Data = Data;
+			this.Data = data;
 		}
 	}
 
+	/// <summary>
+	/// Serialization packet containing discrete component state modifications and configuration metadata for a Prop.
+	/// </summary>
 	[Serializable]
 	public struct PropEntitySavePacket {
 		[JsonProperty("uid")]
 		public HashedTag UniqueID { get; private set; }
+
 		[JsonProperty("identity")]
 		public PropConfig TypeGroupConfig { get; private set; }
 
-		// the type will be used to identify the source of the save data, 
-		// and the save system will use the type to find the corresponding provider to load the data.
 		[JsonProperty("data")]
 		public Dictionary<string, ISaveData> Data;
 
 		[JsonConstructor]
-		public PropEntitySavePacket(
-		HashedTag uniqueID,
-		PropConfig typeGroupConfig,
-		Dictionary<string, ISaveData> Data) {
+		public PropEntitySavePacket(HashedTag uniqueID, PropConfig typeGroupConfig, Dictionary<string, ISaveData> data) {
 			this.UniqueID = uniqueID;
 			this.TypeGroupConfig = typeGroupConfig;
-			this.Data = Data;
+			this.Data = data;
 		}
 	}
 
-
-
 	#endregion
 
+	// ==================================================================================
+	// COMPONENT LEVEL PERSISTENCE DEFINITIONS
+	// ==================================================================================
+	#region Component Level Save System Interfaces
 
-
-	#region Component Level Save System Related Interfaces and Classes
 	/// <summary>
-	/// Interface for objects that can be saved and loaded using the save system.
-	/// Defines methods for getting save data and loading from save data, allowing implementing classes to specify how they should be saved and loaded.
-	/// This interface can be implemented by any class that needs to support saving and loading of its state, providing a standardized way for the save system to interact with different types of saveable objects.
-	/// By implementing this interface, classes can define their own logic for how they generate save data and how they restore their state from save data, while still adhering to a common contract that the save system can work with.
+	/// Contract applied to internal ECS components (MonoBehaviours) requiring persistent state tracking.
 	/// </summary>
 	public interface ISaveable {
 		/// <summary>
-		/// We might need something like a database in future that will,
-		/// manage componentId(this will include name+version) -> ComponentType mapping, so that we can just
-		///  save the componentId in the save data,
-		/// and then use the database to find the corresponding component type when loading the data,
-		/// this way we can avoid the problem of type name changes and assembly changes that can break 
-		/// the save data when we are doing development and refactoring.
-		/// But for now we will just use the component type as the key in the save data dictionary, 
-		/// since we dont have that many components and we are still in early development stage where 
-		/// we are still iterating on the component design and structure,
-		/// so we will just accept the risk of save data being broken during development. we can just resave.
-		/// The database can be a SO i think, since we dont need to modify it at runtime, we just need to read from 
-		/// it when loading the data,
-		/// and we can have a editor tool to generate the database SO asset based on the current components in the project, 
-		/// so that we can easily keep the database up to date with the current components in the project.
-		/// and if we added any dlc we can just patch the SO database asset with the new components in the dlc, 
-		/// so that we can easily support the new components in the dlc without breaking the existing save data.
+		/// Generates an allocation snapshot block containing the component's state parameters.
 		/// </summary>
-		/// <returns></returns>
 		ISaveData GetSaveData();
+
+		/// <summary>
+		/// Restores target variables back to the component using a parsed data payload chunk.
+		/// </summary>
 		void LoadFromSaveData(ISaveData data);
 	}
 
 	/// <summary>
-	/// Use this to create specific save data classes for different components, allowing for organized 
-	/// and type-safe storage of component state in the save system.
-	/// By implementing the ISaveData interface, these classes can be used to encapsulate the necessary 
-	/// information about a component's state that needs to be saved and loaded.
-	/// No need to worry about the performance of using class instead of struct for the save data, since
-	/// the save data will only be used during the save and load process, which is not a performance-critical
-	/// part of the game, and using class can avoid the boxing/unboxing overhead when using the ISaveData 
-	/// interface as a dictionary value or in other contexts where it might be boxed.
+	/// Structural marker interface for data packets representing saved component parameters.
+	/// Classes implementing this contract MUST be reference types to block boxing allocations.
 	/// </summary>
-	public interface ISaveData {
-	}
-	#endregion
+	public interface ISaveData { }
 
+	#endregion
 }
