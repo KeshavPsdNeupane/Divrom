@@ -144,8 +144,8 @@ namespace Kope.EntityIdentity {
 	/// </summary>
 	public class MobConfig : EntityConfig {
 		public EntityRelation Relation { get; }
-		public RaceEnum RaceEnum { get; }
-		public GenderEnum GenderEnum { get; }
+		public RaceEnum Race { get; }
+		public GenderEnum Gender { get; }
 
 		private const string GenderErrorMessage = "Entity Cannot have GenderEnum.neutral since it is reserved for asset definitions. Use GenderEnum.male or GenderEnum.female.";
 		private const string RaceErrorMessage = "Entity Cannot have RaceEnum.All since it is reserved for asset definitions. Use a specific race enum value instead.";
@@ -155,12 +155,12 @@ namespace Kope.EntityIdentity {
 			if (raceEnum == RaceEnum.All) {
 				throw new System.ArgumentException(RaceErrorMessage);
 			}
-			this.RaceEnum = raceEnum;
+			this.Race = raceEnum;
 
 			if (genderEnum == GenderEnum.NEUTRAL) {
 				throw new System.ArgumentException(GenderErrorMessage);
 			}
-			this.GenderEnum = genderEnum;
+			this.Gender = genderEnum;
 
 		}
 	}
