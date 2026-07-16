@@ -6805,6 +6805,14 @@ PrefabInstance:
       propertyPath: 'baseCharacterAssets.Array.data[6]'
       value: 
       objectReference: {fileID: 11400000, guid: f1b65676532dbe99cbc56c2713e76786, type: 2}
+    - target: {fileID: 6069060705174550741, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: initializables.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6069060705174550741, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      propertyPath: 'initializables.Array.data[2]'
+      value: 
+      objectReference: {fileID: 1269175594}
     - target: {fileID: 6671984905160279280, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
       propertyPath: m_LocalPosition.x
       value: -10.73
@@ -6884,7 +6892,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2033154260760698069, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1269175594}
+    - targetCorrespondingSourceObject: {fileID: 3469105770304524330, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1788363146}
   m_SourcePrefab: {fileID: 100100000, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
 --- !u!1001 &687152635
 PrefabInstance:
@@ -7987,40 +8001,40 @@ MonoBehaviour:
     gameObjectName: SceneServiceLocator
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: AddSpd
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: Addhp
+    gameObjectName: Hpstore (1)
   - typeName: EntityInitCaller
     order: -40
     gameObjectName: Hpstore (2)
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: Addhp (2)
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: AddDef
+    gameObjectName: Hpstore
   - typeName: EntityInitCaller
     order: -40
     gameObjectName: Dummy
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: Hpstore (1)
+    gameObjectName: AddDef
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: AddSpd (1)
+    gameObjectName: PlayerNew
   - typeName: EntityInitCaller
     order: -40
     gameObjectName: AddDef (1)
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: Hpstore
+    gameObjectName: AddSpd (1)
   - typeName: EntityInitCaller
     order: -40
     gameObjectName: Addhp (1)
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: PlayerNew
+    gameObjectName: Addhp (2)
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Addhp
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: AddSpd
   - typeName: InGameUIInitCaller
     order: -30
     gameObjectName: UI
@@ -9328,6 +9342,40 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SimulateLevelUp
   levelSystem: {fileID: 1352655600}
   button: {fileID: 901993978}
+--- !u!1 &1269175587 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2033154260760698069, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+  m_PrefabInstance: {fileID: 645946236}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1269175590 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 794350931459441688, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+  m_PrefabInstance: {fileID: 645946236}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1269175587}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5f2a7e09a5e7f4dfaad5c673c86dc7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Kope.Core.Runtime::UniqueID
+--- !u!114 &1269175594
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1269175587}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17f3d81867822bd16a60f971be8be813, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Kope.EntityComponentSystem.Runtime::Kope.Core.Identity.MobInstance
+  entityName: Player
+  uniqueID: {fileID: 1269175590}
+  ecr: {fileID: 833085104}
+  relation: 0
+  race: 520
+  gender: 1
 --- !u!1 &1294788625
 GameObject:
   m_ObjectHideFlags: 0
@@ -11555,6 +11603,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameplayUIController
   inGameplayMenu: {fileID: 2128690284}
   inventoryMenu: {fileID: 576055918}
+--- !u!1 &1788363143 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3469105770304524330, guid: 2b0fa40d0358c358d9fbc52b7da9a018, type: 3}
+  m_PrefabInstance: {fileID: 645946236}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1788363146
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1788363143}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5406b335cf51dbe89d971e7d03d898e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Kope.EntityComponentSystem.Runtime::Kope.Core.Identity.MobEntitySaveSystem
+  entityInstance: {fileID: 1269175594}
 --- !u!1 &1793515979
 GameObject:
   m_ObjectHideFlags: 0

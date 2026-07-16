@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Kope.Core.Identity;
 using Kope.Core.Collections.Hashes;
 using Newtonsoft.Json;
-
+using Kope.EntityIdentity;
 /* --- KOPE SAVE SYSTEM Point for future	 ---
  * * 1. AVOID BOXING: Use the class for the ISavaData interface, instead of struct, 
  	 to avoid the boxing/unboxing overhead when using the interface as a dictionary value or
@@ -68,7 +68,7 @@ namespace Kope.SaveSystem {
 	/// provides a clear structure for how scene data is organized and stored in the save system.
 	/// </summary>
 	[Serializable]
-	public struct SceneSaveDataAggregate {
+	public readonly struct SceneSaveDataAggregate {
 		// why using the JsonProperty attribute here? because we want to make sure that the 
 		// field names in the JSON are consistent and not affected by any potential renaming
 		// or refactoring of the C# code, which can help prevent issues with loading old save data
@@ -116,6 +116,12 @@ namespace Kope.SaveSystem {
 		void OnLoad(SceneSaveDataContainer data);
 	}
 
+	public interface ISceneSaveProviderNew {
+		SceneDataProviderTypeEnum ProviderType { get; }
+		SceneSaveDataContainerNew OnSaveNew();
+		void OnLoadNew(SceneSaveDataContainerNew data);
+	}
+
 	/// <summary>
 	/// This struct serves as a container for the save data provided by a scene data provider, 
 	/// encapsulating the provider type and a dictionary of entity save packets.
@@ -137,6 +143,26 @@ namespace Kope.SaveSystem {
 			Dictionary<HashedTag, EntitySavePacket> entitySavePackets) {
 			this.ProviderType = providerType;
 			EntitySavePackets = entitySavePackets;
+		}
+	}
+
+	[Serializable]
+	public struct SceneSaveDataContainerNew {
+		[JsonProperty("provType")]
+		public SceneDataProviderTypeEnum ProviderType { get; private set; }
+		[JsonProperty("mobPackets")]
+		public Dictionary<HashedTag, MobEntitySavePacket> MobEntitySavePackets { get; private set; }
+		[JsonProperty("propPackets")]
+		public Dictionary<HashedTag, PropEntitySavePacket> PropEntitySavePackets { get; private set; }
+
+		[JsonConstructor]
+		public SceneSaveDataContainerNew(
+			SceneDataProviderTypeEnum providerType,
+			Dictionary<HashedTag, MobEntitySavePacket> mobEntitySavePackets,
+			Dictionary<HashedTag, PropEntitySavePacket> propEntitySavePackets) {
+			this.ProviderType = providerType;
+			MobEntitySavePackets = mobEntitySavePackets;
+			PropEntitySavePackets = propEntitySavePackets;
 		}
 	}
 
@@ -166,6 +192,22 @@ namespace Kope.SaveSystem {
 		void RegisterSaveDataChunk();
 	}
 
+
+	public interface IMobEntitySavePacketProvider {
+		HashedTag UniqueID { get; }
+		MobEntitySavePacket GetEntitySavePacket();
+		void LoadEntitySavePacket(MobEntitySavePacket packet);
+		void RegisterSaveDataChunk();
+
+	}
+	public interface IPropEntitySavePacketProvider {
+		HashedTag UniqueID { get; }
+		PropEntitySavePacket GetEntitySavePacket();
+		void LoadEntitySavePacket(PropEntitySavePacket packet);
+		void RegisterSaveDataChunk();
+
+	}
+
 	[Serializable]
 	public struct EntitySavePacket {
 		[JsonProperty("grpTag")]
@@ -192,6 +234,55 @@ namespace Kope.SaveSystem {
 			this.Data = Data;
 		}
 	}
+
+	[Serializable]
+	public struct MobEntitySavePacket {
+		[JsonProperty("uid")]
+		public HashedTag UniqueID { get; private set; }
+
+		[JsonProperty("identity")]
+		public MobConfig Config { get; private set; }
+
+		// the type will be used to identify the source of the save data, 
+		// and the save system will use the type to find the corresponding provider to load the data.
+		[JsonProperty("data")]
+		public Dictionary<string, ISaveData> Data;
+
+		[JsonConstructor]
+		public MobEntitySavePacket(
+		HashedTag uniqueID,
+		MobConfig config,
+		Dictionary<string, ISaveData> Data) {
+			this.UniqueID = uniqueID;
+			this.Config = config;
+			this.Data = Data;
+		}
+	}
+
+	[Serializable]
+	public struct PropEntitySavePacket {
+		[JsonProperty("uid")]
+		public HashedTag UniqueID { get; private set; }
+		[JsonProperty("identity")]
+		public PropConfig TypeGroupConfig { get; private set; }
+
+		// the type will be used to identify the source of the save data, 
+		// and the save system will use the type to find the corresponding provider to load the data.
+		[JsonProperty("data")]
+		public Dictionary<string, ISaveData> Data;
+
+		[JsonConstructor]
+		public PropEntitySavePacket(
+		HashedTag uniqueID,
+		PropConfig typeGroupConfig,
+		Dictionary<string, ISaveData> Data) {
+			this.UniqueID = uniqueID;
+			this.TypeGroupConfig = typeGroupConfig;
+			this.Data = Data;
+		}
+	}
+
+
 
 	#endregion
 

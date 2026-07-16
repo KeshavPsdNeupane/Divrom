@@ -40,4 +40,5 @@ namespace Kope.Core.EntityComponentRegistry {
 			this.EntityIdentityCategoryEnum = cate;
 		}
 	}
+
 }

@@ -1,9 +1,7 @@
 using UnityEngine.U2D.Animation;
 using UnityEngine;
-using System.Collections.Generic;
 
 #if UNITY_EDITOR
-using UnityEditor;
 #endif
 
 namespace Kope.SpriteComposer2D {

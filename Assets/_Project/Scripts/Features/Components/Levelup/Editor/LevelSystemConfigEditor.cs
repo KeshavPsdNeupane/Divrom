@@ -159,10 +159,10 @@ namespace Kope.Component.ExperienceSystem.Config.Editor {
 				int growthDelta = expNeed - previousExpNeed;
 
 				if (showDelta) {
-					string deltaStr = (i == 1) ? "0" : $"+{(int)growthDelta}";
-					sb.AppendLine($"| Lv. {targetLevel} | {(int)expNeed} | {deltaStr} | {(int)tableData[i]} |");
+					string deltaStr = (i == 1) ? "0" : $"+{growthDelta}";
+					sb.AppendLine($"| Lv. {targetLevel} | {expNeed} | {deltaStr} | {tableData[i]} |");
 				} else {
-					sb.AppendLine($"| Lv. {targetLevel} | {(int)expNeed} | {(int)tableData[i]} |");
+					sb.AppendLine($"| Lv. {targetLevel} | {expNeed} | {tableData[i]} |");
 				}
 
 				previousExpNeed = expNeed;

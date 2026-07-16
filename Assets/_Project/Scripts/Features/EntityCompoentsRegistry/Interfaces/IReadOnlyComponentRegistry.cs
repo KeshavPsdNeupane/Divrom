@@ -1,8 +1,6 @@
 
 using UnityEngine;
 using System.Diagnostics.CodeAnalysis;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 
 namespace Kope.Core.EntityComponentRegistry {
 	/// <summary>

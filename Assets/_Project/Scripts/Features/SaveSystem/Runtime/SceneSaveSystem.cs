@@ -17,7 +17,12 @@ namespace Kope.SaveSystem {
 		// responsible for a different aspect of the save data or different sets of objects. For example, 
 		// one provider could be responsible for all the player data, 
 		// while another provider could be responsible for all the environment data.
+
+		// --- LEGACY CHANNELS ---
 		private readonly Dictionary<SceneDataProviderTypeEnum, ISceneSaveProvider> _saveProviders = new();
+
+		// --- NEW ARCHITECTURE CHANNELS ---
+		private readonly Dictionary<SceneDataProviderTypeEnum, ISceneSaveProviderNew> _saveProvidersNew = new();
 
 
 		protected override bool OnInitializeService() {
@@ -31,6 +36,7 @@ namespace Kope.SaveSystem {
 			return true;
 		}
 
+		// --- OLD CHANNELS REGISTRATION ---
 		public void RegisterProvider(ISceneSaveProvider provider) {
 			if (!this._saveProviders.ContainsKey(provider.ProviderType)) {
 				this._saveProviders.Add(provider.ProviderType, provider);
@@ -41,35 +47,69 @@ namespace Kope.SaveSystem {
 			this._saveProviders.Remove(provider.ProviderType);
 		}
 
+		// --- NEW CHANNELS REGISTRATION ---
+		public void RegisterProviderNew(ISceneSaveProviderNew provider) {
+			if (!this._saveProvidersNew.ContainsKey(provider.ProviderType)) {
+				this._saveProvidersNew.Add(provider.ProviderType, provider);
+			}
+		}
+
+		public void UnregisterProviderNew(ISceneSaveProviderNew provider) {
+			this._saveProvidersNew.Remove(provider.ProviderType);
+		}
+
 		public void TriggerSave() {
-			var data = new Dictionary<SceneDataProviderTypeEnum, SceneSaveDataContainer>();
+			// 1. Core processing for legacy tracking loop
+			var oldData = new Dictionary<SceneDataProviderTypeEnum, SceneSaveDataContainer>();
 			foreach (var kvp in this._saveProviders) {
-				if (!data.ContainsKey(kvp.Key)) {
-					data.Add(kvp.Key, kvp.Value.OnSave());
+				if (!oldData.ContainsKey(kvp.Key)) {
+					oldData.Add(kvp.Key, kvp.Value.OnSave());
 				}
 			}
-			var dataAggregate = new SceneSaveDataAggregate(this.SceneIndex, this.SceneName, data);
+			var dataAggregate = new SceneSaveDataAggregate(this.SceneIndex, this.SceneName, oldData);
 			this._globalSaveSystem.BufferSceneData(dataAggregate);
+
+			// 2. Parallel processing for new infrastructure loop
+			var newData = new Dictionary<SceneDataProviderTypeEnum, SceneSaveDataContainerNew>();
+			foreach (var kvp in this._saveProvidersNew) {
+				if (!newData.ContainsKey(kvp.Key)) {
+					newData.Add(kvp.Key, kvp.Value.OnSaveNew());
+				}
+			}
+			var dataAggregateNew = new SceneSaveDataAggregateNew(this.SceneIndex, this.SceneName, newData);
+			this._globalSaveSystem.BufferSceneDataNew(dataAggregateNew);
+
 #if UNITY_EDITOR
-			Debug.Log($"[SceneSaveSystem] Save triggered for {this._saveProviders.Count} providers.");
+			Debug.Log($"[SceneSaveSystem] Save triggered for {this._saveProviders.Count} old and {this._saveProvidersNew.Count} new providers.");
 #endif
 		}
 
 		public void TriggerLoad() {
+			// 1. Process legacy baseline channel data
+			// if (this._globalSaveSystem.TryGetBufferedSceneData(this.SceneIndex, out var dataAggregate)) {
+			// 	foreach (var kvp in dataAggregate.SceneDataByProvider) {
+			// 		if (this._saveProviders.TryGetValue(kvp.Key, out var provider)) {
+			// 			provider.OnLoad(kvp.Value);
+			// 		} else {
+			// 			Debug.LogWarning($"No legacy save provider found for provider type {kvp.Key}. Skipping load for this provider.");
+			// 		}
+			// 	}
+			// }
 
-			if (!this._globalSaveSystem.TryGetBufferedSceneData(this.SceneIndex, out var dataAggregate)) {
-				Debug.LogWarning($"No buffered data found for scene index {this.SceneIndex}. Load aborted.");
-				return;
-			}
-			foreach (var kvp in dataAggregate.SceneDataByProvider) {
-				if (this._saveProviders.TryGetValue(kvp.Key, out var provider)) {
-					provider.OnLoad(kvp.Value);
-				} else {
-					Debug.LogWarning($"No save provider found for provider type {kvp.Key}. Skipping load for this provider.");
+			// 2. Process new optimized layout data
+			if (this._globalSaveSystem.TryGetBufferedSceneDataNew(this.SceneIndex, out var dataAggregateNew)) {
+				foreach (var kvp in dataAggregateNew.SceneDataByProviderNew) {
+					if (this._saveProvidersNew.TryGetValue(kvp.Key, out var provider)) {
+						provider.OnLoadNew(kvp.Value);
+					} else {
+						Debug.LogWarning($"No new save provider found for provider type {kvp.Key}. Skipping load for this provider.");
+					}
 				}
+				Debug.Log($"[SceneSaveSystem] the load system for the new save system has been triggered for {dataAggregateNew.SceneDataByProviderNew.Count} providers.");
 			}
+
 #if UNITY_EDITOR
-			Debug.Log($"[SceneSaveSystem] Load triggered for {this._saveProviders.Count} providers.");
+			Debug.Log($"[SceneSaveSystem] Load triggered for {this._saveProviders.Count} old and {this._saveProvidersNew.Count} new providers.");
 #endif
 		}
 	}

@@ -163,19 +163,18 @@ namespace Kope.EntityIdentity {
 			this.GenderEnum = genderEnum;
 
 		}
+	}
+	/// <summary>
+	/// Configuration data model dedicated exclusively to environmental and interactive items (PROPs).
+	/// Strips away all irrelevant identity fields (relation, race, gender) to eliminate data sparsity 
+	/// and drastically optimize memory footprints when thousands of static world items are instantiated.
+	/// </summary>
+	public class PropConfig : EntityConfig {
+		public PropType PropType { get; }
 
-		/// <summary>
-		/// Configuration data model dedicated exclusively to environmental and interactive items (PROPs).
-		/// Strips away all irrelevant identity fields (relation, race, gender) to eliminate data sparsity 
-		/// and drastically optimize memory footprints when thousands of static world items are instantiated.
-		/// </summary>
-		public class PropConfig : EntityConfig {
-			public PropType PropType { get; }
-
-			public PropConfig(string name, PropType propType, EntityNature nature = EntityNature.STATIC)
-				: base(name, nature) {
-				this.PropType = propType;
-			}
+		public PropConfig(string name, PropType propType, EntityNature nature = EntityNature.STATIC)
+			: base(name, nature) {
+			this.PropType = propType;
 		}
 	}
 }
