@@ -2,6 +2,7 @@ using Kope.AI.Utility;
 using UnityEngine;
 using Kope.Component.Movement;
 using Kope.Core.Mathfx;
+using Kope.AI.Ctx;
 
 [CreateAssetMenu(fileName = "RandomWanderAction", menuName = "Scriptable Objects/AI/Utility/Actions/RandomWanderAction")]
 public class RandomWanderActionSO : ActionSO {
@@ -22,6 +23,17 @@ public class RandomWanderActionSO : ActionSO {
 		this.targetPosition = GetRandomValidTarget();
 		//Debug.Log($"pos ={this.mc.Position},rand pos={this.targetPosition}");
 	}
+	protected override void OnInitializeNew(ContextNew ctx) {
+		var entityctx = ctx.CurrentMutableEntityContext;
+		if (!entityctx.TryGetMutable(out this.mc)) {
+			Debug.LogError("RandomWanderActionSO Initialization failed: MovementComponentBase not found.");
+			return;
+		}
+		this.targetPosition = GetRandomValidTarget();
+	}
+
+
+
 	protected override void OnEndOrAbort() {
 		if (this.mc == null) return;
 
@@ -85,6 +97,8 @@ public class RandomWanderActionSO : ActionSO {
 
 		return target;
 	}
+
+
 
 	#region NavMesh2D Placeholder, Just in case I want to use it later. right now I am using simple random point generation.
 	// private Vector3 GetWanderPoint()

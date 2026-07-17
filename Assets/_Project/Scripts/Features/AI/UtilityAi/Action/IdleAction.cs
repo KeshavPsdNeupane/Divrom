@@ -1,3 +1,4 @@
+using Kope.AI.Ctx;
 using Kope.AI.Utility;
 using ThirdParty;
 using UnityEngine;
@@ -15,6 +16,13 @@ public class IdleAction : ActionSO {
 		this.idleTimer.Start();
 		this.idleTimer.OnTimerStop += MarkCompleted;
 	}
+	protected override void OnInitializeNew(ContextNew ctx) {
+		this.idleTimer = new CountdownTimer(this.idleDuration);
+		this.idleTimer.Start();
+		this.idleTimer.OnTimerStop += MarkCompleted;
+	}
+
+
 	public override void TickUpdate() {
 		// not possible to have idle timer null since it is initialized in OnInitialize,
 		// that why using ?. operator to avoid null reference exception in case of any unforeseen circumstances.

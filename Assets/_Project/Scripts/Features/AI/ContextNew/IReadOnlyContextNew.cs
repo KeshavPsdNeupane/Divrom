@@ -4,7 +4,7 @@ using Kope.Core.Collections.Hashes;
 using Kope.Core.EntityComponentRegistry;
 using Kope.EntityIdentity;
 
-namespace Kope.AI.ContextNew {
+namespace Kope.AI.Ctx {
 
 	/// <summary>
 	/// Provides read-only access to an entity's context and its known targets.
@@ -59,7 +59,6 @@ namespace Kope.AI.ContextNew {
 		/// through these references.
 		/// </para>
 		/// </summary>
-		bool TryGetTargets<TQuery>(EntityType type, TQuery query, out IReadOnlyList<IReadOnlyComponentRegistry> targets)
-			where TQuery : struct;
+		bool TryGetTargets(EntityQuery query, out IReadOnlyList<IReadOnlyComponentRegistry> targets);
 	}
 }

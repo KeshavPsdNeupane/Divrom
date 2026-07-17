@@ -52,6 +52,7 @@ namespace Kope.AI {
 	/// </list>
 	/// </para>
 	/// </summary>
+	[Serializable]
 	public readonly struct MobQuery {
 
 		/// <summary>
@@ -122,6 +123,7 @@ namespace Kope.AI {
 		private readonly Dictionary<EntityRelation,
 		(HashSet<IReadOnlyComponentRegistry>, List<IReadOnlyComponentRegistry>)> _relationCache = new();
 
+		public int TotalMobs => this._mobRegistry.Count;
 		/// <summary>
 		/// Attempts to retrieve a mob using its unique identifier.
 		/// Expected lookup complexity is O(1).
@@ -206,10 +208,15 @@ namespace Kope.AI {
 		/// event system when the entity dies or is returned to a pool.
 		/// </para>
 		/// </summary>
-		public void RemoveMob(MobEntityDetail mobDetail) {
-			if (!this._mobRegistry.Remove(mobDetail.UniqueID.HashedTag, out var registry))
+		public void RemoveMob(EntityDetailBase entityDetail) {
+			// if not mob, ignore 
+			// since registration is only done for mobs, this should be safe
+			// and the registration function args will ensure that only mobs are registered
+			if (entityDetail is not MobEntityDetail mobDetail)
 				return;
 
+			if (!this._mobRegistry.Remove(entityDetail.UniqueID.HashedTag, out var registry))
+				return;
 			RemoveFromCache(this._raceCache, mobDetail.MobConfig.Race, registry);
 			RemoveFromCache(this._relationCache, mobDetail.MobConfig.Relation, registry);
 

@@ -8002,40 +8002,40 @@ MonoBehaviour:
     gameObjectName: SceneServiceLocator
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: Addhp
-  - typeName: EntityInitCaller
-    order: -40
     gameObjectName: Hpstore (1)
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: Dummy
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: PlayerNew
   - typeName: EntityInitCaller
     order: -40
     gameObjectName: Addhp (2)
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: AddSpd (1)
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: Hpstore
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: Hpstore (2)
+    gameObjectName: AddDef
   - typeName: EntityInitCaller
     order: -40
     gameObjectName: Addhp (1)
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: AddDef (1)
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: AddDef
+    gameObjectName: Hpstore
   - typeName: EntityInitCaller
     order: -40
     gameObjectName: AddSpd
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Dummy
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Addhp
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: PlayerNew
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: AddSpd (1)
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: AddDef (1)
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Hpstore (2)
   - typeName: InGameUIInitCaller
     order: -30
     gameObjectName: UI

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Kope.AI.Ctx;
 using Kope.AI.Utility;
 using Kope.Core.EntityComponentRegistry;
 using UnityEngine;
@@ -16,6 +17,18 @@ public class CompositeConsideration : ConsiderationSO {
 			var (score, count) = consideration.Evaluate(context);
 			finalScore *= score;
 			totalMultiplicationCount += count + 1; // +1 to account for this consideration's multiplication
+			if (finalScore <= 0f) return (0f, totalMultiplicationCount);
+		}
+		return (finalScore, totalMultiplicationCount);
+	}
+
+	public override (float, int) EvaluateNew(IReadOnlyContextNew context) {
+		float finalScore = 1f;
+		int totalMultiplicationCount = 0;
+		foreach (var consideration in considerations) {
+			var (score, count) = consideration.EvaluateNew(context);
+			finalScore *= score;
+			totalMultiplicationCount += count + 1;
 			if (finalScore <= 0f) return (0f, totalMultiplicationCount);
 		}
 		return (finalScore, totalMultiplicationCount);

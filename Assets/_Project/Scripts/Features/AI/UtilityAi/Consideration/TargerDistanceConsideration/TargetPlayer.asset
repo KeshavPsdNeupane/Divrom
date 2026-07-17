@@ -12,12 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97be6016f548f4b0c810bf3d0f05c004, type: 3}
   m_Name: TargetPlayer
   m_EditorClassIdentifier: Assembly-CSharp::RangeConsideration
-  relevantActionType: 42
+  relevantActionTypes: 00000000
   considerationName: Range Consideration
   entityCommonNameConfig: {fileID: 11400000, guid: 296b484721bdc20d2b51d78c4a7374ac, type: 2}
   entityCommonName: Player
   maxRange: 10
   angleThreshold: 180
+  deadZoneRadius: 1
   rangeCurve:
     serializedVersion: 2
     m_Curve:
@@ -42,3 +43,20 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  query:
+    type: 0
+    MobQueryFactory:
+      _queryLogic: "All active filters are combined with 'AND' logic.\n\u2022 Race
+        & Relation: If both are enabled, the entity must match BOTH criteria.\n\u2022
+        Player/Unique Entities: Keep Race 'HasValue' unchecked to prevent exclusion,
+        unless specifically checking for racial aggression."
+      race:
+        _value: 0
+        _hasValue: 0
+      relation:
+        _value: 0
+        _hasValue: 1
+    PropTypeFactory:
+      propType:
+        _value: 0
+        _hasValue: 0

@@ -1,73 +1,93 @@
 using System;
 using System.Collections.Generic;
-using Kope.AI;
 using Kope.Component;
 using Kope.Core.Collections.Hashes;
 using Kope.Core.EntityComponentRegistry;
 using Kope.Core.Identity;
 using Kope.EntityIdentity;
 
-namespace Kope.AI.ContextNew {
+namespace Kope.AI.Ctx {
 
 	/// <summary>
-	/// Stores the operational context of an entity along with access to its known targets.
-	/// <para>
-	/// <b>Self Context:</b> Exposes mutable access to the owning entity's registry,
-	/// allowing the entity to update its own state.
-	/// </para>
-	/// <para>
-	/// <b>Target Access:</b> Uses dedicated databases to provide read-only views of
-	/// other entities. Target data is not locally duplicated or cached within the
-	/// context, ensuring a single authoritative source of truth while minimizing
-	/// memory overhead and synchronization complexity.
-	/// </para>
+	/// Manages the operational context for an entity, bridging the gap between 
+	/// the entity's internal state and external environmental data.
 	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// <b>Self-Context:</b> Provides direct, mutable access to the owning entity's <see cref="ComponentRegistry"/>,
+	/// enabling the entity to modify its own internal state.
+	/// </para>
+	/// <para>
+	/// <b>Environmental Awareness:</b> Acts as a facade for multiple specialized databases 
+	/// (e.g., Mobs, Props). By managing these databases locally, this class ensures 
+	/// a single authoritative source of truth for target data, eliminating the need for 
+	/// fragmented caching and simplifying lifecycle synchronization.
+	/// </para>
+	/// <para>
+	/// <b>Safety:</b> External entity data is exposed exclusively through <see cref="IReadOnlyComponentRegistry"/>, 
+	/// enforcing strict read-only access to prevent side effects and accidental state corruption.
+	/// </para>
+	/// </remarks>
 	public class ContextNew : IReadOnlyContextNew {
 		private FieldOfViewData _fieldOfViewData;
 		private readonly ComponentRegistry _currentEntityContext;
 		private readonly MobDatabase _mobDb;
 		private readonly PropDatabase _propDb;
 
+		/// <inheritdoc />
 		public FieldOfViewData FieldOfViewData => this._fieldOfViewData;
+
+		/// <inheritdoc />
 		public IReadOnlyComponentRegistry SelfReadOnlyEntityContext => this._currentEntityContext;
 
 		/// <summary>
-		/// Provides mutable access to the current entity's component registry.
-		/// Used when the owning entity needs to update or mutate its own state.
+		/// Gets the mutable component registry of the owning entity.
 		/// </summary>
 		public ComponentRegistry CurrentMutableEntityContext => this._currentEntityContext;
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ContextNew"/> class.
+		/// </summary>
+		/// <param name="currentEntityContext">The component registry owned by this entity.</param>
+		/// <exception cref="ArgumentNullException">Thrown when <paramref name="currentEntityContext"/> is null.</exception>
 		public ContextNew(ComponentRegistry currentEntityContext) {
 			this._currentEntityContext = currentEntityContext ?? throw new ArgumentNullException(nameof(currentEntityContext));
 
-			// Each entity owns its own Context instance, so these databases are intentionally
-			// created per context rather than shared globally. The databases are lightweight,
-			// making the memory cost negligible while simplifying ownership and lifecycle
-			// management. This design also preserves a single authoritative source of target
-			// data within each context.
+			// Databases are instantiated per-context to maintain authoritative ownership 
+			// and simplify lifecycle management.
 			this._mobDb = new MobDatabase();
 			this._propDb = new PropDatabase();
 		}
 
+		/// <summary>
+		/// Updates the current field-of-view data for this context.
+		/// </summary>
+		/// <param name="data">The new FOV information.</param>
 		public void SetFieldOfViewData(FieldOfViewData data) => this._fieldOfViewData = data;
+
+		public int TotalSizeOfDatabases() {
+			// this will never throw since the databases are always initialized in the constructor
+			return this._mobDb.TotalMobs + this._propDb.TotalProps;
+		}
 
 
 		/// <summary>
-		/// Registers an entity with the appropriate database.
-		/// The database is responsible for maintaining internal caches and managing
-		/// lifecycle event subscriptions required for automatic cleanup.
+		/// Registers an entity detail with the appropriate underlying database.
 		/// </summary>
-		public void RegisterEntity<TDetail>(TDetail detail) where TDetail : class {
+		/// <typeparam name="TDetail">The type of the entity detail (e.g., MobEntityDetail or PropEntityDetail).</typeparam>
+		/// <param name="detail">The detail object containing entity identification and lifecycle data.</param>
+		public void RegisterEntityContext(EntityDetailBase detail) {
 			if (detail is MobEntityDetail mob) _mobDb.RegisterMob(mob);
 			else if (detail is PropEntityDetail prop) _propDb.RegisterProp(prop);
 		}
 
 		/// <summary>
-		/// Removes an entity from the appropriate database.
-		/// This also removes any cached references and releases lifecycle subscriptions
-		/// maintained by the database.
+		/// Removes an entity from its respective database, triggering cleanup of cached 
+		/// references and lifecycle subscriptions.
 		/// </summary>
-		public void RemoveEntity<TDetail>(TDetail detail) where TDetail : class {
+		/// <typeparam name="TDetail">The type of the entity detail.</typeparam>
+		/// <param name="detail">The detail object used to identify the entity for removal.</param>
+		public void RemoveEntityContext(EntityDetailBase detail) {
 			if (detail is MobEntityDetail mob) _mobDb.RemoveMob(mob);
 			else if (detail is PropEntityDetail prop) _propDb.RemoveProp(prop);
 		}
@@ -77,16 +97,25 @@ namespace Kope.AI.ContextNew {
 		// ---------------------------------------------------------------------
 
 		/// <summary>
-		/// Routes a target lookup request to the appropriate database based on entity type.
-		/// <para>
-		/// Lookups are expected to be O(1) through the underlying database indexes.
-		/// </para>
-		/// <para>
-		/// Targets are returned through the IReadOnlyComponentRegistry contract to
-		/// communicate read-only intent and discourage accidental modification of
-		/// external entity state.
-		/// </para>
+		/// Attempts to retrieve a specific entity registry by its type and unique identifier.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// This method provides O(1) lookup performance via underlying database indexes.
+		/// </para>
+		/// <para>
+		/// Results are returned via <see cref="IReadOnlyComponentRegistry"/> to enforce 
+		/// read-only access and prevent accidental modification of external entity states.
+		/// </para>
+		///  <b>Note:</b> This method requires an <see cref="MobEntityDetail"/> or 
+		/// <see cref="PropEntityDetail"/> struct (as used for registration 
+		/// and removal) to provide the necessary identification, such as
+		///  the unique identifier and entity type.
+		/// </remarks>
+		/// <param name="type">The <see cref="EntityType"/> to filter by.</param>
+		/// <param name="uid">The unique <see cref="HashedTag"/> of the entity.</param>
+		/// <param name="target">When this method returns, holds the registry if found; otherwise, null.</param>
+		/// <returns>True if the entity was successfully retrieved; otherwise, false.</returns>
 		public bool TryGetTarget(EntityType type, HashedTag uid, out IReadOnlyComponentRegistry target) {
 			if (type == EntityType.MOB) return this._mobDb.TryGetMob(uid, out target);
 			if (type == EntityType.PROP) return this._propDb.TryGetProp(uid, out target);
@@ -96,30 +125,30 @@ namespace Kope.AI.ContextNew {
 		}
 
 		/// <summary>
-		/// Routes a query request to the appropriate database and returns the matching
-		/// target collection.
+		/// Queries the appropriate database for a collection of entities matching the provided criteria.
+		/// </summary>
+		/// <remarks>
 		/// <para>
-		/// Centralizing query storage within the databases eliminates the need for
-		/// per-context cache dictionaries, reducing duplicate references and avoiding
+		/// Centralizing query logic within the databases eliminates the need for 
+		/// per-context cache dictionaries, reducing duplicate references and avoiding 
 		/// stale cache synchronization issues.
 		/// </para>
 		/// <para>
-		/// Query results are returned through pre-existing collections, enabling efficient
-		/// retrieval without additional runtime allocations.
+		/// Query results are returned through pre-existing collections, enabling efficient 
+		/// retrieval without additional runtime heap allocations.
 		/// </para>
-		/// </summary>
-		public bool TryGetTargets<TQuery>(
-			EntityType type,
-			TQuery query,
-			out IReadOnlyList<IReadOnlyComponentRegistry> targets)
-			where TQuery : struct {
+		/// </remarks>
+		/// <param name="query">The <see cref="EntityQuery"/> criteria.</param>
+		/// <param name="targets">When this method returns, contains the list of matching registries.</param>
+		/// <returns>True if the query returned results; otherwise, false.</returns>
+		public bool TryGetTargets(
+			EntityQuery query,
+			out IReadOnlyList<IReadOnlyComponentRegistry> targets) {
 
-			if (type == EntityType.MOB && query is MobQuery mobQuery) {
-				return this._mobDb.TryGetMobs(mobQuery, out targets);
-			}
-
-			if (type == EntityType.PROP && query is PropQuery propQuery) {
-				return this._propDb.TryGetProps(propQuery, out targets);
+			if (query.Type == EntityType.MOB) {
+				return this._mobDb.TryGetMobs(query.GetMobQuery(), out targets);
+			} else if (query.Type == EntityType.PROP) {
+				return this._propDb.TryGetProps(query.GetPropQuery(), out targets);
 			}
 
 			targets = Array.Empty<IReadOnlyComponentRegistry>();

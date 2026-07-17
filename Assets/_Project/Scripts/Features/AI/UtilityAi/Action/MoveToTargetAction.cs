@@ -1,4 +1,5 @@
 using System;
+using Kope.AI.Ctx;
 using Kope.AI.Utility;
 using Kope.Component.Movement;
 using ThirdParty;
@@ -74,6 +75,37 @@ public class MoveTowardAction : ActionSO {
 			this._actionTimer.Start();
 		}
 	}
+
+	protected override void OnInitializeNew(ContextNew ctx) {
+		this._directionChangeTime = 1f / this.directionChangeFrequency;
+		this._directionChangeInterval = this._directionChangeTime;
+		this._squareFreeSpaceRadius = this.deadZone * this.deadZone;
+		var readOnlyTargetComponentRegistry = GetSelectedTargetRegistry(this.actionType);
+
+		if (readOnlyTargetComponentRegistry == null) {
+			SetComplete();
+			return;
+		}
+		var selfComponentRegistry = ctx.CurrentMutableEntityContext;
+		this._readOnlyTargetTransform = readOnlyTargetComponentRegistry.EntityTransform;
+
+		if (!selfComponentRegistry.TryGetReadOnly(out this._selfMovementComponent)) {
+			Debug.LogError($"RangeAction Error: Self does not have a MovementComponent on {this.name}");
+			SetComplete();
+			return;
+		}
+
+
+		if (this.maxActionDuration > 0f) {
+			this._actionTimer = new CountdownTimer(this.maxActionDuration);
+			this._actionTimer.OnTimerStop += SetComplete;
+			this._actionTimer.Start();
+		}
+	}
+
+
+
+
 	public override void TickUpdate() {
 		this._actionTimer?.Tick(Time.deltaTime);
 	}
@@ -132,4 +164,6 @@ public class MoveTowardAction : ActionSO {
 			this._actionTimer.Reset();
 		}
 	}
+
+
 }

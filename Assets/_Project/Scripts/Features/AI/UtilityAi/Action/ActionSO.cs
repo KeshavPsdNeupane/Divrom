@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Kope.Core.EntityComponentRegistry;
 using Kope.Core.Collections.Extensions;
 using UnityEngine;
+using Kope.AI.Ctx;
 
 namespace Kope.AI.Utility {
 
@@ -59,6 +60,24 @@ namespace Kope.AI.Utility {
 			}
 			return Mathf.Max(totalScore.GetCompensatedUtility(totalMul), 0.0f);
 		}
+		public virtual float EvaluateNew(IReadOnlyContextNew context) {
+			// marking virtual so we can add logging or other custom behavior in specific actions if needed without affecting the base evaluation logic
+
+			// tracks how many considerations have been multiplied together
+			// to apply compensated utility correctly
+			// this is needed to avoid penalizing actions with many considerations too harshly
+			int totalMul = 0;
+			float totalScore = 1f;
+			foreach (var consideration in considerations) {
+				(float score, int newCount) = consideration.EvaluateNew(context);
+				totalScore *= score;
+				if (totalScore == 0f) return 0f;
+
+				totalMul += newCount + 1; // the +1 is for the current consideration's multiplication
+			}
+			return Mathf.Max(totalScore.GetCompensatedUtility(totalMul), 0.0f);
+		}
+
 		protected IReadOnlyComponentRegistry GetSelectedTargetRegistry(ActionType actionType) {
 			foreach (var consideration in considerations) {
 				var registry = consideration.GetSelectedTargetRegistry(actionType);

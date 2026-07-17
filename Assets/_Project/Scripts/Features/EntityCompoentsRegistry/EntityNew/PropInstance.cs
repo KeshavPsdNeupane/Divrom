@@ -1,17 +1,28 @@
 using UnityEngine;
 using Kope.EntityIdentity;
-using Kope.Core.EntityComponentRegistry;
+
 
 namespace Kope.Core.Identity {
-	public interface IPropEntityInstance : IEntityDetailProvider<PropEntityDetail> { }
-
-	public class PropInstance : EntityInstanceNew<PropConfig, PropEntityDetail>, IPropEntityInstance, IPropEntityDiedOrPooled {
+	public class PropInstance : EntityInstanceNew {
 		[SerializeField] private PropType propType;
 		[SerializeField] private EntityNature nature = EntityNature.STATIC;
 
+		private PropEntityDetail _cachedDetail;
 		public override EntityType Type => EntityType.PROP;
+		private PropConfig _cachedConfig;
 
-		protected override PropConfig CreateConfig() => new(entityName, propType, nature);
-		protected override PropEntityDetail CreateEntityDetail() => new(uniqueID, Config, ecr.ComponentRegistry, this);
+		public override EntityConfig Config {
+			get {
+				this._cachedConfig ??= new PropConfig(entityName, propType, nature);
+				return this._cachedConfig;
+			}
+		}
+		public override EntityDetailBase EntityDetail {
+			get {
+				this._cachedDetail ??= new PropEntityDetail(this.uniqueID,
+				(PropConfig)this.Config, this.ComponentsRegistryForSaveSystemOnly, this);
+				return this._cachedDetail;
+			}
+		}
 	}
 }

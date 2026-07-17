@@ -3,6 +3,7 @@ using Kope.Component.Health.Interface;
 using Kope.Core.EntityComponentRegistry;
 using Kope.Core.Collections.Hashes;
 using UnityEngine;
+using Kope.AI.Ctx;
 
 
 [CreateAssetMenu(fileName = "HealthConsideration", menuName = "Scriptable Objects/AI/Utility/Considerations/HealthConsideration")]
@@ -47,4 +48,17 @@ public class HealthConsideration : ConsiderationSO {
 		return (score, 0);
 	}
 
+	public override (float, int) EvaluateNew(IReadOnlyContextNew context) {
+		if (this.entityCommonNameConfig == null) return (0.0f, 0);
+
+		var selfContext = context.SelfReadOnlyEntityContext;
+		if (!selfContext.TryGetReadOnly<IHealthComponent>(out var healthComponent)) {
+			Debug.LogError($"[{this.considerationName}] The entity does not have a HealthComponent. Please ensure it is added to the entity.", this);
+			return (0.0f, 0);
+		}
+		float healthPercentage = healthComponent.CurrentHealth / healthComponent.MaxHealth;
+		float score = this.healthCurve.Evaluate(healthPercentage);
+		//	Debug.Log($"[{this.considerationName}] Evaluated health percentage: {healthPercentage:F2}, score: {score:F2}");
+		return (score, 0);
+	}
 }

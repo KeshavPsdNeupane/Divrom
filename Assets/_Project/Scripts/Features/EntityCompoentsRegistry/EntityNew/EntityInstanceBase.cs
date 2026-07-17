@@ -14,45 +14,35 @@ namespace Kope.Core.Identity {
 		void SetSavable(bool isSavable);
 	}
 
-	public interface IEntityDetailProvider<out TDetail> {
-		TDetail EntityDetail { get; }
-		void InvokeOnEntityDiedOrPooledEvent();
-	}
-
 	[RequireComponent(typeof(UniqueID))]
-	public abstract class EntityInstanceNew<TConfig, TDetail> : InitializableBase, IEntityInstance, ISavableEntity, IEntityDetailProvider<TDetail>
-		where TConfig : EntityConfig
-		where TDetail : IEntityDetail {
+	public abstract class EntityInstanceNew :
+	InitializableBase, IEntityInstance, ISavableEntity, IEntityDiedOrPooledNew {
 
 		[SerializeField] protected string entityName;
 		[SerializeField] protected UniqueID uniqueID;
 		[SerializeField] protected EntityComponentsRegistry ecr;
 
 		private bool _isSavable = false;
-		private TConfig _cachedConfig;
-		private TDetail _cachedDetail;
-		private event Action<TDetail> OnEntityDiedOrPooled;
 
-		public bool IsSavable => _isSavable;
-		public ComponentRegistry ComponentsRegistryForSaveSystemOnly => ecr.ComponentRegistry;
+		private event Action<EntityDetailBase> OnEntityDiedOrPooled;
+
+		public bool IsSavable => this._isSavable;
+		public ComponentRegistry ComponentsRegistryForSaveSystemOnly => this.ecr.ComponentRegistry;
 
 		public abstract EntityType Type { get; }
-		public TConfig Config => _cachedConfig ??= CreateConfig();
-		public TDetail EntityDetail => _cachedDetail ??= CreateEntityDetail();
-
-		protected abstract TConfig CreateConfig();
-		protected abstract TDetail CreateEntityDetail();
+		public abstract EntityConfig Config { get; }
+		public abstract EntityDetailBase EntityDetail { get; }
 
 		protected override bool OnInit() => Validate();
-		public void SetSavable(bool isSavable) => _isSavable = isSavable;
+		public void SetSavable(bool isSavable) => this._isSavable = isSavable;
 
-		public void OnEntityDiedOrPooledEvent(Action<TDetail> callback, bool isSubscribe) {
-			OnEntityDiedOrPooled -= callback;
-			if (isSubscribe) OnEntityDiedOrPooled += callback;
+
+		public void InvokeOnEntityDiedOrPooledEvent() => this.OnEntityDiedOrPooled?.Invoke(this.EntityDetail);
+		private bool Validate() => this.uniqueID != null && this.ecr != null && this.ecr.ComponentRegistry != null;
+
+		public void OnEntityDiedOrPooledEvent(Action<EntityDetailBase> callback, bool isSubscribe) {
+			this.OnEntityDiedOrPooled -= callback;
+			if (isSubscribe) this.OnEntityDiedOrPooled += callback;
 		}
-
-		public void InvokeOnEntityDiedOrPooledEvent() => OnEntityDiedOrPooled?.Invoke(EntityDetail);
-
-		private bool Validate() => uniqueID != null && ecr != null && ecr.ComponentRegistry != null;
 	}
 }

@@ -7,6 +7,7 @@ using System;
 using Kope.Core.EntityComponentRegistry;
 using Kope.Actor.New;
 using Kope.EntityComponentSystem;
+using Kope.AI.Ctx;
 
 namespace Kope.AI {
 
@@ -26,10 +27,16 @@ namespace Kope.AI {
 		[Header("Debug Utilities")]
 		[SerializeField, Tooltip("If checked, the planner will be initialized when the brain is initialized.")]
 		private bool initPlannerOnBrainInit = true;
+
+
+		[Header("ContextNew")]
+		bool useContextNew = true;
 		#endregion
 
 		#region Private Fields
 		private Context _ctx;
+
+		private ContextNew _ctxNew;
 
 		private EntityStateManagement _entityStateManagement;
 		private BaseActionSO _currentAction;
@@ -50,6 +57,13 @@ namespace Kope.AI {
 			}
 			this._ctx = new Context(this.ecr.ComponentRegistry);
 
+
+
+			this._ctxNew = new ContextNew(this.ecr.ComponentRegistry);
+
+
+
+
 			foreach (var comp in components) {
 				this._ctx.CurrentMutableEntityContext.Register(comp);
 				if (comp is IInterruptOther interrupter) {
@@ -69,6 +83,7 @@ namespace Kope.AI {
 				this._refreshTimer.Start();
 			}
 			this.sensor.InitContext(this._ctx);
+			this.sensor.InitContextNew(this._ctxNew);
 			return true;
 		}
 
@@ -140,7 +155,11 @@ namespace Kope.AI {
 				var nextAction = this._currentPlanEnumerator.Current;
 				if (nextAction != null) {
 					this._currentAction = nextAction;
-					this._currentAction.Initialize(this._ctx);
+					if (this.useContextNew) {
+						this._currentAction.InitializeNew(this._ctxNew);
+					} else {
+						this._currentAction.Initialize(this._ctx);
+					}
 				}
 			} else {
 				this._currentPlanEnumerator = null;
@@ -163,7 +182,8 @@ namespace Kope.AI {
 
 		#region Helpers & Callbacks
 		protected virtual void FetchNewPlan() {
-			var plan = this.planner.GetDecisionPlan(this._ctx);
+			var plan = this.useContextNew ? this.planner.GetDecisionPlanNew(this._ctxNew)
+			: this.planner.GetDecisionPlan(this._ctx);
 			if (plan != null) {
 				this._currentPlanEnumerator = plan.GetEnumerator();
 			}

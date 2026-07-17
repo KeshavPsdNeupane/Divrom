@@ -4,6 +4,7 @@ using UnityEngine;
 using Kope.Core.Sensor;
 using Kope.Component;
 using Kope.Core.Identity;
+using Kope.AI.Ctx;
 
 [RequireComponent(typeof(CircleCollider2D))]
 public class EntitySensor : SensorBase {
@@ -12,7 +13,7 @@ public class EntitySensor : SensorBase {
 	private float innerDetectionRadius = 1f;
 	[SerializeField, Range(0f, 360f)] private float fieldOfViewAngle = 90f;
 	private Context context;
-
+	private ContextNew contextNew;
 	private FieldOfViewData _fieldOfViewData;
 	private bool _fovDataInitialized;
 
@@ -37,6 +38,20 @@ public class EntitySensor : SensorBase {
 		context.SetFieldOfViewData(this.FieldOfViewData);
 	}
 
+	public void InitContextNew(ContextNew contextNew) {
+		this.contextNew = contextNew;
+		contextNew.SetFieldOfViewData(this.FieldOfViewData);
+	}
+
+
+	int tempcount = 0;
+	void Update() {
+		int count = contextNew.TotalSizeOfDatabases();
+		if (this.tempcount != count) {
+			this.tempcount = count;
+			Debug.Log($"[EntitySensor] Total entities in contextNew: {this.tempcount}");
+		}
+	}
 	void OnValidate() {
 		this._fieldOfViewData = new FieldOfViewData(this.fieldOfViewAngle, this.detectionRadius, this.innerDetectionRadius);
 	}
@@ -56,7 +71,12 @@ public class EntitySensor : SensorBase {
 			return;
 		}
 		var entityManager = other.GetComponentInParent<EntityInstance>();
-		if (entityManager == null) return;
+		var entityInstance = other.GetComponentInParent<EntityInstanceNew>();
+
+		if (entityManager == null && entityInstance == null) return;
+
+
+
 		// this is garunteed to be valid for all entity since we check the commonname on the EI itself,
 		// so we can skip the check here and just add it to the context
 		// so if entity manager is valid then all other tags and registry should be valid as well,
@@ -66,7 +86,11 @@ public class EntitySensor : SensorBase {
 		// later i am going to make this register an event like
 		// this.OnEntityDetected?.Invoke(entityManager.EntityDetail) 
 		// then brain wire the subcription to the context.
-		this.context.RegisterEntityContext(entityManager.EntityDetail);
+		if (entityManager != null)
+			this.context.RegisterEntityContext(entityManager.EntityDetail);
+
+		if (entityInstance != null)
+			this.contextNew.RegisterEntityContext(entityInstance.EntityDetail);
 	}
 
 	public override void OnDetectExit(Collider2D other) {
@@ -75,9 +99,15 @@ public class EntitySensor : SensorBase {
 			return;
 		}
 		var entityManager = other.GetComponentInParent<EntityInstance>();
-		if (entityManager == null || this.context == null) return;
+		var entityInstance = other.GetComponentInParent<EntityInstanceNew>();
 
-		this.context.RemoveTargetEntityContext(entityManager.EntityDetail);
+		if (entityManager == null && entityInstance == null) return;
+
+		if (entityManager != null)
+			this.context.RemoveEntityContext(entityManager.EntityDetail);
+
+		if (entityInstance != null)
+			this.contextNew.RemoveEntityContext(entityInstance.EntityDetail);
 	}
 
 

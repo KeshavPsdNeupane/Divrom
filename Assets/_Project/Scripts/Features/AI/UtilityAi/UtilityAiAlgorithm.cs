@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Kope.AI.Ctx;
 using Kope.AI.Utility.Config;
 using ThirdParty.PriorityQueeu;
 using UnityEngine;
@@ -69,6 +70,14 @@ namespace Kope.AI.Utility {
 
 			public float Evaluate(IReadOnlyContext ctx) {
 				float rawScore = this.action.Evaluate(ctx);
+				float score = rawScore * this.biasWeight;
+				if (this.isActive) score += this.action.MomentumBias;
+				this._lastRawScore = rawScore;
+				this._evaluatedScore = score;
+				return score;
+			}
+			public float EvaluateNew(IReadOnlyContextNew ctx) {
+				float rawScore = this.action.EvaluateNew(ctx);
 				float score = rawScore * this.biasWeight;
 				if (this.isActive) score += this.action.MomentumBias;
 				this._lastRawScore = rawScore;
@@ -199,6 +208,8 @@ namespace Kope.AI.Utility {
 			yield return SelectBestAction(ctx);
 		}
 
+
+
 		private ActionSO SelectBestAction(IReadOnlyContext ctx) {
 			// Optimization: If there's only one action (the idle action),
 			// skip evaluation and return it immediately.
@@ -265,6 +276,59 @@ namespace Kope.AI.Utility {
 			return actionEntry.Action;
 		}
 
+		public override IEnumerable<BaseActionSO> GetDecisionPlanNew(IReadOnlyContextNew ctx) {
+			yield return SelectBestActionNew(ctx);
+		}
+
+
+
+		private ActionSO SelectBestActionNew(IReadOnlyContextNew ctx) {
+			// Optimization: If there's only one action (the idle action),
+			// skip evaluation and return it immediately.
+			const int IDLE_ONLY_COUNT = 1;
+			if (this.actionEntries.Count == IDLE_ONLY_COUNT) return this.idleActionEntry.Action;
+
+			// Regenerate weights for all non-active actions based on the time elapsed since the last evaluation.
+			// using Compound interest formula for more dynamic recovery: newWeight = currentWeight + (currentWeight * (regenRate * ticks))
+			this.memory.RegenWeights(this.currentlyActiveEntry, this.lastEvaluationTime, Time.time, this.timeElapsedMult);
+
+			var best = EvaluateActionsNew(ctx);
+			return RunMemoryTask(best);
+		}
+
+		private ActionEntry EvaluateActionsNew(IReadOnlyContextNew ctx) {
+			ActionEntry bestAction = null;
+			float highestScore = float.MinValue;
+			//			Debug.Log("Evaluating Actions:");
+			foreach (var entry in this.actionEntries) {
+				float score = entry.EvaluateNew(ctx);
+				//Debug.Log($"[UtilityAI] Evaluating the action named {entry.Action.name} with the score = {score} and bias = {entry.BiasWeight}");
+				if (score > highestScore) {
+					highestScore = score;
+					bestAction = entry;
+				}
+			}
+
+			if (bestAction != this.currentlyActiveEntry) {
+				this.currentlyActiveEntry?.SetIsActive(false);
+				bestAction?.SetIsActive(true);
+				this.currentlyActiveEntry = bestAction;
+			}
+			return bestAction;
+		}
+
+
+
+
+
+
+
+
+
+
+
+
+
 #if UNITY_EDITOR
 		void OnDrawGizmos() {
 			if (!Application.isPlaying || this.currentlyActiveEntry == null) return;
@@ -285,6 +349,8 @@ namespace Kope.AI.Utility {
 
 			UnityEditor.Handles.Label(transform.position + Vector3.up * 2.0f, labelText, style);
 		}
+
+
 #endif
 
 	}

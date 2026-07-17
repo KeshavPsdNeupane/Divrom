@@ -13,16 +13,14 @@ namespace Kope.Core.Attribute.DataStructure {
 	/// </summary>
 	/// <remarks>
 	/// <para><b>CRITICAL:</b> The enumeration <typeparamref name="TEnum"/> MUST define its safest fallback/default behavior 
-	/// at index 0. This ensures uninitialized components default to a predictable state (e.g., Self-Targeting).</para>
+	/// at index 0. This ensures uninitialized components default to a predictable state.</para>
 	/// 
 	/// <para><b>AUTO-INSTANTIATION:</b> If a bound field is null, <see cref="GetSelected"/> attempts to 
-	/// instantiate the <c>TargetType</c> defined in the attribute. This allows for lazy initialization of data structures.</para>
+	/// instantiate the <c>TargetType</c> defined in the attribute using a cached factory delegate.</para>
 	/// 
-	/// <para><b>PERFORMANCE &amp; LISTS:</b> While this class performs internal instance-level caching, 
-	/// reflection is still required to find the bound field on the first access (a "Cache Miss"). 
-	/// If using a <c>List&lt;DynamicSelection&gt;</c>, it is highly recommended to "warm" the cache 
-	/// by calling <see cref="GetSelected"/> for each element during initialization (e.g., in <c>OnEnable</c>) 
-	/// to prevent frame spikes during high-frequency execution like <c>Ability.Execute()</c>.</para>
+	/// <para><b>PERFORMANCE:</b> To prevent frame spikes during high-frequency execution, this class uses 
+	/// cached reflection and compiled factory delegates. It is recommended to "warm" the cache 
+	/// by calling <see cref="GetSelected"/> during initialization (e.g., in <c>OnEnable</c>).</para>
 	/// </remarks>
 	/// <typeparam name="TEnum">The enumeration type used for selection.</typeparam>
 	/// <typeparam name="TBase">The base interface or class type the selected fields implement.</typeparam>
@@ -30,82 +28,66 @@ namespace Kope.Core.Attribute.DataStructure {
 	public abstract class DynamicSelection<TEnum, TBase> where TEnum : Enum {
 		public TEnum selectedType;
 
-		// Keyed by (concrete subclass type, enum value) since different subclasses
-		// have different field layouts. Null is a valid cached result (missing binding).
-		private static readonly Dictionary<(Type, object), (FieldInfo field, Type targetType)> _fieldCache = new();
-		/// <summary>
-		/// Caches the selected field's value after the first retrieval to optimize subsequent accesses.
-		/// This assumes that the selected enum value does not change at runtime. If the enum selection can change,
-		/// this cache should be invalidated accordingly (not implemented in this version for simplicity).
-		/// </summary>
+		// Stores the field, the target type, and a compiled factory delegate to bypass slow Activator calls.
+		private static readonly Dictionary<(Type, object), (FieldInfo field, Type targetType, Func<object> creator)> _fieldCache = new();
+
 		private TBase _cachedEnumType;
 		private TEnum _lastSelectedType;
 
-
 		/// <summary>
 		/// Retrieves the instance of <typeparamref name="TBase"/> associated with the currently selected 
-		/// <typeparamref name="TEnum"/> value.<br/>
-		/// On the first call, it uses reflection to find the field bound to the selected enum value, 
-		/// retrieves its value, and caches it for future calls.<br/>
-		/// If the bound field's value is null and the field's type is concrete, it will attempt to 
-		/// auto-instantiate it using the TargetType specified in the <see cref="BindToEnumAttribute"/>.
-		/// This allows for lazy initialization of the bound data, but be cautious as it will create
-		/// an instance on the fly if accessed without proper setup.
+		/// <typeparamref name="TEnum"/> value.
+		/// <para>Uses internal caching to ensure that retrieval is near-zero cost after the first access.</para>
 		/// </summary>
-		/// <returns></returns>
 		public TBase GetSelected() {
-			// highly optimized path for repeated access without changing the selected enum value,
-			//  which is the common case in ability execution
+			// Optimized path for repeated access without changing the enum selection
 			if (this._cachedEnumType != null && this._lastSelectedType.Equals(this.selectedType)) {
 				return this._cachedEnumType;
 			}
+
 			var key = (this.GetType(), (object)this.selectedType);
+
 			if (!_fieldCache.TryGetValue(key, out var cached)) {
-				cached = FindBoundField(GetType(), this.selectedType);
+				var (field, targetType) = FindBoundField(GetType(), this.selectedType);
+
+				if (field == null) {
+#if UNITY_EDITOR
+					Debug.LogError($"[DynamicSelection] No field bound to enum value '{this.selectedType}' on type '{this.GetType().Name}'. Did you forget [BindToEnum]?");
+#endif
+					return default;
+				}
+
+				// Cache the creation logic as a delegate to avoid reflection overhead during runtime
+				object creator() => Activator.CreateInstance(targetType);
+				cached = (field, targetType, creator);
 				_fieldCache[key] = cached;
 			}
 
-			if (cached.field == null) {
-#if UNITY_EDITOR
-				// this null will never happen since all field is bound to a enum otherwise they will
-				// fallback to the default value which is index 0, and index 0 must be bound to a field,
-				// so if this happen it means the developer forget to bind a field to the default enum value
-				Debug.LogError(
-					$"[DynamicSelection] No field bound to enum value '{this.selectedType}' " +
-					$"on type '{this.GetType().Name}'. Did you forget [BindToEnum]?"
-				);
-#endif
-				return default;
-			}
-
 			var value = cached.field.GetValue(this);
-			if (cached.targetType.IsAbstract || cached.targetType.IsInterface) {
-#if UNITY_EDITOR
-				Debug.LogError(
-					$"[DynamicSelection] Cannot auto-instantiate abstract/interface type '{cached.targetType.Name}' " +
-					$"for enum value '{this.selectedType}' on type '{this.GetType().Name}'."
-				);
-#endif
-				return default;
-			}
-			// this should handle both ScriptableObject and regular class types, since 
-			// some of the data is better represented as SO (e.g., damage formula) while
-			// some is better as plain class (e.g., targeting logic)
+
+			// Auto-instantiate if null using the cached factory delegate
 			if (value == null && cached.targetType != null) {
-				value = Activator.CreateInstance(cached.targetType);
+				if (cached.targetType.IsAbstract || cached.targetType.IsInterface) {
+#if UNITY_EDITOR
+					Debug.LogError($"[DynamicSelection] Cannot auto-instantiate abstract/interface type '{cached.targetType.Name}' for enum '{this.selectedType}'.");
+#endif
+					return default;
+				}
+
+				value = cached.creator();
 				cached.field.SetValue(this, value);
 			}
+
 			this._cachedEnumType = (TBase)value;
 			this._lastSelectedType = this.selectedType;
 			return (TBase)value;
 		}
 
+		/// <summary>
+		/// Searches for the field decorated with <see cref="BindToEnumAttribute"/> matching the selected enum.
+		/// </summary>
 		private static (FieldInfo field, Type targetType) FindBoundField(Type containerType, TEnum enumValue) {
-			var fields = containerType.GetFields(
-				BindingFlags.NonPublic |
-				BindingFlags.Public |
-				BindingFlags.Instance
-			);
+			var fields = containerType.GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
 
 			foreach (var field in fields) {
 				var attr = (BindToEnumAttribute)Attribute.GetCustomAttribute(field, typeof(BindToEnumAttribute));

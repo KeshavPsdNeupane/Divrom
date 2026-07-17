@@ -15,40 +15,41 @@ namespace Kope.Core.Identity {
 	/// <summary>
 	/// Pure, decoupled data container housing core infrastructure components for an entity instance.
 	/// </summary>
-	public abstract class EntityDetailBase<TConfig, TEventProvider> : IEntityDetail {
+	public abstract class EntityDetailBase : IEntityDetail {
 		public UniqueID UniqueID { get; }
-		public TConfig Config { get; }
 		public IReadOnlyComponentRegistry ComponentRegistry { get; }
-		public TEventProvider EventProvider { get; }
-
+		public IEntityDiedOrPooledNew EventProvider { get; protected set; }
 		protected EntityDetailBase(
 			UniqueID uniqueID,
-			TConfig config,
 			IReadOnlyComponentRegistry componentRegistry,
-			TEventProvider eventProvider) {
-
+			IEntityDiedOrPooledNew eventProvider = null) {
 			this.UniqueID = uniqueID;
-			this.Config = config;
 			this.ComponentRegistry = componentRegistry;
 			this.EventProvider = eventProvider;
 		}
 	}
-	public class MobEntityDetail : EntityDetailBase<MobConfig, IMobEntityDiedOrPooled> {
-		public MobConfig MobConfig => Config;
+	public class MobEntityDetail : EntityDetailBase {
+		public MobConfig MobConfig { get; }
 		public MobEntityDetail(
-			UniqueID uniqueID,
-			MobConfig mobConfig,
-			IReadOnlyComponentRegistry entityComponentRegistry,
-			IMobEntityDiedOrPooled onEntityDiedOrPooled)
-			: base(uniqueID, mobConfig, entityComponentRegistry, onEntityDiedOrPooled) { }
+	UniqueID uniqueID,
+	MobConfig mobConfig,
+	IReadOnlyComponentRegistry entityComponentRegistry,
+	IEntityDiedOrPooledNew onEntityDiedOrPooled)
+	: base(uniqueID, entityComponentRegistry, onEntityDiedOrPooled) {
+			this.MobConfig = mobConfig;
+			this.EventProvider = onEntityDiedOrPooled;
+		}
 	}
-	public class PropEntityDetail : EntityDetailBase<PropConfig, IPropEntityDiedOrPooled> {
-		public PropConfig PropConfig => Config;
+	public class PropEntityDetail : EntityDetailBase {
+		public PropConfig PropConfig { get; }
 		public PropEntityDetail(
 			UniqueID uniqueID,
 			PropConfig propConfig,
 			IReadOnlyComponentRegistry entityComponentRegistry,
-			IPropEntityDiedOrPooled onEntityDiedOrPooled)
-			: base(uniqueID, propConfig, entityComponentRegistry, onEntityDiedOrPooled) { }
+			IEntityDiedOrPooledNew onEntityDiedOrPooled)
+			: base(uniqueID, entityComponentRegistry, onEntityDiedOrPooled) {
+			this.PropConfig = propConfig;
+			this.EventProvider = onEntityDiedOrPooled;
+		}
 	}
 }

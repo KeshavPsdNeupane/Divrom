@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using Kope.Core.EntityComponentRegistry;
+using Kope.AI.Ctx;
 
 namespace Kope.AI {
 	public enum ExecutionActionStatus : short {
@@ -50,6 +51,12 @@ namespace Kope.AI {
 			OnInitialize(ctx);
 		}
 
+		public void InitializeNew(ContextNew ctx) {
+			this.actionStatus = ExecutionActionStatus.Running;
+			OnInitializeNew(ctx);
+		}
+
+
 		/// <summary>
 		/// A Template Method hook for action initialization within the provided <see cref="Context"/>.
 		/// </summary>
@@ -69,6 +76,9 @@ namespace Kope.AI {
 		/// </remarks>
 		/// <param name="ctx">The evaluation context containing the self-entity and environmental targets.</param>
 		protected abstract void OnInitialize(Context ctx);
+
+
+		protected abstract void OnInitializeNew(ContextNew ctx);
 
 		/// <summary>
 		/// End or abort the action.

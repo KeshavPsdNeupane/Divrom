@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Kope.AI.Ctx;
 using Kope.Core.EntityComponentRegistry;
 using UnityEngine;
 
@@ -64,6 +65,10 @@ namespace Kope.AI.Utility {
 		/// <param name="totalMultiplicationCount">The current number of multiplying factors applied to the utility score.</param>
 		/// <returns>A tuple where the <c>float</c> is the consideration score and the <c>int</c> is the potentially incremented multiplication count.</returns>
 		public abstract (float, int) Evaluate(IReadOnlyContext context);
+
+
+
+		public abstract (float, int) EvaluateNew(IReadOnlyContextNew context);
 
 		/// <summary>
 		/// Provides access to a selected target's component registry if this consideration 

@@ -7,12 +7,10 @@ using Kope.Core.Collections.Hashes;
 using Kope.EntityIdentity;
 
 namespace Kope.Core.Identity {
-	public abstract class EntitySaveSystemBase<TInstance, TConfig, TDetail, TEventProvider, TPacket> : MonoBehaviour
-		where TInstance : EntityInstanceNew<TConfig, TDetail>
-		where TConfig : EntityConfig
-		where TDetail : EntityDetailBase<TConfig, TEventProvider> {
+	public abstract class EntitySaveSystemBase<TConfig, TDetail, TPacket> : MonoBehaviour
+		where TConfig : EntityConfig {
 
-		[SerializeField] protected TInstance entityInstance;
+		[SerializeField] protected EntityInstanceNew entityInstance;
 		private readonly Dictionary<System.Type, ISaveable> _saveableComponents = new();
 		protected SavableEntityRegistry _savableEntityRegistry;
 
@@ -69,7 +67,7 @@ namespace Kope.Core.Identity {
 			}
 		}
 
-		private void UnRegisterTheEntity(TDetail detail) {
+		private void UnRegisterTheEntity(EntityDetailBase detail) {
 			this._savableEntityRegistry.UnregisterEntity(this.UniqueID);
 		}
 
@@ -88,7 +86,7 @@ namespace Kope.Core.Identity {
 				dataChunks[saveId] = kvp.Value.GetSaveData();
 			}
 
-			return CreateSavePacket(this.UniqueID, this.entityInstance.Config, dataChunks);
+			return CreateSavePacket(UniqueID, (TConfig)this.entityInstance.Config, dataChunks);
 		}
 
 		public void LoadEntitySavePacket(TPacket packet) {

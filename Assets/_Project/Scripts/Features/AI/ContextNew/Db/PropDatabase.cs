@@ -19,6 +19,7 @@ namespace Kope.AI {
 	/// retrieval through cached lookup tables rather than full collection scans.
 	/// </para>
 	/// </summary>
+	[Serializable]
 	public readonly struct PropQuery {
 		public readonly PropType? PropType;
 
@@ -55,6 +56,8 @@ namespace Kope.AI {
 		/// all registered props.
 		/// </summary>
 		private readonly Dictionary<PropType, List<IReadOnlyComponentRegistry>> _propTypeCache = new();
+
+		public int TotalProps => this._propRegistry.Count;
 
 		/// <summary>
 		/// Attempts to retrieve a prop using its unique identifier.
@@ -125,17 +128,21 @@ namespace Kope.AI {
 		/// event system when the entity dies or is returned to a pool.
 		/// </para>
 		/// </summary>
-		public void RemoveProp(PropEntityDetail propDetail) {
-
-			if (!this._propRegistry.Remove(propDetail.UniqueID.HashedTag, out var registry))
+		public void RemoveProp(EntityDetailBase entityDetail) {
+			// if not a prop, ignore
+			// since registration is only done for props, this should be safe
+			// and the registration function args will ensure that only props are registered
+			if (entityDetail is not PropEntityDetail propDetail)
 				return;
 
+			if (!this._propRegistry.Remove(entityDetail.UniqueID.HashedTag, out var registry))
+				return;
 			RemoveFromCache(
 				this._propTypeCache,
 				propDetail.PropConfig.PropType,
 				registry);
 
-			propDetail.EventProvider.OnEntityDiedOrPooledEvent(RemoveProp, false);
+			entityDetail.EventProvider.OnEntityDiedOrPooledEvent(RemoveProp, false);
 		}
 
 		// ---------------------------------------------------------------------

@@ -27,7 +27,7 @@ namespace Kope.Core.EntityComponentRegistry {
 	/// <para>
 	/// <b>OnEntityDied:</b> This event is triggered when the entity dies, allowing subscribers to perform cleanup, update contexts, or trigger other game logic in response to the
 	/// </summary>
-	public interface IMobEntityDiedOrPooled {
+	public interface IEntityDiedOrPooledNew {
 		/// <summary>
 		/// Event triggered when the entity dies or is pooled. Subscribers can use this event to perform necessary
 		///  cleanup, update contexts, or trigger other game logic in response to the entity's death or pooling.
@@ -40,10 +40,6 @@ namespace Kope.Core.EntityComponentRegistry {
 		///  or deactivated and returned to pool (pooled), but in both cases the entity is no 
 		/// longer active in the game world and needs to be handled similarly by subscribers.
 		/// </summary>
-		public void OnEntityDiedOrPooledEvent(Action<MobEntityDetail> callback, bool isSubscribe);
-	}
-
-	public interface IPropEntityDiedOrPooled {
-		public void OnEntityDiedOrPooledEvent(Action<PropEntityDetail> callback, bool isSubscribe);
+		public void OnEntityDiedOrPooledEvent(Action<EntityDetailBase> callback, bool isSubscribe);
 	}
 }

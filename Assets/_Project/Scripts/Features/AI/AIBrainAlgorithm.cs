@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Kope.AI.Ctx;
 using Kope.EntityComponentSystem;
 
 namespace Kope.AI {
@@ -60,6 +61,9 @@ namespace Kope.AI {
 		/// <param name="ctx">Read-only snapshot of entity state for evaluation purposes.</param>
 		/// <returns>Linear sequence of <see cref="BaseActionSO"/> to execute sequentially.</returns>
 		public abstract IEnumerable<BaseActionSO> GetDecisionPlan(IReadOnlyContext ctx);
+
+
+		public abstract IEnumerable<BaseActionSO> GetDecisionPlanNew(IReadOnlyContextNew ctx);
 
 		/// <summary>
 		/// Override this to release any resources or state owned by the algorithm.

@@ -43,3 +43,16 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  query:
+    type: 1
+    MobQueryFactory:
+      race:
+        _value: 0
+        _hasValue: 0
+      relation:
+        _value: 0
+        _hasValue: 0
+    PropTypeFactory:
+      propType:
+        _value: 0
+        _hasValue: 1

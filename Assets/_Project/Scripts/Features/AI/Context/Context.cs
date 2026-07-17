@@ -70,7 +70,7 @@ public class Context : IReadOnlyContext {
 		}
 		// If it exists, the reference is already shared. Do nothing.
 	}
-	public void RemoveTargetEntityContext(EntityDetail entityDetail) {
+	public void RemoveEntityContext(EntityDetail entityDetail) {
 		var commonTag = entityDetail.CommonEntityHashedTag;
 		var individualTag = entityDetail.UniqueID;
 		if (this._targetEntityContexts.TryGetValue(commonTag, out var innerDict)) {
@@ -121,6 +121,6 @@ public class Context : IReadOnlyContext {
 
 
 	private void RemoveEntityDueToSignal(EntityDetail entityDetail) {
-		RemoveTargetEntityContext(entityDetail);
+		RemoveEntityContext(entityDetail);
 	}
 }

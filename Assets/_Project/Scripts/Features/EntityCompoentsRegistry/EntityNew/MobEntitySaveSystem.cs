@@ -2,11 +2,10 @@ using System.Collections.Generic;
 using Kope.EntityIdentity;
 using Kope.SaveSystem;
 using Kope.Core.Collections.Hashes;
-using Kope.Core.EntityComponentRegistry;
 
 namespace Kope.Core.Identity {
-	public class MobEntitySaveSystem : EntitySaveSystemBase<MobInstance, MobConfig, MobEntityDetail,
-	IMobEntityDiedOrPooled, MobEntitySavePacket>, IMobEntitySavePacketProvider {
+	public class MobEntitySaveSystem : EntitySaveSystemBase<MobConfig, IMobEntitySavePacketProvider,
+	MobEntitySavePacket>, IMobEntitySavePacketProvider {
 
 		protected override void RegisterToGlobalRegistry() {
 			this._savableEntityRegistry.RegisterMobEntity(this);
