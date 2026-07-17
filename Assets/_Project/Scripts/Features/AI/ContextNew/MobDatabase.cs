@@ -5,6 +5,36 @@ using Kope.Core.EntityComponentRegistry;
 using Kope.Core.Identity;
 using Kope.EntityIdentity;
 
+/**
+ * ARCHITECTURE: Materialized View Pattern
+ * ---------------------------------------
+ * This database employs a "1 + N" indexing strategy:
+ * - 1 Primary Index: O(1) retrieval by Unique Identifier (HashedTag).
+ * - N Categorical Indexes: O(min(N, M)) intersection queries using dual-storage 
+ *   (List for iteration, HashSet for O(1) membership).
+ *
+ * DESIGN NOTE: Potential for Generic Refactoring
+ * ----------------------------------------------
+ * Because the structure (Registry + 1 Primary Dictionary + N Categorical Dictionaries)
+ * is identical across databases, this can be abstracted into a generic base:
+ * 
+ * public abstract class CategorizedDatabase<TRegistry, TKey1, TKey2> 
+ *     where TRegistry : IReadOnlyComponentRegistry 
+ * {
+ *     protected readonly Dictionary<HashedTag, TRegistry> Registry = new();
+ *     protected readonly Dictionary<TKey1, (HashSet<TRegistry>, List<TRegistry>)> Cache1 = new();
+ *     protected readonly Dictionary<TKey2, (HashSet<TRegistry>, List<TRegistry>)> Cache2 = new();
+ *     
+ *     protected List<TRegistry> BuildIntersection(TKey1 k1, TKey2 k2) { ... }
+ * }
+ * 
+ * Refactoring would centralize intersection and index-management logic while keeping 
+ * specialized Query structs to preserve a clean, type-safe API. This is for future 
+ * consideration and is not necessary for the current implementation, which is 
+ * focused on a single entity type (MobEntityDetail).
+ */
+
+
 namespace Kope.AI {
 
 	/// <summary>
@@ -82,13 +112,15 @@ namespace Kope.AI {
 		/// Cache of mobs grouped by race.
 		/// Enables efficient categorical queries without scanning all entities.
 		/// </summary>
-		private readonly Dictionary<RaceEnum, List<IReadOnlyComponentRegistry>> _raceCache = new();
+		private readonly Dictionary<RaceEnum,
+		(HashSet<IReadOnlyComponentRegistry>, List<IReadOnlyComponentRegistry>)> _raceCache = new();
 
 		/// <summary>
 		/// Cache of mobs grouped by relation.
 		/// Enables efficient categorical queries without scanning all entities.
 		/// </summary>
-		private readonly Dictionary<EntityRelation, List<IReadOnlyComponentRegistry>> _relationCache = new();
+		private readonly Dictionary<EntityRelation,
+		(HashSet<IReadOnlyComponentRegistry>, List<IReadOnlyComponentRegistry>)> _relationCache = new();
 
 		/// <summary>
 		/// Attempts to retrieve a mob using its unique identifier.
@@ -101,21 +133,12 @@ namespace Kope.AI {
 
 		/// <summary>
 		/// Attempts to retrieve a collection of mobs matching the supplied query.
-		/// If the provided query are single attribute then the query is O(1) time complexity and 
-		/// returns the internally maintained cache list.
-		/// If the provided query contains multiple attributes then the query is O(n+m) time complexity and 
-		/// returns a new list containing the intersection of the relevant caches.
 		/// <para>
-		/// Query evaluation behavior:
+		/// Evaluation behavior:
 		/// <list type="bullet">
-		/// <item><description>Race only → race cache lookup.</description></item>
-		/// <item><description>Relation only → relation cache lookup.</description></item>
-		/// <item><description>Race + Relation → AND intersection lookup.</description></item>
+		/// <item><description>Single-attribute (Race/Relation): O(1) cache lookup.</description></item>
+		/// <item><description>Multi-attribute (Race + Relation): O(min(N, M)) intersection lookup.</description></item>
 		/// </list>
-		/// </para>
-		/// <para>
-		/// Single-attribute queries return the internally maintained cache lists.
-		/// Multi-attribute queries generate an intersection from the relevant caches.
 		/// </para>
 		/// </summary>
 		public bool TryGetMobs(
@@ -132,16 +155,16 @@ namespace Kope.AI {
 			}
 
 			if (query.Race.HasValue &&
-				this._raceCache.TryGetValue(query.Race.Value, out var raceList)) {
+				this._raceCache.TryGetValue(query.Race.Value, out var raceCache)) {
 
-				result = raceList;
+				result = raceCache.Item2;
 				return true;
 			}
 
 			if (query.Relation.HasValue &&
-				this._relationCache.TryGetValue(query.Relation.Value, out var relationList)) {
+				this._relationCache.TryGetValue(query.Relation.Value, out var relationCache)) {
 
-				result = relationList;
+				result = relationCache.Item2;
 				return true;
 			}
 
@@ -192,42 +215,41 @@ namespace Kope.AI {
 
 			mobDetail.EventProvider.OnEntityDiedOrPooledEvent(RemoveMob, false);
 		}
-
 		/// <summary>
 		/// Builds the intersection of two categorical caches.
 		/// <para>
-		/// The resulting collection contains only entities that belong to both
-		/// the specified race and relation classifications.
-		/// </para>
-		/// <para>
-		/// The smaller cache is iterated first to minimize lookup cost.
+		/// Uses the pre-existing HashSet from the cache for O(1) lookups,
+		/// avoiding new allocations during the intersection process.
 		/// </para>
 		/// </summary>
 		private List<IReadOnlyComponentRegistry> BuildIntersection(
 			RaceEnum race,
 			EntityRelation relation) {
 
-			if (!this._raceCache.TryGetValue(race, out var raceList) ||
-				!this._relationCache.TryGetValue(relation, out var relationList)) {
-
+			if (!this._raceCache.TryGetValue(race, out var raceCache) ||
+				!this._relationCache.TryGetValue(relation, out var relationCache)) {
 				return new List<IReadOnlyComponentRegistry>();
 			}
 
-			var result = new List<IReadOnlyComponentRegistry>(
-				Math.Min(raceList.Count, relationList.Count));
+			var raceList = raceCache.Item2;
+			var raceSet = raceCache.Item1;
+			var relList = relationCache.Item2;
+			var relSet = relationCache.Item1;
 
-			if (raceList.Count <= relationList.Count) {
-				var lookup = new HashSet<IReadOnlyComponentRegistry>(relationList);
+			// Choose the smaller list to iterate, and the larger set to perform lookups
+			// This ensures O(min(N, M)) performance
+			var result = new List<IReadOnlyComponentRegistry>(Math.Min(raceList.Count, relList.Count));
 
+			if (raceList.Count <= relList.Count) {
+				// Iterate Race, Lookup in Relation Set
 				foreach (var registry in raceList) {
-					if (lookup.Contains(registry))
+					if (relSet.Contains(registry))
 						result.Add(registry);
 				}
 			} else {
-				var lookup = new HashSet<IReadOnlyComponentRegistry>(raceList);
-
-				foreach (var registry in relationList) {
-					if (lookup.Contains(registry))
+				// Iterate Relation, Lookup in Race Set
+				foreach (var registry in relList) {
+					if (raceSet.Contains(registry))
 						result.Add(registry);
 				}
 			}
@@ -240,16 +262,17 @@ namespace Kope.AI {
 		/// Creates the cache bucket if it does not already exist.
 		/// </summary>
 		private static void AddValueToCache<TKey>(
-			Dictionary<TKey, List<IReadOnlyComponentRegistry>> cache,
+			Dictionary<TKey, (HashSet<IReadOnlyComponentRegistry>, List<IReadOnlyComponentRegistry>)> cache,
 			TKey key,
 			IReadOnlyComponentRegistry registry) {
 
-			if (!cache.TryGetValue(key, out var list)) {
-				list = new List<IReadOnlyComponentRegistry>();
-				cache[key] = list;
+			if (!cache.TryGetValue(key, out var tuple)) {
+				tuple = (new HashSet<IReadOnlyComponentRegistry>(), new List<IReadOnlyComponentRegistry>());
+				cache[key] = tuple;
 			}
 
-			list.Add(registry);
+			tuple.Item2.Add(registry);
+			tuple.Item1.Add(registry);
 		}
 
 		/// <summary>
@@ -258,12 +281,13 @@ namespace Kope.AI {
 		/// dictionary churn during frequent registration/removal cycles.
 		/// </summary>
 		private static void RemoveFromCache<TKey>(
-			Dictionary<TKey, List<IReadOnlyComponentRegistry>> cache,
+			Dictionary<TKey, (HashSet<IReadOnlyComponentRegistry>, List<IReadOnlyComponentRegistry>)> cache,
 			TKey key,
 			IReadOnlyComponentRegistry registry) {
 
-			if (cache.TryGetValue(key, out var list)) {
-				list.Remove(registry);
+			if (cache.TryGetValue(key, out var tuple)) {
+				tuple.Item2.Remove(registry);
+				tuple.Item1.Remove(registry);
 			}
 		}
 	}
