@@ -1,4 +1,4 @@
-using Kope.Actor.New;
+using Kope.Actor.States;
 using UnityEngine;
 
 namespace Kope.Component {

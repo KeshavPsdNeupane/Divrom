@@ -47,9 +47,11 @@ namespace Kope.EntityIdentity {
 	/// </summary>
 	public enum PropType : short {
 		HEALTHPACK = 0,
-		// below are not implemented yet but are reserved for future use
-		BLESSING_ALTAR = 1,
-		TRAP = 2,
+		DUMMY = 1,
+		BUFF = 2, // temp for now.
+				  // below are not implemented yet but are reserved for future use
+		BLESSING_ALTAR = 1000,
+		TRAP = 1001,
 	}
 
 	/// <summary>

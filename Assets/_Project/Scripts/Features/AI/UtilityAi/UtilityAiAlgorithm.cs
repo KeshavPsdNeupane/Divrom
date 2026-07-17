@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Kope.AI.Ctx;
+using Kope.AI.AIBlackBoard;
 using Kope.AI.Utility.Config;
 using ThirdParty.PriorityQueeu;
 using UnityEngine;
@@ -68,15 +68,7 @@ namespace Kope.AI.Utility {
 
 			public float GetCost() => this.biasWeight;
 
-			public float Evaluate(IReadOnlyContext ctx) {
-				float rawScore = this.action.Evaluate(ctx);
-				float score = rawScore * this.biasWeight;
-				if (this.isActive) score += this.action.MomentumBias;
-				this._lastRawScore = rawScore;
-				this._evaluatedScore = score;
-				return score;
-			}
-			public float EvaluateNew(IReadOnlyContextNew ctx) {
+			public float EvaluateNew(IReadOnlyContext ctx) {
 				float rawScore = this.action.EvaluateNew(ctx);
 				float score = rawScore * this.biasWeight;
 				if (this.isActive) score += this.action.MomentumBias;
@@ -204,47 +196,6 @@ namespace Kope.AI.Utility {
 		}
 		#endregion
 
-		public override IEnumerable<BaseActionSO> GetDecisionPlan(IReadOnlyContext ctx) {
-			yield return SelectBestAction(ctx);
-		}
-
-
-
-		private ActionSO SelectBestAction(IReadOnlyContext ctx) {
-			// Optimization: If there's only one action (the idle action),
-			// skip evaluation and return it immediately.
-			const int IDLE_ONLY_COUNT = 1;
-			if (this.actionEntries.Count == IDLE_ONLY_COUNT) return this.idleActionEntry.Action;
-
-			// Regenerate weights for all non-active actions based on the time elapsed since the last evaluation.
-			// using Compound interest formula for more dynamic recovery: newWeight = currentWeight + (currentWeight * (regenRate * ticks))
-			this.memory.RegenWeights(this.currentlyActiveEntry, this.lastEvaluationTime, Time.time, this.timeElapsedMult);
-
-			var best = EvaluateActions(ctx);
-			return RunMemoryTask(best);
-		}
-
-		private ActionEntry EvaluateActions(IReadOnlyContext ctx) {
-			ActionEntry bestAction = null;
-			float highestScore = float.MinValue;
-			//			Debug.Log("Evaluating Actions:");
-			foreach (var entry in this.actionEntries) {
-				float score = entry.Evaluate(ctx);
-				//Debug.Log($"[UtilityAI] Evaluating the action named {entry.Action.name} with the score = {score} and bias = {entry.BiasWeight}");
-				if (score > highestScore) {
-					highestScore = score;
-					bestAction = entry;
-				}
-			}
-
-			if (bestAction != this.currentlyActiveEntry) {
-				this.currentlyActiveEntry?.SetIsActive(false);
-				bestAction?.SetIsActive(true);
-				this.currentlyActiveEntry = bestAction;
-			}
-			return bestAction;
-		}
-
 		private ActionSO RunMemoryTask(ActionEntry actionEntry) {
 			// BUG FIX: Ensure actionEntry isn't null for the logic below
 			actionEntry ??= this.idleActionEntry;
@@ -276,13 +227,13 @@ namespace Kope.AI.Utility {
 			return actionEntry.Action;
 		}
 
-		public override IEnumerable<BaseActionSO> GetDecisionPlanNew(IReadOnlyContextNew ctx) {
+		public override IEnumerable<BaseActionSO> GetDecisionPlanNew(IReadOnlyContext ctx) {
 			yield return SelectBestActionNew(ctx);
 		}
 
 
 
-		private ActionSO SelectBestActionNew(IReadOnlyContextNew ctx) {
+		private ActionSO SelectBestActionNew(IReadOnlyContext ctx) {
 			// Optimization: If there's only one action (the idle action),
 			// skip evaluation and return it immediately.
 			const int IDLE_ONLY_COUNT = 1;
@@ -296,7 +247,7 @@ namespace Kope.AI.Utility {
 			return RunMemoryTask(best);
 		}
 
-		private ActionEntry EvaluateActionsNew(IReadOnlyContextNew ctx) {
+		private ActionEntry EvaluateActionsNew(IReadOnlyContext ctx) {
 			ActionEntry bestAction = null;
 			float highestScore = float.MinValue;
 			//			Debug.Log("Evaluating Actions:");

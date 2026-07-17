@@ -368,8 +368,8 @@ GameObject:
   - component: {fileID: 5760765433560478908}
   - component: {fileID: 3817346171218316597}
   - component: {fileID: 5028322666046906755}
-  - component: {fileID: 8698070850850616}
   - component: {fileID: 6069060705174550741}
+  - component: {fileID: 5937285832790927002}
   m_Layer: 3
   m_Name: PlayerNew
   m_TagString: Player
@@ -503,23 +503,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
---- !u!114 &8698070850850616
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2033154260760698069}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bceaae993f9ebf280b4c92d8d12a3d46, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Kope.Core.Runtime::EntityManager
-  commonEntityName: Player
-  uniqueID: {fileID: 794350931459441688}
-  entityComponentRegistry: {fileID: 6037248722059709900}
-  category: 1
-  config: {fileID: 11400000, guid: 296b484721bdc20d2b51d78c4a7374ac, type: 2}
 --- !u!114 &6069060705174550741
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -535,10 +518,29 @@ MonoBehaviour:
   canSelfServe: 1
   initializables:
   - {fileID: 6037248722059709900}
-  - {fileID: 8698070850850616}
+  - {fileID: 0}
+  - {fileID: 5937285832790927002}
   autoPopulate: 0
   includeChildren: 1
   traversal: 0
+--- !u!114 &5937285832790927002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2033154260760698069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17f3d81867822bd16a60f971be8be813, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Kope.EntityComponentSystem.Runtime::Kope.Core.Identity.MobInstance
+  entityName: Player
+  uniqueID: {fileID: 794350931459441688}
+  ecr: {fileID: 6037248722059709900}
+  relation: 0
+  race: 520
+  gender: 1
 --- !u!1 &2738320167129086288
 GameObject:
   m_ObjectHideFlags: 0
@@ -739,6 +741,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4629897108049674397}
+  - component: {fileID: 5538388368403616643}
   m_Layer: 0
   m_Name: SaveSystem
   m_TagString: Untagged
@@ -761,6 +764,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6671984905160279280}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5538388368403616643
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3469105770304524330}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5406b335cf51dbe89d971e7d03d898e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Kope.EntityComponentSystem.Runtime::Kope.Core.Identity.MobEntitySaveSystem
+  entityInstance: {fileID: 5937285832790927002}
 --- !u!1 &3512450001767581797
 GameObject:
   m_ObjectHideFlags: 0
@@ -2037,6 +2053,14 @@ PrefabInstance:
       propertyPath: m_SpriteLibraryAsset
       value: 
       objectReference: {fileID: 7108339969198208228, guid: 0271fb688dc71e1e0ada464059d110d2, type: 3}
+    - target: {fileID: 1667204338665440249, guid: a3a8a13a5b0e837f2a16f09baf3d90a6, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -1914632134, guid: dc6ebe7f372cae8419162756f1104752, type: 3}
+    - target: {fileID: 1667204338665440249, guid: a3a8a13a5b0e837f2a16f09baf3d90a6, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1830256875294825079, guid: a3a8a13a5b0e837f2a16f09baf3d90a6, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -2074,16 +2098,20 @@ PrefabInstance:
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 2604759032030204665, guid: a3a8a13a5b0e837f2a16f09baf3d90a6, type: 3}
-      propertyPath: 'equipmentAssets.Array.data[3]'
+      propertyPath: 'equipmentAssets.Array.data[2]'
       value: 
       objectReference: {fileID: 11400000, guid: 079c04d92642502a7b7ecfc03b2d6ccb, type: 2}
+    - target: {fileID: 2604759032030204665, guid: a3a8a13a5b0e837f2a16f09baf3d90a6, type: 3}
+      propertyPath: 'equipmentAssets.Array.data[3]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 4ff7cddd8e2405da2a8ddb2dda3659a1, type: 2}
     - target: {fileID: 2604759032030204665, guid: a3a8a13a5b0e837f2a16f09baf3d90a6, type: 3}
       propertyPath: 'equipmentAssets.Array.data[4]'
       value: 
       objectReference: {fileID: 11400000, guid: 45c8845ff170547eb8fa626438ac8d9c, type: 2}
     - target: {fileID: 2604759032030204665, guid: a3a8a13a5b0e837f2a16f09baf3d90a6, type: 3}
       propertyPath: baseCharacterAssets.Array.size
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 2604759032030204665, guid: a3a8a13a5b0e837f2a16f09baf3d90a6, type: 3}
       propertyPath: 'baseCharacterAssets.Array.data[2]'
@@ -2101,6 +2129,10 @@ PrefabInstance:
       propertyPath: 'baseCharacterAssets.Array.data[5]'
       value: 
       objectReference: {fileID: 11400000, guid: 21c2cffcb659a82bfbc806c54fd110ee, type: 2}
+    - target: {fileID: 2604759032030204665, guid: a3a8a13a5b0e837f2a16f09baf3d90a6, type: 3}
+      propertyPath: 'baseCharacterAssets.Array.data[6]'
+      value: 
+      objectReference: {fileID: 11400000, guid: f1b65676532dbe99cbc56c2713e76786, type: 2}
     - target: {fileID: 3048572483934911602, guid: a3a8a13a5b0e837f2a16f09baf3d90a6, type: 3}
       propertyPath: m_Name
       value: Animation
@@ -2145,6 +2177,10 @@ PrefabInstance:
       propertyPath: m_SpriteHash
       value: 235424171
       objectReference: {fileID: 0}
+    - target: {fileID: 5872911390596661001, guid: a3a8a13a5b0e837f2a16f09baf3d90a6, type: 3}
+      propertyPath: m_SpriteLibraryAsset
+      value: 
+      objectReference: {fileID: 7108339969198208228, guid: 1f7883dc543a5a8728378897e75fc1b7, type: 3}
     - target: {fileID: 6152516264922837659, guid: a3a8a13a5b0e837f2a16f09baf3d90a6, type: 3}
       propertyPath: m_LocalScale.x
       value: 1

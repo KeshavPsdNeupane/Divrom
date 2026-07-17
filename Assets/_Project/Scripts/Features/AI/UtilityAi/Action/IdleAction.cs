@@ -1,4 +1,4 @@
-using Kope.AI.Ctx;
+using Kope.AI.AIBlackBoard;
 using Kope.AI.Utility;
 using ThirdParty;
 using UnityEngine;
@@ -11,12 +11,7 @@ public class IdleAction : ActionSO {
 	[SerializeField] private float idleDuration = 1f;
 	private CountdownTimer idleTimer;
 
-	protected override void OnInitialize(Context ctx) {
-		this.idleTimer = new CountdownTimer(this.idleDuration);
-		this.idleTimer.Start();
-		this.idleTimer.OnTimerStop += MarkCompleted;
-	}
-	protected override void OnInitializeNew(ContextNew ctx) {
+	protected override void OnInitialize(Context _) {
 		this.idleTimer = new CountdownTimer(this.idleDuration);
 		this.idleTimer.Start();
 		this.idleTimer.OnTimerStop += MarkCompleted;
@@ -27,11 +22,10 @@ public class IdleAction : ActionSO {
 		// not possible to have idle timer null since it is initialized in OnInitialize,
 		// that why using ?. operator to avoid null reference exception in case of any unforeseen circumstances.
 		this.idleTimer?.Tick(Time.deltaTime);
-		return; // no other logic needed for idle action. so we can return early.
 	}
 
 	public override void TickFixedUpdate() {
-		return;// no physics based logic needed for idle action. so we can leave this empty.
+		// no physics based logic needed for idle action. so we can leave this empty.
 	}
 
 

@@ -2,7 +2,7 @@ using Kope.AI.Utility;
 using UnityEngine;
 using Kope.Component.Movement;
 using Kope.Core.Mathfx;
-using Kope.AI.Ctx;
+using Kope.AI.AIBlackBoard;
 
 [CreateAssetMenu(fileName = "RandomWanderAction", menuName = "Scriptable Objects/AI/Utility/Actions/RandomWanderAction")]
 public class RandomWanderActionSO : ActionSO {
@@ -14,16 +14,6 @@ public class RandomWanderActionSO : ActionSO {
 	private MovementComponentBase mc;
 
 	protected override void OnInitialize(Context ctx) {
-		var entityctx = ctx.CurrentMutableEntityContext;
-		if (!entityctx.TryGetMutable(out this.mc)) {
-			Debug.LogError("RandomWanderActionSO Initialization failed: MovementComponentBase not found.");
-			return;
-		}
-
-		this.targetPosition = GetRandomValidTarget();
-		//Debug.Log($"pos ={this.mc.Position},rand pos={this.targetPosition}");
-	}
-	protected override void OnInitializeNew(ContextNew ctx) {
 		var entityctx = ctx.CurrentMutableEntityContext;
 		if (!entityctx.TryGetMutable(out this.mc)) {
 			Debug.LogError("RandomWanderActionSO Initialization failed: MovementComponentBase not found.");

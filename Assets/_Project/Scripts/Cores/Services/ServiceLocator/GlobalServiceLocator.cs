@@ -13,11 +13,13 @@ namespace Kope.Core.ServiceLocator {
 	public class GlobalServiceLocator : ServiceLocator<GlobalServiceLocator, GlobalServiceBase> {
 		private bool _canRegister = true;
 		private static AxisMode _dimension = AxisMode.TwoD;
+		private bool _registerCompletedLoggingEnable = true;
 		protected override void Awake() {
 			this.isPersistent = true;
 			base.Awake();
 		}
 		public void Lock() => this._canRegister = false;
+		public void RegistrationCompletedLogEnable(bool enable) => this._registerCompletedLoggingEnable = enable;
 		public static void InjectDimension(AxisMode dimension) => _dimension = dimension;
 		public static AxisMode Dimension => _dimension;
 
@@ -32,7 +34,9 @@ namespace Kope.Core.ServiceLocator {
 			service = null;
 			// We do NOT search the scene or create here. 
 			// Global services MUST be registered via Bootstrapper or RegisterService.
+
 			Debug.LogError($"[GlobalLocator] Critical Error: {type.Name} is not registered. Check your GlobalBootStrap!");
+
 			return false;
 		}
 		public void RegisterService<TService>(Func<TService> factory) where TService : GlobalServiceBase {
@@ -64,7 +68,8 @@ namespace Kope.Core.ServiceLocator {
 
 			service.name = $"[Global] {type.Name}_{tag}";
 			service.transform.SetParent(transform);
-			KLog.Log($"[Service] Initialized {type.Name}: {service.name} via {source}", service.gameObject);
+			if (this._registerCompletedLoggingEnable)
+				KLog.Log($"[Service] Initialized {type.Name}: {service.name} via {source}", service.gameObject);
 
 			service.InitializeService();
 			services[type] = service;

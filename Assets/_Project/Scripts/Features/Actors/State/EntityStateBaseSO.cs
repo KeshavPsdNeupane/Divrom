@@ -2,7 +2,7 @@ using Kope.Component;
 using Kope.Component.Movement;
 using UnityEngine;
 
-namespace Kope.Actor.New {
+namespace Kope.Actor.States {
 
 	/// <summary>
 	/// The fundamental blueprint for all entity states within the Kope framework. 

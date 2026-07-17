@@ -1,450 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &118544628897046472
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3430180962361138754}
-  - component: {fileID: 8676144523200710050}
-  - component: {fileID: 4154965771084270563}
-  - component: {fileID: 1267831902753390753}
-  - component: {fileID: 317286741643461728}
-  - component: {fileID: 1703189556996044989}
-  - component: {fileID: 7847816778885904574}
-  - component: {fileID: 7491166595083753095}
-  m_Layer: 11
-  m_Name: AddDef (1)
-  m_TagString: StatusEffect
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &3430180962361138754
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 118544628897046472}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7.68, y: 3.68, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 5182074621675209341}
-  m_Father: {fileID: 4529134496874935388}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8676144523200710050
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 118544628897046472}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b6ec4e8a30adc9e448e7171477010e0e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SelectionBase
---- !u!114 &4154965771084270563
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 118544628897046472}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5f2a7e09a5e7f4dfaad5c673c86dc7e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Kope.Core.Runtime::UniqueID
-  guid: e46d539b-95f9-47c3-a9e6-da76d9ff26da
-  absoluteHierarchyPath: SampleScene-->Random->Buffs->def->AddDef (1)
---- !u!114 &1267831902753390753
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 118544628897046472}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bceaae993f9ebf280b4c92d8d12a3d46, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Kope.Core.Runtime::EntityManager
-  commonEntityName: Defence
-  uniqueID: {fileID: 4154965771084270563}
-  entityComponentRegistry: {fileID: 1703189556996044989}
-  category: 31
-  config: {fileID: 11400000, guid: 296b484721bdc20d2b51d78c4a7374ac, type: 2}
---- !u!114 &317286741643461728
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 118544628897046472}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ffd0ac4ef1ba07c7fa439d5abd24b190, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EntityInitCaller
-  initializables:
-  - {fileID: 1703189556996044989}
-  - {fileID: 1267831902753390753}
-  canCallInAwake: 1
-  autoPopulate: 0
-  includeChildren: 1
-  traversal: 0
---- !u!114 &1703189556996044989
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 118544628897046472}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0ec1ce75969574c18af1816b31cb755, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Kope.Core.Runtime::Kope.Core.EntityComponentSystem.EntityComponentsRegistry
-  entityTransform: {fileID: 3430180962361138754}
-  registryName: DefaultRegistryName
-  hasBehavioralComponents: 0
-  config: {fileID: 11400000, guid: fcace0391532e5648a86e8f603e94c7d, type: 2}
-  components:
-  - {fileID: 7491166595083753095}
---- !u!58 &7847816778885904574
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 118544628897046472}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Radius: 0.5
---- !u!114 &7491166595083753095
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 118544628897046472}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 61ae3fa2d3dbd7f488a6aca1b06f50d4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::StatusEffectContainer
-  source: Environment
-  effectName: Increase Def
-  statType: 2
-  modifierAmount: 14
-  totalDuration: 10
-  isPercentage: 0
-  isDebuffFromArmor: 0
-  isDebuffFromEnemy: 0
-  debuffPriority: 0
-  description: 
---- !u!1 &138480397241016133
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2220858226749057220}
-  - component: {fileID: 4255318028384407776}
-  m_Layer: 11
-  m_Name: Sprite
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2220858226749057220
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 138480397241016133}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 7232721442786493727}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &4255318028384407776
-SpriteRenderer:
-  serializedVersion: 2
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 138480397241016133}
-  m_Enabled: 1
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 0
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 0
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 1095348801
-  m_SortingLayer: 4
-  m_SortingOrder: 0
-  m_MaskInteraction: 0
-  m_Sprite: {fileID: -2354079490960433704, guid: 4d072aa5cee6a4848918875b8fcb17ff, type: 3}
-  m_Color: {r: 0.9622642, g: 0.9622642, b: 0.9622642, a: 1}
-  m_FlipX: 0
-  m_FlipY: 0
-  m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
-  m_AdaptiveModeThreshold: 0.5
-  m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
-  m_SpriteSortPoint: 0
---- !u!1 &661759301358820310
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7232721442786493727}
-  - component: {fileID: 1524759524165202669}
-  - component: {fileID: 8595621163281444643}
-  - component: {fileID: 5767319542152046503}
-  - component: {fileID: 1291358592899020709}
-  - component: {fileID: 4784172945682777350}
-  - component: {fileID: 346225319489772788}
-  - component: {fileID: 1743002802768173349}
-  m_Layer: 11
-  m_Name: Addhp (1)
-  m_TagString: StatusEffect
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &7232721442786493727
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 661759301358820310}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 7.24, y: 1.1, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 2220858226749057220}
-  m_Father: {fileID: 7613188475979125402}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1524759524165202669
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 661759301358820310}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b6ec4e8a30adc9e448e7171477010e0e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SelectionBase
---- !u!114 &8595621163281444643
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 661759301358820310}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5f2a7e09a5e7f4dfaad5c673c86dc7e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Kope.Core.Runtime::UniqueID
-  guid: ab745028-5d22-4fc4-abe3-c37898b47abf
-  absoluteHierarchyPath: SampleScene-->Random->Buffs->AddHpCollction->Addhp (1)
---- !u!114 &5767319542152046503
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 661759301358820310}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bceaae993f9ebf280b4c92d8d12a3d46, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Kope.Core.Runtime::EntityManager
-  commonEntityName: Health
-  uniqueID: {fileID: 8595621163281444643}
-  entityComponentRegistry: {fileID: 4784172945682777350}
-  category: 31
-  config: {fileID: 11400000, guid: 296b484721bdc20d2b51d78c4a7374ac, type: 2}
---- !u!114 &1291358592899020709
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 661759301358820310}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ffd0ac4ef1ba07c7fa439d5abd24b190, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EntityInitCaller
-  initializables:
-  - {fileID: 4784172945682777350}
-  - {fileID: 5767319542152046503}
-  canCallInAwake: 1
-  autoPopulate: 0
-  includeChildren: 1
-  traversal: 0
---- !u!114 &4784172945682777350
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 661759301358820310}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0ec1ce75969574c18af1816b31cb755, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Kope.Core.Runtime::Kope.Core.EntityComponentSystem.EntityComponentsRegistry
-  entityTransform: {fileID: 7232721442786493727}
-  registryName: DefaultRegistryName
-  hasBehavioralComponents: 0
-  config: {fileID: 11400000, guid: fcace0391532e5648a86e8f603e94c7d, type: 2}
-  components:
-  - {fileID: 1743002802768173349}
---- !u!58 &346225319489772788
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 661759301358820310}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Radius: 0.5
---- !u!114 &1743002802768173349
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 661759301358820310}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 61ae3fa2d3dbd7f488a6aca1b06f50d4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::StatusEffectContainer
-  source: Environment
-  effectName: Increase HP
-  statType: 0
-  modifierAmount: 50
-  totalDuration: 10
-  isPercentage: 1
-  isDebuffFromArmor: 0
-  isDebuffFromEnemy: 0
-  debuffPriority: 0
-  description: 
 --- !u!1 &731462471523800302
 GameObject:
   m_ObjectHideFlags: 0
@@ -456,11 +11,11 @@ GameObject:
   - component: {fileID: 7366735170652880468}
   - component: {fileID: 6256662149950524611}
   - component: {fileID: 5069068059667772042}
-  - component: {fileID: 8749886013577102786}
   - component: {fileID: 8151917672880718754}
   - component: {fileID: 6738816631613905506}
   - component: {fileID: 3991051474799595702}
   - component: {fileID: 5654987288443734813}
+  - component: {fileID: 3689188288288837750}
   m_Layer: 11
   m_Name: AddDef
   m_TagString: StatusEffect
@@ -510,23 +65,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Kope.Core.Runtime::UniqueID
   guid: d8be2b7a-0318-4b0c-893a-f13742311d73
   absoluteHierarchyPath: SampleScene-->Random->Buffs->def->AddDef
---- !u!114 &8749886013577102786
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 731462471523800302}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bceaae993f9ebf280b4c92d8d12a3d46, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Kope.Core.Runtime::EntityManager
-  commonEntityName: Defence
-  uniqueID: {fileID: 5069068059667772042}
-  entityComponentRegistry: {fileID: 5654987288443734813}
-  category: 31
-  config: {fileID: 11400000, guid: 296b484721bdc20d2b51d78c4a7374ac, type: 2}
 --- !u!114 &8151917672880718754
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -539,10 +77,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffd0ac4ef1ba07c7fa439d5abd24b190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EntityInitCaller
+  canSelfServe: 1
   initializables:
   - {fileID: 5654987288443734813}
-  - {fileID: 8749886013577102786}
-  canCallInAwake: 1
+  - {fileID: 0}
   autoPopulate: 0
   includeChildren: 1
   traversal: 0
@@ -622,6 +160,23 @@ MonoBehaviour:
   config: {fileID: 11400000, guid: fcace0391532e5648a86e8f603e94c7d, type: 2}
   components:
   - {fileID: 3991051474799595702}
+--- !u!114 &3689188288288837750
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 731462471523800302}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fa357a3ba7543915be59908d7a41615, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Kope.EntityComponentSystem.Runtime::Kope.Core.Identity.PropInstance
+  entityName: AddDef
+  uniqueID: {fileID: 5069068059667772042}
+  ecr: {fileID: 5654987288443734813}
+  propType: 2
+  nature: 0
 --- !u!1 &949834273440677730
 GameObject:
   m_ObjectHideFlags: 0
@@ -656,183 +211,6 @@ Transform:
   - {fileID: 8538014386256031303}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1072145253226391805
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3647411565292593117}
-  - component: {fileID: 7799722746895698489}
-  - component: {fileID: 4050554562851639622}
-  - component: {fileID: 2002814516058205490}
-  - component: {fileID: 8050058343370668024}
-  - component: {fileID: 5306763311426310566}
-  - component: {fileID: 6317169973083217252}
-  - component: {fileID: 426976735408551214}
-  m_Layer: 11
-  m_Name: Addhp (2)
-  m_TagString: StatusEffect
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &3647411565292593117
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1072145253226391805}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.75, y: 2.92, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 3968961660713098963}
-  m_Father: {fileID: 7613188475979125402}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7799722746895698489
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1072145253226391805}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b6ec4e8a30adc9e448e7171477010e0e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SelectionBase
---- !u!114 &4050554562851639622
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1072145253226391805}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5f2a7e09a5e7f4dfaad5c673c86dc7e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Kope.Core.Runtime::UniqueID
-  guid: c7deb3bf-901c-4ada-971e-9ef0025ef491
-  absoluteHierarchyPath: SampleScene-->Random->Buffs->AddHpCollction->Addhp (2)
---- !u!114 &2002814516058205490
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1072145253226391805}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bceaae993f9ebf280b4c92d8d12a3d46, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Kope.Core.Runtime::EntityManager
-  commonEntityName: Health
-  uniqueID: {fileID: 4050554562851639622}
-  entityComponentRegistry: {fileID: 5306763311426310566}
-  category: 31
-  config: {fileID: 11400000, guid: 296b484721bdc20d2b51d78c4a7374ac, type: 2}
---- !u!114 &8050058343370668024
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1072145253226391805}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ffd0ac4ef1ba07c7fa439d5abd24b190, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EntityInitCaller
-  initializables:
-  - {fileID: 5306763311426310566}
-  - {fileID: 2002814516058205490}
-  canCallInAwake: 1
-  autoPopulate: 0
-  includeChildren: 1
-  traversal: 0
---- !u!114 &5306763311426310566
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1072145253226391805}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0ec1ce75969574c18af1816b31cb755, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Kope.Core.Runtime::Kope.Core.EntityComponentSystem.EntityComponentsRegistry
-  entityTransform: {fileID: 3647411565292593117}
-  registryName: DefaultRegistryName
-  hasBehavioralComponents: 0
-  config: {fileID: 11400000, guid: fcace0391532e5648a86e8f603e94c7d, type: 2}
-  components:
-  - {fileID: 426976735408551214}
---- !u!58 &6317169973083217252
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1072145253226391805}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Radius: 0.5
---- !u!114 &426976735408551214
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1072145253226391805}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 61ae3fa2d3dbd7f488a6aca1b06f50d4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::StatusEffectContainer
-  source: Environment
-  effectName: Increase HP
-  statType: 0
-  modifierAmount: 30
-  totalDuration: 10
-  isPercentage: 0
-  isDebuffFromArmor: 0
-  isDebuffFromEnemy: 0
-  debuffPriority: 0
-  description: 
 --- !u!1 &1640548724517403409
 GameObject:
   m_ObjectHideFlags: 0
@@ -1045,368 +423,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7366735170652880468}
-  - {fileID: 3430180962361138754}
   m_Father: {fileID: 3641461807115669659}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &2883680590666126685
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 5372361332949364499}
-  - component: {fileID: 1790089455555608474}
-  - component: {fileID: 1951864918855207819}
-  - component: {fileID: 4934920424844791872}
-  - component: {fileID: 5609741558938562842}
-  - component: {fileID: 4630339933961776763}
-  - component: {fileID: 3076879283262664330}
-  - component: {fileID: 2710043825809214334}
-  m_Layer: 11
-  m_Name: AddSpd (1)
-  m_TagString: StatusEffect
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &5372361332949364499
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2883680590666126685}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.58, y: 4.86, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 4672372140032682091}
-  m_Father: {fileID: 8538014386256031303}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1790089455555608474
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2883680590666126685}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b6ec4e8a30adc9e448e7171477010e0e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SelectionBase
---- !u!114 &1951864918855207819
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2883680590666126685}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5f2a7e09a5e7f4dfaad5c673c86dc7e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Kope.Core.Runtime::UniqueID
-  guid: 57f6ae58-af80-4c1e-b05c-50b88ff8e6c0
-  absoluteHierarchyPath: SampleScene-->Random->Buffs->AddMoveCollection->AddSpd (1)
---- !u!114 &4934920424844791872
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2883680590666126685}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bceaae993f9ebf280b4c92d8d12a3d46, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Kope.Core.Runtime::EntityManager
-  commonEntityName: Speed
-  uniqueID: {fileID: 1951864918855207819}
-  entityComponentRegistry: {fileID: 4630339933961776763}
-  category: 31
-  config: {fileID: 11400000, guid: 296b484721bdc20d2b51d78c4a7374ac, type: 2}
---- !u!114 &5609741558938562842
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2883680590666126685}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ffd0ac4ef1ba07c7fa439d5abd24b190, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EntityInitCaller
-  initializables:
-  - {fileID: 4630339933961776763}
-  - {fileID: 4934920424844791872}
-  canCallInAwake: 1
-  autoPopulate: 0
-  includeChildren: 1
-  traversal: 0
---- !u!114 &4630339933961776763
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2883680590666126685}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0ec1ce75969574c18af1816b31cb755, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Kope.Core.Runtime::Kope.Core.EntityComponentSystem.EntityComponentsRegistry
-  entityTransform: {fileID: 5372361332949364499}
-  registryName: DefaultRegistryName
-  hasBehavioralComponents: 0
-  config: {fileID: 11400000, guid: fcace0391532e5648a86e8f603e94c7d, type: 2}
-  components:
-  - {fileID: 2710043825809214334}
---- !u!58 &3076879283262664330
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2883680590666126685}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Radius: 0.5
---- !u!114 &2710043825809214334
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2883680590666126685}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 61ae3fa2d3dbd7f488a6aca1b06f50d4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::StatusEffectContainer
-  source: Environment
-  effectName: Increase SPD
-  statType: 4
-  modifierAmount: 10
-  totalDuration: 10
-  isPercentage: 1
-  isDebuffFromArmor: 0
-  isDebuffFromEnemy: 0
-  debuffPriority: 0
-  description: 
---- !u!1 &3003570909250651031
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 5182074621675209341}
-  - component: {fileID: 9217696127393331227}
-  m_Layer: 11
-  m_Name: Sprite
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &5182074621675209341
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3003570909250651031}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3430180962361138754}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &9217696127393331227
-SpriteRenderer:
-  serializedVersion: 2
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3003570909250651031}
-  m_Enabled: 1
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 0
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 0
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 1095348801
-  m_SortingLayer: 4
-  m_SortingOrder: 0
-  m_MaskInteraction: 0
-  m_Sprite: {fileID: -2354079490960433704, guid: 4d072aa5cee6a4848918875b8fcb17ff, type: 3}
-  m_Color: {r: 0, g: 0.15046243, b: 0.99215686, a: 1}
-  m_FlipX: 0
-  m_FlipY: 0
-  m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
-  m_AdaptiveModeThreshold: 0.5
-  m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
-  m_SpriteSortPoint: 0
---- !u!1 &3315061044890715757
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3968961660713098963}
-  - component: {fileID: 4352088365947146624}
-  m_Layer: 11
-  m_Name: Sprite
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &3968961660713098963
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3315061044890715757}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3647411565292593117}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &4352088365947146624
-SpriteRenderer:
-  serializedVersion: 2
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3315061044890715757}
-  m_Enabled: 1
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 0
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 0
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 1095348801
-  m_SortingLayer: 4
-  m_SortingOrder: 0
-  m_MaskInteraction: 0
-  m_Sprite: {fileID: -2354079490960433704, guid: 4d072aa5cee6a4848918875b8fcb17ff, type: 3}
-  m_Color: {r: 0.9622642, g: 0.9622642, b: 0.9622642, a: 1}
-  m_FlipX: 0
-  m_FlipY: 0
-  m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
-  m_AdaptiveModeThreshold: 0.5
-  m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
-  m_SpriteSortPoint: 0
 --- !u!1 &4183781045689512795
 GameObject:
   m_ObjectHideFlags: 0
@@ -1418,11 +436,11 @@ GameObject:
   - component: {fileID: 6359283467635601095}
   - component: {fileID: 3931999220570498775}
   - component: {fileID: 188623322283249771}
-  - component: {fileID: 3819720797428205242}
   - component: {fileID: 2698336743556688245}
   - component: {fileID: 7768581690230232246}
   - component: {fileID: 24027889215411010}
   - component: {fileID: 9107418771064554752}
+  - component: {fileID: 6200679061722507542}
   m_Layer: 11
   m_Name: AddSpd
   m_TagString: StatusEffect
@@ -1472,23 +490,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Kope.Core.Runtime::UniqueID
   guid: dbeb8fef-ec57-45a1-b110-98532aa2d4da
   absoluteHierarchyPath: SampleScene-->Random->Buffs->AddMoveCollection->AddSpd
---- !u!114 &3819720797428205242
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4183781045689512795}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bceaae993f9ebf280b4c92d8d12a3d46, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Kope.Core.Runtime::EntityManager
-  commonEntityName: Speed
-  uniqueID: {fileID: 188623322283249771}
-  entityComponentRegistry: {fileID: 7768581690230232246}
-  category: 31
-  config: {fileID: 11400000, guid: 296b484721bdc20d2b51d78c4a7374ac, type: 2}
 --- !u!114 &2698336743556688245
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1501,10 +502,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffd0ac4ef1ba07c7fa439d5abd24b190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EntityInitCaller
+  canSelfServe: 1
   initializables:
   - {fileID: 7768581690230232246}
-  - {fileID: 3819720797428205242}
-  canCallInAwake: 1
+  - {fileID: 0}
   autoPopulate: 0
   includeChildren: 1
   traversal: 0
@@ -1584,6 +585,23 @@ MonoBehaviour:
   isDebuffFromEnemy: 0
   debuffPriority: 0
   description: 
+--- !u!114 &6200679061722507542
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4183781045689512795}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fa357a3ba7543915be59908d7a41615, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Kope.EntityComponentSystem.Runtime::Kope.Core.Identity.PropInstance
+  entityName: AddSpd
+  uniqueID: {fileID: 188623322283249771}
+  ecr: {fileID: 7768581690230232246}
+  propType: 0
+  nature: 0
 --- !u!1 &5498991145193284562
 GameObject:
   m_ObjectHideFlags: 0
@@ -1614,8 +632,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6293852187549075652}
-  - {fileID: 7232721442786493727}
-  - {fileID: 3647411565292593117}
   m_Father: {fileID: 3641461807115669659}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5832605857673240799
@@ -1629,11 +645,11 @@ GameObject:
   - component: {fileID: 6293852187549075652}
   - component: {fileID: 4585033880009187382}
   - component: {fileID: 6976223545776199980}
-  - component: {fileID: 6494346411316941637}
   - component: {fileID: 7667280052250439500}
   - component: {fileID: 9025357845960183026}
   - component: {fileID: 3186751994654637514}
   - component: {fileID: 7892775882635857607}
+  - component: {fileID: 4653880803381485785}
   m_Layer: 11
   m_Name: Addhp
   m_TagString: StatusEffect
@@ -1683,23 +699,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Kope.Core.Runtime::UniqueID
   guid: 0fdbfa84-76b1-4275-9296-d8d75840a5ab
   absoluteHierarchyPath: SampleScene-->Random->Buffs->AddHpCollction->Addhp
---- !u!114 &6494346411316941637
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5832605857673240799}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bceaae993f9ebf280b4c92d8d12a3d46, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Kope.Core.Runtime::EntityManager
-  commonEntityName: Health
-  uniqueID: {fileID: 6976223545776199980}
-  entityComponentRegistry: {fileID: 9025357845960183026}
-  category: 31
-  config: {fileID: 11400000, guid: 296b484721bdc20d2b51d78c4a7374ac, type: 2}
 --- !u!114 &7667280052250439500
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1712,10 +711,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffd0ac4ef1ba07c7fa439d5abd24b190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EntityInitCaller
+  canSelfServe: 1
   initializables:
   - {fileID: 9025357845960183026}
-  - {fileID: 6494346411316941637}
-  canCallInAwake: 1
+  - {fileID: 0}
   autoPopulate: 0
   includeChildren: 1
   traversal: 0
@@ -1795,6 +794,23 @@ MonoBehaviour:
   isDebuffFromEnemy: 0
   debuffPriority: 0
   description: 
+--- !u!114 &4653880803381485785
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5832605857673240799}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fa357a3ba7543915be59908d7a41615, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Kope.EntityComponentSystem.Runtime::Kope.Core.Identity.PropInstance
+  entityName: AddHp
+  uniqueID: {fileID: 6976223545776199980}
+  ecr: {fileID: 9025357845960183026}
+  propType: 0
+  nature: 0
 --- !u!1 &6093664147388103570
 GameObject:
   m_ObjectHideFlags: 0
@@ -1916,97 +932,5 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6359283467635601095}
-  - {fileID: 5372361332949364499}
   m_Father: {fileID: 3641461807115669659}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &8877059989116162965
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4672372140032682091}
-  - component: {fileID: 3993539281564519698}
-  m_Layer: 11
-  m_Name: Sprite
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4672372140032682091
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8877059989116162965}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.12, y: 0.23, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 5372361332949364499}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &3993539281564519698
-SpriteRenderer:
-  serializedVersion: 2
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8877059989116162965}
-  m_Enabled: 1
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 0
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 0
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 1095348801
-  m_SortingLayer: 4
-  m_SortingOrder: 0
-  m_MaskInteraction: 0
-  m_Sprite: {fileID: -2354079490960433704, guid: 4d072aa5cee6a4848918875b8fcb17ff, type: 3}
-  m_Color: {r: 0.8988769, g: 1, b: 0, a: 1}
-  m_FlipX: 0
-  m_FlipY: 0
-  m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
-  m_AdaptiveModeThreshold: 0.5
-  m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
-  m_SpriteSortPoint: 0

@@ -103,9 +103,9 @@ GameObject:
   - component: {fileID: 6881689935710523987}
   - component: {fileID: 2854484675665960483}
   - component: {fileID: 1144922514153141712}
-  - component: {fileID: 2988009866949436591}
   - component: {fileID: 231177243576165561}
   - component: {fileID: 9095419972494026866}
+  - component: {fileID: 7546862289960231778}
   m_Layer: 8
   m_Name: Hpstore
   m_TagString: Untagged
@@ -177,10 +177,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffd0ac4ef1ba07c7fa439d5abd24b190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EntityInitCaller
+  canSelfServe: 1
   initializables:
   - {fileID: 231177243576165561}
-  - {fileID: 2988009866949436591}
-  canCallInAwake: 1
+  - {fileID: 0}
   autoPopulate: 0
   includeChildren: 1
   traversal: 0
@@ -198,23 +198,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Kope.Core.Runtime::UniqueID
   guid: 385478bd-6c2f-49b3-a488-7818e41ada49
   absoluteHierarchyPath: SampleScene-->Hpres->Hpstore
---- !u!114 &2988009866949436591
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7975278105760316048}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bceaae993f9ebf280b4c92d8d12a3d46, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Kope.Core.Runtime::EntityManager
-  commonEntityName: Health
-  uniqueID: {fileID: 1144922514153141712}
-  entityComponentRegistry: {fileID: 231177243576165561}
-  category: 31
-  config: {fileID: 11400000, guid: 296b484721bdc20d2b51d78c4a7374ac, type: 2}
 --- !u!114 &231177243576165561
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -247,3 +230,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: Kope.Components::Kope.Component.Health.Temp.HpRestoration
   isPercentage: 0
   restoreAmount: 20
+--- !u!114 &7546862289960231778
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7975278105760316048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fa357a3ba7543915be59908d7a41615, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Kope.EntityComponentSystem.Runtime::Kope.Core.Identity.PropInstance
+  entityName: Health
+  uniqueID: {fileID: 1144922514153141712}
+  ecr: {fileID: 231177243576165561}
+  propType: 0
+  nature: 0

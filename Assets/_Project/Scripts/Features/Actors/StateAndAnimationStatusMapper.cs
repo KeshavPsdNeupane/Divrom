@@ -1,4 +1,4 @@
-using Kope.Actor.New;
+using Kope.Actor.States;
 namespace Kope.Actor {
 	public static class AnimationStatusExtensions {
 		public static StateChangeResult ToStateChangeResult(this AnimationStatus status) {

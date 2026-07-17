@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Kope.Actor.New {
+namespace Kope.Actor.States {
 	public enum AnimationStatus : byte {
 		Success = 0,
 		NotFound = 1,

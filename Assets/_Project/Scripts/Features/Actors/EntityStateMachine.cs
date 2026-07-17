@@ -1,4 +1,4 @@
-namespace Kope.Actor.New {
+namespace Kope.Actor.States {
 	public enum StateChangeResult : short {
 		Success = 0,
 		Denied_Locked = 1,      // Current state is non-receptive (Input Locked)

@@ -646,6 +646,7 @@ MonoBehaviour:
   - {fileID: 4790525821007680954}
   - {fileID: 9032542264227806970}
   - {fileID: 133449266573284797}
+  - {fileID: 1287031167493385407}
 --- !u!1 &4513367037071607233
 GameObject:
   m_ObjectHideFlags: 0
@@ -659,8 +660,9 @@ GameObject:
   - component: {fileID: 6528310715214574038}
   - component: {fileID: 7428367574571897464}
   - component: {fileID: 1048981498321793666}
-  - component: {fileID: 1814066906529279447}
   - component: {fileID: 66932067619678931}
+  - component: {fileID: 3792914541747443045}
+  - component: {fileID: 1652587194659108386}
   m_Layer: 3
   m_Name: Dummy
   m_TagString: Player
@@ -789,23 +791,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Kope.Core.Runtime::Kope.Core.UniqueID
   guid: d095cbcf-373d-42b7-b9ae-e35cee66a0cb
   absoluteHierarchyPath: SampleScene-->Dummy
---- !u!114 &1814066906529279447
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4513367037071607233}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bceaae993f9ebf280b4c92d8d12a3d46, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Kope.Core.Runtime::EntityManager
-  commonEntityName: Random
-  uniqueID: {fileID: 1048981498321793666}
-  entityComponentRegistry: {fileID: 4512281911964162701}
-  category: 11
-  config: {fileID: 11400000, guid: 296b484721bdc20d2b51d78c4a7374ac, type: 2}
 --- !u!114 &66932067619678931
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -821,10 +806,40 @@ MonoBehaviour:
   canSelfServe: 1
   initializables:
   - {fileID: 4512281911964162701}
-  - {fileID: 1814066906529279447}
+  - {fileID: 3792914541747443045}
   autoPopulate: 0
   includeChildren: 1
   traversal: 0
+--- !u!114 &3792914541747443045
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4513367037071607233}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fa357a3ba7543915be59908d7a41615, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Kope.EntityComponentSystem.Runtime::Kope.Core.Identity.PropInstance
+  entityName: Dummy
+  uniqueID: {fileID: 1048981498321793666}
+  ecr: {fileID: 4512281911964162701}
+  propType: 1
+  nature: 0
+--- !u!114 &1652587194659108386
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4513367037071607233}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ac1b82e4af36893b9c0a41abbe7665d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Kope.EntityComponentSystem.Runtime::Kope.Core.Identity.PropEntitySaveSystem
+  entityInstance: {fileID: 3792914541747443045}
 --- !u!1 &4638364160050005537
 GameObject:
   m_ObjectHideFlags: 0

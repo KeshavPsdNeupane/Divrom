@@ -34,7 +34,7 @@ public class StatModifierCollector : SensorBase {
 			//  not have it (if it's not set up correctly), using TryGetComponent allows us to handle that case
 			//  gracefully by logging an error message and returning early, rather than having an unhandled exception
 			//  that could disrupt the game flow.
-			if (!other.TryGetComponent(out EntityInstance mgr)) {
+			if (!other.TryGetComponent(out EntityInstanceNew entityInstance)) {
 				Debug.LogError("No EntityManager found on detected object with tag " + StatusObjectTagName + ". Please ensure the object has an EntityManager component." + this._parentGOHiearchPathMessage);
 				return;
 			}
@@ -49,7 +49,7 @@ public class StatModifierCollector : SensorBase {
 			//  and we have a convention that any object with that tag must have 
 			// a StatusEffectContainer component. so if we don't find it, it means something is
 			//  wrong with the setup of the detected object, and we log an error to notify the developer to fix it.
-			if (!mgr.EntityDetail.ComponentRegistry.TryGetReadOnly(out StatModifierContainer effect)) {
+			if (!entityInstance.EntityDetail.ComponentRegistry.TryGetReadOnly(out StatModifierContainer effect)) {
 				Debug.LogError("No StatusEffectContainer found on detected object with tag " + StatusObjectTagName + ". Please ensure the object has a StatusEffectContainer component." + this._parentGOHiearchPathMessage);
 				return;
 			}
@@ -58,7 +58,7 @@ public class StatModifierCollector : SensorBase {
 					// always call NotifyEntityDiedOrPooled before destroying the gameobject,
 					// so that any systems that need to react to the entity's death or pooling 
 					// can do so before the gameobject is destroyed and becomes inaccessible.
-					mgr.NotifyEntityDiedOrPooled();
+					entityInstance.InvokeOnEntityDiedOrPooledEvent();
 
 					// for this case we are treating the status effect as a "pickup" that the character can collect
 					// and apply to themselves, so we destroy the gameobject after collecting it.

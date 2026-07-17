@@ -19,12 +19,12 @@ namespace Kope.Component {
 
 		public override void OnDetect(Collider2D other) {
 			if (this.healthComponent == null) return;
-			if (!other.TryGetComponent<EntityInstance>(out var mgr)) {
+			if (!other.TryGetComponent<EntityInstanceNew>(out var entityInstance)) {
 				Debug.LogWarning($"[HpRestorationCollector] Detected collider {other.name} does not have an EntityManager component. Cannot restore HP." + this._parentGOHiearchPathMessage, other.gameObject);
 				return;
 			}
 
-			if (!mgr.EntityDetail.ComponentRegistry.TryGetReadOnly(out HpRestoration healthComp)) {
+			if (!entityInstance.EntityDetail.ComponentRegistry.TryGetReadOnly(out HpRestoration healthComp)) {
 				Debug.LogWarning($"[HpRestorationCollector] Detected collider {other.name} does not have an HpRestoration component. Cannot restore HP." + this._parentGOHiearchPathMessage, other.gameObject);
 				return;
 			}
@@ -39,7 +39,7 @@ namespace Kope.Component {
 					amountToRestore *= maxHp * 0.01f;
 				}
 				this.healthComponent.Heal(amountToRestore);
-				mgr.NotifyEntityDiedOrPooled();
+				entityInstance.InvokeOnEntityDiedOrPooledEvent();
 				Destroy(other.gameObject);
 				return;
 			}

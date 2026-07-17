@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Kope.Actor.New {
+namespace Kope.Actor.States {
 
 	[CreateAssetMenu(menuName = "Scriptable Objects/Entity States/Attack", fileName = "New Attack State")]
 	public class EntityAttackState : EntityStateBaseSO {

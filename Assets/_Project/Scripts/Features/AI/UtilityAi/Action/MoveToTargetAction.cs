@@ -1,5 +1,5 @@
 using System;
-using Kope.AI.Ctx;
+using Kope.AI.AIBlackBoard;
 using Kope.AI.Utility;
 using Kope.Component.Movement;
 using ThirdParty;
@@ -33,7 +33,6 @@ public class MoveTowardAction : ActionSO {
 	private MovementComponentBase _selfMovementComponent;
 	private float _directionChangeTime;
 	private float _directionChangeInterval;
-
 	/// <summary>
 	/// Just a cheap micro-optimization so we dont have to square the playerFreeSpaceRadius
 	/// every frame in the distance check, since it is a constant value that only changes
@@ -49,39 +48,6 @@ public class MoveTowardAction : ActionSO {
 		this._squareFreeSpaceRadius = this.deadZone * this.deadZone;
 		var readOnlyTargetComponentRegistry = GetSelectedTargetRegistry(this.actionType);
 
-		// just defensive checking, in case the considerations that provide the target registry 
-		// are not properly set up or fail to find a valid target, we want to avoid starting an action 
-		// that will try to act on a null target and cause errors.
-		// but it is garuntee that if the considerations fail to find a valid target, they will return a score of 0, 
-		// thus making this action unselectable, so this is just an extra safety check.
-		if (readOnlyTargetComponentRegistry == null) {
-			SetComplete();
-			return;
-		}
-
-		var selfComponentRegistry = ctx.CurrentMutableEntityContext;
-		this._readOnlyTargetTransform = readOnlyTargetComponentRegistry.EntityTransform;
-
-		if (!selfComponentRegistry.TryGetReadOnly(out this._selfMovementComponent)) {
-			Debug.LogError($"RangeAction Error: Self does not have a MovementComponent on {this.name}");
-			SetComplete();
-			return;
-		}
-
-
-		if (this.maxActionDuration > 0f) {
-			this._actionTimer = new CountdownTimer(this.maxActionDuration);
-			this._actionTimer.OnTimerStop += SetComplete;
-			this._actionTimer.Start();
-		}
-	}
-
-	protected override void OnInitializeNew(ContextNew ctx) {
-		this._directionChangeTime = 1f / this.directionChangeFrequency;
-		this._directionChangeInterval = this._directionChangeTime;
-		this._squareFreeSpaceRadius = this.deadZone * this.deadZone;
-		var readOnlyTargetComponentRegistry = GetSelectedTargetRegistry(this.actionType);
-
 		if (readOnlyTargetComponentRegistry == null) {
 			SetComplete();
 			return;
@@ -102,9 +68,6 @@ public class MoveTowardAction : ActionSO {
 			this._actionTimer.Start();
 		}
 	}
-
-
-
 
 	public override void TickUpdate() {
 		this._actionTimer?.Tick(Time.deltaTime);

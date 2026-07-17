@@ -8,7 +8,7 @@ using Kope.Core.Type.EnumAsset;
 using Kope.EntityComponentSystem;
 using UnityEngine;
 
-namespace Kope.Actor.New {
+namespace Kope.Actor.States {
 
 	/// <summary>
 	/// Default fallback logic for purely data-driven states that do not require custom C# logic files.

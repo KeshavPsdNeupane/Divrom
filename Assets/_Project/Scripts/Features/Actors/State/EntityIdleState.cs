@@ -3,7 +3,7 @@ using Kope.Core.Mathfx;
 using Kope.Core.Type.EnumAsset;
 using UnityEngine;
 
-namespace Kope.Actor.New {
+namespace Kope.Actor.States {
 
 	/// <summary>
 	/// The foundational routing hub for an entity when at rest.

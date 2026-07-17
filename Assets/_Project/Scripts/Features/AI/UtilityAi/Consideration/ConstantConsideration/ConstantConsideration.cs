@@ -1,6 +1,6 @@
 using UnityEngine;
 using Kope.AI.Utility;
-using Kope.AI.Ctx;
+using Kope.AI.AIBlackBoard;
 [CreateAssetMenu(fileName = "ConstantConsideration", menuName = "Scriptable Objects/AI/Utility/Considerations/ConstantConsideration")]
 public class ConstantConsideration : ConsiderationSO {
 	[SerializeField] private string considerationName;
@@ -16,10 +16,7 @@ public class ConstantConsideration : ConsiderationSO {
 	/// 
 	/// </summary>
 	/// <returns></returns>
-	public override (float, int) Evaluate(IReadOnlyContext context) {
-		return (this.constantValue, 0); // no mult happened
-	}
-	public override (float, int) EvaluateNew(IReadOnlyContextNew context) {
+	public override (float, int) EvaluateNew(IReadOnlyContext context) {
 		return (this.constantValue, 0); // no mult happened
 	}
 

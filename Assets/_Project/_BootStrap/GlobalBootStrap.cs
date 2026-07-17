@@ -10,6 +10,7 @@ public static class GlobalBootStrap {
 	[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
 	private static void Init() {
 		GlobalServiceLocator.InjectDimension(AxisMode.TwoD);
+		GS.RegistrationCompletedLogEnable(false);
 		GS.RegisterService(() => new GameObject().AddComponent<InputManager>());
 		GS.RegisterService(() => new GameObject().AddComponent<GlobalSaveSystem>());
 		GS.RegisterService(() => new GameObject().AddComponent<ObjectPooler>());

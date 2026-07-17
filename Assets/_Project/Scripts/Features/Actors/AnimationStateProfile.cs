@@ -3,7 +3,7 @@ using Kope.Core.Type.EnumAsset;
 using UnityEngine;
 
 
-namespace Kope.Actor.New {
+namespace Kope.Actor.States {
 	/// <summary>
 	/// A serializable class representing an animation state profile for Unity's Inspector.
 	/// This class is used by EnumPicker class to allow designers to configure animation states in a user-friendly way.
