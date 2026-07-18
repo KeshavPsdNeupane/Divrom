@@ -7,7 +7,7 @@ using Kope.EntityComponentSystem;
 using Kope.SaveSystem;
 using Newtonsoft.Json;
 using UnityEngine;
-
+using Kope.SaveSystem.Attributes;
 namespace Kope.Component.Health {
 
 
@@ -20,7 +20,7 @@ namespace Kope.Component.Health {
 	/// health when we load from save data, and we will not change the current health in the save data after that,
 	/// so it is effectively immutable.
 	/// </summary>
-	[SaveId("health_data")]
+	[SaveComponentData("health_data")]
 	public class HealthComponentSaveData : ISaveData {
 		[JsonProperty("chp")]
 		public float CurrentHealth { get; private set; }
@@ -30,7 +30,7 @@ namespace Kope.Component.Health {
 		}
 	}
 
-	[SaveId("health")]
+	[SaveComponent("health")]
 	public class HealthComponentBase : ComponentBase, IHealthComponent, ISaveable, IHealable {
 		[SerializeField] EntityComponentsRegistry ecr;
 
@@ -43,13 +43,10 @@ namespace Kope.Component.Health {
 		public float MaxHealth => this.maxHealth;
 
 		private event Action<HealthChangeInfo> _onHealthChange;
-
 		protected void InvokeHpChange(HealthChangeInfo info) {
 			Debug.Log($"HealthChangeEvent Invoked: {info}");
 			this._onHealthChange?.Invoke(info);
 		}
-
-
 
 		protected override bool OnInit() {
 			if (ecr == null) return false;

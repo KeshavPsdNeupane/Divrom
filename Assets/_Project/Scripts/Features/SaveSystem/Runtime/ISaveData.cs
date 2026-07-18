@@ -84,8 +84,8 @@ namespace Kope.SaveSystem {
 	/// </summary>
 	public interface ISceneSaveProvider {
 		SceneDataProviderTypeEnum ProviderType { get; }
-		SceneSaveDataContainer OnSaveNew();
-		void OnLoadNew(SceneSaveDataContainer data);
+		SceneSaveDataContainer OnSave();
+		void OnLoad(SceneSaveDataContainer data);
 	}
 
 	/// <summary>
@@ -153,8 +153,8 @@ namespace Kope.SaveSystem {
 	/// </summary>
 	[Serializable]
 	public struct MobEntitySavePacket {
-		[JsonProperty("uid")]
-		public HashedTag UniqueID { get; private set; }
+		// [JsonProperty("uid")]
+		// public HashedTag UniqueID { get; private set; }
 
 		[JsonProperty("identity")]
 		public MobConfig Config { get; private set; }
@@ -163,8 +163,7 @@ namespace Kope.SaveSystem {
 		public Dictionary<string, ISaveData> Data;
 
 		[JsonConstructor]
-		public MobEntitySavePacket(HashedTag uniqueID, MobConfig config, Dictionary<string, ISaveData> data) {
-			this.UniqueID = uniqueID;
+		public MobEntitySavePacket(MobConfig config, Dictionary<string, ISaveData> data) {
 			this.Config = config;
 			this.Data = data;
 		}
@@ -175,9 +174,6 @@ namespace Kope.SaveSystem {
 	/// </summary>
 	[Serializable]
 	public struct PropEntitySavePacket {
-		[JsonProperty("uid")]
-		public HashedTag UniqueID { get; private set; }
-
 		[JsonProperty("identity")]
 		public PropConfig TypeGroupConfig { get; private set; }
 
@@ -185,8 +181,7 @@ namespace Kope.SaveSystem {
 		public Dictionary<string, ISaveData> Data;
 
 		[JsonConstructor]
-		public PropEntitySavePacket(HashedTag uniqueID, PropConfig typeGroupConfig, Dictionary<string, ISaveData> data) {
-			this.UniqueID = uniqueID;
+		public PropEntitySavePacket(PropConfig typeGroupConfig, Dictionary<string, ISaveData> data) {
 			this.TypeGroupConfig = typeGroupConfig;
 			this.Data = data;
 		}

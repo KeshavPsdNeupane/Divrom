@@ -12,7 +12,7 @@ namespace Kope.Core.Identity {
 		}
 
 		protected override PropEntitySavePacket CreateSavePacket(HashedTag uid, PropConfig config, Dictionary<string, ISaveData> data) {
-			return new PropEntitySavePacket(uid, config, data);
+			return new PropEntitySavePacket(config, data);
 		}
 
 		protected override Dictionary<string, ISaveData> GetPacketData(PropEntitySavePacket packet) {

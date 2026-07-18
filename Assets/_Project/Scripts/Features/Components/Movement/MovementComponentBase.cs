@@ -4,18 +4,21 @@ using Kope.Core;
 using Kope.Core.LifeTimeManagement;
 using Kope.Core.EntityComponentRegistry;
 using Kope.Character.Stats;
-using Kope.SaveSystem;
 using Newtonsoft.Json;
 using ThirdParty;
 using Kope.Core.Mathfx;
 using Kope.EntityComponentSystem;
+using Kope.SaveSystem;
+using Kope.SaveSystem.Attributes;
+
+
 
 namespace Kope.Component.Movement {
 
 	#region ISavable Supporting datatype
 
 	[Serializable]
-	[SaveId("player_movement_data")]
+	[SaveComponentData("player_movement_data")]
 	public class MovementComponentSaveData : ISaveData {
 		[JsonProperty("pos")]
 		public Vec3 Position { get; set; }

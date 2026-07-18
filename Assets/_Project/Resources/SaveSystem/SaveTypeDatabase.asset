@@ -12,20 +12,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67aedcce235c9fe96b01251df1612d12, type: 3}
   m_Name: SaveTypeDatabase
   m_EditorClassIdentifier: Kope.SaveSystem.Runtime::Kope.SaveSystem.SaveTypeDatabase
-  entries:
-  - Id: health
-    AssemblyQualifiedTypeName: Kope.Component.Health.HealthComponentBase, Kope.Components,
-      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    DisplayName: Kope.Component.Health.HealthComponentBase
+  dataEntries:
   - Id: health_data
     AssemblyQualifiedTypeName: Kope.Component.Health.HealthComponentSaveData, Kope.Components,
       Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
     DisplayName: Kope.Component.Health.HealthComponentSaveData
-  - Id: player_movement
-    AssemblyQualifiedTypeName: PlayerMovementComponent, Kope.Components, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-    DisplayName: PlayerMovementComponent
   - Id: player_movement_data
     AssemblyQualifiedTypeName: Kope.Component.Movement.MovementComponentSaveData,
       Kope.Components, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
     DisplayName: Kope.Component.Movement.MovementComponentSaveData
+  componentEntries:
+  - Id: health
+    AssemblyQualifiedTypeName: Kope.Component.Health.DamageDummyHealthComponent,
+      Kope.Components, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    DisplayName: Kope.Component.Health.DamageDummyHealthComponent
+    IsDeclaringType: 0
+  - Id: health
+    AssemblyQualifiedTypeName: Kope.Component.Health.HealthComponentBase, Kope.Components,
+      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    DisplayName: Kope.Component.Health.HealthComponentBase
+    IsDeclaringType: 1
+  - Id: player_movement
+    AssemblyQualifiedTypeName: PlayerMovementComponent, Kope.Components, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+    DisplayName: PlayerMovementComponent
+    IsDeclaringType: 1

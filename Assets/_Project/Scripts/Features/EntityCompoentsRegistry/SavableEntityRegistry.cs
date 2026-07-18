@@ -74,7 +74,7 @@ namespace Kope.EntityComponentSystem {
 		// ==========================================
 		// SPECIALIZED SPLIT EXECUTION PIPELINE
 		// ==========================================
-		public SceneSaveDataContainer OnSaveNew() {
+		public SceneSaveDataContainer OnSave() {
 			var mobPackets = new Dictionary<HashedTag, MobEntitySavePacket>();
 			foreach (var kvp in this._saveAbleMobEntityes) {
 				if (kvp.Value != null) {
@@ -92,7 +92,7 @@ namespace Kope.EntityComponentSystem {
 			return new SceneSaveDataContainer(this.ProviderType, mobPackets, propPackets);
 		}
 
-		public void OnLoadNew(SceneSaveDataContainer data) {
+		public void OnLoad(SceneSaveDataContainer data) {
 			if (data.MobEntitySavePackets != null) {
 				foreach (var kvp in data.MobEntitySavePackets) {
 					if (this._saveAbleMobEntityes.TryGetValue(kvp.Key, out var provider)) {

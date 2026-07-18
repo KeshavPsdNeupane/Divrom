@@ -12,7 +12,7 @@ namespace Kope.Core.Identity {
 		}
 
 		protected override MobEntitySavePacket CreateSavePacket(HashedTag uid, MobConfig config, Dictionary<string, ISaveData> data) {
-			return new MobEntitySavePacket(uid, config, data);
+			return new MobEntitySavePacket(config, data);
 		}
 
 		protected override Dictionary<string, ISaveData> GetPacketData(MobEntitySavePacket packet) {

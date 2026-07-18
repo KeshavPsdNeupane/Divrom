@@ -11,12 +11,18 @@ namespace Kope.Core.Identity {
 		where TConfig : EntityConfig {
 
 		[SerializeField] protected EntityInstanceNew entityInstance;
-		private readonly Dictionary<System.Type, ISaveable> _saveableComponents = new();
+
+		// SaveId -> concrete component instance, rebuilt per entity each time components
+		// are (re)registered. This is the ONLY place component ids get resolved to a type/
+		// instance - deliberately local to this entity, never global. A saveId can be
+		// shared by multiple concrete types via [InheritSaveId], so a global id -> Type
+		// lookup would be ambiguous; matching against this entity's own live components
+		// is not, since only one concrete type for a given id can exist on it at once.
+		private readonly Dictionary<string, ISaveable> _saveIdToComponent = new();
+
 		protected SavableEntityRegistry _savableEntityRegistry;
 
 		public HashedTag UniqueID {
-			// really not possible to have a null UniqueID, but just in case, we will return default 
-			// if it is null
 			get {
 				if (this.entityInstance == null || this.entityInstance.EntityDetail == null
 				|| this.entityInstance.EntityDetail.UniqueID == null) {
@@ -56,13 +62,31 @@ namespace Kope.Core.Identity {
 			var registry = this.entityInstance.ComponentsRegistryForSaveSystemOnly;
 			if (registry == null) return;
 
-			this._saveableComponents.Clear();
+			this._saveIdToComponent.Clear();
 			var processedObjects = new HashSet<ISaveable>();
 
 			foreach (var kvp in registry.Components) {
-				if (kvp.Value is ISaveable saveable && !processedObjects.Contains(saveable)) {
-					this._saveableComponents[saveable.GetType()] = saveable;
-					processedObjects.Add(saveable);
+				if (kvp.Value is not ISaveable saveable || !processedObjects.Add(saveable)) continue;
+
+				if (!SaveTypeRegistry.TryGetComponentId(saveable.GetType(), out var saveId)) {
+					// Not every ISaveable necessarily needs to be save-tracked, so this is a
+					// warning rather than an error - but it means this component's state
+					// silently won't persist, which is worth knowing at registration time
+					// rather than discovering it after a save/load round-trip loses data.
+					Debug.LogWarning($"[{GetType().Name}] Component '{saveable.GetType().FullName}' on " +
+						$"{this.GetFullHierarchyPath()} implements ISaveable but has no registered SaveId " +
+						"([SaveComponent] or [InheritSaveId]). Its data will not be saved.");
+					continue;
+				}
+
+				if (!this._saveIdToComponent.TryAdd(saveId, saveable)) {
+					// Two saveable components on the SAME entity resolved to the same id -
+					// this is always a bug (either a duplicate [SaveComponent] id slipped past
+					// the editor validator, or two unrelated InheritSaveId chains collided).
+					// Whichever one lost silently would otherwise fail to save/load with no signal.
+					Debug.LogError($"[{GetType().Name}] Duplicate SaveId '{saveId}' on {this.GetFullHierarchyPath()}: " +
+						$"both '{this._saveIdToComponent[saveId].GetType().FullName}' and " +
+						$"'{saveable.GetType().FullName}' resolve to it. Only the first will be saved/loaded.");
 				}
 			}
 		}
@@ -78,34 +102,31 @@ namespace Kope.Core.Identity {
 		public TPacket GetEntitySavePacket() {
 			var dataChunks = new Dictionary<string, ISaveData>();
 
-			foreach (var kvp in this._saveableComponents) {
-				if (!SaveTypeRegistry.TryGetId(kvp.Key, out var saveId)) {
-					Debug.LogWarning($"[{GetType().Name}] No SaveId registered for component type '{kvp.Key.FullName}'. Skipping save data.");
-					continue;
-				}
-				dataChunks[saveId] = kvp.Value.GetSaveData();
+			foreach (var kvp in this._saveIdToComponent) {
+				dataChunks[kvp.Key] = kvp.Value.GetSaveData();
 			}
 
 			return CreateSavePacket(UniqueID, (TConfig)this.entityInstance.Config, dataChunks);
 		}
 
 		public void LoadEntitySavePacket(TPacket packet) {
-			var registry = this.entityInstance.ComponentsRegistryForSaveSystemOnly;
 			var dataMap = GetPacketData(packet);
 
 			foreach (var kvp in dataMap) {
 				string saveId = kvp.Key;
 				ISaveData dataStruct = kvp.Value;
 
-				if (!SaveTypeRegistry.TryResolve(saveId, out System.Type componentType)) {
-					Debug.LogWarning($"[{GetType().Name}] No component type registered for SaveId '{saveId}'. Skipping load.");
+				if (!this._saveIdToComponent.TryGetValue(saveId, out var targetSaveable)) {
+					// Expected in two legitimate cases, not just errors: the entity's config
+					// changed and no longer has a component for this id, or the save predates
+					// a rename/removal. Either way, skipping is correct - don't throw.
+					Debug.LogWarning($"[{GetType().Name}] No saveable component on {this.GetFullHierarchyPath()} " +
+						$"matches SaveId '{saveId}'. Skipping (component may have been removed, or this data " +
+						"is stale from an older save version).");
 					continue;
 				}
-				if (registry.Components.TryGetValue(componentType, out var component)) {
-					if (component is ISaveable targetSaveable) {
-						targetSaveable.LoadFromSaveData(dataStruct);
-					}
-				}
+
+				targetSaveable.LoadFromSaveData(dataStruct);
 			}
 		}
 	}

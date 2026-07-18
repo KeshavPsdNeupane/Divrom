@@ -1,8 +1,10 @@
 using Kope.Component.Health.Interface;
 using Kope.Core.LifeTimeManagement;
+using Kope.SaveSystem.Attributes;
 using UnityEngine;
 
 namespace Kope.Component.Health {
+	[InheritSaveId(1)]
 	public class DamageDummyHealthComponent : HealthComponentBase, IUpdatable {
 		[SerializeField, Range(0f, 1f), Tooltip("The ratio at which healing starts," +
 		"Put 0 to disable healing")]

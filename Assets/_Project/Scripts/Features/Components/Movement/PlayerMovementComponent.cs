@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Kope.Core.ServiceLocator;
 using Kope.Component.Movement;
-using Kope.SaveSystem;
+using Kope.SaveSystem.Attributes;
 /// <summary>
 /// PlayerMovementComponent.cs<br/>
 /// This component handles player movement input and translates it into movement intents for the movement system to process.
@@ -14,7 +14,7 @@ using Kope.SaveSystem;
 /// <br/>
 /// <inheritdoc cref="MovementComponentBase"/>      
 /// </summary>
-[SaveId("player_movement")]
+[SaveComponent("player_movement")]
 public class PlayerMovementComponent : MovementComponentBase {
 	private InputManager inputManager;
 	bool _isEventSystemSubscribed = false;

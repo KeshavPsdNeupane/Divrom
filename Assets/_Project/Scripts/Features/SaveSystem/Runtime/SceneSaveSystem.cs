@@ -44,7 +44,7 @@ namespace Kope.SaveSystem {
 			var sceneData = new Dictionary<SceneDataProviderTypeEnum, SceneSaveDataContainer>();
 			foreach (var kvp in this._saveProviders) {
 				if (!sceneData.ContainsKey(kvp.Key)) {
-					sceneData.Add(kvp.Key, kvp.Value.OnSaveNew());
+					sceneData.Add(kvp.Key, kvp.Value.OnSave());
 				}
 			}
 			var dataAggregate = new SceneSaveDataAggregate(this.SceneIndex, this.SceneName, sceneData);
@@ -59,7 +59,7 @@ namespace Kope.SaveSystem {
 			if (this._globalSaveSystem.TryGetBufferedSceneData(this.SceneIndex, out var dataAggregate)) {
 				foreach (var kvp in dataAggregate.SceneDataByProvider) {
 					if (this._saveProviders.TryGetValue(kvp.Key, out var provider)) {
-						provider.OnLoadNew(kvp.Value);
+						provider.OnLoad(kvp.Value);
 					} else {
 						Debug.LogWarning($"No save provider found for provider type {kvp.Key}. Skipping load for this provider.");
 					}
