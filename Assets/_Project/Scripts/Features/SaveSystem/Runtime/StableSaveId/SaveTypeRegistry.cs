@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Kope.SaveSystem.Attributes;
+using UnityEngine;
 namespace Kope.SaveSystem {
 	/// <summary>
 	/// Runtime lookup for stable SaveIds. Prefers the <see cref="SaveTypeDatabase"/> asset
@@ -153,39 +154,43 @@ namespace Kope.SaveSystem {
 		private static void EnsureFallbackCache() {
 			if (_hasBuiltFallbackCache) return;
 			_hasBuiltFallbackCache = true;
+			// debug string to collect any missing registrations for a single log block at the end
+			// prevent from newton json deserialization errors when a type is missing from the database asset
+			// but still exists in the project and is marked with the SaveComponentData attribute
+			List<string> missingRegistrations = new();
 
 			foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies()) {
 				Type[] types;
-				try {
-					types = assembly.GetTypes();
-				} catch (ReflectionTypeLoadException exception) {
-					types = exception.Types;
-				}
+				try { types = assembly.GetTypes(); } catch (ReflectionTypeLoadException exception) { types = exception.Types; }
 				if (types == null) continue;
 
 				foreach (var type in types) {
 					if (type == null || type.IsAbstract || type.IsInterface) continue;
 
+					// Handle Data Types
 					if (typeof(ISaveData).IsAssignableFrom(type)) {
-						var dataAttribute = type.GetCustomAttribute<SaveComponentDataAttribute>(inherit: false);
-						if (dataAttribute == null || string.IsNullOrWhiteSpace(dataAttribute.Id)) continue;
+						var attr = type.GetCustomAttribute<SaveComponentDataAttribute>(false);
+						if (attr == null || string.IsNullOrWhiteSpace(attr.Id)) continue;
 
-						if (!FallbackDataIdToType.ContainsKey(dataAttribute.Id)) {
-							FallbackDataIdToType[dataAttribute.Id] = type;
+						if (!FallbackDataIdToType.ContainsKey(attr.Id)) {
+							FallbackDataIdToType[attr.Id] = type;
+
+							if (_database != null && !_database.TryGetDataType(attr.Id, out _)) {
+								missingRegistrations.Add($"{type.Name} (Data ID: {attr.Id})");
+							}
 						}
-						if (!FallbackDataTypeToId.ContainsKey(type)) {
-							FallbackDataTypeToId[type] = dataAttribute.Id;
-						}
-						continue;
+						if (!FallbackDataTypeToId.ContainsKey(type)) FallbackDataTypeToId[type] = attr.Id;
 					}
-
-					if (typeof(ISaveable).IsAssignableFrom(type)) {
-						if (!SaveComponentAttributeResolver.TryGetEffectiveId(type, out var id, out var declaringType)) {
-							continue;
-						}
+					// Handle Component Types
+					else if (typeof(ISaveable).IsAssignableFrom(type)) {
+						if (!SaveComponentAttributeResolver.TryGetEffectiveId(type, out var id, out var declaringType)) continue;
 
 						if (!FallbackComponentTypeToId.ContainsKey(type)) {
 							FallbackComponentTypeToId[type] = id;
+
+							if (_database != null && !_database.TryGetComponentId(type, out _)) {
+								missingRegistrations.Add($"{type.Name} (Component ID: {id})");
+							}
 						}
 						if (type == declaringType && !FallbackComponentIdToDeclaringType.ContainsKey(id)) {
 							FallbackComponentIdToDeclaringType[id] = type;
@@ -193,6 +198,18 @@ namespace Kope.SaveSystem {
 					}
 				}
 			}
+
+			// Single log block to keep the console clean
+			if (missingRegistrations.Count > 0) {
+				string message = "[SaveTypeRegistry] The following types are missing from the SaveTypeDatabase asset:\n" +
+								 string.Join("\n", missingRegistrations) +
+								 "\nOpen the SaveTypeDatabase SO and trigger 'Rebuild From Project' to sync.\n" +
+								 "For now fallback reflection will be used, but this is slower and not recommended for production builds.\n\n";
+
+				Debug.LogWarning(message);
+			}
 		}
+
+
 	}
 }

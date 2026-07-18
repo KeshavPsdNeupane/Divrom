@@ -13,6 +13,10 @@ MonoBehaviour:
   m_Name: SaveTypeDatabase
   m_EditorClassIdentifier: Kope.SaveSystem.Runtime::Kope.SaveSystem.SaveTypeDatabase
   dataEntries:
+  - Id: experience_data
+    AssemblyQualifiedTypeName: Kope.Component.ExperienceSystem.ExperienceSystemSaveData,
+      Kope.Components, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    DisplayName: Kope.Component.ExperienceSystem.ExperienceSystemSaveData
   - Id: health_data
     AssemblyQualifiedTypeName: Kope.Component.Health.HealthComponentSaveData, Kope.Components,
       Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
@@ -22,6 +26,11 @@ MonoBehaviour:
       Kope.Components, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
     DisplayName: Kope.Component.Movement.MovementComponentSaveData
   componentEntries:
+  - Id: exp_system
+    AssemblyQualifiedTypeName: Kope.Component.ExperienceSystem.ExperienceSystem,
+      Kope.Components, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    DisplayName: Kope.Component.ExperienceSystem.ExperienceSystem
+    IsDeclaringType: 1
   - Id: health
     AssemblyQualifiedTypeName: Kope.Component.Health.DamageDummyHealthComponent,
       Kope.Components, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null

@@ -23,6 +23,8 @@ using Newtonsoft.Json;
  *    will not corrupt save payloads.
  */
 
+
+
 namespace Kope.SaveSystem {
 
 	// ==================================================================================
@@ -87,6 +89,25 @@ namespace Kope.SaveSystem {
 		SceneSaveDataContainer OnSave();
 		void OnLoad(SceneSaveDataContainer data);
 	}
+
+
+
+	#region Coupled Entity Packet Structures
+
+	/*
+		FUTURE ARCHITECTURAL GOAL: Decouple persistence from entity-specific packet structures.
+
+		Currently, the SaveAggregator is explicitly coupled to Mob and Prop packet types.
+		This is perfectly sufficient for the current scope and project maturity.
+
+		The end-game roadmap is to eventually transition to a generalized interface-driven 
+		aggregator that abstracts the persistence logic away from specific entity types.
+		This will allow the system to support any arbitrary scene data without 
+		hardcoded packet dependencies.
+	*/
+
+
+
 
 	/// <summary>
 	/// Data structure enclosing compiled entity serialization packets mapped by their specific layout variations.
@@ -188,7 +209,7 @@ namespace Kope.SaveSystem {
 	}
 
 	#endregion
-
+	#endregion
 	// ==================================================================================
 	// COMPONENT LEVEL PERSISTENCE DEFINITIONS
 	// ==================================================================================

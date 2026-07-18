@@ -121,11 +121,13 @@ namespace Kope.Core.LifeTimeManagement {
 		}
 
 		/// <summary>
-		/// Framework Template Method hook. Child classes should override this method to perform 
-		/// their custom start-up logic.
-		/// Defaults to an empty implementation, which allows the component to start without 
-		/// any additional setup.
-		/// Overriding this method is entirely optional.
+		/// Framework template method hook. Override this method to implement custom 
+		/// start-up logic within child classes.
+		/// 
+		/// This method provides an optional opportunity to perform post-initialization 
+		/// tasks, such as validating state managed by the save system.
+		/// 
+		/// The base implementation is empty, making overrides entirely optional.
 		/// </summary>
 		protected virtual void OnStart() { }
 		#endregion

@@ -155,7 +155,17 @@ namespace Kope.SaveSystem {
 			Formatting = Formatting.Indented,
 			ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
 			Error = (sender, args) => {
-				Debug.LogError($"[JSON ERROR] Path: {args.ErrorContext.Path} | Message: {args.ErrorContext.Error.Message}");
+				string path = args.ErrorContext.Path;
+				string message = args.ErrorContext.Error.Message;
+				// Check if this is a type resolution error
+				if (message.Contains("Error resolving type")) {
+					Debug.LogError(
+						$"[SAVE SCHEMA MISMATCH] Path: {path} | This class was likely renamed or deleted. " +
+						$"Check if the type ID is still in the SaveTypeDatabase. " +
+						$"\n\nOriginal Error: {message}");
+				} else {
+					Debug.LogError($"[JSON ERROR] Path: {path} | Message: {message}");
+				}
 				args.ErrorContext.Handled = true;
 			}
 		};

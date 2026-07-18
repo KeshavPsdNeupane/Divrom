@@ -662,7 +662,6 @@ GameObject:
   - component: {fileID: 1048981498321793666}
   - component: {fileID: 66932067619678931}
   - component: {fileID: 3792914541747443045}
-  - component: {fileID: 1652587194659108386}
   m_Layer: 3
   m_Name: Dummy
   m_TagString: Player
@@ -827,19 +826,6 @@ MonoBehaviour:
   ecr: {fileID: 4512281911964162701}
   propType: 1
   nature: 0
---- !u!114 &1652587194659108386
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4513367037071607233}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ac1b82e4af36893b9c0a41abbe7665d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Kope.EntityComponentSystem.Runtime::Kope.Core.Identity.PropEntitySaveSystem
-  entityInstance: {fileID: 3792914541747443045}
 --- !u!1 &4638364160050005537
 GameObject:
   m_ObjectHideFlags: 0

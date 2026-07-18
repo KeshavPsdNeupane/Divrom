@@ -5,9 +5,26 @@ using Kope.Core.EntityComponentRegistry;
 using Kope.Core.Collections;
 using UnityEngine;
 using Kope.EntityComponentSystem;
+using Kope.SaveSystem;
+using Kope.SaveSystem.Attributes;
+using Newtonsoft.Json;
 
 namespace Kope.Component.ExperienceSystem {
-	public class ExperienceSystem : ComponentBase, IExperienceSystem {
+	[SaveComponentData("experience_data")]
+	public class ExperienceSystemSaveData : ISaveData {
+		// why i am not using the AccumulatorInt directly? Because the save system 
+		// shouldnt depend on the implementation of the accumulator, and this way we 
+		// can change it later without breaking save data.
+		[JsonProperty("value")] public int Value;
+		[JsonProperty("residual")] public float Residual;
+		public ExperienceSystemSaveData(int value, float residual) {
+			this.Value = value;
+			this.Residual = residual;
+		}
+	}
+
+	[SaveComponent("exp_system")]
+	public class ExperienceSystem : ComponentBase, IExperienceSystem, ISaveable {
 		[Header("Level System Config")]
 		[SerializeField, Min(1)] private int defaultLevel = 1;
 		[SerializeField] private ExperienceSystemConfig config;
@@ -75,6 +92,22 @@ namespace Kope.Component.ExperienceSystem {
 			OnLevelChangeEvent(this._statsSystem.LevelUp, false);
 		}
 
+
+
+		public ISaveData GetSaveData() {
+			return new ExperienceSystemSaveData(
+				this._currentExp,
+				this._currentExp.Residual
+			);
+		}
+
+		public void LoadFromSaveData(ISaveData data) {
+			if (data is ExperienceSystemSaveData saveData) {
+				this._currentExp = new AccumulatorInt(saveData.Value, saveData.Residual);
+			}
+		}
+
+
 		/// <summary>
 		/// Adds experience points to the running total. Supports fractional values.
 		/// The overloaded operators in AccumulatorInt automatically catch fractions, 
@@ -141,5 +174,7 @@ namespace Kope.Component.ExperienceSystem {
 			int newLevelExp = this.config.GetCumulativeXpForLevel(this._currentLevel + 1) + 1;
 			AddExperience(newLevelExp - this._currentExp);
 		}
+
+
 	}
 }
