@@ -1,3 +1,5 @@
+using System;
+
 namespace Kope.EntityIdentity {
 
 	/// <summary>
@@ -9,6 +11,33 @@ namespace Kope.EntityIdentity {
 	public enum EntityType : byte {
 		MOB = 0,
 		PROP = 1,
+	}
+
+	/// <summary>
+	/// Defines an entity's movement capabilities, determining which terrain types or 
+	/// environments it can traverse. 
+	/// <para>This is a compile-time fixed set. Add new movement types here and recompile 
+	/// as needed to extend the pathfinding system.</para>
+	/// </summary>
+	[Flags]
+	public enum MovementCapability {
+		/// <summary>
+		/// Indicates the entity has no traversal capabilities and cannot move 
+		/// through any terrain. Note: Unlike most enums where 0 is a default/fallback, 
+		/// here 0 explicitly represents an inability to move.
+		/// </summary>
+		None = 0,
+		/// <summary>Can traverse ground-based paths.</summary>
+		Ground = 1 << 0,
+		/// <summary>Can traverse water-based paths.</summary>
+		Water = 1 << 1,
+		/// <summary>Can traverse air-based paths.</summary>
+		Air = 1 << 2,
+		/// <summary>
+		/// Indicates the entity can traverse all defined terrain types (ground, water, and air).
+		/// <para>This is a convenience flag for entities that are not restricted by terrain.</para>
+		/// </summary>
+		All = Ground | Water | Air
 	}
 
 	/// <summary>

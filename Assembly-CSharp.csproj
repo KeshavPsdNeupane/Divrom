@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets/_Project/Scripts/Features/EntityStat/UI/CharacterStatsGUI.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Nodes.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/UI/InventoryDisplays/InventoryDisplay.cs" />
     <Compile Include="Assets/_Project/Scripts/UI/Common/PanelFader.cs" />
     <Compile Include="Assets/_Project/_BootStrap/GlobalBootStrap.cs" />
