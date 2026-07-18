@@ -7735,25 +7735,25 @@ MonoBehaviour:
     gameObjectName: SceneServiceLocator
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: Addhp
-  - typeName: EntityInitCaller
-    order: -40
     gameObjectName: Dummy
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: AddSpd
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: EnemyNew
-  - typeName: EntityInitCaller
-    order: -40
-    gameObjectName: Hpstore
+    gameObjectName: AddDef
   - typeName: EntityInitCaller
     order: -40
     gameObjectName: PlayerNew
   - typeName: EntityInitCaller
     order: -40
-    gameObjectName: AddDef
+    gameObjectName: EnemyNew
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Addhp
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: Hpstore
+  - typeName: EntityInitCaller
+    order: -40
+    gameObjectName: AddSpd
   - typeName: InGameUIInitCaller
     order: -30
     gameObjectName: UI
