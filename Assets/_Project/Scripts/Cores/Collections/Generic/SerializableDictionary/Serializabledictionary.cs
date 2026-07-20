@@ -31,7 +31,20 @@ namespace Kope.Core.Collections {
 
 		public SerializableDictionary() { }
 
-		public SerializableDictionary(IDictionary<TKey, TValue> source) {
+		// Optimization Note: Before, _dict's field initializer ("= new()") always used
+		// EqualityComparer<TKey>.Default, so any SerializableDictionary<Vector2Int,_> was locked
+		// into Vector2Int's default hash — which collides badly on grid-adjacent coordinates (see
+		// Vector2IntComparer.cs). There was no constructor path to override it. Now, an optional
+		// comparer can be supplied and is forwarded straight into the backing Dictionary's own
+		// constructor, exactly like System.Collections.Generic.Dictionary allows. Omitting it (or
+		// passing null) reproduces the exact previous behavior, so this is purely additive and
+		// doesn't change serialization or any existing call site.
+		public SerializableDictionary(IEqualityComparer<TKey> comparer) {
+			this._dict = new Dictionary<TKey, TValue>(comparer);
+		}
+
+		public SerializableDictionary(IDictionary<TKey, TValue> source, IEqualityComparer<TKey> comparer = null) {
+			this._dict = new Dictionary<TKey, TValue>(comparer);
 			foreach (KeyValuePair<TKey, TValue> kvp in source)
 				_dict.Add(kvp.Key, kvp.Value);
 			_isDirty = true;

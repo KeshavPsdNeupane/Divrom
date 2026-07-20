@@ -37,7 +37,6 @@ namespace Kope.Feature.PathFinding {
 		}
 
 		public override int GetHashCode() {
-			// Position is unique per node, serving as the primary key.
 			return this.Position.GetHashCode();
 		}
 	}
@@ -91,11 +90,6 @@ namespace Kope.Feature.PathFinding {
 		public MacroGridNode From { get; set; }
 		public MacroGridNode To { get; set; }
 		public MovementCapability AllowedTraversal { get; set; }
-
-		/// <summary>
-		/// Gets or sets whether this connection is accessible for gameplay traversal.
-		/// Defaults to true.
-		/// </summary>
 		public bool IsNarrativelyAccessible { get; set; } = true;
 
 		public override string ToString() {
@@ -109,38 +103,64 @@ namespace Kope.Feature.PathFinding {
 
 	/// <summary>
 	/// Represents a very lightweight bounding box in 2D space, defined by its minimum and maximum corners.
-	/// Using a custom struct instead of Unity's Bounds for performance and memory efficiency, as
-	/// this is a value type and avoids unnecessary overhead.
+	/// Uses a custom value type with pre-computed hash caching instead of Unity's Bounds or RectInt 
+	/// for optimal performance, memory efficiency, and safe use as high-frequency dictionary keys.
 	/// </summary>
-	public readonly struct BoundingBox {
+	public readonly struct BoundingBox : IEquatable<BoundingBox> {
 		public Vector2Int Min { get; }
 		public Vector2Int Max { get; }
-		// just derive this not worth storing separately
 		public Vector2Int Size => this.Max - this.Min;
+
+		/// <summary>
+		/// Pre-computed hash code for the bounding box, calculated during construction.
+		/// Can precompile the hash code because the struct is readonly immutable, ensuring that 
+		/// the hash code remains consistent throughout its lifetime.
+		/// </summary>
+		private readonly int _hashCode;
+
 		public BoundingBox(Vector2Int min, Vector2Int max) {
 			this.Min = min;
 			this.Max = max;
-
+			this._hashCode = HashCode.Combine(Min, Max);
+		}
+		public BoundingBox(int minX, int minY, int maxX, int maxY) {
+			this.Min = new Vector2Int(minX, minY);
+			this.Max = new Vector2Int(maxX, maxY);
+			this._hashCode = HashCode.Combine(Min, Max);
 		}
 
-		/// <summary>Checks if a point exists within the bounds.</summary>
-		public bool Contains(Vector2Int point) {
+		public readonly bool Contains(Vector2Int point) {
 			return point.x >= Min.x && point.x <= Max.x &&
 				   point.y >= Min.y && point.y <= Max.y;
 		}
 
-		/// <summary>Checks if this box overlaps with another.</summary>
-		public bool Intersects(BoundingBox other) {
+		public readonly bool Intersects(BoundingBox other) {
 			return !(other.Min.x > Max.x || other.Max.x < Min.x ||
 					 other.Min.y > Max.y || other.Max.y < Min.y);
 		}
 
-		public override string ToString() {
+		public readonly override string ToString() {
 			return $"BoundingBox(Min: {Min}, Max: {Max})";
 		}
 
-		public override int GetHashCode() {
-			return HashCode.Combine(Min, Max);
+		public readonly bool Equals(BoundingBox other) {
+			return this.Min.Equals(other.Min) && this.Max.Equals(other.Max);
+		}
+
+		public readonly override bool Equals(object obj) {
+			return obj is BoundingBox other && this.Equals(other);
+		}
+
+		public readonly override int GetHashCode() {
+			return this._hashCode;
+		}
+
+		public static bool operator ==(BoundingBox left, BoundingBox right) {
+			return left.Equals(right);
+		}
+
+		public static bool operator !=(BoundingBox left, BoundingBox right) {
+			return !(left == right);
 		}
 	}
 }

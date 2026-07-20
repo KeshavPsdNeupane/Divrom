@@ -33,11 +33,6 @@ namespace Kope.EntityIdentity {
 		Water = 1 << 1,
 		/// <summary>Can traverse air-based paths.</summary>
 		Air = 1 << 2,
-		/// <summary>
-		/// Indicates the entity can traverse all defined terrain types (ground, water, and air).
-		/// <para>This is a convenience flag for entities that are not restricted by terrain.</para>
-		/// </summary>
-		All = Ground | Water | Air
 	}
 
 	/// <summary>
