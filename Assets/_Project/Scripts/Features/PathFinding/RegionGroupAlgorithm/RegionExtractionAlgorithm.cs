@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using ZLinq;
 using UnityEngine;
-using Kope.Feature.PathFinding;
-
-// shorthand aliases for dictionary types
-using MacroDict = Kope.Core.Collections.SerializableDictionary<UnityEngine.Vector2Int, Kope.Feature.PathFinding.Tile.HHSIMacroPathFindingTile>;
+using Kope.Core.Collections;
+using Kope.Feature.PathFinding.Tile;
 using Kope.Feature.PathFinding.Utility;
+
+
 
 /// <summary>
 /// RegionExtractionAlgorithm is a stateless utility class responsible for identifying and grouping 
@@ -51,18 +51,20 @@ public class RegionExtractionAlgorithm {
 	// on grid-adjacent coordinates, so HashSet lookups on tile data could silently degrade toward
 	// O(n) per call. Now, the comparer's spatial-hash-style mixing spreads adjacent coordinates
 	// across the full hash range, keeping Contains/Add close to true O(1) on real tile grids.
-	public Dictionary<Vector2Int, List<Vector2Int>> Extract(MacroDict _macroTileDictionary) {
-		var visitedTiles = new HashSet<Vector2Int>(_macroTileDictionary.Count, Vector2IntComparer.Instance);
+	public Dictionary<Vector2Int, List<Vector2Int>> Extract(
+		SerializableDictionary<Vector2Int, HHSIMacroPathFindingTile> macroTileDictionary) {
+
+		var visitedTiles = new HashSet<Vector2Int>(macroTileDictionary.Count, Vector2IntComparer.Instance);
 		var allRegions = new Dictionary<Vector2Int, List<Vector2Int>>();
 
 		// Zero-allocation snapshot of all tile coordinates via ZLinq's value-enumerable ToArray.
-		var allKeys = _macroTileDictionary.Keys.AsValueEnumerable().ToArray();
+		var allKeys = macroTileDictionary.Keys.AsValueEnumerable().ToArray();
 
 		for (int i = 0; i < allKeys.Length; i++) {
 			Vector2Int anchor = allKeys[i];
 			if (visitedTiles.Contains(anchor)) continue;
 
-			List<Vector2Int> singleRegionTiles = ExploreRegion(visitedTiles, _macroTileDictionary, anchor);
+			List<Vector2Int> singleRegionTiles = ExploreRegion(visitedTiles, macroTileDictionary, anchor);
 
 			if (singleRegionTiles.Count > 0) {
 				allRegions[anchor] = singleRegionTiles;
@@ -82,7 +84,7 @@ public class RegionExtractionAlgorithm {
 	// a per-tile iterator allocation in the hot path.
 	private List<Vector2Int> ExploreRegion(
 			HashSet<Vector2Int> visitedTiles,
-			MacroDict _macroTileDictionary,
+			SerializableDictionary<Vector2Int, HHSIMacroPathFindingTile> _macroTileDictionary,
 			Vector2Int anchorPos) {
 
 		var regionTiles = new List<Vector2Int>();

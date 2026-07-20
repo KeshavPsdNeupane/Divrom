@@ -21,7 +21,7 @@ namespace Kope.Feature.PathFinding.Utility {
 	/// chaining.
 	/// </summary>
 	public sealed class Vector2IntComparer : IEqualityComparer<Vector2Int> {
-		public static readonly Vector2IntComparer Instance = new Vector2IntComparer();
+		public static readonly Vector2IntComparer Instance = new();
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public bool Equals(Vector2Int a, Vector2Int b) => a.x == b.x && a.y == b.y;

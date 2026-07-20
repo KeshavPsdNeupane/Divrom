@@ -1,16 +1,11 @@
-using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Kope.Feature.PathFinding;
+using Kope.Feature.PathFinding.Interface;
 using Kope.Feature.PathFinding.Utility;
 using UnityEngine;
-using ZLinq;
 
-// shorthand aliases for sliced region dictionary type
-using SlicedRegionDict = Kope.Core.Collections.SerializableDictionary<Kope.Feature.PathFinding.BoundingBox,
-(UnityEngine.Vector2Int, System.Collections.Generic.List<UnityEngine.Vector2Int>)>;
-
-public class GreedyRectanglePackingAlogorithm {
+public class GreedyRectanglePackingAlogorithm : IRectangleRegionSlicer {
 	// =========================================================================
 	// HHSI-SPECIFIC GREEDY RECTANGLE PACKING ALGORITHM
 	// =========================================================================
@@ -24,15 +19,16 @@ public class GreedyRectanglePackingAlogorithm {
 	// produce suboptimal macro-node splitting compared to global optimization solvers, it 
 	// executes instantly at bake-time and provides a predictable, stable zoning topology 
 	// optimized for hierarchical pathfinding.
-	public SlicedRegionDict Slice(Dictionary<Vector2Int, List<Vector2Int>> isolatedRegions, Vector2Int maxBoundSize) {
+	public Dictionary<BoundingBox, (Vector2Int, List<Vector2Int>)> Slice(Dictionary<Vector2Int, List<Vector2Int>> isolatedRegions, Vector2Int maxBoundSize) {
 		if (isolatedRegions == null || isolatedRegions.Count == 0) {
 			Debug.LogError("GreedyRectanglePackingAlgorithm: No regions provided for slicing.");
 			return null;
 		}
 
-		// Pre-allocate the master dictionary with a safe capacity baseline if needed, 
-		// or let it grow. Passing this reference down eliminates inner allocations.
-		var slicedRegions = new SlicedRegionDict();
+		// pre allocating atleast 2x size of isolatedRegions to avoid rehashing and resizing of dictionary
+		// if more needed, it will resize automatically but this is a good starting point
+		var slicedRegions = new Dictionary<BoundingBox,
+		(Vector2Int, List<Vector2Int>)>(isolatedRegions.Count * 2);
 
 		foreach (var kvp in isolatedRegions) {
 			Vector2Int anchor = kvp.Key;
@@ -63,7 +59,7 @@ public class GreedyRectanglePackingAlogorithm {
 		Vector2Int anchor,
 		List<Vector2Int> singleRegionTiles,
 		Vector2Int maxBoundSize,
-		SlicedRegionDict destinationDict) {
+		Dictionary<BoundingBox, (Vector2Int, List<Vector2Int>)> destinationDict) {
 
 		var unvisitedTiles = new HashSet<Vector2Int>(singleRegionTiles, Vector2IntComparer.Instance);
 		bool usedFirstAnchor = false;

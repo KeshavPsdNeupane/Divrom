@@ -57,6 +57,7 @@
     <Compile Include="Assets/_Project/_BootStrap/GlobalBootStrap.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AnimationCurve/Curve.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/StatBased/ResistanceStatModifierEffect.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/RectangleSlicer/GreedyRectanglePackingAlogorithm.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/ConcreteClass/AreaTargeting/AreaTargetingStrategy3D.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AnimationCurve/CurveTester.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/UI/ItemSlotDoubleTap.cs" />
@@ -71,6 +72,7 @@
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Ability/StatBased/StatChangeAbility.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Ability/AbilityBase.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/UtilityClasses/AbilityAreaTargetingController.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/RectangleSlicer/DualAxisGreedyMeshingAlgorithm.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Utility/Vector2IntComparer.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Interface/Interface.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/ConcreteClass/AreaTargeting/AreaTargetingStrategy2D.cs" />
@@ -82,7 +84,6 @@
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/TargetingInputHandler.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/ConcreteClass/SelfTargetingStrategy.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/ConcreteClass/ProjectileTargetingStrategy.cs" />
-    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/RegionExtractionAlgorithm.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/TargetingManager.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/PathChecker.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/HealBased/HealOverTimeEffect.cs" />
@@ -91,10 +92,12 @@
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Ability/DamageBased/DamageAbility.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/UtilityClasses/AbilityProjectileController.cs" />
     <Compile Include="Assets/_Project/Scripts/UI/UIState/UIStateManager.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/RegionGroupAlgorithm/RegionExtractionAlgorithm.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Tiles/HHSIMicroPathFindingTile.cs" />
     <Compile Include="Assets/_Project/Scripts/UI/UIState/InGameUI/InGameUIInitCaller.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Tiles/HHSIPathFindingTileBase.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Utility/TileSpriteCache.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Interface/IRegion.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/TargetingStrategy.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/MovementBased/KnockBackEffect.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/ConcreteClass/AreaTargeting/AreaTargetingStrategy.cs" />
@@ -107,7 +110,6 @@
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/DamageBased/InstantDamageEffect.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/TargetingSettings.cs" />
     <Compile Include="Assets/_Project/Scripts/UI/UIState/UIState.cs" />
-    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/GreedyRectanglePackingAlogorithm.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/ConcreteClass/SingleTargetTargetingStrategy.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/UtilityClasses/ProjectileLineContrller.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/StatBased/StatChangeEffectSetting.cs" />
