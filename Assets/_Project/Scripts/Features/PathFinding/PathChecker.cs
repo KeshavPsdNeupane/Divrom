@@ -34,9 +34,13 @@ namespace Kope.Feature.PathFinding {
 
 	public enum RectanleSlicerAgorithm {
 		GREEDY = 0,
-		DUAL_PHASE_GREEDY_MESHING = 1,
-		AREA_BOUND = 2,
-		AREA_BOUND_v2 = 3,
+		CASCADING_GREEDY = 1,
+		DUAL_PHASE_GREEDY_MESHING = 10,
+		DEFERRED_GREEDY_TWO_PASS_V3 = 12,
+		HOMEGENEOUS_REGION_SLICER = 20,
+		OPTIMAL_SLICER = 21,
+		ADAPTIVE_DUAL_PHASE_GREEDY_MESHING = 30,
+		ADAPTIVE_DUAL_PHASE_GREEDY_MESHING_V2 = 31,
 	}
 
 	[System.Serializable]
@@ -111,9 +115,14 @@ namespace Kope.Feature.PathFinding {
 		public IRectangleRegionSlicer GetRectangleSlicer(RectanleSlicerAgorithm slicer) {
 			return slicer switch {
 				RectanleSlicerAgorithm.GREEDY => new GreedyRectanglePackingAlogorithm(),
+				RectanleSlicerAgorithm.CASCADING_GREEDY => new DualAxisCascadingSlicer(),
 				RectanleSlicerAgorithm.DUAL_PHASE_GREEDY_MESHING => new DualAxisGreedyMeshingAlgorithm(),
-				RectanleSlicerAgorithm.AREA_BOUND => new AreaBoundedGreedyMeshingAlgorithm(),
-				RectanleSlicerAgorithm.AREA_BOUND_v2 => new AreaBoundedGreedyMeshingAlgorithm1(),
+				RectanleSlicerAgorithm.DEFERRED_GREEDY_TWO_PASS_V3 => new DeferredTwoPassGreedyMeshingAlgorithm(),
+				RectanleSlicerAgorithm.HOMEGENEOUS_REGION_SLICER => new HomogeneousRegionSlicer(),
+				RectanleSlicerAgorithm.OPTIMAL_SLICER => new OptimalRegionSlicer(),
+				RectanleSlicerAgorithm.ADAPTIVE_DUAL_PHASE_GREEDY_MESHING => new AdaptiveDualAxisGreedyMeshingAlgorithm(),
+				RectanleSlicerAgorithm.ADAPTIVE_DUAL_PHASE_GREEDY_MESHING_V2 => new AdaptiveDualAxisGreedyMeshingAlgorithm1(),
+
 				_ => throw new System.ArgumentOutOfRangeException(nameof(slicer), slicer, null)
 			};
 		}
