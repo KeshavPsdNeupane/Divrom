@@ -80,6 +80,7 @@
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/PlayerAbilityCaster.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Tiles/HHSIMacroPathFindingTile.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/DamageBased/DamageOverTimeEffect.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/RectangleSlicer/AreaBoundedGreedyMeshingAlgorithm.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/MovementBased/StunEffect.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/TargetingInputHandler.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/ConcreteClass/SelfTargetingStrategy.cs" />
