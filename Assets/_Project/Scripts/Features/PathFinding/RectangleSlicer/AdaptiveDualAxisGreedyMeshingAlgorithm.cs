@@ -39,7 +39,7 @@ namespace Kope.Feature.PathFinding.Utility {
 		/// </summary>
 		private readonly float _protrusionThresholdPercent;
 
-		public AdaptiveDualAxisGreedyMeshingAlgorithm(float protrusionThresholdPercent = 0.25f) {
+		public AdaptiveDualAxisGreedyMeshingAlgorithm(float protrusionThresholdPercent = 0.35f) {
 			_protrusionThresholdPercent = Mathf.Clamp01(protrusionThresholdPercent);
 		}
 
@@ -136,30 +136,34 @@ namespace Kope.Feature.PathFinding.Utility {
 		}
 
 		/// <summary>
-		/// Checks whether a filled rectangle of at least minWidth x minHeight is available
-		/// starting at the anchor. If it fails, the anchor is classified as inside a protrusion.
-		/// Checked in two directions (forward, and back-anchored) to reduce false positives from
-		/// tiles that are legitimately part of the main body but sit near its far edge.
+		/// Checks whether the anchor has "enough surrounding area" to be considered main body
+		/// rather than a narrow protrusion.
+		///
+		/// IMPORTANT DESIGN NOTE: this used to be an AND-based check (full minWidth x minHeight
+		/// box must be simultaneously filled in both dimensions). That over-fires at legitimate
+		/// transitions between two differently-shaped open areas - e.g. the last few columns of a
+		/// wide platform right where a narrow corridor joins it - because no single box spanning
+		/// both shapes is ever fully filled, even though the anchor is clearly not stuck in a
+		/// narrow offshoot. That false positive was confirmed against real slicing output: it
+		/// caused a corner of a platform to be misclassified as a protrusion, which stole tiles
+		/// away from the platform's true footprint and left an orphaned single-tile-wide column
+		/// behind.
+		///
+		/// The fix is an OR-based bidirectional span check: the anchor has sufficient area if
+		/// EITHER its horizontal span (left run + right run through the anchor) OR its vertical
+		/// span meets the threshold. A true protrusion is narrow along BOTH axes at once; if
+		/// either axis has room, the anchor is part of some larger open area, not a corridor.
 		/// </summary>
 		private bool HasSufficientBoundingArea(
 			Vector2Int anchor, HashSet<Vector2Int> shape, int minWidth, int minHeight) {
 
-			if (BoxFullyPresent(anchor.x, anchor.y, minWidth, minHeight, shape)) return true;
+			int horizontalSpan = RunLength(anchor, shape, isXAxis: true)
+				+ ExtentInDirection(anchor, shape, dx: -1, dy: 0, limit: int.MaxValue);
 
-			// Try anchoring the check box so that "anchor" sits at its bottom-right corner
-			// instead of top-left, in case the main body extends backward instead of forward.
-			if (BoxFullyPresent(anchor.x - minWidth + 1, anchor.y - minHeight + 1, minWidth, minHeight, shape)) return true;
+			int verticalSpan = RunLength(anchor, shape, isXAxis: false)
+				+ ExtentInDirection(anchor, shape, dx: 0, dy: -1, limit: int.MaxValue);
 
-			return false;
-		}
-
-		private bool BoxFullyPresent(int startX, int startY, int width, int height, HashSet<Vector2Int> shape) {
-			for (int dx = 0; dx < width; dx++) {
-				for (int dy = 0; dy < height; dy++) {
-					if (!shape.Contains(new Vector2Int(startX + dx, startY + dy))) return false;
-				}
-			}
-			return true;
+			return horizontalSpan >= minWidth || verticalSpan >= minHeight;
 		}
 
 		/// <summary>
@@ -376,33 +380,72 @@ namespace Kope.Feature.PathFinding.Utility {
 		// STEP 2: POST-PROCESSING - Maximal Merging + Uniform Subdivision
 		// =====================================================================================
 
+		/// <summary>
+		/// DESIGN NOTE - why this isn't a per-tile HashSet-order merge:
+		///
+		/// An earlier version of this method iterated `foreach (var tile in allTiles)` and grew a
+		/// maximal rectangle from whichever tile the HashSet happened to enumerate first. That is
+		/// non-deterministic and directionally biased (growth only ever expanded in +x/+y from the
+		/// seed), so a seed that landed on a shape's corner/edge could lock in a thin sliver
+		/// *before* the seed that should have produced the true, larger rectangle ever got a
+		/// chance to claim those cells. Confirmed against real output: an isolated single-tile-wide
+		/// column got carved out of what should have been one wide platform, and a narrow corridor
+		/// "stole" columns from an adjoining platform, forcing both into worse shapes.
+		///
+		/// The fix is to always extract the SINGLE LARGEST all-filled, unclaimed axis-aligned
+		/// rectangle across the *entire* remaining region first, then repeat. This is the classic
+		/// "maximal rectangle in a binary matrix" problem (histogram + monotonic stack, O(W*H) per
+		/// extraction). Picking the biggest rectangle globally, rather than growing from an
+		/// arbitrary seed, means the decomposition naturally respects the shape's real structural
+		/// transitions (a corridor won't out-compete an adjoining platform for shared tiles unless
+		/// it is genuinely the bigger candidate), which is also in line with the finding that a
+		/// "pick the largest remaining region" greedy strategy performs close to optimal in
+		/// practice for rectangle decomposition of binary shapes.
+		/// </summary>
 		private List<RectResult> RunPostProcessing(List<RectResult> primaryResults, Vector2Int maxBoundSize) {
 			if (primaryResults.Count == 0) return primaryResults;
 
-			// Build a flat lookup of every tile back to the primary-pass rectangle that owns it,
-			// so adjacency/merge checks can be done cell-by-cell.
-			var tileOwner = new Dictionary<Vector2Int, int>();
-			for (int i = 0; i < primaryResults.Count; i++) {
-				foreach (var tile in primaryResults[i].Tiles) {
-					tileOwner[tile] = i;
-				}
+			var allTiles = new HashSet<Vector2Int>();
+			foreach (var result in primaryResults) {
+				foreach (var tile in result.Tiles) allTiles.Add(tile);
 			}
 
-			var allTiles = new HashSet<Vector2Int>(tileOwner.Keys);
-			var claimedForMerge = new HashSet<Vector2Int>();
-			var finalResults = new List<RectResult>();
+			if (allTiles.Count == 0) return new List<RectResult>();
 
+			int minX = int.MaxValue, maxX = int.MinValue;
+			int minY = int.MaxValue, maxY = int.MinValue;
 			foreach (var tile in allTiles) {
-				if (claimedForMerge.Contains(tile)) continue; // already part of a locked merged rect
+				if (tile.x < minX) minX = tile.x;
+				if (tile.x > maxX) maxX = tile.x;
+				if (tile.y < minY) minY = tile.y;
+				if (tile.y > maxY) maxY = tile.y;
+			}
 
-				// Maximal Merging: grow the largest possible perfect rectangle from this tile,
-				// ignoring maxBoundSize, using only cells that belong to the same homogeneous
-				// region (i.e. present in allTiles) and are not yet claimed by another merge.
-				var mergedBox = GrowMaximalRectangle(tile, allTiles, claimedForMerge);
+			int width = maxX - minX + 1;
+			int height = maxY - minY + 1;
 
-				foreach (var t in EnumerateBox(mergedBox)) {
-					claimedForMerge.Add(t);
+			// filled[x,y]: is this cell part of the region at all. claimed[x,y]: already extracted.
+			var filled = new bool[width, height];
+			var claimed = new bool[width, height];
+			foreach (var tile in allTiles) {
+				filled[tile.x - minX, tile.y - minY] = true;
+			}
+
+			var finalResults = new List<RectResult>();
+			int remaining = allTiles.Count;
+
+			while (remaining > 0) {
+				var (rx, ry, rw, rh) = FindLargestUnclaimedRectangle(filled, claimed, width, height);
+				if (rw == 0 || rh == 0) break; // safety net, should not happen while remaining > 0
+
+				for (int dx = 0; dx < rw; dx++) {
+					for (int dy = 0; dy < rh; dy++) {
+						claimed[rx + dx, ry + dy] = true;
+					}
 				}
+				remaining -= rw * rh;
+
+				var mergedBox = new BoundingBox(minX + rx, minY + ry, minX + rx + rw - 1, minY + ry + rh - 1);
 
 				// Uniform Subdivision: if the merged rectangle exceeds maxBoundSize, split it into
 				// evenly sized sub-rectangles rather than leaving one oversized region.
@@ -413,63 +456,43 @@ namespace Kope.Feature.PathFinding.Utility {
 		}
 
 		/// <summary>
-		/// Grows the largest axis-aligned rectangle containing `seed`, using only tiles present in
-		/// `available` and not already `claimed`. Equivalent to greedy meshing at cell granularity,
-		/// with no maxBoundSize limit (per spec: "temporarily ignoring the standard maximum
-		/// region size limits").
+		/// Classic "maximal rectangle in a binary matrix" solve: builds a per-column histogram of
+		/// consecutive filled-and-unclaimed cell counts as it sweeps rows top to bottom, and uses a
+		/// monotonic stack to find the largest rectangle in that histogram for every row. Returns
+		/// the single largest rectangle found across the whole grid.
 		/// </summary>
-		private BoundingBox GrowMaximalRectangle(Vector2Int seed, HashSet<Vector2Int> available, HashSet<Vector2Int> claimed) {
-			bool IsFree(Vector2Int p) => available.Contains(p) && !claimed.Contains(p);
+		private (int x, int y, int w, int h) FindLargestUnclaimedRectangle(
+			bool[,] filled, bool[,] claimed, int width, int height) {
 
-			// Expand width along the seed's row first.
-			int width = 1;
-			while (IsFree(new Vector2Int(seed.x + width, seed.y))) width++;
+			var heights = new int[width];
+			int bestArea = 0;
+			var best = (x: 0, y: 0, w: 0, h: 0);
 
-			// Expand height, keeping the full width filled at every row.
-			int height = 1;
-			bool canExpand = true;
-			while (canExpand) {
-				int checkY = seed.y + height;
-				for (int dx = 0; dx < width; dx++) {
-					if (!IsFree(new Vector2Int(seed.x + dx, checkY))) {
-						canExpand = false;
-						break;
+			for (int y = 0; y < height; y++) {
+				for (int x = 0; x < width; x++) {
+					bool free = filled[x, y] && !claimed[x, y];
+					heights[x] = free ? heights[x] + 1 : 0;
+				}
+
+				var stack = new Stack<int>();
+				for (int x = 0; x <= width; x++) {
+					int currentHeight = x == width ? 0 : heights[x];
+					while (stack.Count > 0 && heights[stack.Peek()] >= currentHeight) {
+						int top = stack.Pop();
+						int barHeight = heights[top];
+						int leftBound = stack.Count == 0 ? 0 : stack.Peek() + 1;
+						int barWidth = x - leftBound;
+						int area = barHeight * barWidth;
+						if (area > bestArea) {
+							bestArea = area;
+							best = (leftBound, y - barHeight + 1, barWidth, barHeight);
+						}
 					}
-				}
-				if (canExpand) height++;
-			}
-
-			// Also try the height-first orientation and keep whichever yields the larger area -
-			// mirrors the same dual-axis philosophy used in the primary pass.
-			int heightAlt = 1;
-			while (IsFree(new Vector2Int(seed.x, seed.y + heightAlt))) heightAlt++;
-			int widthAlt = 1;
-			bool canExpandAlt = true;
-			while (canExpandAlt) {
-				int checkX = seed.x + widthAlt;
-				for (int dy = 0; dy < heightAlt; dy++) {
-					if (!IsFree(new Vector2Int(checkX, seed.y + dy))) {
-						canExpandAlt = false;
-						break;
-					}
-				}
-				if (canExpandAlt) widthAlt++;
-			}
-
-			if (widthAlt * heightAlt > width * height) {
-				width = widthAlt;
-				height = heightAlt;
-			}
-
-			return new BoundingBox(seed.x, seed.y, seed.x + width - 1, seed.y + height - 1);
-		}
-
-		private IEnumerable<Vector2Int> EnumerateBox(BoundingBox box) {
-			for (int x = box.Min.x; x <= box.Max.x; x++) {
-				for (int y = box.Min.y; y <= box.Max.y; y++) {
-					yield return new Vector2Int(x, y);
+					stack.Push(x);
 				}
 			}
+
+			return best;
 		}
 
 		private List<RectResult> SubdivideUniformly(BoundingBox box, Vector2Int maxBoundSize) {

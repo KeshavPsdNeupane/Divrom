@@ -39,8 +39,8 @@ namespace Kope.Feature.PathFinding {
 		DEFERRED_GREEDY_TWO_PASS_V3 = 12,
 		HOMEGENEOUS_REGION_SLICER = 20,
 		OPTIMAL_SLICER = 21,
-		ADAPTIVE_DUAL_PHASE_GREEDY_MESHING = 30,
-		ADAPTIVE_DUAL_PHASE_GREEDY_MESHING_V2 = 31,
+		ADAPTIVE_DUAL_PHASE_GREEDY_MESHING_NON_PERM = 30,
+		ADAPTIVE_DUAL_PHASE_GREEDY_MESHING_PERF = 31,
 	}
 
 	[System.Serializable]
@@ -120,8 +120,8 @@ namespace Kope.Feature.PathFinding {
 				RectanleSlicerAgorithm.DEFERRED_GREEDY_TWO_PASS_V3 => new DeferredTwoPassGreedyMeshingAlgorithm(),
 				RectanleSlicerAgorithm.HOMEGENEOUS_REGION_SLICER => new HomogeneousRegionSlicer(),
 				RectanleSlicerAgorithm.OPTIMAL_SLICER => new OptimalRegionSlicer(),
-				RectanleSlicerAgorithm.ADAPTIVE_DUAL_PHASE_GREEDY_MESHING => new AdaptiveDualAxisGreedyMeshingAlgorithm(),
-				RectanleSlicerAgorithm.ADAPTIVE_DUAL_PHASE_GREEDY_MESHING_V2 => new AdaptiveDualAxisGreedyMeshingAlgorithm1(),
+				RectanleSlicerAgorithm.ADAPTIVE_DUAL_PHASE_GREEDY_MESHING_NON_PERM => new AdaptiveDualAxisGreedyMeshingAlgorithm(),
+				RectanleSlicerAgorithm.ADAPTIVE_DUAL_PHASE_GREEDY_MESHING_PERF => new AdaptiveDualAxisGreedyMeshingAlgorithmPERFOPTIMIZED(),
 
 				_ => throw new System.ArgumentOutOfRangeException(nameof(slicer), slicer, null)
 			};
