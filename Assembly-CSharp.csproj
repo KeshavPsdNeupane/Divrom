@@ -108,6 +108,7 @@
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Ability/HealBased/HealAbility.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/StatBased/BasicStatModifierEffect.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/UI/ItemSlotUI/ItemSlotUI.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/RectangleSlicer/AreaBoundedGreedyMeshingAlgorithm1.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/DamageBased/InstantDamageEffect.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/TargetingSettings.cs" />
     <Compile Include="Assets/_Project/Scripts/UI/UIState/UIState.cs" />

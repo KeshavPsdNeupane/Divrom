@@ -35,7 +35,8 @@ namespace Kope.Feature.PathFinding {
 	public enum RectanleSlicerAgorithm {
 		GREEDY = 0,
 		DUAL_PHASE_GREEDY_MESHING = 1,
-		AREA_BOUND = 3,
+		AREA_BOUND = 2,
+		AREA_BOUND_v2 = 3,
 	}
 
 	[System.Serializable]
@@ -112,6 +113,7 @@ namespace Kope.Feature.PathFinding {
 				RectanleSlicerAgorithm.GREEDY => new GreedyRectanglePackingAlogorithm(),
 				RectanleSlicerAgorithm.DUAL_PHASE_GREEDY_MESHING => new DualAxisGreedyMeshingAlgorithm(),
 				RectanleSlicerAgorithm.AREA_BOUND => new AreaBoundedGreedyMeshingAlgorithm(),
+				RectanleSlicerAgorithm.AREA_BOUND_v2 => new AreaBoundedGreedyMeshingAlgorithm1(),
 				_ => throw new System.ArgumentOutOfRangeException(nameof(slicer), slicer, null)
 			};
 		}
