@@ -7,7 +7,7 @@ using Kope.Feature.PathFinding.Tile;
 using Kope.Feature.PathFinding.Utility;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-
+using ZLinq;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -34,13 +34,10 @@ namespace Kope.Feature.PathFinding {
 
 	public enum RectanleSlicerAgorithm {
 		GREEDY = 0,
-		CASCADING_GREEDY = 1,
 		DUAL_PHASE_GREEDY_MESHING = 10,
-		DEFERRED_GREEDY_TWO_PASS_V3 = 12,
-		HOMEGENEOUS_REGION_SLICER = 20,
-		OPTIMAL_SLICER = 21,
 		ADAPTIVE_DUAL_PHASE_GREEDY_MESHING_NON_PERM = 30,
 		ADAPTIVE_DUAL_PHASE_GREEDY_MESHING_PERF = 31,
+		ADAPTIVE_CLUSTERED_SLICER = 32,
 	}
 
 	[System.Serializable]
@@ -115,14 +112,10 @@ namespace Kope.Feature.PathFinding {
 		public IRectangleRegionSlicer GetRectangleSlicer(RectanleSlicerAgorithm slicer) {
 			return slicer switch {
 				RectanleSlicerAgorithm.GREEDY => new GreedyRectanglePackingAlogorithm(),
-				RectanleSlicerAgorithm.CASCADING_GREEDY => new DualAxisCascadingSlicer(),
 				RectanleSlicerAgorithm.DUAL_PHASE_GREEDY_MESHING => new DualAxisGreedyMeshingAlgorithm(),
-				RectanleSlicerAgorithm.DEFERRED_GREEDY_TWO_PASS_V3 => new DeferredTwoPassGreedyMeshingAlgorithm(),
-				RectanleSlicerAgorithm.HOMEGENEOUS_REGION_SLICER => new HomogeneousRegionSlicer(),
-				RectanleSlicerAgorithm.OPTIMAL_SLICER => new OptimalRegionSlicer(),
 				RectanleSlicerAgorithm.ADAPTIVE_DUAL_PHASE_GREEDY_MESHING_NON_PERM => new AdaptiveDualAxisGreedyMeshingAlgorithm(),
 				RectanleSlicerAgorithm.ADAPTIVE_DUAL_PHASE_GREEDY_MESHING_PERF => new AdaptiveDualAxisGreedyMeshingAlgorithmPERFOPTIMIZED(),
-
+				RectanleSlicerAgorithm.ADAPTIVE_CLUSTERED_SLICER => new AdaptiveDualAxisGreedyMeshingAlgorithmClustered(),
 				_ => throw new System.ArgumentOutOfRangeException(nameof(slicer), slicer, null)
 			};
 		}
@@ -205,7 +198,7 @@ namespace Kope.Feature.PathFinding {
 
 		public void QuoteOnQuoteBake() {
 			this._rectanglePacker = GetRectangleSlicer(this.rectangleSlicer);
-			Debug.Log("[Pipeline] Starting Quote-on-Quote bake process...");
+			//	Debug.Log("[Pipeline] Starting Quote-on-Quote bake process...");
 
 			// ==========================================
 			// 1. MICRO-LEVEL NODE GENERATION
@@ -223,25 +216,52 @@ namespace Kope.Feature.PathFinding {
 			// ==========================================
 			// 2. MACRO-LEVEL NODE GENERATION & SLICING
 			// ==========================================
-			Debug.Log("[Pipeline] Extracting macro regions from tilemap...");
+			//Debug.Log("[Pipeline] Extracting macro regions from tilemap...");
 			var regionTiles = this._regionExtractor.Extract(this._macroTileDictionary);
+			string[] regionSummaries = new string[regionTiles.Count];
 
-			StringBuilder regionSummary = new();
-			foreach (var kvp in regionTiles) {
+			for (int i = 0; i < regionTiles.Count; i++) {
+				var kvp = regionTiles.AsValueEnumerable().ElementAt(i);
 				Vector2Int anchorPos = kvp.Key;
 				List<Vector2Int> tilesInRegion = kvp.Value;
-				regionSummary.AppendLine($"Macro region starting at {anchorPos} contains {tilesInRegion.Count} tiles.\n");
-			}
 
-			Debug.Log($"[Pipeline] Region summary (total regions = {regionTiles.Count}): \n" + regionSummary.ToString());
+				// // Build a string specifically for this one region
+				// StringBuilder singleRegionLog = new StringBuilder();
+				// singleRegionLog.Append($"Tiles in region starting at {anchorPos}: ");
+
+				// bool first = true;
+				// foreach (var tilePos in tilesInRegion) {
+				// 	if (first) {
+				// 		singleRegionLog.Append($"{tilePos}");
+				// 		first = false;
+				// 	} else {
+				// 		singleRegionLog.Append($", {tilePos}");
+				// 	}
+				// }
+				// // Log each region independently so nothing gets truncated
+				// regionSummaries[i] = singleRegionLog.ToString();
+			}
+			//Debug.Log($"[Pipeline] Region summary (total regions = {regionTiles.Count}):");
+			// for (int i = 0; i < regionSummaries.Length; i++) {
+			// 	Debug.Log($"[Pipeline] Region {i + 1}/{regionSummaries.Length}: {regionSummaries[i]}");
+			// }
+
 
 			var maxBoundSize = this.maxBoundingBoxSize;
 
 			StringBuilder slicingSummary = new();
 			Debug.Log($"[Pipeline] Slicing macro regions using {this._rectanglePacker.GetType().Name} " +
-			"into bounding boxes with max size " + maxBoundSize);
+			$"into bounding boxes with max size{maxBoundSize}");
+
+
+
+			var stopwatch = System.Diagnostics.Stopwatch.StartNew();
 
 			var slicedRegions = this._rectanglePacker.Slice(regionTiles, maxBoundSize);
+
+			stopwatch.Stop();
+
+			Debug.Log($"Slice execution time: {stopwatch.ElapsedMilliseconds} ms");
 
 			// Store the newly computed slice bounding boxes and tile sets into our persistent instance cache for Gizmo visualization
 			_bakedSlicesCache.Clear();
@@ -249,11 +269,12 @@ namespace Kope.Feature.PathFinding {
 				_bakedSlicesCache[kvp.Key] = kvp.Value;
 				BoundingBox bounds = kvp.Key;
 				var (anchor, tilesInRegion) = kvp.Value;
-				slicingSummary.AppendLine($"Sliced macro region starting at {anchor} with bounds {bounds} contains {tilesInRegion.Count} tiles.\n");
+				//slicingSummary.AppendLine($"Sliced macro region starting at {anchor} with bounds {bounds} contains {tilesInRegion.Count} tiles.\n");
 			}
+
 			Debug.Log($"[Pipeline] Slicing summary (total slices = {slicedRegions.Count}): \n" + slicingSummary.ToString());
 
-			Debug.Log("[Pipeline] Quote-on-Quote bake process completed.");
+			// Debug.Log("[Pipeline] Quote-on-Quote bake process completed.");
 
 #if UNITY_EDITOR
 			SceneView.RepaintAll();

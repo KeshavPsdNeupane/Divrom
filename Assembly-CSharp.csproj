@@ -79,11 +79,9 @@
     <Compile Include="Assets/_Project/Scripts/Features/AnimationCurve/CurveAsset.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/PlayerAbilityCaster.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Tiles/HHSIMacroPathFindingTile.cs" />
-    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/RectangleSlicer/OptimalRegionSlicer.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/DamageBased/DamageOverTimeEffect.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/MovementBased/StunEffect.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/TargetingInputHandler.cs" />
-    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/RectangleSlicer/DeferredTwoPassGreedyMeshingAlgorithm.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/ConcreteClass/SelfTargetingStrategy.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/ConcreteClass/ProjectileTargetingStrategy.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/TargetingManager.cs" />
@@ -101,14 +99,13 @@
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Tiles/HHSIPathFindingTileBase.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Utility/TileSpriteCache.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Interface/IRegion.cs" />
-    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/RectangleSlicer/CascadingGreedyMesher.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/TargetingStrategy.cs" />
-    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/RectangleSlicer/HomogeneousRegionSlicer.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/MovementBased/KnockBackEffect.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/ConcreteClass/AreaTargeting/AreaTargetingStrategy.cs" />
     <Compile Include="Assets/_Project/Scripts/Managers/ItemDragDropManager.cs" />
     <Compile Include="Assets/_Project/Scripts/UI/Menu/TabController.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/DamageBased/DamageEffectSetting.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/RectangleSlicer/AdaptiveDualAxisGreedyMeshingAlgorithmClustered.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Ability/HealBased/HealAbility.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/StatBased/BasicStatModifierEffect.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/UI/ItemSlotUI/ItemSlotUI.cs" />
