@@ -1,6 +1,7 @@
 using Kope.Character.Stats;
 using UnityEngine;
 
+[System.Serializable]
 public abstract class AbstractBaseModifier {
 	public const float PERMANENT_BUFF_DURATION = -1f;
 

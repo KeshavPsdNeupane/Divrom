@@ -46,6 +46,9 @@ namespace Kope.AI {
 	public struct EntityQuery {
 		[Header("Classification")]
 		[Tooltip("The base type of the entity. Used to route the query to the correct registry cache.")]
+		[Message("The base type of the entity. Used to route the query to the correct registry cache.\n" +
+			"• Mob: Queries the MobRegistry for entities matching the specified filters.\n" +
+			"• Prop: Queries the PropRegistry for entities matching the specified filters.")]
 		[SerializeField] private EntityType type;
 
 		[Header("Filter Settings")]

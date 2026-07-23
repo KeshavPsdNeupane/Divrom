@@ -17,7 +17,6 @@ MonoBehaviour:
   entityCommonNameConfig: {fileID: 11400000, guid: 296b484721bdc20d2b51d78c4a7374ac, type: 2}
   entityCommonName: Health
   maxRange: 10
-  angleThreshold: 180
   deadZoneRadius: 0.01
   rangeCurve:
     serializedVersion: 2

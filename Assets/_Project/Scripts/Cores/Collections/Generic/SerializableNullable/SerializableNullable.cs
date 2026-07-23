@@ -3,6 +3,11 @@ namespace Kope.Core.Type.Generic {
 
 	[System.Serializable]
 	public struct SerializableNullable<T> where T : struct {
+		/// <summary>
+		/// NOTE:
+		/// never change the name of following fields, they are being used
+		/// by the custom property drawer to find the serialized values.
+		/// </summary>
 		[SerializeField] private T _value;
 		[SerializeField] private bool _hasValue;
 

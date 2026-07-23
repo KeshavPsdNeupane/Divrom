@@ -4,7 +4,7 @@ namespace Kope.Character.Stats {
 	[System.Serializable]
 	public class BuffDebuffArmorStatusModifier {
 		[HideInInspector] public bool canRemove = false;
-		[HideInInspector] public CountdownTimer durationCountDownTimer;
+		[System.NonSerialized] public CountdownTimer durationCountDownTimer;
 
 		[SerializeField] private AbstractBaseModifier baseEffect;
 

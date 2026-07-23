@@ -181,7 +181,11 @@ namespace Kope.SaveSystem {
 		public MobConfig Config { get; private set; }
 
 		[JsonProperty("data")]
+#pragma warning disable UAC1009
+		// # using newtonsoft which serializes Dictionary<string, ISaveData> correctly, but Unity's 
+		// serializer does not support this type. This is a known limitation of Unity's serialization system.
 		public Dictionary<string, ISaveData> Data;
+#pragma warning restore UAC1009 // Unsupported collection type for serialization
 
 		[JsonConstructor]
 		public MobEntitySavePacket(MobConfig config, Dictionary<string, ISaveData> data) {
@@ -199,7 +203,11 @@ namespace Kope.SaveSystem {
 		public PropConfig TypeGroupConfig { get; private set; }
 
 		[JsonProperty("data")]
+
+		// # using newtonsoft which serializes Dictionary<string, ISaveData> correctly, but Unity's serializer does not support this type. This is a known limitation of Unity's serialization system.
+#pragma warning disable UAC1009 // Unsupported collection type for serialization
 		public Dictionary<string, ISaveData> Data;
+#pragma warning restore UAC1009 // Unsupported collection type for serialization
 
 		[JsonConstructor]
 		public PropEntitySavePacket(PropConfig typeGroupConfig, Dictionary<string, ISaveData> data) {
