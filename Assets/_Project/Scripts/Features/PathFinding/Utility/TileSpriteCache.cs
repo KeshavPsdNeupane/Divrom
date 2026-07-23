@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 
 namespace Kope.Feature.PathFinding.Utility {
@@ -10,7 +11,8 @@ namespace Kope.Feature.PathFinding.Utility {
 	/// The cache is cleared when the application is loaded to ensure that no 
 	/// stale sprites are kept in memory.
 	/// </summary>
-	public static class TileSpriteCache {
+	public static partial class TileSpriteCache {
+		[AutoStaticsCleanup]
 		private static readonly Dictionary<Color32, Sprite> Cache = new();
 		/// <summary>
 		/// Gets or creates a sprite for the specified color. If a sprite for the color 

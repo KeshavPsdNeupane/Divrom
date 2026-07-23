@@ -57,11 +57,10 @@
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Nodes.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/UI/InventoryDisplays/InventoryDisplay.cs" />
     <Compile Include="Assets/_Project/Scripts/UI/Common/PanelFader.cs" />
-    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/RectangleSlicer/Marshalled/PureHistogramRegionSlicerMarshalled.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Utility/RectangleSlicer/GreedyRectanglePackingAlogorithm.cs" />
     <Compile Include="Assets/_Project/_BootStrap/GlobalBootStrap.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AnimationCurve/Curve.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/StatBased/ResistanceStatModifierEffect.cs" />
-    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/RectangleSlicer/GreedyRectanglePackingAlogorithm.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/ConcreteClass/AreaTargeting/AreaTargetingStrategy3D.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AnimationCurve/CurveTester.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/UI/ItemSlotDoubleTap.cs" />
@@ -75,10 +74,10 @@
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/PlayerItemCollector.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Ability/StatBased/StatChangeAbility.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/GridSlicesLogUtility.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Utility/RectangleSlicer/DualAxisGreedyMeshingAlgorithm.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Utility/RectangleSlicer/PureHistogramRegionSlicer.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Ability/AbilityBase.cs" />
-    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/RectangleSlicer/PureHistogramRegionSlicer.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/UtilityClasses/AbilityAreaTargetingController.cs" />
-    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/RectangleSlicer/DualAxisGreedyMeshingAlgorithm.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Utility/Vector2IntComparer.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Interface/Interface.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/ConcreteClass/AreaTargeting/AreaTargetingStrategy2D.cs" />
@@ -88,19 +87,19 @@
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/DamageBased/DamageOverTimeEffect.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/MovementBased/StunEffect.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/TargetingInputHandler.cs" />
-    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/RectangleSlicer/GreedyClusteringHistogramSlicer.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/ConcreteClass/SelfTargetingStrategy.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/ConcreteClass/ProjectileTargetingStrategy.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Utility/RectangleSlicer/Marshalled/PureHistogramRegionSlicerMarshalled.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Utility/RectangleSlicer/GreedyClusteringHistogramSlicer.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/TargetingManager.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/PathChecker.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/HealBased/HealOverTimeEffect.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Tiles/PathFindingTileData.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/DamageBased/VampericDamageEffect.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Ability/DamageBased/DamageAbility.cs" />
-    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/RectangleSlicer/Marshalled/GreedyClusteringHistogramSlicer.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/UtilityClasses/AbilityProjectileController.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Utility/RectangleSlicer/Marshalled/GreedyClusteringHistogramSlicer.cs" />
     <Compile Include="Assets/_Project/Scripts/UI/UIState/UIStateManager.cs" />
-    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/RegionGroupAlgorithm/RegionExtractionAlgorithm.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Tiles/HHSIMicroPathFindingTile.cs" />
     <Compile Include="Assets/_Project/Scripts/UI/UIState/InGameUI/InGameUIInitCaller.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Tiles/HHSIPathFindingTileBase.cs" />
@@ -108,6 +107,7 @@
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Interface/IRegion.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/TargetingStrategy.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/MovementBased/KnockBackEffect.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Utility/RegionGroupAlgorithm/RegionExtractionAlgorithm.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/ConcreteClass/AreaTargeting/AreaTargetingStrategy.cs" />
     <Compile Include="Assets/_Project/Scripts/Managers/ItemDragDropManager.cs" />
     <Compile Include="Assets/_Project/Scripts/UI/Menu/TabController.cs" />
@@ -1609,10 +1609,10 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Kope.InventorySystem.Runtime.csproj" />
-    <ProjectReference Include="Kope.Logging.csproj" />
     <ProjectReference Include="Kope.Actor.Runtime.csproj" />
-    <ProjectReference Include="Kope.InputSystem.csproj" />
+    <ProjectReference Include="Kope.Logging.csproj" />
     <ProjectReference Include="Kope.Character.Stats.Runtime.csproj" />
+    <ProjectReference Include="Kope.InputSystem.csproj" />
     <ProjectReference Include="Out.ThirdParty.Stuff.csproj" />
     <ProjectReference Include="Kope.ModularSpriteAnimation.Editor.csproj" />
     <ProjectReference Include="Kope.ModularSpriteAnimation.Runtime.csproj" />

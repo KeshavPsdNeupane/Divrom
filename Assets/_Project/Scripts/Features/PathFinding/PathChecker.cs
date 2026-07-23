@@ -8,6 +8,8 @@ using Kope.Feature.PathFinding.Utility;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using ZLinq;
+using Kope.EntityIdentity;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -85,6 +87,8 @@ namespace Kope.Feature.PathFinding {
 
 		private readonly SerializableDictionary<Vector2Int, HHSIMacroPathFindingTile> _macroTileDictionary = new(Vector2IntComparer.Instance);
 		private readonly SerializableDictionary<Vector2Int, HHSIMicroPathFindingTile> _microTileDictionary = new(Vector2IntComparer.Instance);
+
+
 		private readonly SerializableDictionary<Vector2Int, MicroGridNode> _microGridNodeDict = new(Vector2IntComparer.Instance);
 		private readonly SerializableDictionary<BoundingBox, MacroGridNode> _macroGridNodeDict = new();
 
@@ -223,11 +227,39 @@ namespace Kope.Feature.PathFinding {
 			var slicedRegions = this._rectanglePacker.Slice(regionTiles, maxBoundSize);
 			stopwatch.Stop();
 
+			// lets fucking goo , need to create connection data using the slicedRegion and 
+			// the macroTileDictionary and the microGridNodeDict to create the connection data 
+			// for each macroGridNode, god forgive me for what i am going to create,
+			// but i know i won't.
+
+
 			// Store newly computed slices into cache for Gizmo visualization
 			this._bakedSlicesCache.Clear();
 			if (slicedRegions != null) {
 				foreach (var kvp in slicedRegions) {
 					this._bakedSlicesCache[kvp.Key] = kvp.Value;
+					// first lets find the terrain type, each other type will be found step wise
+					BoundingBox box = kvp.Key;
+
+					HHSIMacroPathFindingTile regionTile = this._macroTileDictionary[kvp.Value.regionAnchor];
+					// good job me to get 1st data
+					TerrainType terrainType = regionTile.Data.TerrainType;
+
+					MovementCapability movementCapability = regionTile.Data.MovementType;
+
+					bool IsNarrativelyAccessible = regionTile.Data.IsNarrativelyAccessible;
+					// now we all have data except the connection data, we will have to
+					// find the connection data by checking the surrounding tiles
+					// we will check the surrounding tiles and find the connection data
+					// so what to do lets goo time to make another algo that need to be preprocessed
+					// before this loop which will find the connection data for each tile 
+					// and store it in a dictionary
+					// we will use the dictionary to find the connection data for each tile
+					// this._macroGridNodeDict[kvp.Key] = new MacroGridNode(kvp.Key
+					// ,);
+					// man i dont know why but i do be using alot of dictionary and 
+					// but it is fastest for the data structure i need to use and it is 
+					// easy to use and understand
 				}
 			}
 			// ==========================================

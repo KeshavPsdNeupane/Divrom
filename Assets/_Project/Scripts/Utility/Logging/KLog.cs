@@ -1,5 +1,7 @@
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using Unity.Scripting.LifecycleManagement;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -10,7 +12,9 @@ namespace Kope.Logging {
 #if UNITY_EDITOR
 	[InitializeOnLoad]
 #endif
-	public static class KLog {
+	public static partial class KLog {
+
+		[AutoStaticsCleanup]
 		private static ILogger _logger;
 
 		private static ILogger Instance => _logger ??= new UnityLogger();
@@ -18,17 +22,7 @@ namespace Kope.Logging {
 		const string EDITOR_PREFS_KEY = "KLog_UseFileLogger";
 
 		static KLog() {
-			Init();
-		}
-
-		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-		private static void Init() {
-#if UNITY_EDITOR
-			bool useFile = EditorPrefs.GetBool(EDITOR_PREFS_KEY, false);
-			_logger = useFile ? new FileLogger() : new UnityLogger();
-#else
 			_logger = new UnityLogger();
-#endif
 		}
 
 		public static void Configure(bool useFileLogger = false) {

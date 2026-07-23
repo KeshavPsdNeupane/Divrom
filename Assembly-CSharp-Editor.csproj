@@ -1614,10 +1614,10 @@
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp.csproj" />
     <ProjectReference Include="Kope.InventorySystem.Runtime.csproj" />
-    <ProjectReference Include="Kope.Logging.csproj" />
     <ProjectReference Include="Kope.Actor.Runtime.csproj" />
-    <ProjectReference Include="Kope.InputSystem.csproj" />
+    <ProjectReference Include="Kope.Logging.csproj" />
     <ProjectReference Include="Kope.Character.Stats.Runtime.csproj" />
+    <ProjectReference Include="Kope.InputSystem.csproj" />
     <ProjectReference Include="Out.ThirdParty.Stuff.csproj" />
     <ProjectReference Include="Kope.ModularSpriteAnimation.Editor.csproj" />
     <ProjectReference Include="Kope.ModularSpriteAnimation.Runtime.csproj" />

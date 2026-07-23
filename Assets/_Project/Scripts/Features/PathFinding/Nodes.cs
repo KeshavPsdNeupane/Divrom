@@ -59,12 +59,15 @@ namespace Kope.Feature.PathFinding {
 
 		public MacroGridNode(
 			BoundingBox bounds, TerrainType terrainType,
-			List<MacroConnection> connections, MovementCapability allowedTraversal) {
-			this.Connections = connections;
+			 MovementCapability allowedTraversal, List<MicroGridNode> microGridsNodes
+			 , List<MacroConnection> connections) {
 			this.Bounds = bounds;
 			this.TerrainType = terrainType;
 			this.AllowedTraversal = allowedTraversal;
+			this.MicroGridsNodes = microGridsNodes;
+			this.Connections = connections;
 		}
+
 
 		public override string ToString() {
 			return $"MacroGridNode(Bounds: {Bounds}, TerrainType: {TerrainType}, AllowedTraversal: {AllowedTraversal}, TotalMicroGrids: {TotalMicroGrids})";

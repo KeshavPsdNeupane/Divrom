@@ -11,7 +11,7 @@ namespace Kope.Feature.PathFinding.Interface {
 	}
 
 	public interface IRectangleRegionSlicer {
-		Dictionary<BoundingBox, (Vector2Int, List<Vector2Int>)> Slice(
+		Dictionary<BoundingBox, (Vector2Int regionAnchor, List<Vector2Int> RegionTilePosition)> Slice(
 			Dictionary<Vector2Int, List<Vector2Int>> isolatedRegions, Vector2Int maxBoundSize);
 	}
 }
