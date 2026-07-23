@@ -5,14 +5,11 @@ using UnityEngine;
 using ZLinq;
 using Kope.Core.Attribute;
 
-namespace Kope.Core.Execution
-{
+namespace Kope.Core.Execution {
 	[ExecuteAlways]
-	public class SceneExecutionOrderTracker : MonoBehaviour
-	{
+	public class SceneExecutionOrderTracker : MonoBehaviour {
 		[Serializable]
-		public struct TrackedComponent
-		{
+		public struct TrackedComponent {
 			[ReadOnly] public string typeName;
 			[ReadOnly] public int order;
 			[ReadOnly] public string gameObjectName;
@@ -23,24 +20,18 @@ namespace Kope.Core.Execution
 		// Public read-only access at runtime
 		public IReadOnlyList<TrackedComponent> TrackedComponents => trackedComponents;
 
-		void Awake()
-		{
+		void Awake() {
 			this.trackedComponents.Clear();
 
 			// Find all MonoBehaviours in the scene, including inactive
 			var allMonos = FindObjectsByType<MonoBehaviour>(
-				findObjectsInactive: FindObjectsInactive.Include,
-				sortMode: FindObjectsSortMode.None
-			);
+				findObjectsInactive: FindObjectsInactive.Include);
 
-			foreach (var mono in allMonos)
-			{
+			foreach (var mono in allMonos) {
 				var type = mono.GetType();
 				var attr = type.GetCustomAttribute<CustomExecutionOrderAttribute>();
-				if (attr != null)
-				{
-					this.trackedComponents.Add(new TrackedComponent
-					{
+				if (attr != null) {
+					this.trackedComponents.Add(new TrackedComponent {
 						typeName = type.Name,
 						order = attr.order,
 						gameObjectName = mono.gameObject.name

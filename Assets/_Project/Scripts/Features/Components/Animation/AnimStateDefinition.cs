@@ -17,15 +17,16 @@ namespace Kope.Actor.States {
 	/// This design ensures immutability; instances can only be created via the constructor 
 	/// or modified via the <see cref="CopyWith"/> method.
 	/// </remarks>
-	public struct AnimationStateProfileData {
+	public readonly struct AnimationStateProfileData {
+		// readonly class so no need for serializable arrtibute.
 		public const float DEFAULT_ANIMATION_SPEED = 1.0f;
 		public const float DEFAULT_NORMALIZED_EXIT_TIME = 0.9f;
 
-		public string Name { get; private set; }
-		public float AnimationSpeed { get; private set; }
-		public float AbsoluteAnimationLength { get; private set; }
-		public bool IsLooping { get; private set; }
-		public float NormalizedExitTime { get; private set; }
+		public readonly string Name { get; }
+		public readonly float AnimationSpeed { get; }
+		public readonly float AbsoluteAnimationLength { get; }
+		public readonly bool IsLooping { get; }
+		public readonly float NormalizedExitTime { get; }
 
 		public static AnimationStateProfileData DEFAULT = new("Idle", 0.0001f, DEFAULT_ANIMATION_SPEED, true, DEFAULT_NORMALIZED_EXIT_TIME);
 

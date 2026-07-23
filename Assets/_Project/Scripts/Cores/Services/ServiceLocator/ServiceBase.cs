@@ -23,7 +23,7 @@ namespace Kope.Core.ServiceLocator {
 		private void CheckForDuplicates() {
 			// Finds all instances of the specific concrete class (e.g., AudioManager)
 			var type = GetType();
-			var instances = FindObjectsByType(type, FindObjectsSortMode.None);
+			var instances = FindObjectsByType(type);
 
 			if (instances.Length > 1) {
 				Debug.LogWarning($"[ServiceLocator] Multiple instances of <b>{type.Name}</b> found on scene! For now Game will use first one...", this.gameObject);

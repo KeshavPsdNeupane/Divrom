@@ -56,7 +56,7 @@ namespace Kope.Core.ServiceLocator {
 				return true;
 			}
 
-			TService[] instances = FindObjectsByType<TService>(FindObjectsSortMode.None);
+			TService[] instances = FindObjectsByType<TService>(FindObjectsInactive.Include);
 
 			if (instances.Length > 0) {
 				Array.Sort(instances, (a, b) => GetHierarchyDepth(a.transform).CompareTo(GetHierarchyDepth(b.transform)));

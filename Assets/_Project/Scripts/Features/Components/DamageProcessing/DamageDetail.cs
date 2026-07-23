@@ -30,6 +30,7 @@ namespace Kope.Component.Combat {
 		}
 	}
 	// will move this to effect location later
+	[System.Serializable]
 	public struct KnockbackDetail {
 		[Tooltip("If true the target will be pulled toward the point of origin. " +
 		"Not a full blackhole pull, but more of a directional pull that still respects the direction vector, " +

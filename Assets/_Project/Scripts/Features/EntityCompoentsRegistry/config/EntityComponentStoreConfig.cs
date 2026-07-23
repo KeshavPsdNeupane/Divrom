@@ -41,7 +41,7 @@ namespace Kope.Core.EntityComponentRegistry {
 			if (sourceNames == null || sourceNames.Count == 0)
 				return;
 
-			var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+			var assemblies = UnityEngine.Assemblies.CurrentAssemblies.GetLoadedAssemblies();
 
 			foreach (var typeName in sourceNames) {
 				bool found = false;
@@ -51,6 +51,7 @@ namespace Kope.Core.EntityComponentRegistry {
 				// 1. Attempt Exact Matching (Namespace.TypeName)
 				foreach (var assembly in assemblies) {
 					var type = assembly.GetType(strippedTypeName);
+
 					if (type != null) {
 						destinationSet.Add(type);
 						found = true;

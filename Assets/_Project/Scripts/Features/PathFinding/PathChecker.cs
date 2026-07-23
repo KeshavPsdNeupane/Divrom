@@ -8,6 +8,8 @@ using Kope.Feature.PathFinding.Utility;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using ZLinq;
+
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -35,9 +37,8 @@ namespace Kope.Feature.PathFinding {
 	public enum RectanleSlicerAgorithm {
 		GREEDY = 0,
 		DUAL_PHASE_GREEDY_MESHING = 10,
-		ADAPTIVE_DUAL_PHASE_GREEDY_MESHING_NON_PERM = 30,
-		ADAPTIVE_DUAL_PHASE_GREEDY_MESHING_PERF = 31,
-		ADAPTIVE_CLUSTERED_SLICER = 32,
+		ADAPTIVE_CLUSTERED_SLICER_NIterative = 33,
+		ADAPTIVE_CLUSTERED_SLICER_Iterative = 34
 	}
 
 	[System.Serializable]
@@ -90,6 +91,8 @@ namespace Kope.Feature.PathFinding {
 		[SerializeField] private List<ErrorTileInfo> _macroErrors = new();
 		[SerializeField] private List<ErrorTileInfo> _microErrors = new();
 
+
+
 		// Storage cache for the most recently baked region slices to render via gizmos
 		private readonly Dictionary<BoundingBox, (Vector2Int Anchor, List<Vector2Int> Tiles)> _bakedSlicesCache = new();
 
@@ -106,6 +109,7 @@ namespace Kope.Feature.PathFinding {
 #if UNITY_EDITOR
 				SceneView.RepaintAll();
 #endif
+
 			}
 		}
 
@@ -113,9 +117,8 @@ namespace Kope.Feature.PathFinding {
 			return slicer switch {
 				RectanleSlicerAgorithm.GREEDY => new GreedyRectanglePackingAlogorithm(),
 				RectanleSlicerAgorithm.DUAL_PHASE_GREEDY_MESHING => new DualAxisGreedyMeshingAlgorithm(),
-				RectanleSlicerAgorithm.ADAPTIVE_DUAL_PHASE_GREEDY_MESHING_NON_PERM => new AdaptiveDualAxisGreedyMeshingAlgorithm(),
-				RectanleSlicerAgorithm.ADAPTIVE_DUAL_PHASE_GREEDY_MESHING_PERF => new AdaptiveDualAxisGreedyMeshingAlgorithmPERFOPTIMIZED(),
-				RectanleSlicerAgorithm.ADAPTIVE_CLUSTERED_SLICER => new AdaptiveDualAxisGreedyMeshingAlgorithmClustered(),
+				RectanleSlicerAgorithm.ADAPTIVE_CLUSTERED_SLICER_NIterative => new AdaptiveClusteredBoundedRegionSlicer_NIterative(),
+				RectanleSlicerAgorithm.ADAPTIVE_CLUSTERED_SLICER_Iterative => new AdaptiveClusteredBoundedRegionSlicer_Iterative(),
 				_ => throw new System.ArgumentOutOfRangeException(nameof(slicer), slicer, null)
 			};
 		}
@@ -217,7 +220,12 @@ namespace Kope.Feature.PathFinding {
 			// 2. MACRO-LEVEL NODE GENERATION & SLICING
 			// ==========================================
 			//Debug.Log("[Pipeline] Extracting macro regions from tilemap...");
+
+
+
 			var regionTiles = this._regionExtractor.Extract(this._macroTileDictionary);
+
+
 			string[] regionSummaries = new string[regionTiles.Count];
 
 			for (int i = 0; i < regionTiles.Count; i++) {
@@ -245,28 +253,24 @@ namespace Kope.Feature.PathFinding {
 			// for (int i = 0; i < regionSummaries.Length; i++) {
 			// 	Debug.Log($"[Pipeline] Region {i + 1}/{regionSummaries.Length}: {regionSummaries[i]}");
 			// }
-
-
 			var maxBoundSize = this.maxBoundingBoxSize;
 
 			StringBuilder slicingSummary = new();
 			Debug.Log($"[Pipeline] Slicing macro regions using {this._rectanglePacker.GetType().Name} " +
 			$"into bounding boxes with max size{maxBoundSize}");
 
-
-
-			var stopwatch = System.Diagnostics.Stopwatch.StartNew();
-
+			System.Diagnostics.Stopwatch stopwatch = new();
+			stopwatch.Start();
 			var slicedRegions = this._rectanglePacker.Slice(regionTiles, maxBoundSize);
-
 			stopwatch.Stop();
 
-			Debug.Log($"Slice execution time: {stopwatch.ElapsedMilliseconds} ms");
+			Debug.Log($"[Pipeline] Slicing completed in {stopwatch.ElapsedTicks} ticks." +
+			$" {stopwatch.ElapsedMilliseconds} ms. Total slices created: {slicedRegions.Count}");
 
 			// Store the newly computed slice bounding boxes and tile sets into our persistent instance cache for Gizmo visualization
-			_bakedSlicesCache.Clear();
+			this._bakedSlicesCache.Clear();
 			foreach (var kvp in slicedRegions) {
-				_bakedSlicesCache[kvp.Key] = kvp.Value;
+				this._bakedSlicesCache[kvp.Key] = kvp.Value;
 				BoundingBox bounds = kvp.Key;
 				var (anchor, tilesInRegion) = kvp.Value;
 				//slicingSummary.AppendLine($"Sliced macro region starting at {anchor} with bounds {bounds} contains {tilesInRegion.Count} tiles.\n");
@@ -309,17 +313,20 @@ namespace Kope.Feature.PathFinding {
 			}
 		}
 
-		/// <summary>
-		/// Renders visual Gizmo boxes and volume overlays for each stored region slice using the macroTilemap layout context.
-		/// </summary>
 		private void DrawRegionSlices() {
 			if (macroTilemap == null || _bakedSlicesCache == null || _bakedSlicesCache.Count == 0) return;
 
+			// Radius for a circle with a 0.5 unit total diameter (0.25f radius)
+			const float anchorRadius = 0.25f;
+			const float circleThickness = 4f; // Increase pixel width here (e.g., 3f, 4f, 6f)
+
 			foreach (var kvp in _bakedSlicesCache) {
 				BoundingBox box = kvp.Key;
+				Vector2Int anchor = kvp.Value.Anchor;
 
-				// Calculate world positions for the min and max bounds corner cells
+				// Convert bounds and anchor to world positions (cell center for anchor)
 				Vector3 minWorldPos = macroTilemap.CellToWorld(new Vector3Int(box.Min.x, box.Min.y, 0));
+				Vector3 anchorWorldPos = macroTilemap.GetCellCenterWorld(new Vector3Int(anchor.x, anchor.y, 0));
 
 				Vector3 cellSize = macroTilemap.cellSize;
 				Vector3 boxSize = new(
@@ -330,13 +337,26 @@ namespace Kope.Feature.PathFinding {
 
 				Vector3 boxCenter = minWorldPos + (boxSize * 0.5f);
 
-				// Draw filled translucent volume box
+				// 1. Draw filled translucent volume box
 				Gizmos.color = sliceBoxColor;
 				Gizmos.DrawCube(boxCenter, boxSize);
 
-				// Draw crisp solid wireframe border outline
+				// 2. Draw crisp solid wireframe border outline
 				Gizmos.color = sliceBoxBorderColor;
 				Gizmos.DrawWireCube(boxCenter, boxSize);
+
+				// 3. Draw Anchor Point as a thick 2D circle at the cell center
+				anchorWorldPos.z = boxCenter.z - (boxSize.z * 0.5f) - 0.5f; // in front of box
+
+#if UNITY_EDITOR
+				UnityEditor.Handles.color = sliceBoxBorderColor;
+				UnityEditor.Handles.DrawWireDisc(
+					anchorWorldPos,
+					Vector3.forward,  // Normal vector facing the 2D camera
+					anchorRadius,
+					circleThickness   // Line width in pixels
+				);
+#endif
 			}
 		}
 	}

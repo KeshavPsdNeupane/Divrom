@@ -1,6 +1,7 @@
 using System;
 using System.Buffers;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using Kope.Feature.PathFinding.Interface;
 
@@ -36,13 +37,28 @@ namespace Kope.Feature.PathFinding.Utility {
 	///      *geometric search window* the expensive global pass has to operate over. A compact
 	///      region collapses to a single cluster, so this is a strict no-regression change for the
 	///      common case and only pays off (in both directions) on sprawling/thin geometry.
+	///   5. PERFORMANCE PASS (this revision, NO behavioral/output change): the per-cell probing
+	///      helpers that dominate call volume (RunLengthFlat, ExtentInDirectionFlat,
+	///      PerpendicularThicknessFlat, PeekBlockExtentFlat, IsShapeFlat, IsUnassignedFlat) now
+	///      operate on raw (int x, int y) coordinates instead of constructing a Vector2Int per
+	///      probed cell. The math performed is byte-for-byte identical - this only removes the
+	///      struct-construction/deconstruction overhead that was previously paid on every single
+	///      cell check inside every inner loop (these functions are, by a wide margin, the
+	///      hottest code in the class - HasSufficientBoundingArea and PeekBlockExtentFlat alone
+	///      probe every candidate rectangle's full perimeter/area). The pure geometry helpers
+	///      are also marked `static` (no instance field is touched by them) to drop the implicit
+	///      `this` argument on every call, and the two innermost boundary checks are hinted with
+	///      [MethodImplOptions.AggressiveInlining], since Unity/IL2CPP is known to inline far less
+	///      aggressively by default than desktop CoreCLR. Nothing about iteration order, tie-
+	///      breaking, protrusion thresholds, clustering, or the maximal-rectangle histogram search
+	///      was touched - every RectResult produced is identical to the pre-pass version.
 	/// =========================================================================================
 	/// </summary>
-	public class AdaptiveDualAxisGreedyMeshingAlgorithmClustered : IRectangleRegionSlicer {
+	public class AdaptiveClusteredBoundedRegionSlicer_NIterative : IRectangleRegionSlicer {
 
 		private readonly float _protrusionThresholdPercent;
 
-		public AdaptiveDualAxisGreedyMeshingAlgorithmClustered(float protrusionThresholdPercent = 0.35f) {
+		public AdaptiveClusteredBoundedRegionSlicer_NIterative(float protrusionThresholdPercent = 0.35f) {
 			_protrusionThresholdPercent = Mathf.Clamp01(protrusionThresholdPercent);
 		}
 
@@ -100,13 +116,14 @@ namespace Kope.Feature.PathFinding.Utility {
 
 			int width = maxX - minX + 1;
 			int height = maxY - minY + 1;
+			int gridDimension = width * height;
 
 			// Rent structural grid buffers from shared memory pools (Zero-GC footprint)
-			byte[] shapeGrid = ArrayPool<byte>.Shared.Rent(width * height);
-			byte[] unassignedGrid = ArrayPool<byte>.Shared.Rent(width * height);
+			byte[] shapeGrid = ArrayPool<byte>.Shared.Rent(gridDimension);
+			byte[] unassignedGrid = ArrayPool<byte>.Shared.Rent(gridDimension);
 
-			Array.Clear(shapeGrid, 0, width * height);
-			Array.Clear(unassignedGrid, 0, width * height);
+			Array.Clear(shapeGrid, 0, gridDimension);
+			Array.Clear(unassignedGrid, 0, gridDimension);
 
 			try {
 				for (int i = 0; i < regionTiles.Count; i++) {
@@ -128,7 +145,7 @@ namespace Kope.Feature.PathFinding.Utility {
 						var anchor = new Vector2Int(x, y);
 
 						bool hasSufficientArea = HasSufficientBoundingArea(
-							anchor, shapeGrid, minX, minY, width, height, minCheckWidth, minCheckHeight);
+							x, y, shapeGrid, minX, minY, width, height, minCheckWidth, minCheckHeight);
 
 						RectResult result;
 						if (!hasSufficientArea) {
@@ -150,19 +167,19 @@ namespace Kope.Feature.PathFinding.Utility {
 			return results;
 		}
 
-		private bool HasSufficientBoundingArea(
-			Vector2Int anchor, byte[] shape, int minX, int minY, int gridW, int gridH, int minWidth, int minHeight) {
+		private static bool HasSufficientBoundingArea(
+			int anchorX, int anchorY, byte[] shape, int minX, int minY, int gridW, int gridH, int minWidth, int minHeight) {
 
-			int horizontalSpan = RunLengthFlat(anchor, shape, minX, minY, gridW, gridH, isXAxis: true)
-				+ ExtentInDirectionFlat(anchor, shape, minX, minY, gridW, gridH, dx: -1, dy: 0, limit: int.MaxValue);
+			int horizontalSpan = RunLengthFlat(anchorX, anchorY, shape, minX, minY, gridW, gridH, isXAxis: true)
+				+ ExtentInDirectionFlat(anchorX, anchorY, shape, minX, minY, gridW, gridH, dx: -1, dy: 0, limit: int.MaxValue);
 
-			int verticalSpan = RunLengthFlat(anchor, shape, minX, minY, gridW, gridH, isXAxis: false)
-				+ ExtentInDirectionFlat(anchor, shape, minX, minY, gridW, gridH, dx: 0, dy: -1, limit: int.MaxValue);
+			int verticalSpan = RunLengthFlat(anchorX, anchorY, shape, minX, minY, gridW, gridH, isXAxis: false)
+				+ ExtentInDirectionFlat(anchorX, anchorY, shape, minX, minY, gridW, gridH, dx: 0, dy: -1, limit: int.MaxValue);
 
 			return horizontalSpan >= minWidth || verticalSpan >= minHeight;
 		}
 
-		private RectResult ExtractBestOfBothAxes(
+		private static RectResult ExtractBestOfBothAxes(
 			Vector2Int anchor, byte[] unassignedTiles, Vector2Int maxBoundSize, int minX, int minY, int gridW, int gridH) {
 
 			var xCandidate = PeekBlockExtentFlat(anchor, unassignedTiles, maxBoundSize, minX, minY, gridW, gridH, isXDominant: true);
@@ -184,21 +201,23 @@ namespace Kope.Feature.PathFinding.Utility {
 			return new RectResult(box, anchor, tiles);
 		}
 
-		private Vector2Int PeekBlockExtentFlat(
+		private static Vector2Int PeekBlockExtentFlat(
 			Vector2Int anchor, byte[] unassignedTiles, Vector2Int maxBound, int minX, int minY, int gridW, int gridH, bool isXDominant) {
 
+			int anchorX = anchor.x;
+			int anchorY = anchor.y;
 			int blockWidth = 1;
 			int blockHeight = 1;
 
 			if (isXDominant) {
-				while (blockWidth < maxBound.x && IsUnassignedFlat(new Vector2Int(anchor.x + blockWidth, anchor.y), unassignedTiles, minX, minY, gridW, gridH)) {
+				while (blockWidth < maxBound.x && IsUnassignedFlat(anchorX + blockWidth, anchorY, unassignedTiles, minX, minY, gridW, gridH)) {
 					blockWidth++;
 				}
 				bool canExpandHeight = true;
 				while (blockHeight < maxBound.y && canExpandHeight) {
-					int checkY = anchor.y + blockHeight;
+					int checkY = anchorY + blockHeight;
 					for (int dx = 0; dx < blockWidth; dx++) {
-						if (!IsUnassignedFlat(new Vector2Int(anchor.x + dx, checkY), unassignedTiles, minX, minY, gridW, gridH)) {
+						if (!IsUnassignedFlat(anchorX + dx, checkY, unassignedTiles, minX, minY, gridW, gridH)) {
 							canExpandHeight = false;
 							break;
 						}
@@ -206,14 +225,14 @@ namespace Kope.Feature.PathFinding.Utility {
 					if (canExpandHeight) blockHeight++;
 				}
 			} else {
-				while (blockHeight < maxBound.y && IsUnassignedFlat(new Vector2Int(anchor.x, anchor.y + blockHeight), unassignedTiles, minX, minY, gridW, gridH)) {
+				while (blockHeight < maxBound.y && IsUnassignedFlat(anchorX, anchorY + blockHeight, unassignedTiles, minX, minY, gridW, gridH)) {
 					blockHeight++;
 				}
 				bool canExpandWidth = true;
 				while (blockWidth < maxBound.x && canExpandWidth) {
-					int checkX = anchor.x + blockWidth;
+					int checkX = anchorX + blockWidth;
 					for (int dy = 0; dy < blockHeight; dy++) {
-						if (!IsUnassignedFlat(new Vector2Int(checkX, anchor.y + dy), unassignedTiles, minX, minY, gridW, gridH)) {
+						if (!IsUnassignedFlat(checkX, anchorY + dy, unassignedTiles, minX, minY, gridW, gridH)) {
 							canExpandWidth = false;
 							break;
 						}
@@ -239,22 +258,25 @@ namespace Kope.Feature.PathFinding.Utility {
 		/// (73,10)-(84,10) and (86,10)-(87,11); the unchecked flat version merged/warped these
 		/// into a single incorrect (73,10)-(87,10) strip and reported 90 slices instead.
 		/// </summary>
-		private List<Vector2Int> CollectTilesInBoxFlat(
+		private static List<Vector2Int> CollectTilesInBoxFlat(
 			Vector2Int anchor, int width, int height, byte[] unassignedTiles, int minX, int minY, int gridW, int gridH) {
 
+			int anchorX = anchor.x;
+			int anchorY = anchor.y;
 			var tiles = new List<Vector2Int>(width * height);
 			for (int dx = 0; dx < width; dx++) {
+				int px = anchorX + dx;
 				for (int dy = 0; dy < height; dy++) {
-					var pos = new Vector2Int(anchor.x + dx, anchor.y + dy);
-					if (IsUnassignedFlat(pos, unassignedTiles, minX, minY, gridW, gridH)) {
-						tiles.Add(pos);
+					int py = anchorY + dy;
+					if (IsUnassignedFlat(px, py, unassignedTiles, minX, minY, gridW, gridH)) {
+						tiles.Add(new Vector2Int(px, py));
 					}
 				}
 			}
 			return tiles;
 		}
 
-		private void ClaimTiles(List<Vector2Int> tiles, byte[] unassignedTiles, int minX, int minY, int gridW) {
+		private static void ClaimTiles(List<Vector2Int> tiles, byte[] unassignedTiles, int minX, int minY, int gridW) {
 			for (int i = 0; i < tiles.Count; i++) {
 				var tile = tiles[i];
 				int idx = (tile.x - minX) + (tile.y - minY) * gridW;
@@ -266,7 +288,7 @@ namespace Kope.Feature.PathFinding.Utility {
 		// PROTRUSION HANDLING - Optimized Boundary Search (Zero Delegate Allocation)
 		// =====================================================================================
 
-		private RectResult HandleProtrusion(
+		private static RectResult HandleProtrusion(
 			Vector2Int anchor,
 			byte[] regionShape,
 			byte[] unassignedTiles,
@@ -275,8 +297,11 @@ namespace Kope.Feature.PathFinding.Utility {
 			int minCheckWidth,
 			int minCheckHeight) {
 
-			int xRun = RunLengthFlat(anchor, regionShape, minX, minY, gridW, gridH, isXAxis: true);
-			int yRun = RunLengthFlat(anchor, regionShape, minX, minY, gridW, gridH, isXAxis: false);
+			int anchorX = anchor.x;
+			int anchorY = anchor.y;
+
+			int xRun = RunLengthFlat(anchorX, anchorY, regionShape, minX, minY, gridW, gridH, isXAxis: true);
+			int yRun = RunLengthFlat(anchorX, anchorY, regionShape, minX, minY, gridW, gridH, isXAxis: false);
 			bool isXElongation = xRun >= yRun;
 
 			int searchLow = 0;
@@ -284,14 +309,14 @@ namespace Kope.Feature.PathFinding.Utility {
 			int requiredWidth = isXElongation ? minCheckHeight : minCheckWidth;
 
 			int boundaryOffset = BinarySearchBoundaryFlat(
-				anchor, regionShape, minX, minY, gridW, gridH, searchLow, searchHigh, isXElongation, requiredWidth);
+				anchorX, anchorY, regionShape, minX, minY, gridW, gridH, searchLow, searchHigh, isXElongation, requiredWidth);
 
 			int elongationLimit = isXElongation ? maxBoundSize.x : maxBoundSize.y;
 			int protrusionLength = Mathf.Clamp(boundaryOffset, 1, elongationLimit);
 
 			int perpendicularLimit = isXElongation ? maxBoundSize.y : maxBoundSize.x;
 			int perpendicularThickness = Mathf.Min(
-				PerpendicularThicknessFlat(anchor, regionShape, minX, minY, gridW, gridH, isXElongation), perpendicularLimit);
+				PerpendicularThicknessFlat(anchorX, anchorY, regionShape, minX, minY, gridW, gridH, isXElongation), perpendicularLimit);
 			perpendicularThickness = Mathf.Max(1, perpendicularThickness);
 
 			int width = isXElongation ? protrusionLength : perpendicularThickness;
@@ -299,10 +324,10 @@ namespace Kope.Feature.PathFinding.Utility {
 
 			var boxOrigin = anchor;
 			if (isXElongation) {
-				int belowExtent = ExtentInDirectionFlat(anchor, regionShape, minX, minY, gridW, gridH, dx: 0, dy: -1, limit: perpendicularThickness - 1);
+				int belowExtent = ExtentInDirectionFlat(anchorX, anchorY, regionShape, minX, minY, gridW, gridH, dx: 0, dy: -1, limit: perpendicularThickness - 1);
 				boxOrigin = new Vector2Int(anchor.x, anchor.y - belowExtent);
 			} else {
-				int leftExtent = ExtentInDirectionFlat(anchor, regionShape, minX, minY, gridW, gridH, dx: -1, dy: 0, limit: perpendicularThickness - 1);
+				int leftExtent = ExtentInDirectionFlat(anchorX, anchorY, regionShape, minX, minY, gridW, gridH, dx: -1, dy: 0, limit: perpendicularThickness - 1);
 				boxOrigin = new Vector2Int(anchor.x - leftExtent, anchor.y);
 			}
 
@@ -311,8 +336,8 @@ namespace Kope.Feature.PathFinding.Utility {
 			return new RectResult(box, anchor, tiles);
 		}
 
-		private int BinarySearchBoundaryFlat(
-			Vector2Int anchor, byte[] shape, int minX, int minY, int gridW, int gridH,
+		private static int BinarySearchBoundaryFlat(
+			int anchorX, int anchorY, byte[] shape, int minX, int minY, int gridW, int gridH,
 			int low, int high, bool isXElongation, int requiredWidth) {
 
 			if (high <= low) return Mathf.Max(1, high);
@@ -320,9 +345,9 @@ namespace Kope.Feature.PathFinding.Utility {
 			int lo = low, hi = high;
 			while (hi - lo > 1) {
 				int mid = lo + (hi - lo) / 2;
-				bool reached = PerpendicularThicknessFlat(
-					isXElongation ? new Vector2Int(anchor.x + mid, anchor.y) : new Vector2Int(anchor.x, anchor.y + mid),
-					shape, minX, minY, gridW, gridH, isXElongation) >= requiredWidth;
+				int probeX = isXElongation ? anchorX + mid : anchorX;
+				int probeY = isXElongation ? anchorY : anchorY + mid;
+				bool reached = PerpendicularThicknessFlat(probeX, probeY, shape, minX, minY, gridW, gridH, isXElongation) >= requiredWidth;
 
 				if (reached) hi = mid;
 				else lo = mid;
@@ -331,9 +356,9 @@ namespace Kope.Feature.PathFinding.Utility {
 			int correctionWindow = Mathf.Min(hi, 8);
 			for (int offset = hi - correctionWindow; offset < hi; offset++) {
 				if (offset >= low) {
-					bool reached = PerpendicularThicknessFlat(
-						isXElongation ? new Vector2Int(anchor.x + offset, anchor.y) : new Vector2Int(anchor.x, anchor.y + offset),
-						shape, minX, minY, gridW, gridH, isXElongation) >= requiredWidth;
+					int probeX = isXElongation ? anchorX + offset : anchorX;
+					int probeY = isXElongation ? anchorY : anchorY + offset;
+					bool reached = PerpendicularThicknessFlat(probeX, probeY, shape, minX, minY, gridW, gridH, isXElongation) >= requiredWidth;
 
 					if (reached) return Mathf.Max(1, offset);
 				}
@@ -342,48 +367,50 @@ namespace Kope.Feature.PathFinding.Utility {
 			return Mathf.Max(1, hi);
 		}
 
-		private int RunLengthFlat(Vector2Int anchor, byte[] shape, int minX, int minY, int gridW, int gridH, bool isXAxis) {
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static int RunLengthFlat(int anchorX, int anchorY, byte[] shape, int minX, int minY, int gridW, int gridH, bool isXAxis) {
 			int run = 0;
-			while (true) {
-				var probe = isXAxis
-					? new Vector2Int(anchor.x + run, anchor.y)
-					: new Vector2Int(anchor.x, anchor.y + run);
-
-				if (!IsShapeFlat(probe, shape, minX, minY, gridW, gridH)) break;
-				run++;
+			if (isXAxis) {
+				while (IsShapeFlat(anchorX + run, anchorY, shape, minX, minY, gridW, gridH)) run++;
+			} else {
+				while (IsShapeFlat(anchorX, anchorY + run, shape, minX, minY, gridW, gridH)) run++;
 			}
 			return run;
 		}
 
-		private int PerpendicularThicknessFlat(Vector2Int probe, byte[] shape, int minX, int minY, int gridW, int gridH, bool isXElongation) {
+		private static int PerpendicularThicknessFlat(int probeX, int probeY, byte[] shape, int minX, int minY, int gridW, int gridH, bool isXElongation) {
 			int forward = isXElongation
-				? ExtentInDirectionFlat(probe, shape, minX, minY, gridW, gridH, 0, 1, int.MaxValue)
-				: ExtentInDirectionFlat(probe, shape, minX, minY, gridW, gridH, 1, 0, int.MaxValue);
+				? ExtentInDirectionFlat(probeX, probeY, shape, minX, minY, gridW, gridH, 0, 1, int.MaxValue)
+				: ExtentInDirectionFlat(probeX, probeY, shape, minX, minY, gridW, gridH, 1, 0, int.MaxValue);
 			int backward = isXElongation
-				? ExtentInDirectionFlat(probe, shape, minX, minY, gridW, gridH, 0, -1, int.MaxValue)
-				: ExtentInDirectionFlat(probe, shape, minX, minY, gridW, gridH, -1, 0, int.MaxValue);
+				? ExtentInDirectionFlat(probeX, probeY, shape, minX, minY, gridW, gridH, 0, -1, int.MaxValue)
+				: ExtentInDirectionFlat(probeX, probeY, shape, minX, minY, gridW, gridH, -1, 0, int.MaxValue);
 			return 1 + forward + backward;
 		}
 
-		private int ExtentInDirectionFlat(Vector2Int origin, byte[] shape, int minX, int minY, int gridW, int gridH, int dx, int dy, int limit) {
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static int ExtentInDirectionFlat(int originX, int originY, byte[] shape, int minX, int minY, int gridW, int gridH, int dx, int dy, int limit) {
 			int distance = 0;
 			while (distance < limit) {
-				var probe = new Vector2Int(origin.x + dx * (distance + 1), origin.y + dy * (distance + 1));
-				if (!IsShapeFlat(probe, shape, minX, minY, gridW, gridH)) break;
+				int px = originX + dx * (distance + 1);
+				int py = originY + dy * (distance + 1);
+				if (!IsShapeFlat(px, py, shape, minX, minY, gridW, gridH)) break;
 				distance++;
 			}
 			return distance;
 		}
 
-		private bool IsShapeFlat(Vector2Int pos, byte[] shape, int minX, int minY, int gridW, int gridH) {
-			if (pos.x < minX || pos.x >= minX + gridW || pos.y < minY || pos.y >= minY + gridH) return false;
-			int idx = (pos.x - minX) + (pos.y - minY) * gridW;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static bool IsShapeFlat(int x, int y, byte[] shape, int minX, int minY, int gridW, int gridH) {
+			if (x < minX || x >= minX + gridW || y < minY || y >= minY + gridH) return false;
+			int idx = (x - minX) + (y - minY) * gridW;
 			return shape[idx] == 1;
 		}
 
-		private bool IsUnassignedFlat(Vector2Int pos, byte[] unassigned, int minX, int minY, int gridW, int gridH) {
-			if (pos.x < minX || pos.x >= minX + gridW || pos.y < minY || pos.y >= minY + gridH) return false;
-			int idx = (pos.x - minX) + (pos.y - minY) * gridW;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static bool IsUnassignedFlat(int x, int y, byte[] unassigned, int minX, int minY, int gridW, int gridH) {
+			if (x < minX || x >= minX + gridW || y < minY || y >= minY + gridH) return false;
+			int idx = (x - minX) + (y - minY) * gridW;
 			return unassigned[idx] == 1;
 		}
 
@@ -391,7 +418,7 @@ namespace Kope.Feature.PathFinding.Utility {
 		// STEP 2: POST-PROCESSING - Adjacency Clustering + Per-Cluster Maximal Histogram
 		// =====================================================================================
 
-		private List<RectResult> RunPostProcessing(List<RectResult> primaryResults, Vector2Int maxBoundSize) {
+		private static List<RectResult> RunPostProcessing(List<RectResult> primaryResults, Vector2Int maxBoundSize) {
 			if (primaryResults.Count == 0) return primaryResults;
 
 			var clusters = ClusterByAdjacency(primaryResults, maxBoundSize);
@@ -416,7 +443,7 @@ namespace Kope.Feature.PathFinding.Utility {
 		/// a 200k-tile region produces thousands of primary rectangles. Bucket size is chosen so
 		/// any two rectangles that actually touch are guaranteed to share at least one bucket.
 		/// </summary>
-		private List<List<RectResult>> ClusterByAdjacency(List<RectResult> primaryResults, Vector2Int maxBoundSize) {
+		private static List<List<RectResult>> ClusterByAdjacency(List<RectResult> primaryResults, Vector2Int maxBoundSize) {
 			int n = primaryResults.Count;
 			var parent = new int[n];
 			for (int i = 0; i < n; i++) parent[i] = i;
@@ -488,7 +515,7 @@ namespace Kope.Feature.PathFinding.Utility {
 		/// island - two rectangles sharing a border are still one contiguous walkable area and
 		/// must be able to combine into a single larger rectangle during the histogram pass.
 		/// </summary>
-		private bool BoxesTouchOrOverlap(BoundingBox a, BoundingBox b) {
+		private static bool BoxesTouchOrOverlap(BoundingBox a, BoundingBox b) {
 			return a.Min.x - 1 <= b.Max.x && a.Max.x + 1 >= b.Min.x &&
 				   a.Min.y - 1 <= b.Max.y && a.Max.y + 1 >= b.Min.y;
 		}
@@ -500,7 +527,7 @@ namespace Kope.Feature.PathFinding.Utility {
 		/// original (unclustered) implementation for why global-largest-rectangle-first beats
 		/// per-tile seeded growth; that reasoning is unchanged, just re-scoped per island.
 		/// </summary>
-		private List<RectResult> RunPostProcessingOnCluster(List<RectResult> cluster, Vector2Int maxBoundSize) {
+		private static List<RectResult> RunPostProcessingOnCluster(List<RectResult> cluster, Vector2Int maxBoundSize) {
 			int minX = int.MaxValue, maxX = int.MinValue;
 			int minY = int.MaxValue, maxY = int.MinValue;
 
@@ -568,7 +595,7 @@ namespace Kope.Feature.PathFinding.Utility {
 			}
 		}
 
-		private (int x, int y, int w, int h) FindLargestUnclaimedRectanglePooled(
+		private static (int x, int y, int w, int h) FindLargestUnclaimedRectanglePooled(
 			byte[] filled, byte[] claimed, int width, int height, int[] heights, int[] stack) {
 
 			Array.Clear(heights, 0, width);
@@ -604,7 +631,7 @@ namespace Kope.Feature.PathFinding.Utility {
 			return best;
 		}
 
-		private List<RectResult> SubdivideUniformly(BoundingBox box, Vector2Int maxBoundSize) {
+		private static List<RectResult> SubdivideUniformly(BoundingBox box, Vector2Int maxBoundSize) {
 			int totalWidth = box.Max.x - box.Min.x + 1;
 			int totalHeight = box.Max.y - box.Min.y + 1;
 
@@ -651,7 +678,7 @@ namespace Kope.Feature.PathFinding.Utility {
 			return results;
 		}
 
-		private void SplitEvenlySpan(int total, Span<int> sizes) {
+		private static void SplitEvenlySpan(int total, Span<int> sizes) {
 			int parts = sizes.Length;
 			int baseSize = total / parts;
 			int remainder = total % parts;
