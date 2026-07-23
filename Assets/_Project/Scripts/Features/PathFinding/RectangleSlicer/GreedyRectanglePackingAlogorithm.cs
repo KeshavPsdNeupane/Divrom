@@ -27,8 +27,7 @@ public class GreedyRectanglePackingAlogorithm : IRectangleRegionSlicer {
 
 		// pre allocating atleast 2x size of isolatedRegions to avoid rehashing and resizing of dictionary
 		// if more needed, it will resize automatically but this is a good starting point
-		var slicedRegions = new Dictionary<BoundingBox,
-		(Vector2Int, List<Vector2Int>)>(isolatedRegions.Count * 2);
+		var slicedRegions = new Dictionary<BoundingBox, (Vector2Int, List<Vector2Int>)>(isolatedRegions.Count * 2);
 
 		foreach (var kvp in isolatedRegions) {
 			Vector2Int anchor = kvp.Key;
@@ -132,7 +131,9 @@ public class GreedyRectanglePackingAlogorithm : IRectangleRegionSlicer {
 			// Construct final BoundingBox
 			var boundingBox = new BoundingBox(minX, minY, maxX, maxY);
 
-			// Commit to the destination dictionary
+			// Commit to the destination dictionary:
+			// Maps the BoundingBox to a tuple containing the region's origin anchor point (from args)
+			// and the list of grid positions contained inside this slice.
 			destinationDict[boundingBox] = (anchor, currentBoxTiles);
 		}
 	}

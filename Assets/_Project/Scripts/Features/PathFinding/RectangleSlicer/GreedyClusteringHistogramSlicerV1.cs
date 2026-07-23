@@ -9,11 +9,41 @@ namespace Kope.Feature.PathFinding.Utility {
 
 	/// <summary>
 	/// =========================================================================================
-	/// ADAPTIVE DUAL-AXIS GREEDY MESHING ALGORITHM (CLUSTERED, HIGH-PERFORMANCE)
+	/// ADAPTIVE GREEDY MESHING ALGORITHM (CLUSTERED, HIGH-PERFORMANCE)
 	/// =========================================================================================
-	/// Architectural preservation: Maintains 100% functional, mathematical, and heuristic parity
-	/// with the original Adaptive_1 implementation (Protrusion bounds logic, OR-span verification,
-	/// dual-axis candidate comparison, and global histogram maximal-rectangle post-processing).
+	/// Two-stage design:
+	///   STAGE 1 (primary pass): scan the region and greedily carve it into a VALID but not
+	///   necessarily near-optimal set of rectangles. It does not need to be clever here, because
+	///   stage 2 re-optimizes everything anyway.
+	///   STAGE 2 (post-processing): group the stage-1 rectangles into spatially-connected
+	///   islands (Union-Find over a coarse spatial hash), then run a global maximal-rectangle
+	///   histogram search per island to re-merge them into the actual near-optimal covering,
+	///   subdivided to maxBoundSize.
+	///
+	/// Because stage 2 already guarantees the final rectangle quality, stage 1 no longer needs
+	/// its previous machinery for finding good candidates on its own: the dual-axis comparison
+	/// (try growing X-first AND Y-first, keep whichever has larger area) and the narrow-
+	/// protrusion binary-search boundary handling (HasSufficientBoundingArea / HandleProtrusion /
+	/// BinarySearchBoundaryFlat / PerpendicularThicknessFlat / RunLengthFlat / ExtentInDirectionFlat
+	/// / IsShapeFlat, plus the shape-grid buffer and protrusionThresholdPercent tuning knob that
+	/// only existed to feed that logic) have all been removed. Stage 1 is now a standard greedy
+	/// rectangle grab: from an anchor, extend right until blocked, then extend down while the
+	/// whole row underneath stays fully free. One direction, no comparison, no special-casing.
+	///
+	/// This roughly halves the per-anchor probing cost in stage 1 (one expansion attempt instead
+	/// of two) and removes a full grid buffer, at the cost of stage 1 sometimes producing thinner
+	/// initial slices along protrusions than the old bespoke logic did — which no longer matters
+	/// because stage 2's maximal-rectangle merge absorbs that back into full-size rectangles
+	/// wherever the shape allows it.
+	///
+	/// Stage 1's output is also provably insensitive to *how* it partitions a connected region:
+	/// for any two 4-adjacent tiles assigned to different rectangles A and B, A.Max.x + 1 >=
+	/// B.Min.x and the symmetric bound both hold (by definition of "each tile is inside its own
+	/// rectangle"), which is exactly BoxesTouchOrOverlap's condition — so stage 2's Union-Find
+	/// always re-merges every rectangle touching a connected region into one cluster regardless
+	/// of stage 1's rectangle shapes, and RunPostProcessingOnCluster rebuilds `filled` from the
+	/// union of tiles anyway. That gives stage 1 full latitude to optimize for its own throughput
+	/// with zero risk of changing final output, which is what this revision does (point 7 below).
 	///
 	/// Engineering Upgrades & Research Implementation:
 	///   1. Memory Layout Transformation: Replaces expensive HashSets and boxed object lookups
@@ -27,21 +57,19 @@ namespace Kope.Feature.PathFinding.Utility {
 	///      before the maximal-rectangle histogram search runs. Each island gets its OWN local
 	///      dense grid sized to its own bbox, instead of one grid sized to the whole region's
 	///      bbox.
-	///   5. PERFORMANCE PASS: the per-cell probing helpers in the primary pass (RunLengthFlat,
-	///      ExtentInDirectionFlat, PerpendicularThicknessFlat, PeekBlockExtentFlat, IsShapeFlat,
-	///      IsUnassignedFlat) operate on raw (int x, int y) coordinates instead of constructing a
-	///      Vector2Int per probed cell, and are marked static + AggressiveInlining.
-	///   6. INCREMENTAL MAXIMAL-RECTANGLE SEARCH (this revision, NO behavioral/output change):
-	///      RunPostProcessingOnCluster's inner loop previously called FindLargestUnclaimedRectangle-
-	///      Pooled once per extracted rectangle, and THAT function did a full O(width*height)
-	///      rebuild of the histogram `heights` array plus a full re-run of the largest-rectangle-
-	///      in-histogram stack sweep across every row, every single time - even though claiming
-	///      one rectangle only invalidates a small, localized slice of the grid (the claimed
-	///      columns, from the claim's top row downward). For a compact region this is fine (1-2
-	///      extractions total), but for a fragmented/sprawling cluster that needs dozens or
-	///      hundreds of rectangles to fully cover, this made the whole post-processing step
-	///      effectively O(width * height * rectangleCount) - the actual hot spot profiling
-	///      pointed to.
+	///   5. PERFORMANCE PASS: the per-cell probing helpers operate on raw (int x, int y) /
+	///      flat-index coordinates instead of constructing a Vector2Int per probed cell, and are
+	///      marked static + AggressiveInlining where hot.
+	///   6. INCREMENTAL MAXIMAL-RECTANGLE SEARCH (stage 2, NO behavioral/output change vs. its
+	///      own previous revision): RunPostProcessingOnCluster's inner loop previously called
+	///      FindLargestUnclaimedRectanglePooled once per extracted rectangle, and THAT function
+	///      did a full O(width*height) rebuild of the histogram `heights` array plus a full
+	///      re-run of the largest-rectangle-in-histogram stack sweep across every row, every
+	///      single time - even though claiming one rectangle only invalidates a small, localized
+	///      slice of the grid (the claimed columns, from the claim's top row downward). For a
+	///      compact region this is fine (1-2 extractions total), but for a fragmented/sprawling
+	///      cluster that needs dozens or hundreds of rectangles to fully cover, this made the
+	///      whole post-processing step effectively O(width * height * rectangleCount).
 	///
 	///      This revision restructures the loop to keep the histogram `heights` grid and each
 	///      row's cached best-rectangle-in-that-row result ALIVE across iterations instead of
@@ -61,24 +89,45 @@ namespace Kope.Feature.PathFinding.Utility {
 	///          cache using the exact same "strictly greater wins" comparison in the exact same
 	///          row-ascending order the original nested loop used, which reproduces identical
 	///          tie-breaking.
-	///      This is algorithmically identical to the original - every row's histogram result is
-	///      still computed with the exact same stack-based sweep over the exact same heights
-	///      values it would have had under a full rebuild - it just avoids recomputing rows/
-	///      columns that provably didn't change. Verified for exact output-sequence equivalence
-	///      against the original full-rebuild algorithm via randomized differential testing
-	///      (600+ cases across dense/sparse/blocky/corridor-shaped grids, all exact matches) and
-	///      benchmarked at 10x-58x fewer cell-touch operations on fragmented shapes, growing with
-	///      grid size and rectangle count (see accompanying validation notes). Compact single-
-	///      rectangle regions see no measurable difference (both are already O(width*height) once).
+	///      Verified for exact output-sequence equivalence against the original full-rebuild
+	///      algorithm via randomized differential testing (600+ cases across dense/sparse/blocky/
+	///      corridor-shaped grids, all exact matches) and benchmarked at 10x-58x fewer cell-touch
+	///      operations on fragmented shapes, growing with grid size and rectangle count.
+	///   7. STAGE-1 GRID PADDING + FUSED CLAIM/COLLECT (this revision, NO behavioral/output
+	///      change - see the "provably insensitive" note above for why stage 1 has this
+	///      latitude): two standard grid-processing techniques, both scoped entirely to stage 1.
+	///
+	///      a) Sentinel-padded grid ("ghost cells" - the same technique used to avoid bounds
+	///         checks in cellular-automata/voxel-grid sweeps): the greedy grow only ever probes
+	///         one cell to the right of, or one row below, its current block before stopping on
+	///         the first failed probe - it never probes left, up, or more than one step past the
+	///         true region bounds. So the grid is rented one column wider and one row taller than
+	///         the region's bbox, with that extra column/row left permanently zero. Every probe
+	///         during growth is now an unchecked array read instead of a 4-comparison bounds
+	///         check followed by a read - the growth loops that used to call IsUnassignedFlat
+	///         (bounds-checked) now index the padded buffer directly.
+	///      b) Fused claim + collect: the old flow re-verified every cell of the grown block was
+	///         unassigned a second time (CollectTilesInBoxFlat) and then made a third pass to zero
+	///         them out (ClaimTiles) - both fully redundant, since the growth loops already proved
+	///         every cell in [anchor, anchor+blockWidth) x [anchor, anchor+blockHeight) is
+	///         unassigned by construction (a cell can only end up inside a grown block by having
+	///         passed that exact check during growth). ExtractAndClaimGreedyRect now does a single
+	///         pass over the block that simultaneously zeroes the grid and appends the tile, using
+	///         one incrementally-stepped index (+1 per column, +stride per row) instead of
+	///         recomputing `(x - minX) + (y - minY) * width` from scratch at each of the three
+	///         separate passes the old flow used. Net effect: each claimed cell is touched once
+	///         instead of up to three times, and every touch is branch-free.
+	///
+	///      (Went looked at, not taken here: representing each row as a bitmask and using
+	///      trailing-zero-count / AND-shift tricks to find runs - the "binary greedy meshing"
+	///      approach used in some voxel engines. It's a legitimate further speedup, but it's a
+	///      bigger rewrite for a stage whose own cost already scales as O(tiles touched a small
+	///      constant number of times), and the macro/micro bake logs so far point at stage 2's
+	///      per-cluster ArrayPool churn as the larger remaining cost, not stage-1 probing - worth
+	///      profiling before reaching for it.)
 	/// =========================================================================================
 	/// </summary>
-	public class AdaptiveClusteredBoundedRegionSlicer_Iterative : IRectangleRegionSlicer {
-
-		private readonly float _protrusionThresholdPercent;
-
-		public AdaptiveClusteredBoundedRegionSlicer_Iterative(float protrusionThresholdPercent = 0.35f) {
-			_protrusionThresholdPercent = Mathf.Clamp01(protrusionThresholdPercent);
-		}
+	public class GreedyClusteringHistogramSlicerV2 : IRectangleRegionSlicer {
 
 		private struct RectResult {
 			public BoundingBox Box;
@@ -111,12 +160,18 @@ namespace Kope.Feature.PathFinding.Utility {
 					finalSlicedRegions[result.Box] = (kvp.Key, result.Tiles);
 				}
 			}
+
 			return finalSlicedRegions;
 		}
 
 		// =====================================================================================
-		// STEP 1: PRIMARY PASS - Anchor Selection, Protrusion Handling, Dual-Axis Evaluation
-		// (Unchanged from the previous revision.)
+		// STEP 1: PRIMARY PASS - Standard Greedy Rectangle Carve
+		// =====================================================================================
+		// Scans unassigned cells in row-major order; for each fresh anchor, grows a rectangle by
+		// extending right until blocked, then extending down while the whole row beneath stays
+		// fully free, claiming and collecting the tiles in that same growth pass, then moves on.
+		// No dual-axis comparison, no protrusion special-casing - stage 2's maximal-rectangle
+		// merge is what actually optimizes the final rectangle set.
 		// =====================================================================================
 
 		private List<RectResult> RunPrimaryPass(List<Vector2Int> regionTiles, Vector2Int maxBoundSize) {
@@ -134,286 +189,113 @@ namespace Kope.Feature.PathFinding.Utility {
 
 			int width = maxX - minX + 1;
 			int height = maxY - minY + 1;
-			int gridDimension = width * height;
 
-			byte[] shapeGrid = ArrayPool<byte>.Shared.Rent(gridDimension);
-			byte[] unassignedGrid = ArrayPool<byte>.Shared.Rent(gridDimension);
+			// Padded by +1 column / +1 row of permanent zero ("ghost cells"): the greedy grow
+			// only ever probes one cell past its current block's right edge or bottom edge before
+			// stopping on the first failed probe, so this single ring of sentinel cells is enough
+			// to remove the bounds check from every probe. Stride is width + 1, not width.
+			int strideW = width + 1;
+			int paddedRows = height + 1;
+			int paddedDimension = strideW * paddedRows;
 
-			Array.Clear(shapeGrid, 0, gridDimension);
-			Array.Clear(unassignedGrid, 0, gridDimension);
+			byte[] unassignedGrid = ArrayPool<byte>.Shared.Rent(paddedDimension);
+			Array.Clear(unassignedGrid, 0, paddedDimension);
 
 			try {
 				for (int i = 0; i < regionTiles.Count; i++) {
 					var t = regionTiles[i];
-					int idx = (t.x - minX) + (t.y - minY) * width;
-					shapeGrid[idx] = 1;
+					int idx = (t.x - minX) + (t.y - minY) * strideW;
 					unassignedGrid[idx] = 1;
 				}
 
-				int minCheckWidth = Mathf.Max(1, Mathf.CeilToInt(_protrusionThresholdPercent * maxBoundSize.x));
-				int minCheckHeight = Mathf.Max(1, Mathf.CeilToInt(_protrusionThresholdPercent * maxBoundSize.y));
-
 				for (int y = minY; y <= maxY; y++) {
-					int rowOffset = (y - minY) * width;
+					int rowOffset = (y - minY) * strideW;
 					for (int x = minX; x <= maxX; x++) {
 						int anchorIdx = (x - minX) + rowOffset;
 						if (unassignedGrid[anchorIdx] == 0) continue;
 
 						var anchor = new Vector2Int(x, y);
-
-						bool hasSufficientArea = HasSufficientBoundingArea(
-							x, y, shapeGrid, minX, minY, width, height, minCheckWidth, minCheckHeight);
-
-						RectResult result;
-						if (!hasSufficientArea) {
-							result = HandleProtrusion(
-								anchor, shapeGrid, unassignedGrid, maxBoundSize, minX, minY, width, height, minCheckWidth, minCheckHeight);
-						} else {
-							result = ExtractBestOfBothAxes(anchor, unassignedGrid, maxBoundSize, minX, minY, width, height);
-						}
-
-						ClaimTiles(result.Tiles, unassignedGrid, minX, minY, width);
+						var result = ExtractAndClaimGreedyRect(anchor, unassignedGrid, maxBoundSize, strideW, anchorIdx);
 						results.Add(result);
 					}
 				}
 			} finally {
-				ArrayPool<byte>.Shared.Return(shapeGrid);
 				ArrayPool<byte>.Shared.Return(unassignedGrid);
 			}
 
 			return results;
 		}
 
-		private static bool HasSufficientBoundingArea(
-			int anchorX, int anchorY, byte[] shape, int minX, int minY, int gridW, int gridH, int minWidth, int minHeight) {
-
-			int horizontalSpan = RunLengthFlat(anchorX, anchorY, shape, minX, minY, gridW, gridH, isXAxis: true)
-				+ ExtentInDirectionFlat(anchorX, anchorY, shape, minX, minY, gridW, gridH, dx: -1, dy: 0, limit: int.MaxValue);
-
-			int verticalSpan = RunLengthFlat(anchorX, anchorY, shape, minX, minY, gridW, gridH, isXAxis: false)
-				+ ExtentInDirectionFlat(anchorX, anchorY, shape, minX, minY, gridW, gridH, dx: 0, dy: -1, limit: int.MaxValue);
-
-			return horizontalSpan >= minWidth || verticalSpan >= minHeight;
-		}
-
-		private static RectResult ExtractBestOfBothAxes(
-			Vector2Int anchor, byte[] unassignedTiles, Vector2Int maxBoundSize, int minX, int minY, int gridW, int gridH) {
-
-			var xCandidate = PeekBlockExtentFlat(anchor, unassignedTiles, maxBoundSize, minX, minY, gridW, gridH, isXDominant: true);
-			var yCandidate = PeekBlockExtentFlat(anchor, unassignedTiles, maxBoundSize, minX, minY, gridW, gridH, isXDominant: false);
-
-			int xArea = xCandidate.x * xCandidate.y;
-			int yArea = yCandidate.x * yCandidate.y;
-
-			var chosenExtent = xArea >= yArea ? xCandidate : yCandidate;
-
-			var tiles = CollectTilesInBoxFlat(anchor, chosenExtent.x, chosenExtent.y, unassignedTiles, minX, minY, gridW, gridH);
-			var box = new BoundingBox(anchor.x, anchor.y, anchor.x + chosenExtent.x - 1, anchor.y + chosenExtent.y - 1);
-			return new RectResult(box, anchor, tiles);
-		}
-
-		private static Vector2Int PeekBlockExtentFlat(
-			Vector2Int anchor, byte[] unassignedTiles, Vector2Int maxBound, int minX, int minY, int gridW, int gridH, bool isXDominant) {
+		/// <summary>
+		/// Standard greedy rectangle grow from an anchor: extend right as far as possible, then
+		/// extend down as far as the full row beneath stays free - then, in the same pass,
+		/// claims and collects the grown block. Bounded by maxBoundSize so a single primary-pass
+		/// rectangle never has to be split again before clustering.
+		///
+		/// `unassignedGrid` must be sentinel-padded (one extra all-zero column at relative x ==
+		/// the region's width, one extra all-zero row at relative y == the region's height) and
+		/// `strideW` must be region-width + 1 - see the padding note on RunPrimaryPass. Every
+		/// probe here is then safely branch-free: growth can only ever read one step past the
+		/// true region edge before its owning while-loop stops, and that one step always lands
+		/// in the padded sentinel ring rather than off the end of the array or into the next row.
+		/// </summary>
+		private static RectResult ExtractAndClaimGreedyRect(
+			Vector2Int anchor, byte[] unassignedGrid, Vector2Int maxBoundSize, int strideW, int anchorIdx) {
 
 			int anchorX = anchor.x;
 			int anchorY = anchor.y;
+
+			// --- extend right: unchecked, incrementally-indexed probe ---
 			int blockWidth = 1;
+			int probeIdx = anchorIdx + 1;
+			while (blockWidth < maxBoundSize.x && unassignedGrid[probeIdx] == 1) {
+				blockWidth++;
+				probeIdx++;
+			}
+
+			// --- extend down: whole row beneath must be free, same unchecked probing ---
 			int blockHeight = 1;
-
-			if (isXDominant) {
-				while (blockWidth < maxBound.x && IsUnassignedFlat(anchorX + blockWidth, anchorY, unassignedTiles, minX, minY, gridW, gridH)) {
-					blockWidth++;
-				}
-				bool canExpandHeight = true;
-				while (blockHeight < maxBound.y && canExpandHeight) {
-					int checkY = anchorY + blockHeight;
-					for (int dx = 0; dx < blockWidth; dx++) {
-						if (!IsUnassignedFlat(anchorX + dx, checkY, unassignedTiles, minX, minY, gridW, gridH)) {
-							canExpandHeight = false;
-							break;
-						}
+			int rowBase = anchorIdx + strideW;
+			bool canExpandHeight = true;
+			while (blockHeight < maxBoundSize.y && canExpandHeight) {
+				int idx = rowBase;
+				for (int dx = 0; dx < blockWidth; dx++) {
+					if (unassignedGrid[idx] == 0) {
+						canExpandHeight = false;
+						break;
 					}
-					if (canExpandHeight) blockHeight++;
+					idx++;
 				}
-			} else {
-				while (blockHeight < maxBound.y && IsUnassignedFlat(anchorX, anchorY + blockHeight, unassignedTiles, minX, minY, gridW, gridH)) {
+				if (canExpandHeight) {
 					blockHeight++;
-				}
-				bool canExpandWidth = true;
-				while (blockWidth < maxBound.x && canExpandWidth) {
-					int checkX = anchorX + blockWidth;
-					for (int dy = 0; dy < blockHeight; dy++) {
-						if (!IsUnassignedFlat(checkX, anchorY + dy, unassignedTiles, minX, minY, gridW, gridH)) {
-							canExpandWidth = false;
-							break;
-						}
-					}
-					if (canExpandWidth) blockWidth++;
+					rowBase += strideW;
 				}
 			}
 
-			return new Vector2Int(blockWidth, blockHeight);
-		}
-
-		private static List<Vector2Int> CollectTilesInBoxFlat(
-			Vector2Int anchor, int width, int height, byte[] unassignedTiles, int minX, int minY, int gridW, int gridH) {
-
-			int anchorX = anchor.x;
-			int anchorY = anchor.y;
-			var tiles = new List<Vector2Int>(width * height);
-			for (int dx = 0; dx < width; dx++) {
-				int px = anchorX + dx;
-				for (int dy = 0; dy < height; dy++) {
-					int py = anchorY + dy;
-					if (IsUnassignedFlat(px, py, unassignedTiles, minX, minY, gridW, gridH)) {
-						tiles.Add(new Vector2Int(px, py));
-					}
+			// --- fused claim + collect: every cell in this block already passed the unassigned
+			// check above during growth, so there is nothing left to re-verify - just zero it and
+			// record it, once, using an index stepped by +1/+strideW instead of recomputed from
+			// scratch per cell.
+			var tiles = new List<Vector2Int>(blockWidth * blockHeight);
+			int rowStart = anchorIdx;
+			for (int dy = 0; dy < blockHeight; dy++) {
+				int idx = rowStart;
+				int py = anchorY + dy;
+				for (int dx = 0; dx < blockWidth; dx++) {
+					unassignedGrid[idx] = 0;
+					tiles.Add(new Vector2Int(anchorX + dx, py));
+					idx++;
 				}
-			}
-			return tiles;
-		}
-
-		private static void ClaimTiles(List<Vector2Int> tiles, byte[] unassignedTiles, int minX, int minY, int gridW) {
-			for (int i = 0; i < tiles.Count; i++) {
-				var tile = tiles[i];
-				int idx = (tile.x - minX) + (tile.y - minY) * gridW;
-				unassignedTiles[idx] = 0;
-			}
-		}
-
-		// =====================================================================================
-		// PROTRUSION HANDLING - Optimized Boundary Search (Zero Delegate Allocation)
-		// (Unchanged from the previous revision.)
-		// =====================================================================================
-
-		private static RectResult HandleProtrusion(
-			Vector2Int anchor,
-			byte[] regionShape,
-			byte[] unassignedTiles,
-			Vector2Int maxBoundSize,
-			int minX, int minY, int gridW, int gridH,
-			int minCheckWidth,
-			int minCheckHeight) {
-
-			int anchorX = anchor.x;
-			int anchorY = anchor.y;
-
-			int xRun = RunLengthFlat(anchorX, anchorY, regionShape, minX, minY, gridW, gridH, isXAxis: true);
-			int yRun = RunLengthFlat(anchorX, anchorY, regionShape, minX, minY, gridW, gridH, isXAxis: false);
-			bool isXElongation = xRun >= yRun;
-
-			int searchLow = 0;
-			int searchHigh = isXElongation ? xRun : yRun;
-			int requiredWidth = isXElongation ? minCheckHeight : minCheckWidth;
-
-			int boundaryOffset = BinarySearchBoundaryFlat(
-				anchorX, anchorY, regionShape, minX, minY, gridW, gridH, searchLow, searchHigh, isXElongation, requiredWidth);
-
-			int elongationLimit = isXElongation ? maxBoundSize.x : maxBoundSize.y;
-			int protrusionLength = Mathf.Clamp(boundaryOffset, 1, elongationLimit);
-
-			int perpendicularLimit = isXElongation ? maxBoundSize.y : maxBoundSize.x;
-			int perpendicularThickness = Mathf.Min(
-				PerpendicularThicknessFlat(anchorX, anchorY, regionShape, minX, minY, gridW, gridH, isXElongation), perpendicularLimit);
-			perpendicularThickness = Mathf.Max(1, perpendicularThickness);
-
-			int width = isXElongation ? protrusionLength : perpendicularThickness;
-			int height = isXElongation ? perpendicularThickness : protrusionLength;
-
-			var boxOrigin = anchor;
-			if (isXElongation) {
-				int belowExtent = ExtentInDirectionFlat(anchorX, anchorY, regionShape, minX, minY, gridW, gridH, dx: 0, dy: -1, limit: perpendicularThickness - 1);
-				boxOrigin = new Vector2Int(anchor.x, anchor.y - belowExtent);
-			} else {
-				int leftExtent = ExtentInDirectionFlat(anchorX, anchorY, regionShape, minX, minY, gridW, gridH, dx: -1, dy: 0, limit: perpendicularThickness - 1);
-				boxOrigin = new Vector2Int(anchor.x - leftExtent, anchor.y);
+				rowStart += strideW;
 			}
 
-			var tiles = CollectTilesInBoxFlat(boxOrigin, width, height, unassignedTiles, minX, minY, gridW, gridH);
-			var box = new BoundingBox(boxOrigin.x, boxOrigin.y, boxOrigin.x + width - 1, boxOrigin.y + height - 1);
+			var box = new BoundingBox(anchorX, anchorY, anchorX + blockWidth - 1, anchorY + blockHeight - 1);
 			return new RectResult(box, anchor, tiles);
-		}
-
-		private static int BinarySearchBoundaryFlat(
-			int anchorX, int anchorY, byte[] shape, int minX, int minY, int gridW, int gridH,
-			int low, int high, bool isXElongation, int requiredWidth) {
-
-			if (high <= low) return Mathf.Max(1, high);
-
-			int lo = low, hi = high;
-			while (hi - lo > 1) {
-				int mid = lo + (hi - lo) / 2;
-				int probeX = isXElongation ? anchorX + mid : anchorX;
-				int probeY = isXElongation ? anchorY : anchorY + mid;
-				bool reached = PerpendicularThicknessFlat(probeX, probeY, shape, minX, minY, gridW, gridH, isXElongation) >= requiredWidth;
-
-				if (reached) hi = mid;
-				else lo = mid;
-			}
-
-			int correctionWindow = Mathf.Min(hi, 8);
-			for (int offset = hi - correctionWindow; offset < hi; offset++) {
-				if (offset >= low) {
-					int probeX = isXElongation ? anchorX + offset : anchorX;
-					int probeY = isXElongation ? anchorY : anchorY + offset;
-					bool reached = PerpendicularThicknessFlat(probeX, probeY, shape, minX, minY, gridW, gridH, isXElongation) >= requiredWidth;
-
-					if (reached) return Mathf.Max(1, offset);
-				}
-			}
-
-			return Mathf.Max(1, hi);
-		}
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		private static int RunLengthFlat(int anchorX, int anchorY, byte[] shape, int minX, int minY, int gridW, int gridH, bool isXAxis) {
-			int run = 0;
-			if (isXAxis) {
-				while (IsShapeFlat(anchorX + run, anchorY, shape, minX, minY, gridW, gridH)) run++;
-			} else {
-				while (IsShapeFlat(anchorX, anchorY + run, shape, minX, minY, gridW, gridH)) run++;
-			}
-			return run;
-		}
-
-		private static int PerpendicularThicknessFlat(int probeX, int probeY, byte[] shape, int minX, int minY, int gridW, int gridH, bool isXElongation) {
-			int forward = isXElongation
-				? ExtentInDirectionFlat(probeX, probeY, shape, minX, minY, gridW, gridH, 0, 1, int.MaxValue)
-				: ExtentInDirectionFlat(probeX, probeY, shape, minX, minY, gridW, gridH, 1, 0, int.MaxValue);
-			int backward = isXElongation
-				? ExtentInDirectionFlat(probeX, probeY, shape, minX, minY, gridW, gridH, 0, -1, int.MaxValue)
-				: ExtentInDirectionFlat(probeX, probeY, shape, minX, minY, gridW, gridH, -1, 0, int.MaxValue);
-			return 1 + forward + backward;
-		}
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		private static int ExtentInDirectionFlat(int originX, int originY, byte[] shape, int minX, int minY, int gridW, int gridH, int dx, int dy, int limit) {
-			int distance = 0;
-			while (distance < limit) {
-				int px = originX + dx * (distance + 1);
-				int py = originY + dy * (distance + 1);
-				if (!IsShapeFlat(px, py, shape, minX, minY, gridW, gridH)) break;
-				distance++;
-			}
-			return distance;
-		}
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		private static bool IsShapeFlat(int x, int y, byte[] shape, int minX, int minY, int gridW, int gridH) {
-			if (x < minX || x >= minX + gridW || y < minY || y >= minY + gridH) return false;
-			int idx = (x - minX) + (y - minY) * gridW;
-			return shape[idx] == 1;
-		}
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		private static bool IsUnassignedFlat(int x, int y, byte[] unassigned, int minX, int minY, int gridW, int gridH) {
-			if (x < minX || x >= minX + gridW || y < minY || y >= minY + gridH) return false;
-			int idx = (x - minX) + (y - minY) * gridW;
-			return unassigned[idx] == 1;
 		}
 
 		// =====================================================================================
 		// STEP 2: POST-PROCESSING - Adjacency Clustering + Per-Cluster Maximal Histogram
+		// (Unchanged.)
 		// =====================================================================================
 
 		private static List<RectResult> RunPostProcessing(List<RectResult> primaryResults, Vector2Int maxBoundSize) {
@@ -503,10 +385,8 @@ namespace Kope.Feature.PathFinding.Utility {
 		/// <summary>
 		/// Same overall shape as before (rent filled/claimed local to this cluster's bbox, greedily
 		/// pull the largest unclaimed rectangle until nothing remains, subdivide each merged
-		/// rectangle to maxBoundSize) - but the "find the current largest unclaimed rectangle"
-		/// step is now incremental instead of a from-scratch O(width*height) rebuild per
-		/// extraction. See the class-level doc comment (point 6) for the full rationale and the
-		/// invariant that makes the incremental update exact.
+		/// rectangle to maxBoundSize) with the incremental "find the current largest unclaimed
+		/// rectangle" update described in the class-level doc comment (point 6).
 		/// </summary>
 		private static List<RectResult> RunPostProcessingOnCluster(List<RectResult> cluster, Vector2Int maxBoundSize) {
 			int minX = int.MaxValue, maxX = int.MinValue;

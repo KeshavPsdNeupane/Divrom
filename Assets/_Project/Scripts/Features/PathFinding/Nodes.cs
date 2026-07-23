@@ -110,6 +110,15 @@ namespace Kope.Feature.PathFinding {
 		public Vector2Int Min { get; }
 		public Vector2Int Max { get; }
 		public Vector2Int Size => this.Max - this.Min;
+		public float AspectRatio {
+			get {
+				// Avoid division by zero, return a sentinel value
+				if (Size.y == 0) return -1f;
+				// the float case is impilicitly casted to float, so the division is done
+				// in floating point arithmetic
+				return (float)Size.x / Size.y;
+			}
+		}
 
 		/// <summary>
 		/// Pre-computed hash code for the bounding box, calculated during construction.

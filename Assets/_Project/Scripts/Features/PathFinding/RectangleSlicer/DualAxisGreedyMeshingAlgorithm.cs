@@ -22,11 +22,12 @@ namespace Kope.Feature.PathFinding.Utility {
 			var finalSlicedRegions = new Dictionary<BoundingBox, (Vector2Int, List<Vector2Int>)>();
 
 			foreach (var kvp in isolatedRegions) {
+				Vector2Int regionAnchor = kvp.Key;
 				var regionTiles = kvp.Value;
 
-				// Evaluate both scanline strategies
-				var horizontalSlices = ExecuteMeshingSweep(regionTiles, maxBoundSize, isXDominant: true);
-				var verticalSlices = ExecuteMeshingSweep(regionTiles, maxBoundSize, isXDominant: false);
+				// Evaluate both scanline strategies, passing down the region anchor
+				var horizontalSlices = ExecuteMeshingSweep(regionAnchor, regionTiles, maxBoundSize, isXDominant: true);
+				var verticalSlices = ExecuteMeshingSweep(regionAnchor, regionTiles, maxBoundSize, isXDominant: false);
 
 				// Adopt the strategy that yielded the fewest total partitions
 				var optimalSlices = horizontalSlices.Count <= verticalSlices.Count ? horizontalSlices : verticalSlices;
@@ -40,6 +41,7 @@ namespace Kope.Feature.PathFinding.Utility {
 		}
 
 		private Dictionary<BoundingBox, (Vector2Int, List<Vector2Int>)> ExecuteMeshingSweep(
+			Vector2Int regionAnchor,
 			List<Vector2Int> regionTiles,
 			Vector2Int maxBoundSize,
 			bool isXDominant) {
@@ -61,19 +63,19 @@ namespace Kope.Feature.PathFinding.Utility {
 			if (isXDominant) {
 				for (int y = minY; y <= maxY; y++) {
 					for (int x = minX; x <= maxX; x++) {
-						var anchorPos = new Vector2Int(x, y);
-						if (!unassignedTiles.Contains(anchorPos)) continue;
+						var blockAnchor = new Vector2Int(x, y);
+						if (!unassignedTiles.Contains(blockAnchor)) continue;
 
-						ExtractOptimalBlock(anchorPos, unassignedTiles, maxBoundSize, sweepResults, isXDominant);
+						ExtractOptimalBlock(regionAnchor, blockAnchor, unassignedTiles, maxBoundSize, sweepResults, isXDominant);
 					}
 				}
 			} else {
 				for (int x = minX; x <= maxX; x++) {
 					for (int y = minY; y <= maxY; y++) {
-						var anchorPos = new Vector2Int(x, y);
-						if (!unassignedTiles.Contains(anchorPos)) continue;
+						var blockAnchor = new Vector2Int(x, y);
+						if (!unassignedTiles.Contains(blockAnchor)) continue;
 
-						ExtractOptimalBlock(anchorPos, unassignedTiles, maxBoundSize, sweepResults, isXDominant);
+						ExtractOptimalBlock(regionAnchor, blockAnchor, unassignedTiles, maxBoundSize, sweepResults, isXDominant);
 					}
 				}
 			}
@@ -82,7 +84,8 @@ namespace Kope.Feature.PathFinding.Utility {
 		}
 
 		private void ExtractOptimalBlock(
-			Vector2Int anchor,
+			Vector2Int regionAnchor,
+			Vector2Int blockAnchor,
 			HashSet<Vector2Int> unassignedTiles,
 			Vector2Int maxBound,
 			Dictionary<BoundingBox, (Vector2Int, List<Vector2Int>)> sweepResults,
@@ -93,15 +96,15 @@ namespace Kope.Feature.PathFinding.Utility {
 
 			if (isXDominant) {
 				// Expand horizontally as far as possible
-				while (blockWidth < maxBound.x && unassignedTiles.Contains(new Vector2Int(anchor.x + blockWidth, anchor.y))) {
+				while (blockWidth < maxBound.x && unassignedTiles.Contains(new Vector2Int(blockAnchor.x + blockWidth, blockAnchor.y))) {
 					blockWidth++;
 				}
 				// Expand vertically using the established width
 				bool canExpandHeight = true;
 				while (blockHeight < maxBound.y && canExpandHeight) {
-					int checkY = anchor.y + blockHeight;
+					int checkY = blockAnchor.y + blockHeight;
 					for (int dx = 0; dx < blockWidth; dx++) {
-						if (!unassignedTiles.Contains(new Vector2Int(anchor.x + dx, checkY))) {
+						if (!unassignedTiles.Contains(new Vector2Int(blockAnchor.x + dx, checkY))) {
 							canExpandHeight = false;
 							break;
 						}
@@ -110,15 +113,15 @@ namespace Kope.Feature.PathFinding.Utility {
 				}
 			} else {
 				// Expand vertically as far as possible
-				while (blockHeight < maxBound.y && unassignedTiles.Contains(new Vector2Int(anchor.x, anchor.y + blockHeight))) {
+				while (blockHeight < maxBound.y && unassignedTiles.Contains(new Vector2Int(blockAnchor.x, blockAnchor.y + blockHeight))) {
 					blockHeight++;
 				}
 				// Expand horizontally using the established height
 				bool canExpandWidth = true;
 				while (blockWidth < maxBound.x && canExpandWidth) {
-					int checkX = anchor.x + blockWidth;
+					int checkX = blockAnchor.x + blockWidth;
 					for (int dy = 0; dy < blockHeight; dy++) {
-						if (!unassignedTiles.Contains(new Vector2Int(checkX, anchor.y + dy))) {
+						if (!unassignedTiles.Contains(new Vector2Int(checkX, blockAnchor.y + dy))) {
 							canExpandWidth = false;
 							break;
 						}
@@ -131,14 +134,14 @@ namespace Kope.Feature.PathFinding.Utility {
 			var claimedTiles = new List<Vector2Int>(blockWidth * blockHeight);
 			for (int dx = 0; dx < blockWidth; dx++) {
 				for (int dy = 0; dy < blockHeight; dy++) {
-					var pos = new Vector2Int(anchor.x + dx, anchor.y + dy);
+					var pos = new Vector2Int(blockAnchor.x + dx, blockAnchor.y + dy);
 					unassignedTiles.Remove(pos); // Safe removal logic, acting effectively as our Rent/Release for tile ownership
 					claimedTiles.Add(pos);
 				}
 			}
 
-			var boundingBox = new BoundingBox(anchor.x, anchor.y, anchor.x + blockWidth - 1, anchor.y + blockHeight - 1);
-			sweepResults[boundingBox] = (anchor, claimedTiles);
+			var boundingBox = new BoundingBox(blockAnchor.x, blockAnchor.y, blockAnchor.x + blockWidth - 1, blockAnchor.y + blockHeight - 1);
+			sweepResults[boundingBox] = (regionAnchor, claimedTiles);
 		}
 	}
 }

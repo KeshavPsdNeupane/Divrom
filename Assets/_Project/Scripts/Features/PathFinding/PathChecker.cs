@@ -9,7 +9,6 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using ZLinq;
 
-
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -37,8 +36,10 @@ namespace Kope.Feature.PathFinding {
 	public enum RectanleSlicerAgorithm {
 		GREEDY = 0,
 		DUAL_PHASE_GREEDY_MESHING = 10,
-		ADAPTIVE_CLUSTERED_SLICER_NIterative = 33,
-		ADAPTIVE_CLUSTERED_SLICER_Iterative = 34
+		ADAPTIVE_CLUSTERED_SLICER_Iterative = 34,
+		GreedyClusteringHistogramSlicer = 35,
+		GreedyClusteringHistogramSlicerV2 = 36,
+		PureHistogramSlicer = 50,
 	}
 
 	[System.Serializable]
@@ -91,12 +92,11 @@ namespace Kope.Feature.PathFinding {
 		[SerializeField] private List<ErrorTileInfo> _macroErrors = new();
 		[SerializeField] private List<ErrorTileInfo> _microErrors = new();
 
-
-
 		// Storage cache for the most recently baked region slices to render via gizmos
 		private readonly Dictionary<BoundingBox, (Vector2Int Anchor, List<Vector2Int> Tiles)> _bakedSlicesCache = new();
 
 		private readonly RegionExtractionAlgorithm _regionExtractor = new();
+		private readonly SliceAnalysisSummarizer _summarizer = new();
 		private IRectangleRegionSlicer _rectanglePacker;
 
 		/// <summary>
@@ -109,7 +109,6 @@ namespace Kope.Feature.PathFinding {
 #if UNITY_EDITOR
 				SceneView.RepaintAll();
 #endif
-
 			}
 		}
 
@@ -117,8 +116,10 @@ namespace Kope.Feature.PathFinding {
 			return slicer switch {
 				RectanleSlicerAgorithm.GREEDY => new GreedyRectanglePackingAlogorithm(),
 				RectanleSlicerAgorithm.DUAL_PHASE_GREEDY_MESHING => new DualAxisGreedyMeshingAlgorithm(),
-				RectanleSlicerAgorithm.ADAPTIVE_CLUSTERED_SLICER_NIterative => new AdaptiveClusteredBoundedRegionSlicer_NIterative(),
 				RectanleSlicerAgorithm.ADAPTIVE_CLUSTERED_SLICER_Iterative => new AdaptiveClusteredBoundedRegionSlicer_Iterative(),
+				RectanleSlicerAgorithm.GreedyClusteringHistogramSlicer => new GreedyClusteringHistogramSlicer(),
+				RectanleSlicerAgorithm.GreedyClusteringHistogramSlicerV2 => new GreedyClusteringHistogramSlicerV2(),
+				RectanleSlicerAgorithm.PureHistogramSlicer => new PureHistogramRegionSlicer(),
 				_ => throw new System.ArgumentOutOfRangeException(nameof(slicer), slicer, null)
 			};
 		}
@@ -189,9 +190,6 @@ namespace Kope.Feature.PathFinding {
 				}
 			}
 
-			Debug.Log($"[Pipeline] {tilemapName} preparation complete. Collected {targetDictionary.Count} valid " +
-					  $"tiles. Flagged {targetErrorList.Count} structural errors.");
-
 #if UNITY_EDITOR
 			if (repaint) {
 				SceneView.RepaintAll();
@@ -201,7 +199,6 @@ namespace Kope.Feature.PathFinding {
 
 		public void QuoteOnQuoteBake() {
 			this._rectanglePacker = GetRectangleSlicer(this.rectangleSlicer);
-			//	Debug.Log("[Pipeline] Starting Quote-on-Quote bake process...");
 
 			// ==========================================
 			// 1. MICRO-LEVEL NODE GENERATION
@@ -219,66 +216,31 @@ namespace Kope.Feature.PathFinding {
 			// ==========================================
 			// 2. MACRO-LEVEL NODE GENERATION & SLICING
 			// ==========================================
-			//Debug.Log("[Pipeline] Extracting macro regions from tilemap...");
-
-
-
 			var regionTiles = this._regionExtractor.Extract(this._macroTileDictionary);
-
-
-			string[] regionSummaries = new string[regionTiles.Count];
-
-			for (int i = 0; i < regionTiles.Count; i++) {
-				var kvp = regionTiles.AsValueEnumerable().ElementAt(i);
-				Vector2Int anchorPos = kvp.Key;
-				List<Vector2Int> tilesInRegion = kvp.Value;
-
-				// // Build a string specifically for this one region
-				// StringBuilder singleRegionLog = new StringBuilder();
-				// singleRegionLog.Append($"Tiles in region starting at {anchorPos}: ");
-
-				// bool first = true;
-				// foreach (var tilePos in tilesInRegion) {
-				// 	if (first) {
-				// 		singleRegionLog.Append($"{tilePos}");
-				// 		first = false;
-				// 	} else {
-				// 		singleRegionLog.Append($", {tilePos}");
-				// 	}
-				// }
-				// // Log each region independently so nothing gets truncated
-				// regionSummaries[i] = singleRegionLog.ToString();
-			}
-			//Debug.Log($"[Pipeline] Region summary (total regions = {regionTiles.Count}):");
-			// for (int i = 0; i < regionSummaries.Length; i++) {
-			// 	Debug.Log($"[Pipeline] Region {i + 1}/{regionSummaries.Length}: {regionSummaries[i]}");
-			// }
 			var maxBoundSize = this.maxBoundingBoxSize;
 
-			StringBuilder slicingSummary = new();
-			Debug.Log($"[Pipeline] Slicing macro regions using {this._rectanglePacker.GetType().Name} " +
-			$"into bounding boxes with max size{maxBoundSize}");
-
-			System.Diagnostics.Stopwatch stopwatch = new();
-			stopwatch.Start();
+			System.Diagnostics.Stopwatch stopwatch = System.Diagnostics.Stopwatch.StartNew();
 			var slicedRegions = this._rectanglePacker.Slice(regionTiles, maxBoundSize);
 			stopwatch.Stop();
 
-			Debug.Log($"[Pipeline] Slicing completed in {stopwatch.ElapsedTicks} ticks." +
-			$" {stopwatch.ElapsedMilliseconds} ms. Total slices created: {slicedRegions.Count}");
-
-			// Store the newly computed slice bounding boxes and tile sets into our persistent instance cache for Gizmo visualization
+			// Store newly computed slices into cache for Gizmo visualization
 			this._bakedSlicesCache.Clear();
-			foreach (var kvp in slicedRegions) {
-				this._bakedSlicesCache[kvp.Key] = kvp.Value;
-				BoundingBox bounds = kvp.Key;
-				var (anchor, tilesInRegion) = kvp.Value;
-				//slicingSummary.AppendLine($"Sliced macro region starting at {anchor} with bounds {bounds} contains {tilesInRegion.Count} tiles.\n");
+			if (slicedRegions != null) {
+				foreach (var kvp in slicedRegions) {
+					this._bakedSlicesCache[kvp.Key] = kvp.Value;
+				}
 			}
 
-			Debug.Log($"[Pipeline] Slicing summary (total slices = {slicedRegions.Count}): \n" + slicingSummary.ToString());
-
-			// Debug.Log("[Pipeline] Quote-on-Quote bake process completed.");
+			// ==========================================
+			// 3. UNIFIED SUMMARY REPORTING
+			// ==========================================
+			this._summarizer.MakeSummary(
+				this._rectanglePacker,
+				maxBoundSize,
+				regionTiles != null ? regionTiles.Count : 0,
+				slicedRegions,
+				stopwatch
+			);
 
 #if UNITY_EDITOR
 			SceneView.RepaintAll();
@@ -318,15 +280,18 @@ namespace Kope.Feature.PathFinding {
 
 			// Radius for a circle with a 0.5 unit total diameter (0.25f radius)
 			const float anchorRadius = 0.25f;
-			const float circleThickness = 4f; // Increase pixel width here (e.g., 3f, 4f, 6f)
+			const float circleThickness = 10f; // Increase pixel width here (e.g., 3f, 4f, 6f)
 
 			foreach (var kvp in _bakedSlicesCache) {
 				BoundingBox box = kvp.Key;
-				Vector2Int anchor = kvp.Value.Anchor;
+				Vector2Int anchor = kvp.Value.Tiles[0];
+				Vector2Int anchorRegion = kvp.Value.Anchor;
+
+				Vector3 regionAnchorPoint = macroTilemap.CellToWorld(new Vector3Int(anchorRegion.x, anchorRegion.y, 0));
 
 				// Convert bounds and anchor to world positions (cell center for anchor)
 				Vector3 minWorldPos = macroTilemap.CellToWorld(new Vector3Int(box.Min.x, box.Min.y, 0));
-				Vector3 anchorWorldPos = macroTilemap.GetCellCenterWorld(new Vector3Int(anchor.x, anchor.y, 0));
+				Vector3 tileAnchorWorldPos = macroTilemap.GetCellCenterWorld(new Vector3Int(anchor.x, anchor.y, 0));
 
 				Vector3 cellSize = macroTilemap.cellSize;
 				Vector3 boxSize = new(
@@ -346,14 +311,22 @@ namespace Kope.Feature.PathFinding {
 				Gizmos.DrawWireCube(boxCenter, boxSize);
 
 				// 3. Draw Anchor Point as a thick 2D circle at the cell center
-				anchorWorldPos.z = boxCenter.z - (boxSize.z * 0.5f) - 0.5f; // in front of box
+				tileAnchorWorldPos.z = boxCenter.z - (boxSize.z * 0.5f) - 0.5f; // in front of box
 
 #if UNITY_EDITOR
-				UnityEditor.Handles.color = sliceBoxBorderColor;
-				UnityEditor.Handles.DrawWireDisc(
-					anchorWorldPos,
+				Handles.color = sliceBoxBorderColor;
+				Handles.DrawWireDisc(
+					tileAnchorWorldPos,
 					Vector3.forward,  // Normal vector facing the 2D camera
 					anchorRadius,
+					circleThickness   // Line width in pixels
+				);
+
+				Handles.color = Color.white;
+				Handles.DrawWireDisc(
+					regionAnchorPoint,
+					Vector3.forward,  // Normal vector facing the 2D camera
+					anchorRadius * 0.5f,
 					circleThickness   // Line width in pixels
 				);
 #endif
