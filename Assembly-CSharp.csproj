@@ -57,6 +57,7 @@
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Nodes.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/UI/InventoryDisplays/InventoryDisplay.cs" />
     <Compile Include="Assets/_Project/Scripts/UI/Common/PanelFader.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/RectangleSlicer/Marshalled/PureHistogramRegionSlicerMarshalled.cs" />
     <Compile Include="Assets/_Project/_BootStrap/GlobalBootStrap.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AnimationCurve/Curve.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/StatBased/ResistanceStatModifierEffect.cs" />
@@ -94,10 +95,9 @@
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/PathChecker.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/HealBased/HealOverTimeEffect.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Tiles/PathFindingTileData.cs" />
-    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/RectangleSlicer/AdaptiveDualAxisGreedyMeshingAlgorithmClusteredV2.cs" />
-    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/RectangleSlicer/GreedyClusteringHistogramSlicerV1.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/DamageBased/VampericDamageEffect.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Ability/DamageBased/DamageAbility.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/RectangleSlicer/Marshalled/GreedyClusteringHistogramSlicer.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/UtilityClasses/AbilityProjectileController.cs" />
     <Compile Include="Assets/_Project/Scripts/UI/UIState/UIStateManager.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/RegionGroupAlgorithm/RegionExtractionAlgorithm.cs" />

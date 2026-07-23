@@ -36,10 +36,10 @@ namespace Kope.Feature.PathFinding {
 	public enum RectanleSlicerAgorithm {
 		GREEDY = 0,
 		DUAL_PHASE_GREEDY_MESHING = 10,
-		ADAPTIVE_CLUSTERED_SLICER_Iterative = 34,
-		GreedyClusteringHistogramSlicer = 35,
-		GreedyClusteringHistogramSlicerV2 = 36,
+		GreedyClusteringHistogramSlicer = 36,
+		GreedyClusteringHistogramSlicerMarshalled = 37,
 		PureHistogramSlicer = 50,
+		PureHistogramSlicerMarshalled = 51
 	}
 
 	[System.Serializable]
@@ -116,10 +116,10 @@ namespace Kope.Feature.PathFinding {
 			return slicer switch {
 				RectanleSlicerAgorithm.GREEDY => new GreedyRectanglePackingAlogorithm(),
 				RectanleSlicerAgorithm.DUAL_PHASE_GREEDY_MESHING => new DualAxisGreedyMeshingAlgorithm(),
-				RectanleSlicerAgorithm.ADAPTIVE_CLUSTERED_SLICER_Iterative => new AdaptiveClusteredBoundedRegionSlicer_Iterative(),
 				RectanleSlicerAgorithm.GreedyClusteringHistogramSlicer => new GreedyClusteringHistogramSlicer(),
-				RectanleSlicerAgorithm.GreedyClusteringHistogramSlicerV2 => new GreedyClusteringHistogramSlicerV2(),
+				RectanleSlicerAgorithm.GreedyClusteringHistogramSlicerMarshalled => new GreedyClusteringHistogramSlicerMarshalled(),
 				RectanleSlicerAgorithm.PureHistogramSlicer => new PureHistogramRegionSlicer(),
+				RectanleSlicerAgorithm.PureHistogramSlicerMarshalled => new PureHistogramRegionSlicerMarshalled(),
 				_ => throw new System.ArgumentOutOfRangeException(nameof(slicer), slicer, null)
 			};
 		}
@@ -230,7 +230,6 @@ namespace Kope.Feature.PathFinding {
 					this._bakedSlicesCache[kvp.Key] = kvp.Value;
 				}
 			}
-
 			// ==========================================
 			// 3. UNIFIED SUMMARY REPORTING
 			// ==========================================
