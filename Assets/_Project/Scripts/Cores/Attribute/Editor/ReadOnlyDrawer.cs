@@ -25,7 +25,7 @@ public class ReadOnlyTextAreaDrawer : PropertyDrawer {
 	public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
 		ReadOnlyTextAreaAttribute attr = (ReadOnlyTextAreaAttribute)attribute;
 
-		GUIStyle style = new GUIStyle(EditorStyles.textArea) {
+		GUIStyle style = new(EditorStyles.textArea) {
 			wordWrap = true
 		};
 
@@ -41,7 +41,7 @@ public class ReadOnlyTextAreaDrawer : PropertyDrawer {
 	public override float GetPropertyHeight(SerializedProperty property, GUIContent label) {
 		ReadOnlyTextAreaAttribute attr = (ReadOnlyTextAreaAttribute)attribute;
 
-		GUIStyle style = new GUIStyle(EditorStyles.textArea) {
+		GUIStyle style = new(EditorStyles.textArea) {
 			wordWrap = true
 		};
 

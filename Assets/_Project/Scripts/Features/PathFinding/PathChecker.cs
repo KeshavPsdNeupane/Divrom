@@ -10,7 +10,6 @@ using UnityEngine.Tilemaps;
 using ZLinq;
 using Kope.EntityIdentity;
 
-
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -85,9 +84,13 @@ namespace Kope.Feature.PathFinding {
 		[SerializeField] private Color sliceBoxColor = new(0f, 1f, 1f, 0.3f); // Translucent Cyan
 		[SerializeField] private Color sliceBoxBorderColor = new(0f, 0.8f, 0.8f, 1f); // Opaque Cyan
 
+		[Header("Macro Neighbor Line Gizmo Settings")]
+		[SerializeField] private bool showNeighborConnections = true;
+		[SerializeField] private Color neighborLineColor = Color.yellow;
+		[SerializeField] private float neighborLineThickness = 3f;
+
 		private readonly SerializableDictionary<Vector2Int, HHSIMacroPathFindingTile> _macroTileDictionary = new(Vector2IntComparer.Instance);
 		private readonly SerializableDictionary<Vector2Int, HHSIMicroPathFindingTile> _microTileDictionary = new(Vector2IntComparer.Instance);
-
 
 		private readonly SerializableDictionary<Vector2Int, MicroGridNode> _microGridNodeDict = new(Vector2IntComparer.Instance);
 		private readonly SerializableDictionary<BoundingBox, MacroGridNode> _macroGridNodeDict = new();
@@ -96,12 +99,14 @@ namespace Kope.Feature.PathFinding {
 		[SerializeField] private List<ErrorTileInfo> _macroErrors = new();
 		[SerializeField] private List<ErrorTileInfo> _microErrors = new();
 
-		// Storage cache for the most recently baked region slices to render via gizmos
-		private readonly Dictionary<BoundingBox, (Vector2Int Anchor, List<Vector2Int> Tiles)> _bakedSlicesCache = new();
-
 		private readonly RegionExtractionAlgorithm _regionExtractor = new();
 		private readonly SliceAnalysisSummarizer _summarizer = new();
 		private IRectangleRegionSlicer _rectanglePacker;
+		private readonly IMacroNeighbourFinder _neighborFinder = new MacroCardinalNeighbourFinder();
+
+		// Gizmos cache for baked slices to avoid recalculating during OnDrawGizmos
+		private readonly Dictionary<BoundingBox, (Vector2Int Anchor, List<Vector2Int> Tiles)> _bakedSlicesCache = new();
+		private Dictionary<BoundingBox, List<BoundingBox>> _macroNeighbourCacheForGizmos;
 
 		/// <summary>
 		/// Gets or sets whether region slice bounding boxes should be drawn in the Scene view via Gizmos.
@@ -214,7 +219,7 @@ namespace Kope.Feature.PathFinding {
 				MicroGridNode node = new(position, tile.Data.IsStaticObstacle) {
 					ParentMacroGrid = null
 				};
-				this._microGridNodeDict[position] = node;
+				this._microGridNodeDict.Add(position, node);
 			}
 
 			// ==========================================
@@ -227,43 +232,51 @@ namespace Kope.Feature.PathFinding {
 			var slicedRegions = this._rectanglePacker.Slice(regionTiles, maxBoundSize);
 			stopwatch.Stop();
 
-			// lets fucking goo , need to create connection data using the slicedRegion and 
-			// the macroTileDictionary and the microGridNodeDict to create the connection data 
-			// for each macroGridNode, god forgive me for what i am going to create,
-			// but i know i won't.
+			if (slicedRegions == null) return;
 
+			int totalSizeForReserveDict = slicedRegions.AsValueEnumerable().Sum(kvp => kvp.Value.RegionTilePositions.Count);
+			BoundingBox[] slicedRegionArray = slicedRegions.Keys.AsValueEnumerable().ToArray();
+			Dictionary<(int x, int y), BoundingBox> microToMacroMapping = new(totalSizeForReserveDict);
 
-			// Store newly computed slices into cache for Gizmo visualization
 			this._bakedSlicesCache.Clear();
-			if (slicedRegions != null) {
-				foreach (var kvp in slicedRegions) {
-					this._bakedSlicesCache[kvp.Key] = kvp.Value;
-					// first lets find the terrain type, each other type will be found step wise
-					BoundingBox box = kvp.Key;
 
-					HHSIMacroPathFindingTile regionTile = this._macroTileDictionary[kvp.Value.regionAnchor];
-					// good job me to get 1st data
-					TerrainType terrainType = regionTile.Data.TerrainType;
+			foreach (var kvp in slicedRegions) {
+				this._bakedSlicesCache[kvp.Key] = kvp.Value;
+				BoundingBox box = kvp.Key;
 
-					MovementCapability movementCapability = regionTile.Data.MovementType;
+				HHSIMacroPathFindingTile regionTile = this._macroTileDictionary[kvp.Value.regionAnchor];
 
-					bool IsNarrativelyAccessible = regionTile.Data.IsNarrativelyAccessible;
-					// now we all have data except the connection data, we will have to
-					// find the connection data by checking the surrounding tiles
-					// we will check the surrounding tiles and find the connection data
-					// so what to do lets goo time to make another algo that need to be preprocessed
-					// before this loop which will find the connection data for each tile 
-					// and store it in a dictionary
-					// we will use the dictionary to find the connection data for each tile
-					// this._macroGridNodeDict[kvp.Key] = new MacroGridNode(kvp.Key
-					// ,);
-					// man i dont know why but i do be using alot of dictionary and 
-					// but it is fastest for the data structure i need to use and it is 
-					// easy to use and understand
+				TerrainType terrainType = regionTile.Data.TerrainType;
+				MovementCapability movementCapability = regionTile.Data.MovementType;
+
+				var currentMacroNode = new MacroGridNode(box, terrainType, movementCapability);
+				this._macroGridNodeDict.Add(box, currentMacroNode);
+
+				foreach (Vector2Int tilePos in kvp.Value.RegionTilePositions) {
+					if (this._microGridNodeDict.TryGetValue(tilePos, out MicroGridNode microNode)) {
+						microNode.SetParentMacroGrid(currentMacroNode);
+						currentMacroNode.MicroGridsNodes.Add(microNode);
+						microToMacroMapping[(tilePos.x, tilePos.y)] = box;
+					}
 				}
 			}
+
 			// ==========================================
-			// 3. UNIFIED SUMMARY REPORTING
+			// 3. MACRO CONNECTION BUILD PASS
+			// ==========================================
+			Dictionary<BoundingBox, List<BoundingBox>> macroNeighbours =
+				this._neighborFinder.FindNeighbours(microToMacroMapping, slicedRegionArray);
+
+			this._macroNeighbourCacheForGizmos = macroNeighbours;
+
+			StringBuilder debugOutput = new();
+			foreach (var kvp in macroNeighbours) {
+				debugOutput.AppendLine($"Macro Box {kvp.Key} has {kvp.Value.Count} neighbours.");
+			}
+			Debug.Log(debugOutput.ToString());
+
+			// ==========================================
+			// 4. UNIFIED SUMMARY REPORTING
 			// ==========================================
 			this._summarizer.MakeSummary(
 				this._rectanglePacker,
@@ -284,6 +297,10 @@ namespace Kope.Feature.PathFinding {
 
 			if (showRegionSlices) {
 				DrawRegionSlices();
+			}
+
+			if (showNeighborConnections) {
+				DrawNeighbourLine();
 			}
 		}
 
@@ -309,9 +326,8 @@ namespace Kope.Feature.PathFinding {
 		private void DrawRegionSlices() {
 			if (macroTilemap == null || _bakedSlicesCache == null || _bakedSlicesCache.Count == 0) return;
 
-			// Radius for a circle with a 0.5 unit total diameter (0.25f radius)
 			const float anchorRadius = 0.25f;
-			const float circleThickness = 10f; // Increase pixel width here (e.g., 3f, 4f, 6f)
+			const float circleThickness = 10f;
 
 			foreach (var kvp in _bakedSlicesCache) {
 				BoundingBox box = kvp.Key;
@@ -320,7 +336,6 @@ namespace Kope.Feature.PathFinding {
 
 				Vector3 regionAnchorPoint = macroTilemap.CellToWorld(new Vector3Int(anchorRegion.x, anchorRegion.y, 0));
 
-				// Convert bounds and anchor to world positions (cell center for anchor)
 				Vector3 minWorldPos = macroTilemap.CellToWorld(new Vector3Int(box.Min.x, box.Min.y, 0));
 				Vector3 tileAnchorWorldPos = macroTilemap.GetCellCenterWorld(new Vector3Int(anchor.x, anchor.y, 0));
 
@@ -342,26 +357,142 @@ namespace Kope.Feature.PathFinding {
 				Gizmos.DrawWireCube(boxCenter, boxSize);
 
 				// 3. Draw Anchor Point as a thick 2D circle at the cell center
-				tileAnchorWorldPos.z = boxCenter.z - (boxSize.z * 0.5f) - 0.5f; // in front of box
+				tileAnchorWorldPos.z = boxCenter.z - (boxSize.z * 0.5f) - 0.5f;
 
 #if UNITY_EDITOR
 				Handles.color = sliceBoxBorderColor;
 				Handles.DrawWireDisc(
 					tileAnchorWorldPos,
-					Vector3.forward,  // Normal vector facing the 2D camera
+					Vector3.forward,
 					anchorRadius,
-					circleThickness   // Line width in pixels
+					circleThickness
 				);
 
 				Handles.color = Color.white;
 				Handles.DrawWireDisc(
 					regionAnchorPoint,
-					Vector3.forward,  // Normal vector facing the 2D camera
+					Vector3.forward,
 					anchorRadius * 0.5f,
-					circleThickness   // Line width in pixels
+					circleThickness
 				);
 #endif
 			}
+		}
+
+		/// <summary>
+		/// Renders a connection line crossing the shared border between neighboring macro boxes.
+		/// The line length dynamically scales to half (or a quarter) of the distance between the box centers.
+		/// Deduplicates bidirectional graph edges so each seam indicator is drawn exactly once.
+		/// </summary>
+		private void DrawNeighbourLine() {
+			if (macroTilemap == null || _macroNeighbourCacheForGizmos == null || _macroNeighbourCacheForGizmos.Count == 0) return;
+			MacroCardinalNeighbourGizmos.DrawNeighbourLine(
+				_macroNeighbourCacheForGizmos,
+				macroTilemap,
+				neighborLineColor,
+				neighborLineThickness,
+				0.1f
+			);
+
+			// 			// Pre-allocated set to ensure we only draw 1 edge indicator per shared border
+			// 			HashSet<(BoundingBox, BoundingBox)> drawnEdges = new(_macroNeighbourCacheForGizmos.Count * 2);
+
+			// 			// Distance multiplier for line length (0.5f = 50% of distance between box centers)
+			// 			// Change to 0.25f if you prefer a quarter of the distance.
+			// 			const float lineDistanceRatio = 0.25f;
+
+			// 			foreach (var kvp in _macroNeighbourCacheForGizmos) {
+			// 				BoundingBox boxA = kvp.Key;
+			// 				List<BoundingBox> neighbors = kvp.Value;
+
+			// 				if (neighbors == null || neighbors.Count == 0) continue;
+
+			// 				Vector3 centerA = GetBoxCenterWorld(boxA);
+
+			// 				foreach (var boxB in neighbors) {
+			// 					var edge = GetUndirectedEdge(boxA, boxB);
+
+			// 					// Skip if this shared border was already drawn
+			// 					if (!drawnEdges.Add(edge)) continue;
+
+			// 					Vector3 centerB = GetBoxCenterWorld(boxB);
+
+			// 					// 1. Calculate total distance between box centers & normalized direction
+			// 					float distance = Vector3.Distance(centerA, centerB);
+			// 					Vector3 dir = (centerB - centerA) / distance; // Normalized vector
+
+			// 					// 2. Calculate seam midpoint
+			// 					Vector3 seamPoint = GetSeamPointWorld(boxA, boxB);
+
+			// 					// 3. Scale line length based on percentage of center-to-center distance
+			// 					float lineLength = distance * lineDistanceRatio;
+
+			// 					Vector3 p1 = seamPoint - dir * (lineLength * 0.5f);
+			// 					Vector3 p2 = seamPoint + dir * (lineLength * 0.5f);
+
+			// #if UNITY_EDITOR
+			// 					Handles.color = neighborLineColor;
+			// 					Handles.DrawAAPolyLine(neighborLineThickness, p1, p2);
+			// #else
+			//                     Gizmos.color = neighborLineColor;
+			//                     Gizmos.DrawLine(p1, p2);
+			// #endif
+			// 				}
+			//}
+		}
+
+		private Vector3 GetSeamPointWorld(BoundingBox a, BoundingBox b) {
+			Vector3 cellSize = macroTilemap.cellSize;
+			Vector3 mapOrigin = macroTilemap.CellToWorld(new Vector3Int(0, 0, 0));
+
+			// 1. Horizontal shared border (Left / Right)
+			if (a.Max.x + 1 == b.Min.x || b.Max.x + 1 == a.Min.x) {
+				int borderX = (a.Max.x + 1 == b.Min.x) ? b.Min.x : a.Min.x;
+				float overlapMinY = Mathf.Max(a.Min.y, b.Min.y);
+				float overlapMaxY = Mathf.Min(a.Max.y, b.Max.y);
+				float midY = (overlapMinY + overlapMaxY + 1f) * 0.5f;
+
+				return new Vector3(
+					macroTilemap.CellToWorld(new Vector3Int(borderX, 0, 0)).x,
+					mapOrigin.y + (midY * cellSize.y),
+					0f
+				);
+			}
+
+			// 2. Vertical shared border (Top / Bottom)
+			int borderY = (a.Max.y + 1 == b.Min.y) ? b.Min.y : a.Min.y;
+			float overlapMinX = Mathf.Max(a.Min.x, b.Min.x);
+			float overlapMaxX = Mathf.Min(a.Max.x, b.Max.x);
+			float midX = (overlapMinX + overlapMaxX + 1f) * 0.5f;
+
+			return new Vector3(
+				mapOrigin.x + (midX * cellSize.x),
+				macroTilemap.CellToWorld(new Vector3Int(0, borderY, 0)).y,
+				0f
+			);
+		}
+		/// <summary>
+		/// Calculates the exact world position center of a macro region's bounding box.
+		/// </summary>
+		private Vector3 GetBoxCenterWorld(BoundingBox box) {
+			Vector3 minWorldPos = macroTilemap.CellToWorld(new Vector3Int(box.Min.x, box.Min.y, 0));
+			Vector3 cellSize = macroTilemap.cellSize;
+
+			Vector3 boxSize = new(
+				(box.Max.x - box.Min.x + 1) * cellSize.x,
+				(box.Max.y - box.Min.y + 1) * cellSize.y,
+				0f
+			);
+
+			return minWorldPos + (boxSize * 0.5f);
+		}
+
+		/// <summary>
+		/// Consistent hash-code ordering ensuring undirected edges (A, B) and (B, A) match.
+		/// </summary>
+		[System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+		private static (BoundingBox, BoundingBox) GetUndirectedEdge(BoundingBox a, BoundingBox b) {
+			return a.GetHashCode() < b.GetHashCode() ? (a, b) : (b, a);
 		}
 	}
 }

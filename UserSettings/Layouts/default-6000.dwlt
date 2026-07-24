@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 1920
     height: 986
   m_ShowMode: 4
-  m_Title: Project
+  m_Title: Hierarchy
   m_RootView: {fileID: 5}
   m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
@@ -74,7 +74,7 @@ MonoBehaviour:
   m_MinSize: {x: 100, y: 112}
   m_MaxSize: {x: 8096, y: 16192}
   vertical: 1
-  controlID: 34
+  controlID: 43
   draggingID: 0
 --- !u!114 &4
 MonoBehaviour:
@@ -196,7 +196,7 @@ MonoBehaviour:
   m_MinSize: {x: 400, y: 168}
   m_MaxSize: {x: 32384, y: 24288}
   vertical: 1
-  controlID: 101
+  controlID: 55
   draggingID: 0
 --- !u!114 &9
 MonoBehaviour:
@@ -222,7 +222,7 @@ MonoBehaviour:
   m_MinSize: {x: 400, y: 168}
   m_MaxSize: {x: 32384, y: 24288}
   vertical: 0
-  controlID: 102
+  controlID: 56
   draggingID: 0
 --- !u!114 &10
 MonoBehaviour:
@@ -248,7 +248,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 168}
   m_MaxSize: {x: 24288, y: 24288}
   vertical: 1
-  controlID: 103
+  controlID: 57
   draggingID: 0
 --- !u!114 &11
 MonoBehaviour:
@@ -275,7 +275,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 112}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 93
+  controlID: 58
   draggingID: 0
 --- !u!114 &12
 MonoBehaviour:
@@ -343,7 +343,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 1
   m_Script: {fileID: 12006, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: ProjectBrowser
+  m_Name: ConsoleWindow
   m_EditorClassIdentifier: 
   m_Children: []
   m_Position:
@@ -352,15 +352,15 @@ MonoBehaviour:
     y: 536
     width: 1545
     height: 394
-  m_MinSize: {x: 231, y: 276}
-  m_MaxSize: {x: 10001, y: 10026}
-  m_ActualView: {fileID: 25}
+  m_MinSize: {x: 101, y: 126}
+  m_MaxSize: {x: 4001, y: 4026}
+  m_ActualView: {fileID: 26}
   m_Panes:
   - {fileID: 25}
   - {fileID: 21}
   - {fileID: 26}
-  m_Selected: 0
-  m_LastSelected: 2
+  m_Selected: 2
+  m_LastSelected: 0
 --- !u!114 &15
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -443,7 +443,7 @@ MonoBehaviour:
       Index: 1
     - ColumnId: HierarchyViewColumn Name
       Visible: 1
-      Width: 228
+      Width: 202
       Index: 2
     - ColumnId: GameObject/Active
       Visible: 0
@@ -3724,7 +3724,7 @@ MonoBehaviour:
   m_LockTracker:
     m_IsLocked: 0
   m_LastSelectedObjectID:
-    m_rawData: 0
+    m_rawData: 568105584918857470
 --- !u!114 &22
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -4322,9 +4322,9 @@ MonoBehaviour:
   m_AudioPlay: 0
   m_DebugDrawModesUseInteractiveLightBakingData: 0
   m_Position:
-    m_Target: {x: 83.08695, y: -5.9244275, z: -0.2823271}
+    m_Target: {x: 113.90592, y: -4.9911346, z: -0.3024006}
     speed: 2
-    m_Value: {x: 83.08695, y: -5.9244275, z: -0.2823271}
+    m_Value: {x: 113.76289, y: -5.335575, z: -0.28827268}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -4375,9 +4375,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 30.800743
+    m_Target: 32.80813
     speed: 2
-    m_Value: 30.800743
+    m_Value: 31.395338
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -4836,7 +4836,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets
+    - Assets/_Project/Scripts/Features/PathFinding/Utility/ConnectionFinder
     m_Globs: []
     m_ProductIds: 
     m_AnyWithAssetOrigin: 0
@@ -4846,20 +4846,21 @@ MonoBehaviour:
   m_ViewMode: 1
   m_StartGridSize: 74
   m_LastFolders:
-  - Assets
+  - Assets/_Project/Scripts/Features/PathFinding/Utility/ConnectionFinder
   m_LastFoldersGridSize: 74
   m_LastProjectPath: /mnt/Development/GameDevelopment/Unity/projects/example/Divrom
   m_LockTracker:
     m_IsLocked: 0
   m_LastLocalAssetsSearchArea: 1
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 0}
+    scrollPos: {x: 0, y: 820}
     m_SelectedIDs:
-    - m_rawData: 568105584918860124
+    - m_rawData: 568105584918860614
     m_LastClickedID:
-      m_rawData: 568105584918860124
+      m_rawData: 568105584918860614
     m_ExpandedIDs:
     - m_rawData: 0
+    - m_rawData: 568105584918860124
     - m_rawData: 568105584918860126
     - m_rawData: 568105584918860128
     - m_rawData: 568105584918860130
@@ -4882,7 +4883,9 @@ MonoBehaviour:
     - m_rawData: 568105584918860164
     - m_rawData: 568105584918860166
     - m_rawData: 568105584918860168
-    - m_rawData: 568105584918860170
+    - m_rawData: 568105584918860380
+    - m_rawData: 568105584918860382
+    - m_rawData: 568105584918860494
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -4939,7 +4942,6 @@ MonoBehaviour:
     - m_rawData: 568105584918860164
     - m_rawData: 568105584918860166
     - m_rawData: 568105584918860168
-    - m_rawData: 568105584918860170
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -4994,7 +4996,7 @@ MonoBehaviour:
       m_OriginalEventType: 11
       m_IsRenamingFilename: 1
       m_TrimLeadingAndTrailingWhitespace: 0
-      m_ClientGUIView: {fileID: 14}
+      m_ClientGUIView: {fileID: 0}
     m_CreateAssetUtility:
       m_EndAction: {fileID: 0}
       m_EntityId:

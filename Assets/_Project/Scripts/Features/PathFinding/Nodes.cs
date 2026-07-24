@@ -26,14 +26,30 @@ namespace Kope.Feature.PathFinding {
 		public Vector2Int Position { get; }
 		public bool IsStaticObstacle { get; set; }
 		public MacroGridNode ParentMacroGrid { get; set; }
-
+		public MicroGridNode(int x, int y, bool isStaticObstacle) {
+			Position = new Vector2Int(x, y);
+			IsStaticObstacle = isStaticObstacle;
+		}
 		public MicroGridNode(Vector2Int position, bool isStaticObstacle) {
 			Position = position;
 			IsStaticObstacle = isStaticObstacle;
 		}
+		public MicroGridNode(Vector2Int position, bool isStaticObstacle, MacroGridNode parentMacroGrid) {
+			Position = position;
+			IsStaticObstacle = isStaticObstacle;
+			ParentMacroGrid = parentMacroGrid;
+		}
+		public MicroGridNode(int x, int y, bool isStaticObstacle, MacroGridNode parentMacroGrid) {
+			Position = new Vector2Int(x, y);
+			IsStaticObstacle = isStaticObstacle;
+			ParentMacroGrid = parentMacroGrid;
+		}
+		public void SetParentMacroGrid(MacroGridNode parentMacroGrid) {
+			ParentMacroGrid = parentMacroGrid;
+		}
 
 		public override string ToString() {
-			return $"MicroGridNode(Position: {Position}, IsStaticObstacle: {IsStaticObstacle})";
+			return $"MicroGridNode(Position: {Position}, IsStaticObstacle: {IsStaticObstacle}, ParentMacroGrid: {ParentMacroGrid})";
 		}
 
 		public override int GetHashCode() {
@@ -67,8 +83,23 @@ namespace Kope.Feature.PathFinding {
 			this.MicroGridsNodes = microGridsNodes;
 			this.Connections = connections;
 		}
-
-
+		public MacroGridNode(BoundingBox bounds, TerrainType terrainType, MovementCapability allowedTraversal) {
+			this.Bounds = bounds;
+			this.TerrainType = terrainType;
+			this.AllowedTraversal = allowedTraversal;
+		}
+		public MacroGridNode(BoundingBox bounds, TerrainType terrainType, MovementCapability allowedTraversal, List<MicroGridNode> microGridsNodes) {
+			this.Bounds = bounds;
+			this.TerrainType = terrainType;
+			this.AllowedTraversal = allowedTraversal;
+			this.MicroGridsNodes = microGridsNodes;
+		}
+		public void AddConnections(List<MacroConnection> connections) {
+			this.Connections.AddRange(connections);
+		}
+		public void AddConnection(MacroConnection connection) {
+			this.Connections.Add(connection);
+		}
 		public override string ToString() {
 			return $"MacroGridNode(Bounds: {Bounds}, TerrainType: {TerrainType}, AllowedTraversal: {AllowedTraversal}, TotalMicroGrids: {TotalMicroGrids})";
 		}
@@ -90,13 +121,27 @@ namespace Kope.Feature.PathFinding {
 	/// gameplay progression.
 	/// </summary>
 	public sealed class MacroConnection {
-		public MacroGridNode From { get; set; }
-		public MacroGridNode To { get; set; }
+		// using the bounding boxes of the connected MacroGridNodes as identifiers for
+		//  the connection so there wont be a cyclic nested reference between MacroGridNode 
+		// and MacroConnection, which would cause a stack overflow in the ToString() method.
+		public BoundingBox From { get; set; }
+		public BoundingBox To { get; set; }
 		public MovementCapability AllowedTraversal { get; set; }
 		public bool IsNarrativelyAccessible { get; set; } = true;
 
+		public MacroConnection(BoundingBox from, BoundingBox to, MovementCapability allowedTraversal, bool isNarrativelyAccessible = true) {
+			this.From = from;
+			this.To = to;
+			this.AllowedTraversal = allowedTraversal;
+			this.IsNarrativelyAccessible = isNarrativelyAccessible;
+		}
+
+		public bool IsTraversable(MovementCapability capability) {
+			return this.IsNarrativelyAccessible && (this.AllowedTraversal & capability)
+			 == capability;
+		}
 		public override string ToString() {
-			return $"MacroConnection(From: {From.Bounds}, To: {To.Bounds}, AllowedTraversal: {AllowedTraversal}, IsNarrativelyAccessible: {IsNarrativelyAccessible})";
+			return $"MacroConnection(From: {From}, To: {To}, AllowedTraversal: {AllowedTraversal}, IsNarrativelyAccessible: {IsNarrativelyAccessible})";
 		}
 
 		public override int GetHashCode() {

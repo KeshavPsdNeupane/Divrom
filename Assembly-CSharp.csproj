@@ -53,6 +53,7 @@
     <Analyzer Include="/home/keshav/Unity/Hub/Editor/6000.5.4f1/Editor/Data/BCLExtensions/TargetingPacks/netstandard2.1/analyzers/dotnet/roslyn4.0/cs/System.Text.Json.SourceGeneration.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Utility/ConnectionFinder/MacroCardinalNeighbourFinder.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/EntityStat/UI/CharacterStatsGUI.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Nodes.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/UI/InventoryDisplays/InventoryDisplay.cs" />
@@ -67,6 +68,7 @@
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/UI/InventoryDisplays/PlayerInventoryDisplay.cs" />
     <Compile Include="Assets/_Project/Scripts/UI/Common/PanelController.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/UI/ItemSlotUI/SimpleItemUIDragAndDropInteractionHelperClass.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Utility/ConnectionFinder/ConnectionFInder.cs" />
     <Compile Include="Assets/_Project/Scripts/UI/UIState/InGameUI/GameplayUIController.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/HealBased/HealEffectSetting.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Ability/ExampleAbility.cs" />
@@ -81,6 +83,7 @@
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Utility/Vector2IntComparer.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Interface/Interface.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/ConcreteClass/AreaTargeting/AreaTargetingStrategy2D.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Utility/Gizmos.cs/MacroCardinalNeighbourGizmos.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AnimationCurve/CurveAsset.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/PlayerAbilityCaster.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Tiles/HHSIMacroPathFindingTile.cs" />
@@ -1609,10 +1612,10 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Kope.InventorySystem.Runtime.csproj" />
-    <ProjectReference Include="Kope.Actor.Runtime.csproj" />
     <ProjectReference Include="Kope.Logging.csproj" />
-    <ProjectReference Include="Kope.Character.Stats.Runtime.csproj" />
+    <ProjectReference Include="Kope.Actor.Runtime.csproj" />
     <ProjectReference Include="Kope.InputSystem.csproj" />
+    <ProjectReference Include="Kope.Character.Stats.Runtime.csproj" />
     <ProjectReference Include="Out.ThirdParty.Stuff.csproj" />
     <ProjectReference Include="Kope.ModularSpriteAnimation.Editor.csproj" />
     <ProjectReference Include="Kope.ModularSpriteAnimation.Runtime.csproj" />

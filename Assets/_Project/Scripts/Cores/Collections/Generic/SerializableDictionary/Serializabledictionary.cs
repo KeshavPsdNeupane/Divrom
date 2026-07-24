@@ -46,14 +46,14 @@ namespace Kope.Core.Collections {
 		public SerializableDictionary(IDictionary<TKey, TValue> source, IEqualityComparer<TKey> comparer = null) {
 			this._dict = new Dictionary<TKey, TValue>(comparer);
 			foreach (KeyValuePair<TKey, TValue> kvp in source)
-				_dict.Add(kvp.Key, kvp.Value);
-			_isDirty = true;
+				this._dict.Add(kvp.Key, kvp.Value);
+			this._isDirty = true;
 		}
 
 		#region IDictionary<TKey, TValue>
 
 		public TValue this[TKey key] {
-			get => _dict[key];
+			get => this._dict[key];
 			set {
 				this._dict[key] = value;
 				this._isDirty = true;
