@@ -4,7 +4,6 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Jobs;
 using Unity.Mathematics;
-using UnityEngine;
 using Kope.Feature.PathFinding.Interface;
 
 namespace Kope.Feature.PathFinding.Utility {
@@ -71,11 +70,11 @@ namespace Kope.Feature.PathFinding.Utility {
 		/// MARSHALLED: matches IRectangleRegionSlicer exactly. Use this when you need to stay a
 		/// drop-in replacement for existing callers.
 		/// </summary>
-		public Dictionary<BoundingBox, (Vector2Int, List<Vector2Int>)> Slice(
-			Dictionary<Vector2Int, List<Vector2Int>> isolatedRegions,
-			Vector2Int maxBoundSize) {
+		public Dictionary<BoundingBox, (Vec2Int, List<Vec2Int>)> Slice(
+			Dictionary<Vec2Int, List<Vec2Int>> isolatedRegions,
+			Vec2Int maxBoundSize) {
 
-			var finalSlicedRegions = new Dictionary<BoundingBox, (Vector2Int, List<Vector2Int>)>();
+			var finalSlicedRegions = new Dictionary<BoundingBox, (Vec2Int, List<Vec2Int>)>();
 			if (isolatedRegions == null || isolatedRegions.Count == 0) return finalSlicedRegions;
 
 			var resultStream = RunClusteringJob(isolatedRegions, maxBoundSize);
@@ -87,14 +86,14 @@ namespace Kope.Feature.PathFinding.Utility {
 						var r = reader.Read<SlicedRectOut>();
 
 						var box = new BoundingBox(r.MinX, r.MinY, r.MaxX, r.MaxY);
-						var anchor = new Vector2Int(r.AnchorKey.x, r.AnchorKey.y);
+						var anchor = new Vec2Int(r.AnchorKey.x, r.AnchorKey.y);
 
 						int w = r.MaxX - r.MinX + 1;
 						int h = r.MaxY - r.MinY + 1;
-						var tileList = new List<Vector2Int>(w * h);
+						var tileList = new List<Vec2Int>(w * h);
 						for (int dx = 0; dx < w; dx++) {
 							for (int dy = 0; dy < h; dy++) {
-								tileList.Add(new Vector2Int(r.MinX + dx, r.MinY + dy));
+								tileList.Add(new Vec2Int(r.MinX + dx, r.MinY + dy));
 							}
 						}
 
@@ -117,8 +116,8 @@ namespace Kope.Feature.PathFinding.Utility {
 		/// consuming it within the same frame/job chain).
 		/// </summary>
 		public NativeList<SlicedRectOut> SliceNative(
-			Dictionary<Vector2Int, List<Vector2Int>> isolatedRegions,
-			Vector2Int maxBoundSize,
+			Dictionary<Vec2Int, List<Vec2Int>> isolatedRegions,
+			Vec2Int maxBoundSize,
 			Allocator resultAllocator = Allocator.Persistent) {
 
 			var results = new NativeList<SlicedRectOut>(resultAllocator);
@@ -148,7 +147,7 @@ namespace Kope.Feature.PathFinding.Utility {
 		/// Dispose() it.
 		/// </summary>
 		private static NativeStream RunClusteringJob(
-			Dictionary<Vector2Int, List<Vector2Int>> isolatedRegions, Vector2Int maxBoundSize) {
+			Dictionary<Vec2Int, List<Vec2Int>> isolatedRegions, Vec2Int maxBoundSize) {
 
 			int regionCount = isolatedRegions.Count;
 			int totalTiles = 0;
@@ -166,12 +165,12 @@ namespace Kope.Feature.PathFinding.Utility {
 				if (tiles == null || tiles.Count == 0) continue;
 
 				regionInfos[regionCursor] = new RegionInfo {
-					Key = new int2(kvp.Key.x, kvp.Key.y),
+					Key = new int2(kvp.Key.X, kvp.Key.Y),
 					TileStart = tileCursor,
 					TileCount = tiles.Count
 				};
 				for (int i = 0; i < tiles.Count; i++) {
-					allTiles[tileCursor++] = new int2(tiles[i].x, tiles[i].y);
+					allTiles[tileCursor++] = new int2(tiles[i].X, tiles[i].Y);
 				}
 				regionCursor++;
 			}
@@ -183,7 +182,7 @@ namespace Kope.Feature.PathFinding.Utility {
 				var job = new GreedyClusteringHistogramJob {
 					Regions = activeRegionInfos,
 					AllTiles = allTiles,
-					MaxBoundSize = new int2(maxBoundSize.x, maxBoundSize.y),
+					MaxBoundSize = new int2(maxBoundSize.X, maxBoundSize.Y),
 					Results = resultStream.AsWriter()
 				};
 

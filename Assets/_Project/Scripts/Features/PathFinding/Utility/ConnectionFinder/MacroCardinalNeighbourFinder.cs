@@ -30,24 +30,24 @@ namespace Kope.Feature.PathFinding.Utility {
 			var boxesByMinY = new Dictionary<int, List<BoundingBox>>(totalBoundingBoxes);
 
 			foreach (var box in boundingBoxesArray) {
-				AddToBucket(boxesByMinX, box.Min.x, box);
-				AddToBucket(boxesByMinY, box.Min.y, box);
+				AddToBucket(boxesByMinX, box.Min.X, box);
+				AddToBucket(boxesByMinY, box.Min.Y, box);
 			}
 
 			foreach (var box in boundingBoxesArray) {
 				// Right — horizontal edge share
-				if (boxesByMinX.TryGetValue(box.Max.x + 1, out var rightCandidates)) {
+				if (boxesByMinX.TryGetValue(box.Max.X + 1, out var rightCandidates)) {
 					foreach (var candidate in rightCandidates) {
-						if (RangesOverlap(box.Min.y, box.Max.y, candidate.Min.y, candidate.Max.y)) {
+						if (RangesOverlap(box.Min.Y, box.Max.Y, candidate.Min.Y, candidate.Max.Y)) {
 							AddConnection(connections, box, candidate);
 						}
 					}
 				}
 
 				// Up — vertical edge share
-				if (boxesByMinY.TryGetValue(box.Max.y + 1, out var upCandidates)) {
+				if (boxesByMinY.TryGetValue(box.Max.Y + 1, out var upCandidates)) {
 					foreach (var candidate in upCandidates) {
-						if (RangesOverlap(box.Min.x, box.Max.x, candidate.Min.x, candidate.Max.x)) {
+						if (RangesOverlap(box.Min.X, box.Max.X, candidate.Min.X, candidate.Max.X)) {
 							AddConnection(connections, box, candidate);
 						}
 					}

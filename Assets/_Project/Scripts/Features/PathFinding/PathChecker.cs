@@ -23,11 +23,11 @@ namespace Kope.Feature.PathFinding {
 
 	[System.Serializable]
 	public struct ErrorTileInfo {
-		[ReadOnly] public Vector2Int Position;
+		[ReadOnly] public Vec2Int Position;
 		[ReadOnly] public PathCheckerErrorType ErrorType;
 		[ReadOnly] public string ErrorMessage;
 
-		public ErrorTileInfo(Vector2Int position, PathCheckerErrorType errorType, string errorMessage) {
+		public ErrorTileInfo(Vec2Int position, PathCheckerErrorType errorType, string errorMessage) {
 			this.Position = position;
 			this.ErrorType = errorType;
 			this.ErrorMessage = errorMessage;
@@ -73,7 +73,7 @@ namespace Kope.Feature.PathFinding {
 		[SerializeField] private RectanleSlicerAgorithm rectangleSlicer = RectanleSlicerAgorithm.GREEDY;
 
 		[Header("Bounding Box Constraints")]
-		[SerializeField] private Vector2Int maxBoundingBoxSize = new(16, 16);
+		[SerializeField] private Vec2Int maxBoundingBoxSize = new(16, 16);
 
 		[Header("Error Visualizer Configurations")]
 		[SerializeField] private ErrorConfiguration macroErrorConfig = new();
@@ -89,10 +89,10 @@ namespace Kope.Feature.PathFinding {
 		[SerializeField] private Color neighborLineColor = Color.yellow;
 		[SerializeField] private float neighborLineThickness = 3f;
 
-		private readonly SerializableDictionary<Vector2Int, HHSIMacroPathFindingTile> _macroTileDictionary = new(Vector2IntComparer.Instance);
-		private readonly SerializableDictionary<Vector2Int, HHSIMicroPathFindingTile> _microTileDictionary = new(Vector2IntComparer.Instance);
+		private readonly SerializableDictionary<Vec2Int, HHSIMacroPathFindingTile> _macroTileDictionary = new();
+		private readonly SerializableDictionary<Vec2Int, HHSIMicroPathFindingTile> _microTileDictionary = new();
 
-		private readonly SerializableDictionary<Vector2Int, MicroGridNode> _microGridNodeDict = new(Vector2IntComparer.Instance);
+		private readonly SerializableDictionary<Vec2Int, MicroGridNode> _microGridNodeDict = new();
 		private readonly SerializableDictionary<BoundingBox, MacroGridNode> _macroGridNodeDict = new();
 
 		[Header("Error Tracking")]
@@ -105,7 +105,7 @@ namespace Kope.Feature.PathFinding {
 		private readonly IMacroNeighbourFinder _neighborFinder = new MacroCardinalNeighbourFinder();
 
 		// Gizmos cache for baked slices to avoid recalculating during OnDrawGizmos
-		private readonly Dictionary<BoundingBox, (Vector2Int Anchor, List<Vector2Int> Tiles)> _bakedSlicesCache = new();
+		private readonly Dictionary<BoundingBox, (Vec2Int Anchor, List<Vec2Int> Tiles)> _bakedSlicesCache = new();
 		private Dictionary<BoundingBox, List<BoundingBox>> _macroNeighbourCacheForGizmos;
 
 		/// <summary>
@@ -157,7 +157,7 @@ namespace Kope.Feature.PathFinding {
 		public void PreparePathfindingData<TData, TitledTile>(
 		string tilemapName,
 		Tilemap targetTilemap,
-		SerializableDictionary<Vector2Int, TitledTile> targetDictionary,
+		SerializableDictionary<Vec2Int, TitledTile> targetDictionary,
 		List<ErrorTileInfo> targetErrorList, bool repaint = true)
 		where TData : struct, ITerrainData<TData>
 		where TitledTile : HSIPathFindingTileBase<TData> {
@@ -178,7 +178,7 @@ namespace Kope.Feature.PathFinding {
 
 				int x = bounds.x + (i % bounds.size.x);
 				int y = bounds.y + (i / bounds.size.x);
-				Vector2Int cellPos = new(x, y);
+				Vec2Int cellPos = new(x, y);
 
 				if (tile is not TitledTile typedTile) {
 					targetErrorList.Add(new ErrorTileInfo(
@@ -214,7 +214,7 @@ namespace Kope.Feature.PathFinding {
 			// ==========================================
 			this._microGridNodeDict.Clear();
 			foreach (var kvp in this._microTileDictionary) {
-				Vector2Int position = kvp.Key;
+				Vec2Int position = kvp.Key;
 				HHSIMicroPathFindingTile tile = kvp.Value;
 				MicroGridNode node = new(position, tile.Data.IsStaticObstacle) {
 					ParentMacroGrid = null
@@ -244,7 +244,8 @@ namespace Kope.Feature.PathFinding {
 				this._bakedSlicesCache[kvp.Key] = kvp.Value;
 				BoundingBox box = kvp.Key;
 
-				HHSIMacroPathFindingTile regionTile = this._macroTileDictionary[kvp.Value.regionAnchor];
+				Vec2Int regionAnchor = kvp.Value.regionAnchor;
+				HHSIMacroPathFindingTile regionTile = this._macroTileDictionary[regionAnchor];
 
 				TerrainType terrainType = regionTile.Data.TerrainType;
 				MovementCapability movementCapability = regionTile.Data.MovementType;
@@ -252,11 +253,11 @@ namespace Kope.Feature.PathFinding {
 				var currentMacroNode = new MacroGridNode(box, terrainType, movementCapability);
 				this._macroGridNodeDict.Add(box, currentMacroNode);
 
-				foreach (Vector2Int tilePos in kvp.Value.RegionTilePositions) {
+				foreach (Vec2Int tilePos in kvp.Value.RegionTilePositions) {
 					if (this._microGridNodeDict.TryGetValue(tilePos, out MicroGridNode microNode)) {
 						microNode.SetParentMacroGrid(currentMacroNode);
 						currentMacroNode.MicroGridsNodes.Add(microNode);
-						microToMacroMapping[(tilePos.x, tilePos.y)] = box;
+						microToMacroMapping[(tilePos.X, tilePos.Y)] = box;
 					}
 				}
 			}
@@ -310,7 +311,7 @@ namespace Kope.Feature.PathFinding {
 			foreach (var err in errors) {
 				Gizmos.color = config.GetColor(err.ErrorType);
 
-				Vector3 worldPos = targetTilemap.CellToWorld(new Vector3Int(err.Position.x, err.Position.y, 0));
+				Vector3 worldPos = targetTilemap.CellToWorld(new Vector3Int(err.Position.X, err.Position.Y, 0));
 				Vector3 centerPos = worldPos + new Vector3(targetTilemap.cellSize.x * 0.5f, targetTilemap.cellSize.y * 0.5f, 0f);
 
 				float radius = 0.4f;
@@ -324,25 +325,28 @@ namespace Kope.Feature.PathFinding {
 		}
 
 		private void DrawRegionSlices() {
-			if (macroTilemap == null || _bakedSlicesCache == null || _bakedSlicesCache.Count == 0) return;
+			if (macroTilemap == null || this._bakedSlicesCache == null || this._bakedSlicesCache.Count == 0) return;
 
 			const float anchorRadius = 0.25f;
 			const float circleThickness = 10f;
 
-			foreach (var kvp in _bakedSlicesCache) {
+			foreach (var kvp in this._bakedSlicesCache) {
 				BoundingBox box = kvp.Key;
-				Vector2Int anchor = kvp.Value.Tiles[0];
-				Vector2Int anchorRegion = kvp.Value.Anchor;
+				Vec2Int anchor = kvp.Value.Tiles[0];
+				Vec2Int anchorRegion = kvp.Value.Anchor;
 
-				Vector3 regionAnchorPoint = macroTilemap.CellToWorld(new Vector3Int(anchorRegion.x, anchorRegion.y, 0));
+				Vector3 regionAnchorPoint = macroTilemap.CellToWorld(
+					new Vector3Int(anchorRegion.X, anchorRegion.Y, 0));
 
-				Vector3 minWorldPos = macroTilemap.CellToWorld(new Vector3Int(box.Min.x, box.Min.y, 0));
-				Vector3 tileAnchorWorldPos = macroTilemap.GetCellCenterWorld(new Vector3Int(anchor.x, anchor.y, 0));
+				Vector3 minWorldPos = macroTilemap.CellToWorld(
+					new Vector3Int(box.Min.X, box.Min.Y, 0));
+				Vector3 tileAnchorWorldPos = macroTilemap.GetCellCenterWorld(
+					new Vector3Int(anchor.X, anchor.Y, 0));
 
 				Vector3 cellSize = macroTilemap.cellSize;
 				Vector3 boxSize = new(
-					(box.Max.x - box.Min.x + 1) * cellSize.x,
-					(box.Max.y - box.Min.y + 1) * cellSize.y,
+					(box.Max.X - box.Min.X + 1) * cellSize.x,
+					(box.Max.Y - box.Min.Y + 1) * cellSize.y,
 					Mathf.Max(cellSize.z, 0.1f)
 				);
 
@@ -393,106 +397,6 @@ namespace Kope.Feature.PathFinding {
 				neighborLineThickness,
 				0.1f
 			);
-
-			// 			// Pre-allocated set to ensure we only draw 1 edge indicator per shared border
-			// 			HashSet<(BoundingBox, BoundingBox)> drawnEdges = new(_macroNeighbourCacheForGizmos.Count * 2);
-
-			// 			// Distance multiplier for line length (0.5f = 50% of distance between box centers)
-			// 			// Change to 0.25f if you prefer a quarter of the distance.
-			// 			const float lineDistanceRatio = 0.25f;
-
-			// 			foreach (var kvp in _macroNeighbourCacheForGizmos) {
-			// 				BoundingBox boxA = kvp.Key;
-			// 				List<BoundingBox> neighbors = kvp.Value;
-
-			// 				if (neighbors == null || neighbors.Count == 0) continue;
-
-			// 				Vector3 centerA = GetBoxCenterWorld(boxA);
-
-			// 				foreach (var boxB in neighbors) {
-			// 					var edge = GetUndirectedEdge(boxA, boxB);
-
-			// 					// Skip if this shared border was already drawn
-			// 					if (!drawnEdges.Add(edge)) continue;
-
-			// 					Vector3 centerB = GetBoxCenterWorld(boxB);
-
-			// 					// 1. Calculate total distance between box centers & normalized direction
-			// 					float distance = Vector3.Distance(centerA, centerB);
-			// 					Vector3 dir = (centerB - centerA) / distance; // Normalized vector
-
-			// 					// 2. Calculate seam midpoint
-			// 					Vector3 seamPoint = GetSeamPointWorld(boxA, boxB);
-
-			// 					// 3. Scale line length based on percentage of center-to-center distance
-			// 					float lineLength = distance * lineDistanceRatio;
-
-			// 					Vector3 p1 = seamPoint - dir * (lineLength * 0.5f);
-			// 					Vector3 p2 = seamPoint + dir * (lineLength * 0.5f);
-
-			// #if UNITY_EDITOR
-			// 					Handles.color = neighborLineColor;
-			// 					Handles.DrawAAPolyLine(neighborLineThickness, p1, p2);
-			// #else
-			//                     Gizmos.color = neighborLineColor;
-			//                     Gizmos.DrawLine(p1, p2);
-			// #endif
-			// 				}
-			//}
-		}
-
-		private Vector3 GetSeamPointWorld(BoundingBox a, BoundingBox b) {
-			Vector3 cellSize = macroTilemap.cellSize;
-			Vector3 mapOrigin = macroTilemap.CellToWorld(new Vector3Int(0, 0, 0));
-
-			// 1. Horizontal shared border (Left / Right)
-			if (a.Max.x + 1 == b.Min.x || b.Max.x + 1 == a.Min.x) {
-				int borderX = (a.Max.x + 1 == b.Min.x) ? b.Min.x : a.Min.x;
-				float overlapMinY = Mathf.Max(a.Min.y, b.Min.y);
-				float overlapMaxY = Mathf.Min(a.Max.y, b.Max.y);
-				float midY = (overlapMinY + overlapMaxY + 1f) * 0.5f;
-
-				return new Vector3(
-					macroTilemap.CellToWorld(new Vector3Int(borderX, 0, 0)).x,
-					mapOrigin.y + (midY * cellSize.y),
-					0f
-				);
-			}
-
-			// 2. Vertical shared border (Top / Bottom)
-			int borderY = (a.Max.y + 1 == b.Min.y) ? b.Min.y : a.Min.y;
-			float overlapMinX = Mathf.Max(a.Min.x, b.Min.x);
-			float overlapMaxX = Mathf.Min(a.Max.x, b.Max.x);
-			float midX = (overlapMinX + overlapMaxX + 1f) * 0.5f;
-
-			return new Vector3(
-				mapOrigin.x + (midX * cellSize.x),
-				macroTilemap.CellToWorld(new Vector3Int(0, borderY, 0)).y,
-				0f
-			);
-		}
-		/// <summary>
-		/// Calculates the exact world position center of a macro region's bounding box.
-		/// </summary>
-		private Vector3 GetBoxCenterWorld(BoundingBox box) {
-			Vector3 minWorldPos = macroTilemap.CellToWorld(new Vector3Int(box.Min.x, box.Min.y, 0));
-			Vector3 cellSize = macroTilemap.cellSize;
-
-			Vector3 boxSize = new(
-				(box.Max.x - box.Min.x + 1) * cellSize.x,
-				(box.Max.y - box.Min.y + 1) * cellSize.y,
-				0f
-			);
-
-			return minWorldPos + (boxSize * 0.5f);
-		}
-
-		/// <summary>
-		/// Consistent hash-code ordering ensuring undirected edges (A, B) and (B, A) match.
-		/// </summary>
-		[System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-		private static (BoundingBox, BoundingBox) GetUndirectedEdge(BoundingBox a, BoundingBox b) {
-			return a.GetHashCode() < b.GetHashCode() ? (a, b) : (b, a);
 		}
 	}
 }

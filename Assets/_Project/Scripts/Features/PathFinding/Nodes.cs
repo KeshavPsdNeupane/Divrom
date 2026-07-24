@@ -14,6 +14,75 @@ namespace Kope.Feature.PathFinding {
 		DeepWater = 20,
 		Forest = 30
 	}
+	[Serializable]
+	public readonly struct Vec2Int : IEquatable<Vec2Int> {
+		public int X { get; }
+		public int Y { get; }
+		// caching the hash code for performance and immutability
+		private readonly int _hashCode;
+
+
+		public readonly static Vec2Int Zero = new(0, 0);
+		public readonly static Vec2Int One = new(1, 1);
+		public readonly static Vec2Int Up = new(0, 1);
+		public readonly static Vec2Int Down = new(0, -1);
+		public readonly static Vec2Int Left = new(-1, 0);
+		public readonly static Vec2Int Right = new(1, 0);
+
+
+		public Vec2Int(Vector2Int vector) {
+			this.X = vector.x;
+			this.Y = vector.y;
+			this._hashCode = HashCode.Combine(X, Y);
+		}
+		public Vec2Int(int x, int y) {
+			this.X = x;
+			this.Y = y;
+			this._hashCode = HashCode.Combine(X, Y);
+		}
+
+		public readonly bool Equals(Vec2Int other) {
+			return this.X == other.X && this.Y == other.Y;
+		}
+		public override bool Equals(object obj) {
+			return obj is Vec2Int other && this.Equals(other);
+		}
+
+		public static bool operator ==(Vec2Int left, Vec2Int right) {
+			return left.Equals(right);
+		}
+		public static bool operator !=(Vec2Int left, Vec2Int right) {
+			return !left.Equals(right);
+		}
+
+		public static Vec2Int operator +(Vec2Int a, Vec2Int b) {
+			return new Vec2Int(a.X + b.X, a.Y + b.Y);
+		}
+
+		public static Vec2Int operator -(Vec2Int a, Vec2Int b) {
+			return new Vec2Int(a.X - b.X, a.Y - b.Y);
+		}
+		public static Vec2Int operator *(Vec2Int a, int scalar) {
+			return new Vec2Int(a.X * scalar, a.Y * scalar);
+		}
+		public static Vec2Int operator /(Vec2Int a, int scalar) {
+			return new Vec2Int(a.X / scalar, a.Y / scalar);
+		}
+
+		public static implicit operator Vector2Int(Vec2Int v) {
+			return new Vector2Int(v.X, v.Y);
+		}
+		public static implicit operator Vec2Int(Vector2Int v) {
+			return new Vec2Int(v.x, v.y);
+		}
+		public override string ToString() {
+			return $"({X}, {Y})";
+		}
+		public override int GetHashCode() {
+			return this._hashCode;
+		}
+	}
+
 
 	/// <summary>
 	/// Represents a single node in the micro grid, providing a fine-grained representation of the world.
@@ -23,24 +92,24 @@ namespace Kope.Feature.PathFinding {
 	/// trajectory around obstacles and terrain features.</para>
 	/// </summary>
 	public sealed class MicroGridNode {
-		public Vector2Int Position { get; }
+		public Vec2Int Position { get; }
 		public bool IsStaticObstacle { get; set; }
 		public MacroGridNode ParentMacroGrid { get; set; }
 		public MicroGridNode(int x, int y, bool isStaticObstacle) {
-			Position = new Vector2Int(x, y);
+			Position = new Vec2Int(x, y);
 			IsStaticObstacle = isStaticObstacle;
 		}
-		public MicroGridNode(Vector2Int position, bool isStaticObstacle) {
+		public MicroGridNode(Vec2Int position, bool isStaticObstacle) {
 			Position = position;
 			IsStaticObstacle = isStaticObstacle;
 		}
-		public MicroGridNode(Vector2Int position, bool isStaticObstacle, MacroGridNode parentMacroGrid) {
+		public MicroGridNode(Vec2Int position, bool isStaticObstacle, MacroGridNode parentMacroGrid) {
 			Position = position;
 			IsStaticObstacle = isStaticObstacle;
 			ParentMacroGrid = parentMacroGrid;
 		}
 		public MicroGridNode(int x, int y, bool isStaticObstacle, MacroGridNode parentMacroGrid) {
-			Position = new Vector2Int(x, y);
+			Position = new Vec2Int(x, y);
 			IsStaticObstacle = isStaticObstacle;
 			ParentMacroGrid = parentMacroGrid;
 		}
@@ -65,89 +134,29 @@ namespace Kope.Feature.PathFinding {
 	/// <see cref="MicroGridNode"/>s for specific, low-level navigation.</para>
 	/// </summary>
 	public sealed class MacroGridNode {
-		public BoundingBox Bounds { get; set; }
-		public TerrainType TerrainType { get; set; }
-		public MovementCapability AllowedTraversal { get; set; }
-		public List<MacroConnection> Connections { get; } = new();
+		public BoundingBox Bounds { get; }
+		public TerrainType TerrainType { get; }
+		public MovementCapability AllowedTraversal { get; }
 		public List<MicroGridNode> MicroGridsNodes { get; } = new();
-
 		public int TotalMicroGrids => MicroGridsNodes.Count;
 
 		public MacroGridNode(
-			BoundingBox bounds, TerrainType terrainType,
-			 MovementCapability allowedTraversal, List<MicroGridNode> microGridsNodes
-			 , List<MacroConnection> connections) {
-			this.Bounds = bounds;
-			this.TerrainType = terrainType;
-			this.AllowedTraversal = allowedTraversal;
-			this.MicroGridsNodes = microGridsNodes;
-			this.Connections = connections;
+			BoundingBox bounds,
+			TerrainType terrainType,
+			MovementCapability allowedTraversal,
+			List<MicroGridNode> microGridsNodes = null) {
+			Bounds = bounds;
+			TerrainType = terrainType;
+			AllowedTraversal = allowedTraversal;
+			MicroGridsNodes = microGridsNodes ?? new List<MicroGridNode>();
 		}
-		public MacroGridNode(BoundingBox bounds, TerrainType terrainType, MovementCapability allowedTraversal) {
-			this.Bounds = bounds;
-			this.TerrainType = terrainType;
-			this.AllowedTraversal = allowedTraversal;
-		}
-		public MacroGridNode(BoundingBox bounds, TerrainType terrainType, MovementCapability allowedTraversal, List<MicroGridNode> microGridsNodes) {
-			this.Bounds = bounds;
-			this.TerrainType = terrainType;
-			this.AllowedTraversal = allowedTraversal;
-			this.MicroGridsNodes = microGridsNodes;
-		}
-		public void AddConnections(List<MacroConnection> connections) {
-			this.Connections.AddRange(connections);
-		}
-		public void AddConnection(MacroConnection connection) {
-			this.Connections.Add(connection);
-		}
-		public override string ToString() {
-			return $"MacroGridNode(Bounds: {Bounds}, TerrainType: {TerrainType}, AllowedTraversal: {AllowedTraversal}, TotalMicroGrids: {TotalMicroGrids})";
-		}
+		public override string ToString() =>
+			$"MacroGridNode(Bounds: {Bounds}, TerrainType: {TerrainType}, AllowedTraversal: {AllowedTraversal}, TotalMicroGrids: {TotalMicroGrids})";
 
-		public override int GetHashCode() {
-			// Bounds are unique identifiers for MacroGridNodes.
-			return this.Bounds.GetHashCode();
-		}
+		public override int GetHashCode() => Bounds.GetHashCode();
 	}
 
-	/// <summary>
-	/// Represents a connection between two MacroGridNodes, allowing traversal between 
-	/// them based on the specified MovementCapability. 
-	/// <br/><br/>
-	/// The <see cref="IsNarrativelyAccessible"/> property acts as a master toggle for 
-	/// storytelling purposes. If set to false, traversal is blocked regardless of the 
-	/// <see cref="AllowedTraversal"/> capability. This allows connections to remain part 
-	/// of the graph structure while being temporarily or permanently disabled for 
-	/// gameplay progression.
-	/// </summary>
-	public sealed class MacroConnection {
-		// using the bounding boxes of the connected MacroGridNodes as identifiers for
-		//  the connection so there wont be a cyclic nested reference between MacroGridNode 
-		// and MacroConnection, which would cause a stack overflow in the ToString() method.
-		public BoundingBox From { get; set; }
-		public BoundingBox To { get; set; }
-		public MovementCapability AllowedTraversal { get; set; }
-		public bool IsNarrativelyAccessible { get; set; } = true;
 
-		public MacroConnection(BoundingBox from, BoundingBox to, MovementCapability allowedTraversal, bool isNarrativelyAccessible = true) {
-			this.From = from;
-			this.To = to;
-			this.AllowedTraversal = allowedTraversal;
-			this.IsNarrativelyAccessible = isNarrativelyAccessible;
-		}
-
-		public bool IsTraversable(MovementCapability capability) {
-			return this.IsNarrativelyAccessible && (this.AllowedTraversal & capability)
-			 == capability;
-		}
-		public override string ToString() {
-			return $"MacroConnection(From: {From}, To: {To}, AllowedTraversal: {AllowedTraversal}, IsNarrativelyAccessible: {IsNarrativelyAccessible})";
-		}
-
-		public override int GetHashCode() {
-			return HashCode.Combine(From, To, AllowedTraversal, IsNarrativelyAccessible);
-		}
-	}
 
 	/// <summary>
 	/// Represents a very lightweight bounding box in 2D space, defined by its minimum and maximum corners.
@@ -155,16 +164,16 @@ namespace Kope.Feature.PathFinding {
 	/// for optimal performance, memory efficiency, and safe use as high-frequency dictionary keys.
 	/// </summary>
 	public readonly struct BoundingBox : IEquatable<BoundingBox> {
-		public Vector2Int Min { get; }
-		public Vector2Int Max { get; }
-		public Vector2Int Size => this.Max - this.Min;
+		public Vec2Int Min { get; }
+		public Vec2Int Max { get; }
+		public Vec2Int Size => this.Max - this.Min;
 		public float AspectRatio {
 			get {
 				// Avoid division by zero, return a sentinel value
-				if (Size.y == 0) return -1f;
+				if (Size.Y == 0) return -1f;
 				// the float case is impilicitly casted to float, so the division is done
 				// in floating point arithmetic
-				return (float)Size.x / Size.y;
+				return (float)Size.X / Size.Y;
 			}
 		}
 
@@ -175,25 +184,25 @@ namespace Kope.Feature.PathFinding {
 		/// </summary>
 		private readonly int _hashCode;
 
-		public BoundingBox(Vector2Int min, Vector2Int max) {
+		public BoundingBox(Vec2Int min, Vec2Int max) {
 			this.Min = min;
 			this.Max = max;
 			this._hashCode = HashCode.Combine(Min, Max);
 		}
 		public BoundingBox(int minX, int minY, int maxX, int maxY) {
-			this.Min = new Vector2Int(minX, minY);
-			this.Max = new Vector2Int(maxX, maxY);
+			this.Min = new Vec2Int(minX, minY);
+			this.Max = new Vec2Int(maxX, maxY);
 			this._hashCode = HashCode.Combine(Min, Max);
 		}
 
-		public readonly bool Contains(Vector2Int point) {
-			return point.x >= Min.x && point.x <= Max.x &&
-				   point.y >= Min.y && point.y <= Max.y;
+		public readonly bool Contains(Vec2Int point) {
+			return point.X >= Min.X && point.X <= Max.X &&
+				   point.Y >= Min.Y && point.Y <= Max.Y;
 		}
 
 		public readonly bool Intersects(BoundingBox other) {
-			return !(other.Min.x > Max.x || other.Max.x < Min.x ||
-					 other.Min.y > Max.y || other.Max.y < Min.y);
+			return !(other.Min.X > Max.X || other.Max.X < Min.X ||
+					 other.Min.Y > Max.Y || other.Max.Y < Min.Y);
 		}
 
 		public readonly override string ToString() {

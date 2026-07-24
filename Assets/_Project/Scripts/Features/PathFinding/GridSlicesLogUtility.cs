@@ -19,9 +19,9 @@ namespace Kope.Feature.PathFinding.Utility {
 		/// </summary>
 		public void MakeSummary(
 			IRectangleRegionSlicer slicer,
-			Vector2Int maxBoundSize,
+			Vec2Int maxBoundSize,
 			int totalExtractedRegions,
-			Dictionary<BoundingBox, (Vector2Int Anchor, List<Vector2Int> Tiles)> slicedRegions,
+			Dictionary<BoundingBox, (Vec2Int Anchor, List<Vec2Int> Tiles)> slicedRegions,
 			System.Diagnostics.Stopwatch stopwatch) {
 
 			if (slicedRegions == null || slicedRegions.Count == 0) {
@@ -30,17 +30,15 @@ namespace Kope.Feature.PathFinding.Utility {
 			}
 
 			// Aggregate stats per anchor in a single pass without allocating List<BoundingBox>
-			var anchorStats = new Dictionary<Vector2Int, RegionStats>(
-				slicedRegions.Count / 2,
-				Vector2IntComparer.Instance
-			);
+			var anchorStats = new Dictionary<Vec2Int, RegionStats>(
+				slicedRegions.Count / 2);
 
 			int totalBoxes = slicedRegions.Count;
 			int totalSlicedTiles = 0;
 
 			foreach (var kvp in slicedRegions) {
 				BoundingBox box = kvp.Key;
-				Vector2Int anchor = kvp.Value.Anchor;
+				Vec2Int anchor = kvp.Value.Anchor;
 				int tileCount = kvp.Value.Tiles != null ? kvp.Value.Tiles.Count : 0;
 				float sqTiles = (float)tileCount * tileCount;
 
@@ -77,7 +75,7 @@ namespace Kope.Feature.PathFinding.Utility {
 			float sumOfRegionUniformities = 0f;
 
 			foreach (var kvp in anchorStats) {
-				Vector2Int anchor = kvp.Key;
+				Vec2Int anchor = kvp.Key;
 				RegionStats stats = kvp.Value;
 
 				float avgAspectRatio = stats.SliceCount > 0 ? stats.TotalAspectRatio / stats.SliceCount : 0f;
@@ -121,8 +119,8 @@ namespace Kope.Feature.PathFinding.Utility {
 		}
 
 		// Backward compatibility overload
-		public void MakeSummary(Dictionary<BoundingBox, (Vector2Int Anchor, List<Vector2Int> Tiles)> slicedRegions) {
-			MakeSummary(null, Vector2Int.zero, 0, slicedRegions, new System.Diagnostics.Stopwatch());
+		public void MakeSummary(Dictionary<BoundingBox, (Vec2Int Anchor, List<Vec2Int> Tiles)> slicedRegions) {
+			MakeSummary(null, Vec2Int.Zero, 0, slicedRegions, new System.Diagnostics.Stopwatch());
 		}
 	}
 }

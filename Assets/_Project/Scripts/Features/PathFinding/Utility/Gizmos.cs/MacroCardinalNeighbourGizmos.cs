@@ -76,20 +76,20 @@ namespace Kope.Feature.PathFinding.Utility {
 		/// without a HashSet or tuple allocation.
 		/// </summary>
 		private static bool IsPrimaryEdge(BoundingBox a, BoundingBox b) {
-			if (a.Min.x != b.Min.x) return a.Min.x < b.Min.x;
-			if (a.Min.y != b.Min.y) return a.Min.y < b.Min.y;
-			if (a.Max.x != b.Max.x) return a.Max.x < b.Max.x;
-			return a.Max.y < b.Max.y;
+			if (a.Min.X != b.Min.X) return a.Min.X < b.Min.X;
+			if (a.Min.Y != b.Min.Y) return a.Min.Y < b.Min.Y;
+			if (a.Max.X != b.Max.X) return a.Max.X < b.Max.X;
+			return a.Max.Y < b.Max.Y;
 		}
 
 		// Routed entirely through CellToWorld (no manual cellSize scaling) so seams stay correct
 		// under cellGap, tileAnchor offsets, or non-orthogonal grid layouts.
 		private static Vector3 GetSeamPointWorld(BoundingBox a, BoundingBox b, Tilemap tilemap) {
 			// 1. Horizontal shared border (Left / Right)
-			if (a.Max.x + 1 == b.Min.x || b.Max.x + 1 == a.Min.x) {
-				int borderX = (a.Max.x + 1 == b.Min.x) ? b.Min.x : a.Min.x;
-				int overlapMinY = Mathf.Max(a.Min.y, b.Min.y);
-				int overlapMaxY = Mathf.Min(a.Max.y, b.Max.y);
+			if (a.Max.X + 1 == b.Min.X || b.Max.X + 1 == a.Min.X) {
+				int borderX = (a.Max.X + 1 == b.Min.X) ? b.Min.X : a.Min.X;
+				int overlapMinY = Mathf.Max(a.Min.Y, b.Min.Y);
+				int overlapMaxY = Mathf.Min(a.Max.Y, b.Max.Y);
 
 				Vector3 p1 = tilemap.CellToWorld(new Vector3Int(borderX, overlapMinY, 0));
 				Vector3 p2 = tilemap.CellToWorld(new Vector3Int(borderX, overlapMaxY + 1, 0));
@@ -97,9 +97,9 @@ namespace Kope.Feature.PathFinding.Utility {
 			}
 
 			// 2. Vertical shared border (Top / Bottom)
-			int borderY = (a.Max.y + 1 == b.Min.y) ? b.Min.y : a.Min.y;
-			int overlapMinX = Mathf.Max(a.Min.x, b.Min.x);
-			int overlapMaxX = Mathf.Min(a.Max.x, b.Max.x);
+			int borderY = (a.Max.Y + 1 == b.Min.Y) ? b.Min.Y : a.Min.Y;
+			int overlapMinX = Mathf.Max(a.Min.X, b.Min.X);
+			int overlapMaxX = Mathf.Min(a.Max.X, b.Max.X);
 
 			Vector3 q1 = tilemap.CellToWorld(new Vector3Int(overlapMinX, borderY, 0));
 			Vector3 q2 = tilemap.CellToWorld(new Vector3Int(overlapMaxX + 1, borderY, 0));
@@ -111,8 +111,8 @@ namespace Kope.Feature.PathFinding.Utility {
 		/// CellToWorld on both corners so it agrees with GetSeamPointWorld under any grid configuration.
 		/// </summary>
 		private static Vector3 GetBoxCenterWorld(BoundingBox box, Tilemap tilemap) {
-			Vector3 minCorner = tilemap.CellToWorld(new Vector3Int(box.Min.x, box.Min.y, 0));
-			Vector3 maxCorner = tilemap.CellToWorld(new Vector3Int(box.Max.x + 1, box.Max.y + 1, 0));
+			Vector3 minCorner = tilemap.CellToWorld(new Vector3Int(box.Min.X, box.Min.Y, 0));
+			Vector3 maxCorner = tilemap.CellToWorld(new Vector3Int(box.Max.X + 1, box.Max.Y + 1, 0));
 			return (minCorner + maxCorner) * 0.5f;
 		}
 	}

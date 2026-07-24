@@ -115,6 +115,7 @@
     <Compile Include="Assets/_Project/Scripts/Managers/ItemDragDropManager.cs" />
     <Compile Include="Assets/_Project/Scripts/UI/Menu/TabController.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/DamageBased/DamageEffectSetting.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/GraphManager.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Ability/HealBased/HealAbility.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/StatBased/BasicStatModifierEffect.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/UI/ItemSlotUI/ItemSlotUI.cs" />

@@ -43,39 +43,39 @@ namespace Kope.Feature.PathFinding.Utility {
 			var byBottomRightCorner = new Dictionary<(int x, int y), BoundingBox>(totalBoundingBoxes);
 
 			foreach (var box in boundingBoxesArray) {
-				AddToBucket(boxesByMinX, box.Min.x, box);
-				AddToBucket(boxesByMinY, box.Min.y, box);
+				AddToBucket(boxesByMinX, box.Min.X, box);
+				AddToBucket(boxesByMinY, box.Min.Y, box);
 
-				RegisterCorner(byBottomLeftCorner, (box.Min.x, box.Min.y), box);
-				RegisterCorner(byBottomRightCorner, (box.Max.x, box.Min.y), box);
+				RegisterCorner(byBottomLeftCorner, (box.Min.X, box.Min.Y), box);
+				RegisterCorner(byBottomRightCorner, (box.Max.X, box.Min.Y), box);
 			}
 
 			foreach (var box in boundingBoxesArray) {
 				// Right — horizontal edge share
-				if (boxesByMinX.TryGetValue(box.Max.x + 1, out var rightCandidates)) {
+				if (boxesByMinX.TryGetValue(box.Max.X + 1, out var rightCandidates)) {
 					foreach (var candidate in rightCandidates) {
-						if (RangesOverlap(box.Min.y, box.Max.y, candidate.Min.y, candidate.Max.y)) {
+						if (RangesOverlap(box.Min.Y, box.Max.Y, candidate.Min.Y, candidate.Max.Y)) {
 							AddConnection(connections, box, candidate);
 						}
 					}
 				}
 
 				// Up — vertical edge share
-				if (boxesByMinY.TryGetValue(box.Max.y + 1, out var upCandidates)) {
+				if (boxesByMinY.TryGetValue(box.Max.Y + 1, out var upCandidates)) {
 					foreach (var candidate in upCandidates) {
-						if (RangesOverlap(box.Min.x, box.Max.x, candidate.Min.x, candidate.Max.x)) {
+						if (RangesOverlap(box.Min.X, box.Max.X, candidate.Min.X, candidate.Max.X)) {
 							AddConnection(connections, box, candidate);
 						}
 					}
 				}
 
 				// UpRight — this box's top-right corner touches a neighbor's bottom-left corner
-				if (byBottomLeftCorner.TryGetValue((box.Max.x + 1, box.Max.y + 1), out var upRightNeighbor)) {
+				if (byBottomLeftCorner.TryGetValue((box.Max.X + 1, box.Max.Y + 1), out var upRightNeighbor)) {
 					AddConnection(connections, box, upRightNeighbor);
 				}
 
 				// UpLeft — this box's top-left corner touches a neighbor's bottom-right corner
-				if (byBottomRightCorner.TryGetValue((box.Min.x - 1, box.Max.y + 1), out var upLeftNeighbor)) {
+				if (byBottomRightCorner.TryGetValue((box.Min.X - 1, box.Max.Y + 1), out var upLeftNeighbor)) {
 					AddConnection(connections, box, upLeftNeighbor);
 				}
 			}

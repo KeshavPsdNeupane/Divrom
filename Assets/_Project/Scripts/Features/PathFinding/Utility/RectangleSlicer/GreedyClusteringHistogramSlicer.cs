@@ -131,11 +131,11 @@ namespace Kope.Feature.PathFinding.Utility {
 
 		private struct RectResult {
 			public BoundingBox Box;
-			public Vector2Int Anchor;
-			public List<Vector2Int> Tiles;
+			public Vec2Int Anchor;
+			public List<Vec2Int> Tiles;
 			public bool Locked;
 
-			public RectResult(BoundingBox box, Vector2Int anchor, List<Vector2Int> tiles) {
+			public RectResult(BoundingBox box, Vec2Int anchor, List<Vec2Int> tiles) {
 				Box = box;
 				Anchor = anchor;
 				Tiles = tiles;
@@ -143,11 +143,11 @@ namespace Kope.Feature.PathFinding.Utility {
 			}
 		}
 
-		public Dictionary<BoundingBox, (Vector2Int, List<Vector2Int>)> Slice(
-			Dictionary<Vector2Int, List<Vector2Int>> isolatedRegions,
-			Vector2Int maxBoundSize) {
+		public Dictionary<BoundingBox, (Vec2Int, List<Vec2Int>)> Slice(
+			Dictionary<Vec2Int, List<Vec2Int>> isolatedRegions,
+			Vec2Int maxBoundSize) {
 
-			var finalSlicedRegions = new Dictionary<BoundingBox, (Vector2Int, List<Vector2Int>)>();
+			var finalSlicedRegions = new Dictionary<BoundingBox, (Vec2Int, List<Vec2Int>)>();
 
 			foreach (var kvp in isolatedRegions) {
 				var regionTiles = kvp.Value;
@@ -174,17 +174,17 @@ namespace Kope.Feature.PathFinding.Utility {
 		// merge is what actually optimizes the final rectangle set.
 		// =====================================================================================
 
-		private List<RectResult> RunPrimaryPass(List<Vector2Int> regionTiles, Vector2Int maxBoundSize) {
+		private List<RectResult> RunPrimaryPass(List<Vec2Int> regionTiles, Vec2Int maxBoundSize) {
 			var results = new List<RectResult>();
 
 			int minX = int.MaxValue, maxX = int.MinValue;
 			int minY = int.MaxValue, maxY = int.MinValue;
 			for (int i = 0; i < regionTiles.Count; i++) {
 				var t = regionTiles[i];
-				if (t.x < minX) minX = t.x;
-				if (t.x > maxX) maxX = t.x;
-				if (t.y < minY) minY = t.y;
-				if (t.y > maxY) maxY = t.y;
+				if (t.X < minX) minX = t.X;
+				if (t.X > maxX) maxX = t.X;
+				if (t.Y < minY) minY = t.Y;
+				if (t.Y > maxY) maxY = t.Y;
 			}
 
 			int width = maxX - minX + 1;
@@ -204,7 +204,7 @@ namespace Kope.Feature.PathFinding.Utility {
 			try {
 				for (int i = 0; i < regionTiles.Count; i++) {
 					var t = regionTiles[i];
-					int idx = (t.x - minX) + (t.y - minY) * strideW;
+					int idx = (t.X - minX) + (t.Y - minY) * strideW;
 					unassignedGrid[idx] = 1;
 				}
 
@@ -214,7 +214,7 @@ namespace Kope.Feature.PathFinding.Utility {
 						int anchorIdx = (x - minX) + rowOffset;
 						if (unassignedGrid[anchorIdx] == 0) continue;
 
-						var anchor = new Vector2Int(x, y);
+						var anchor = new Vec2Int(x, y);
 						var result = ExtractAndClaimGreedyRect(anchor, unassignedGrid, maxBoundSize, strideW, anchorIdx);
 						results.Add(result);
 					}
@@ -240,15 +240,15 @@ namespace Kope.Feature.PathFinding.Utility {
 		/// in the padded sentinel ring rather than off the end of the array or into the next row.
 		/// </summary>
 		private static RectResult ExtractAndClaimGreedyRect(
-			Vector2Int anchor, byte[] unassignedGrid, Vector2Int maxBoundSize, int strideW, int anchorIdx) {
+			Vec2Int anchor, byte[] unassignedGrid, Vec2Int maxBoundSize, int strideW, int anchorIdx) {
 
-			int anchorX = anchor.x;
-			int anchorY = anchor.y;
+			int anchorX = anchor.X;
+			int anchorY = anchor.Y;
 
 			// --- extend right: unchecked, incrementally-indexed probe ---
 			int blockWidth = 1;
 			int probeIdx = anchorIdx + 1;
-			while (blockWidth < maxBoundSize.x && unassignedGrid[probeIdx] == 1) {
+			while (blockWidth < maxBoundSize.X && unassignedGrid[probeIdx] == 1) {
 				blockWidth++;
 				probeIdx++;
 			}
@@ -257,7 +257,7 @@ namespace Kope.Feature.PathFinding.Utility {
 			int blockHeight = 1;
 			int rowBase = anchorIdx + strideW;
 			bool canExpandHeight = true;
-			while (blockHeight < maxBoundSize.y && canExpandHeight) {
+			while (blockHeight < maxBoundSize.Y && canExpandHeight) {
 				int idx = rowBase;
 				for (int dx = 0; dx < blockWidth; dx++) {
 					if (unassignedGrid[idx] == 0) {
@@ -276,14 +276,14 @@ namespace Kope.Feature.PathFinding.Utility {
 			// check above during growth, so there is nothing left to re-verify - just zero it and
 			// record it, once, using an index stepped by +1/+strideW instead of recomputed from
 			// scratch per cell.
-			var tiles = new List<Vector2Int>(blockWidth * blockHeight);
+			var tiles = new List<Vec2Int>(blockWidth * blockHeight);
 			int rowStart = anchorIdx;
 			for (int dy = 0; dy < blockHeight; dy++) {
 				int idx = rowStart;
 				int py = anchorY + dy;
 				for (int dx = 0; dx < blockWidth; dx++) {
 					unassignedGrid[idx] = 0;
-					tiles.Add(new Vector2Int(anchorX + dx, py));
+					tiles.Add(new Vec2Int(anchorX + dx, py));
 					idx++;
 				}
 				rowStart += strideW;
@@ -298,7 +298,7 @@ namespace Kope.Feature.PathFinding.Utility {
 		// (Unchanged.)
 		// =====================================================================================
 
-		private static List<RectResult> RunPostProcessing(List<RectResult> primaryResults, Vector2Int maxBoundSize) {
+		private static List<RectResult> RunPostProcessing(List<RectResult> primaryResults, Vec2Int maxBoundSize) {
 			if (primaryResults.Count == 0) return primaryResults;
 
 			var clusters = ClusterByAdjacency(primaryResults, maxBoundSize);
@@ -310,7 +310,7 @@ namespace Kope.Feature.PathFinding.Utility {
 			return finalResults;
 		}
 
-		private static List<List<RectResult>> ClusterByAdjacency(List<RectResult> primaryResults, Vector2Int maxBoundSize) {
+		private static List<List<RectResult>> ClusterByAdjacency(List<RectResult> primaryResults, Vec2Int maxBoundSize) {
 			int n = primaryResults.Count;
 			var parent = new int[n];
 			for (int i = 0; i < n; i++) parent[i] = i;
@@ -327,8 +327,8 @@ namespace Kope.Feature.PathFinding.Utility {
 				if (ra != rb) parent[ra] = rb;
 			}
 
-			int bucketW = Mathf.Max(1, maxBoundSize.x * 2);
-			int bucketH = Mathf.Max(1, maxBoundSize.y * 2);
+			int bucketW = Mathf.Max(1, maxBoundSize.X * 2);
+			int bucketH = Mathf.Max(1, maxBoundSize.Y * 2);
 
 			(int bx, int by) BucketOf(int x, int y) =>
 				(Mathf.FloorToInt((float)x / bucketW), Mathf.FloorToInt((float)y / bucketH));
@@ -336,8 +336,8 @@ namespace Kope.Feature.PathFinding.Utility {
 			var buckets = new Dictionary<(int, int), List<int>>();
 			for (int i = 0; i < n; i++) {
 				var box = primaryResults[i].Box;
-				var minBucket = BucketOf(box.Min.x, box.Min.y);
-				var maxBucket = BucketOf(box.Max.x, box.Max.y);
+				var minBucket = BucketOf(box.Min.X, box.Min.Y);
+				var maxBucket = BucketOf(box.Max.X, box.Max.Y);
 				for (int bx = minBucket.bx; bx <= maxBucket.bx; bx++) {
 					for (int by = minBucket.by; by <= maxBucket.by; by++) {
 						var key = (bx, by);
@@ -352,8 +352,8 @@ namespace Kope.Feature.PathFinding.Utility {
 
 			for (int i = 0; i < n; i++) {
 				var box = primaryResults[i].Box;
-				var minBucket = BucketOf(box.Min.x, box.Min.y);
-				var maxBucket = BucketOf(box.Max.x, box.Max.y);
+				var minBucket = BucketOf(box.Min.X, box.Min.Y);
+				var maxBucket = BucketOf(box.Max.X, box.Max.Y);
 				for (int bx = minBucket.bx; bx <= maxBucket.bx; bx++) {
 					for (int by = minBucket.by; by <= maxBucket.by; by++) {
 						if (!buckets.TryGetValue((bx, by), out var candidates)) continue;
@@ -378,8 +378,8 @@ namespace Kope.Feature.PathFinding.Utility {
 		}
 
 		private static bool BoxesTouchOrOverlap(BoundingBox a, BoundingBox b) {
-			return a.Min.x - 1 <= b.Max.x && a.Max.x + 1 >= b.Min.x &&
-				   a.Min.y - 1 <= b.Max.y && a.Max.y + 1 >= b.Min.y;
+			return a.Min.X - 1 <= b.Max.X && a.Max.X + 1 >= b.Min.X &&
+				   a.Min.Y - 1 <= b.Max.Y && a.Max.Y + 1 >= b.Min.Y;
 		}
 
 		/// <summary>
@@ -388,7 +388,7 @@ namespace Kope.Feature.PathFinding.Utility {
 		/// rectangle to maxBoundSize) with the incremental "find the current largest unclaimed
 		/// rectangle" update described in the class-level doc comment (point 6).
 		/// </summary>
-		private static List<RectResult> RunPostProcessingOnCluster(List<RectResult> cluster, Vector2Int maxBoundSize) {
+		private static List<RectResult> RunPostProcessingOnCluster(List<RectResult> cluster, Vec2Int maxBoundSize) {
 			int minX = int.MaxValue, maxX = int.MinValue;
 			int minY = int.MaxValue, maxY = int.MinValue;
 
@@ -396,10 +396,10 @@ namespace Kope.Feature.PathFinding.Utility {
 			for (int i = 0; i < cluster.Count; i++) {
 				totalTileCount += cluster[i].Tiles.Count;
 				var box = cluster[i].Box;
-				if (box.Min.x < minX) minX = box.Min.x;
-				if (box.Max.x > maxX) maxX = box.Max.x;
-				if (box.Min.y < minY) minY = box.Min.y;
-				if (box.Max.y > maxY) maxY = box.Max.y;
+				if (box.Min.X < minX) minX = box.Min.X;
+				if (box.Max.X > maxX) maxX = box.Max.X;
+				if (box.Min.Y < minY) minY = box.Min.Y;
+				if (box.Max.Y > maxY) maxY = box.Max.Y;
 			}
 
 			if (totalTileCount == 0) return new List<RectResult>();
@@ -431,7 +431,7 @@ namespace Kope.Feature.PathFinding.Utility {
 					var tiles = cluster[i].Tiles;
 					for (int j = 0; j < tiles.Count; j++) {
 						var tile = tiles[j];
-						int idx = (tile.x - minX) + (tile.y - minY) * width;
+						int idx = (tile.X - minX) + (tile.Y - minY) * width;
 						filled[idx] = 1;
 					}
 				}
@@ -584,12 +584,12 @@ namespace Kope.Feature.PathFinding.Utility {
 			}
 		}
 
-		private static List<RectResult> SubdivideUniformly(BoundingBox box, Vector2Int maxBoundSize) {
-			int totalWidth = box.Max.x - box.Min.x + 1;
-			int totalHeight = box.Max.y - box.Min.y + 1;
+		private static List<RectResult> SubdivideUniformly(BoundingBox box, Vec2Int maxBoundSize) {
+			int totalWidth = box.Max.X - box.Min.X + 1;
+			int totalHeight = box.Max.Y - box.Min.Y + 1;
 
-			int numCols = Mathf.Max(1, Mathf.CeilToInt((float)totalWidth / maxBoundSize.x));
-			int numRows = Mathf.Max(1, Mathf.CeilToInt((float)totalHeight / maxBoundSize.y));
+			int numCols = Mathf.Max(1, Mathf.CeilToInt((float)totalWidth / maxBoundSize.X));
+			int numRows = Mathf.Max(1, Mathf.CeilToInt((float)totalHeight / maxBoundSize.Y));
 
 			var results = new List<RectResult>(numCols * numRows);
 
@@ -599,22 +599,22 @@ namespace Kope.Feature.PathFinding.Utility {
 			SplitEvenlySpan(totalWidth, colWidths);
 			SplitEvenlySpan(totalHeight, rowHeights);
 
-			int yCursor = box.Min.y;
+			int yCursor = box.Min.Y;
 			for (int r = 0; r < numRows; r++) {
 				int h = rowHeights[r];
-				int xCursor = box.Min.x;
+				int xCursor = box.Min.X;
 				for (int c = 0; c < numCols; c++) {
 					int w = colWidths[c];
-					var subAnchor = new Vector2Int(xCursor, yCursor);
+					var subAnchor = new Vec2Int(xCursor, yCursor);
 					var subBox = new BoundingBox(
 						xCursor, yCursor,
 						xCursor + w - 1, yCursor + h - 1);
 
 					int tileCapacity = w * h;
-					var tiles = new List<Vector2Int>(tileCapacity);
+					var tiles = new List<Vec2Int>(tileCapacity);
 					for (int dx = 0; dx < w; dx++) {
 						for (int dy = 0; dy < h; dy++) {
-							tiles.Add(new Vector2Int(xCursor + dx, yCursor + dy));
+							tiles.Add(new Vec2Int(xCursor + dx, yCursor + dy));
 						}
 					}
 

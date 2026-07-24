@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Kope.Feature.PathFinding;
 using Kope.Feature.PathFinding.Interface;
-using Kope.Feature.PathFinding.Utility;
 using UnityEngine;
 
 public class GreedyRectanglePackingAlogorithm : IRectangleRegionSlicer {
@@ -19,7 +18,7 @@ public class GreedyRectanglePackingAlogorithm : IRectangleRegionSlicer {
 	// produce suboptimal macro-node splitting compared to global optimization solvers, it 
 	// executes instantly at bake-time and provides a predictable, stable zoning topology 
 	// optimized for hierarchical pathfinding.
-	public Dictionary<BoundingBox, (Vector2Int, List<Vector2Int>)> Slice(Dictionary<Vector2Int, List<Vector2Int>> isolatedRegions, Vector2Int maxBoundSize) {
+	public Dictionary<BoundingBox, (Vec2Int, List<Vec2Int>)> Slice(Dictionary<Vec2Int, List<Vec2Int>> isolatedRegions, Vec2Int maxBoundSize) {
 		if (isolatedRegions == null || isolatedRegions.Count == 0) {
 			Debug.LogError("GreedyRectanglePackingAlgorithm: No regions provided for slicing.");
 			return null;
@@ -27,11 +26,11 @@ public class GreedyRectanglePackingAlogorithm : IRectangleRegionSlicer {
 
 		// pre allocating atleast 2x size of isolatedRegions to avoid rehashing and resizing of dictionary
 		// if more needed, it will resize automatically but this is a good starting point
-		var slicedRegions = new Dictionary<BoundingBox, (Vector2Int, List<Vector2Int>)>(isolatedRegions.Count * 2);
+		var slicedRegions = new Dictionary<BoundingBox, (Vec2Int, List<Vec2Int>)>(isolatedRegions.Count * 2);
 
 		foreach (var kvp in isolatedRegions) {
-			Vector2Int anchor = kvp.Key;
-			List<Vector2Int> singleRegionTiles = kvp.Value;
+			Vec2Int anchor = kvp.Key;
+			List<Vec2Int> singleRegionTiles = kvp.Value;
 
 			// Pass the master dictionary reference and max constraint down to be mutated in-place
 			SliceTheRegionsAlgorithm(anchor, singleRegionTiles, maxBoundSize, slicedRegions);
@@ -55,18 +54,18 @@ public class GreedyRectanglePackingAlogorithm : IRectangleRegionSlicer {
 	// across the hash table evenly, keeping each Contains() check close to O(1) even on dense,
 	// large regions.
 	private void SliceTheRegionsAlgorithm(
-		Vector2Int anchor,
-		List<Vector2Int> singleRegionTiles,
-		Vector2Int maxBoundSize,
-		Dictionary<BoundingBox, (Vector2Int, List<Vector2Int>)> destinationDict) {
+		Vec2Int anchor,
+		List<Vec2Int> singleRegionTiles,
+		Vec2Int maxBoundSize,
+		Dictionary<BoundingBox, (Vec2Int, List<Vec2Int>)> destinationDict) {
 
-		var unvisitedTiles = new HashSet<Vector2Int>(singleRegionTiles, Vector2IntComparer.Instance);
+		var unvisitedTiles = new HashSet<Vec2Int>(singleRegionTiles);
 		bool usedFirstAnchor = false;
 		int searchIndex = 0;
 
 		while (unvisitedTiles.Count > 0) {
 			// Grab the starting anchor point for this specific rectangle box
-			Vector2Int anchorPos;
+			Vec2Int anchorPos;
 			if (!usedFirstAnchor) {
 				anchorPos = anchor;
 				usedFirstAnchor = true;
@@ -79,32 +78,32 @@ public class GreedyRectanglePackingAlogorithm : IRectangleRegionSlicer {
 
 			// A rectangle starting from anchorPos must be completely solid and unvisited 
 			// across its entire span. We grow it greedily while respecting maxBoundSize.
-			int minX = anchorPos.x;
-			int maxX = anchorPos.x;
-			int minY = anchorPos.y;
-			int maxY = anchorPos.y;
+			int minX = anchorPos.X;
+			int maxX = anchorPos.X;
+			int minY = anchorPos.Y;
+			int maxY = anchorPos.Y;
 
 			bool isExpandible = true;
 			while (isExpandible) {
 				isExpandible = false;
 
 				// Try expanding Right (increase maxX) if it doesn't exceed width constraint and full column is unvisited
-				if ((maxX - minX + 1) < maxBoundSize.x && TryExpandRight(unvisitedTiles, minX, maxX, minY, maxY)) {
+				if ((maxX - minX + 1) < maxBoundSize.X && TryExpandRight(unvisitedTiles, minX, maxX, minY, maxY)) {
 					maxX++;
 					isExpandible = true;
 				}
 				// Try expanding Up (increase maxY) if it doesn't exceed height constraint and full row is unvisited
-				else if ((maxY - minY + 1) < maxBoundSize.y && TryExpandUp(unvisitedTiles, minX, maxX, minY, maxY)) {
+				else if ((maxY - minY + 1) < maxBoundSize.Y && TryExpandUp(unvisitedTiles, minX, maxX, minY, maxY)) {
 					maxY++;
 					isExpandible = true;
 				}
 				// Try expanding Left (decrease minX) if it doesn't exceed width constraint and full column is unvisited
-				else if ((maxX - minX + 1) < maxBoundSize.x && TryExpandLeft(unvisitedTiles, minX, maxX, minY, maxY)) {
+				else if ((maxX - minX + 1) < maxBoundSize.X && TryExpandLeft(unvisitedTiles, minX, maxX, minY, maxY)) {
 					minX--;
 					isExpandible = true;
 				}
 				// Try expanding Down (decrease minY) if it doesn't exceed height constraint and full row is unvisited
-				else if ((maxY - minY + 1) < maxBoundSize.y && TryExpandDown(unvisitedTiles, minX, maxX, minY, maxY)) {
+				else if ((maxY - minY + 1) < maxBoundSize.Y && TryExpandDown(unvisitedTiles, minX, maxX, minY, maxY)) {
 					minY--;
 					isExpandible = true;
 				}
@@ -119,10 +118,10 @@ public class GreedyRectanglePackingAlogorithm : IRectangleRegionSlicer {
 			// and the list is pre-sized to the exact known box area so it never has to grow/reallocate.
 			int boxWidth = maxX - minX + 1;
 			int boxHeight = maxY - minY + 1;
-			var currentBoxTiles = new List<Vector2Int>(boxWidth * boxHeight);
+			var currentBoxTiles = new List<Vec2Int>(boxWidth * boxHeight);
 			for (int x = minX; x <= maxX; x++) {
 				for (int y = minY; y <= maxY; y++) {
-					var pos = new Vector2Int(x, y);
+					var pos = new Vec2Int(x, y);
 					currentBoxTiles.Add(pos);
 					unvisitedTiles.Remove(pos);
 				}
@@ -145,37 +144,37 @@ public class GreedyRectanglePackingAlogorithm : IRectangleRegionSlicer {
 	// many thousands of times per bake for large maps. Logic is untouched — same loop, same
 	// early-out on the first missing tile.
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	private bool TryExpandRight(HashSet<Vector2Int> unvisited, int minX, int maxX, int minY, int maxY) {
+	private bool TryExpandRight(HashSet<Vec2Int> unvisited, int minX, int maxX, int minY, int maxY) {
 		int nextX = maxX + 1;
 		for (int y = minY; y <= maxY; y++) {
-			if (!unvisited.Contains(new Vector2Int(nextX, y))) return false;
+			if (!unvisited.Contains(new Vec2Int(nextX, y))) return false;
 		}
 		return true;
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	private bool TryExpandUp(HashSet<Vector2Int> unvisited, int minX, int maxX, int minY, int maxY) {
+	private bool TryExpandUp(HashSet<Vec2Int> unvisited, int minX, int maxX, int minY, int maxY) {
 		int nextY = maxY + 1;
 		for (int x = minX; x <= maxX; x++) {
-			if (!unvisited.Contains(new Vector2Int(x, nextY))) return false;
+			if (!unvisited.Contains(new Vec2Int(x, nextY))) return false;
 		}
 		return true;
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	private bool TryExpandLeft(HashSet<Vector2Int> unvisited, int minX, int maxX, int minY, int maxY) {
+	private bool TryExpandLeft(HashSet<Vec2Int> unvisited, int minX, int maxX, int minY, int maxY) {
 		int nextX = minX - 1;
 		for (int y = minY; y <= maxY; y++) {
-			if (!unvisited.Contains(new Vector2Int(nextX, y))) return false;
+			if (!unvisited.Contains(new Vec2Int(nextX, y))) return false;
 		}
 		return true;
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	private bool TryExpandDown(HashSet<Vector2Int> unvisited, int minX, int maxX, int minY, int maxY) {
+	private bool TryExpandDown(HashSet<Vec2Int> unvisited, int minX, int maxX, int minY, int maxY) {
 		int nextY = minY - 1;
 		for (int x = minX; x <= maxX; x++) {
-			if (!unvisited.Contains(new Vector2Int(x, nextY))) return false;
+			if (!unvisited.Contains(new Vec2Int(x, nextY))) return false;
 		}
 		return true;
 	}

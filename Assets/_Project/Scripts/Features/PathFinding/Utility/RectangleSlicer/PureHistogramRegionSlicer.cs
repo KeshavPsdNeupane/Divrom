@@ -54,11 +54,11 @@ namespace Kope.Feature.PathFinding.Utility {
 
 		private struct RectResult {
 			public BoundingBox Box;
-			public Vector2Int Anchor;
-			public List<Vector2Int> Tiles;
+			public Vec2Int Anchor;
+			public List<Vec2Int> Tiles;
 			public bool Locked;
 
-			public RectResult(BoundingBox box, Vector2Int anchor, List<Vector2Int> tiles) {
+			public RectResult(BoundingBox box, Vec2Int anchor, List<Vec2Int> tiles) {
 				Box = box;
 				Anchor = anchor;
 				Tiles = tiles;
@@ -66,11 +66,11 @@ namespace Kope.Feature.PathFinding.Utility {
 			}
 		}
 
-		public Dictionary<BoundingBox, (Vector2Int, List<Vector2Int>)> Slice(
-			Dictionary<Vector2Int, List<Vector2Int>> isolatedRegions,
-			Vector2Int maxBoundSize) {
+		public Dictionary<BoundingBox, (Vec2Int, List<Vec2Int>)> Slice(
+			Dictionary<Vec2Int, List<Vec2Int>> isolatedRegions,
+			Vec2Int maxBoundSize) {
 
-			var finalSlicedRegions = new Dictionary<BoundingBox, (Vector2Int, List<Vector2Int>)>();
+			var finalSlicedRegions = new Dictionary<BoundingBox, (Vec2Int, List<Vec2Int>)>();
 
 			foreach (var kvp in isolatedRegions) {
 				var regionTiles = kvp.Value;
@@ -90,15 +90,15 @@ namespace Kope.Feature.PathFinding.Utility {
 		// incremental maximal-rectangle histogram loop used per-cluster elsewhere.
 		// =====================================================================================
 
-		private static List<RectResult> RunHistogramExtraction(List<Vector2Int> regionTiles, Vector2Int maxBoundSize) {
+		private static List<RectResult> RunHistogramExtraction(List<Vec2Int> regionTiles, Vec2Int maxBoundSize) {
 			int minX = int.MaxValue, maxX = int.MinValue;
 			int minY = int.MaxValue, maxY = int.MinValue;
 			for (int i = 0; i < regionTiles.Count; i++) {
 				var t = regionTiles[i];
-				if (t.x < minX) minX = t.x;
-				if (t.x > maxX) maxX = t.x;
-				if (t.y < minY) minY = t.y;
-				if (t.y > maxY) maxY = t.y;
+				if (t.X < minX) minX = t.X;
+				if (t.X > maxX) maxX = t.X;
+				if (t.Y < minY) minY = t.Y;
+				if (t.Y > maxY) maxY = t.Y;
 			}
 
 			int width = maxX - minX + 1;
@@ -123,7 +123,7 @@ namespace Kope.Feature.PathFinding.Utility {
 			try {
 				for (int i = 0; i < regionTiles.Count; i++) {
 					var t = regionTiles[i];
-					int idx = (t.x - minX) + (t.y - minY) * width;
+					int idx = (t.X - minX) + (t.Y - minY) * width;
 					filled[idx] = 1;
 				}
 
@@ -259,12 +259,12 @@ namespace Kope.Feature.PathFinding.Utility {
 			}
 		}
 
-		private static List<RectResult> SubdivideUniformly(BoundingBox box, Vector2Int maxBoundSize) {
-			int totalWidth = box.Max.x - box.Min.x + 1;
-			int totalHeight = box.Max.y - box.Min.y + 1;
+		private static List<RectResult> SubdivideUniformly(BoundingBox box, Vec2Int maxBoundSize) {
+			int totalWidth = box.Max.X - box.Min.X + 1;
+			int totalHeight = box.Max.Y - box.Min.Y + 1;
 
-			int numCols = Mathf.Max(1, Mathf.CeilToInt((float)totalWidth / maxBoundSize.x));
-			int numRows = Mathf.Max(1, Mathf.CeilToInt((float)totalHeight / maxBoundSize.y));
+			int numCols = Mathf.Max(1, Mathf.CeilToInt((float)totalWidth / maxBoundSize.X));
+			int numRows = Mathf.Max(1, Mathf.CeilToInt((float)totalHeight / maxBoundSize.Y));
 
 			var results = new List<RectResult>(numCols * numRows);
 
@@ -274,22 +274,22 @@ namespace Kope.Feature.PathFinding.Utility {
 			SplitEvenlySpan(totalWidth, colWidths);
 			SplitEvenlySpan(totalHeight, rowHeights);
 
-			int yCursor = box.Min.y;
+			int yCursor = box.Min.Y;
 			for (int r = 0; r < numRows; r++) {
 				int h = rowHeights[r];
-				int xCursor = box.Min.x;
+				int xCursor = box.Min.X;
 				for (int c = 0; c < numCols; c++) {
 					int w = colWidths[c];
-					var subAnchor = new Vector2Int(xCursor, yCursor);
+					var subAnchor = new Vec2Int(xCursor, yCursor);
 					var subBox = new BoundingBox(
 						xCursor, yCursor,
 						xCursor + w - 1, yCursor + h - 1);
 
 					int tileCapacity = w * h;
-					var tiles = new List<Vector2Int>(tileCapacity);
+					var tiles = new List<Vec2Int>(tileCapacity);
 					for (int dx = 0; dx < w; dx++) {
 						for (int dy = 0; dy < h; dy++) {
-							tiles.Add(new Vector2Int(xCursor + dx, yCursor + dy));
+							tiles.Add(new Vec2Int(xCursor + dx, yCursor + dy));
 						}
 					}
 
