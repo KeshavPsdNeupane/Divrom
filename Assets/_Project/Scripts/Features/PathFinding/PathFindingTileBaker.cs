@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Text;
 using Kope.Core.Attribute;
 using Kope.Core.Collections;
 using Kope.Feature.PathFinding.Interface;
@@ -9,7 +8,7 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using ZLinq;
 using Kope.EntityIdentity;
-using Project.Scripts.Features.PathFinding.GraphManager; // For MacroConnectionData & Managers
+using Project.Scripts.Features.PathFinding.GraphManager;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -35,9 +34,6 @@ namespace Kope.Feature.PathFinding {
 		}
 	}
 
-	/// <summary>
-	/// Defines available algorithms used to group adjacent grid tiles into optimal macro regions.
-	/// </summary>
 	public enum RectangleSlicerAlgorithm {
 		Greedy = 0,
 		DualPhaseGreedyMeshing = 10,
@@ -50,12 +46,10 @@ namespace Kope.Feature.PathFinding {
 	[System.Serializable]
 	public class ErrorConfiguration {
 		[Header("Gizmo Colors per Error Type")]
-		[Tooltip("Color of the error gizmo for unassigned or unrecognized tiles.")]
 		[SerializeField] private Color invalidTileColor = Color.red;
 		public Color InvalidTileColor => invalidTileColor;
 
-		[Tooltip("Color of the error gizmo for overlapping or duplicate tile placements.")]
-		[SerializeField] private Color duplicateTileColor = new(1f, 0.5f, 0f); // Orange
+		[SerializeField] private Color duplicateTileColor = new(1f, 0.5f, 0f);
 		public Color DuplicateTileColor => duplicateTileColor;
 
 		public Color GetColor(PathCheckerErrorType errorType) {
@@ -67,15 +61,10 @@ namespace Kope.Feature.PathFinding {
 		}
 	}
 
-	/// <summary>
-	/// Validates and constructs the hierarchical pathfinding grid (Macro and Micro tiers) directly from Unity Tilemaps.
-	/// </summary>
-	/// <remarks>
-	/// Operates in edit-mode to visualize slicing algorithms, report grid errors, and preview neighbor connections.
-	/// Acts as the authoring tool and serialized data container for the pathfinding system.
-	/// </remarks>
 	[ExecuteAlways]
-	public class PathChecker : MonoBehaviour {
+	public class PathFindingTileBaker : MonoBehaviour {
+		[Header("Bake Data Container")]
+		[SerializeField] private PathFindingGridDataContainer gridDataContainer;
 
 		[Header("Tilemap Targets")]
 		[SerializeField] private Tilemap microTilemap;
@@ -94,44 +83,33 @@ namespace Kope.Feature.PathFinding {
 
 		[Header("Region Slice Gizmo Settings")]
 		[SerializeField] private bool showRegionSlices = true;
-		[SerializeField] private Color sliceBoxColor = new(0f, 1f, 1f, 0.3f); // Translucent Cyan
-		[SerializeField] private Color sliceBoxBorderColor = new(0f, 0.8f, 0.8f, 1f); // Opaque Cyan
+		[SerializeField] private Color sliceBoxColor = new(0f, 1f, 1f, 0.3f);
+		[SerializeField] private Color sliceBoxBorderColor = new(0f, 0.8f, 0.8f, 1f);
 
 		[Header("Macro Neighbor Line Gizmo Settings")]
 		[SerializeField] private bool showNeighborConnections = true;
 		[SerializeField] private Color neighborLineColor = Color.yellow;
 		[SerializeField] private float neighborLineThickness = 3f;
 
-		// Authoring-time dictionaries for raw tiles
-		private readonly SerializableDictionary<Vec2Int, HHSIMacroPathFindingTile> _macroTileDictionary = new();
-		private readonly SerializableDictionary<Vec2Int, HHSIMicroPathFindingTile> _microTileDictionary = new();
-
-
 		[Header("Error Tracking")]
 		[SerializeField] private List<ErrorTileInfo> _macroErrors = new();
 		[SerializeField] private List<ErrorTileInfo> _microErrors = new();
 
+		// --- RESTORED: Temporary authoring dictionaries for the two-step Editor workflow ---
 
+		private readonly Dictionary<Vec2Int, HHSIMacroPathFindingTile> _macroTileDictionary = new();
+		private readonly Dictionary<Vec2Int, HHSIMicroPathFindingTile> _microTileDictionary = new();
 
-		// Baked graph node dictionaries (Saved in scene)
-		[SerializeField, HideInInspector][ReadOnly] private SerializableDictionary<Vec2Int, MicroGridNode> _microGridNodeDict = new();
-		[SerializeField, HideInInspector][ReadOnly] private SerializableDictionary<BoundingBox, MacroGridNode> _macroGridNodeDict = new();
-		[SerializeField, HideInInspector][ReadOnly] private SerializableDictionary<BoundingBox, List<MacroConnectionData>> _macroAdjacencyList = new();
+		// Gizmo-Specific Caches
+		private readonly Dictionary<BoundingBox, (Vec2Int Anchor, List<Vec2Int> Tiles)> _bakedSlicesCache = new();
+		private Dictionary<BoundingBox, List<BoundingBox>> _macroNeighbourCacheForGizmos;
 
-		private PathfindingGraphManager _runtimeGraphManager;
-
+		// Tools
 		private readonly RegionExtractionAlgorithm _regionExtractor = new();
 		private readonly SliceAnalysisSummarizer _summarizer = new();
 		private IRectangleRegionSlicer _rectanglePacker;
 		private readonly IMacroNeighbourFinder _neighborFinder = new MacroCardinalNeighbourFinder();
 
-		// Gizmos cache for baked slices to avoid recalculating during OnDrawGizmos
-		private readonly Dictionary<BoundingBox, (Vec2Int Anchor, List<Vec2Int> Tiles)> _bakedSlicesCache = new();
-		private Dictionary<BoundingBox, List<BoundingBox>> _macroNeighbourCacheForGizmos;
-
-		/// <summary>
-		/// Gets or sets whether region slice bounding boxes should be drawn in the Scene view via Gizmos.
-		/// </summary>
 		public bool ShowRegionSlices {
 			get => showRegionSlices;
 			set {
@@ -142,19 +120,17 @@ namespace Kope.Feature.PathFinding {
 			}
 		}
 
-		/// <summary>
-		/// Constructs the pure C# runtime graph manager using the baked dictionary data.
-		/// Call this at runtime during your systems initialization phase.
-		/// </summary>
 		public PathfindingGraphManager CreateRuntimeGraphManager() {
-			if (_microGridNodeDict.Count == 0 || _macroGridNodeDict.Count == 0) {
-				Debug.LogWarning("PathChecker has no baked data! Did you forget to bake the grid?");
+			if (gridDataContainer == null || gridDataContainer.GridData.MicroGridNodeDict == null || gridDataContainer.GridData.MicroGridNodeDict.Count == 0) {
+				Debug.LogWarning("PathChecker has no baked data! Did you forget to bake the grid or assign the SO?");
 			}
 
-			var microGraph = new MicroGraphManager(this._microGridNodeDict);
-			var macroGraph = new MacroGraphManager(this._macroGridNodeDict, this._macroAdjacencyList);
+			// var gridData = gridDataContainer.GridData;
+			// var microGraph = new MicroGraphManager(gridData.MicroGridNodeDict);
+			// var macroGraph = new MacroGraphManager(gridData.MacroGridNodeDict, gridData.MacroAdjacencyListWrapper);
 
-			return new PathfindingGraphManager(macroGraph, microGraph);
+			// return new PathfindingGraphManager(macroGraph, microGraph);
+			return null;
 		}
 
 		public IRectangleRegionSlicer GetRectangleSlicer(RectangleSlicerAlgorithm slicer) {
@@ -170,35 +146,26 @@ namespace Kope.Feature.PathFinding {
 		}
 
 		/// <summary>
-		/// Reads all raw tile data from the assigned Tilemaps and flags misconfigured or conflicting tiles.
+		/// Step 1: Prepares the raw tile data from the Tilemaps.
+		/// Called by the "Prepare Pathfinding Data For Bake" button in the Custom Editor.
 		/// </summary>
 		public void PreparePathfindingData() {
 			PreparePathfindingData<MacroTerrainData, HHSIMacroPathFindingTile>(
-				"Macro",
-				this.macroTilemap,
-				this._macroTileDictionary,
-				this._macroErrors,
-				false
-			);
+				"Macro", this.macroTilemap, this._macroTileDictionary, this._macroErrors);
 
 			PreparePathfindingData<MicroTerrainData, HHSIMicroPathFindingTile>(
-				"Micro",
-				this.microTilemap,
-				this._microTileDictionary,
-				this._microErrors,
-				false
-			);
+				"Micro", this.microTilemap, this._microTileDictionary, this._microErrors);
+
 #if UNITY_EDITOR
 			SceneView.RepaintAll();
 #endif
 		}
 
-		public void PreparePathfindingData<TData, TitledTile>(
+		private void PreparePathfindingData<TData, TitledTile>(
 			string tilemapName,
 			Tilemap targetTilemap,
-			SerializableDictionary<Vec2Int, TitledTile> targetDictionary,
-			List<ErrorTileInfo> targetErrorList,
-			bool repaint = true)
+			IDictionary<Vec2Int, TitledTile> targetDictionary,
+			List<ErrorTileInfo> targetErrorList)
 			where TData : struct, ITerrainData<TData>
 			where TitledTile : HSIPathFindingTileBase<TData> {
 
@@ -206,6 +173,7 @@ namespace Kope.Feature.PathFinding {
 				Debug.LogError($"{tilemapName} Tilemap reference is missing.");
 				return;
 			}
+
 			targetDictionary.Clear();
 			targetErrorList.Clear();
 
@@ -238,39 +206,51 @@ namespace Kope.Feature.PathFinding {
 					}
 				}
 			}
-
-#if UNITY_EDITOR
-			if (repaint) {
-				SceneView.RepaintAll();
-			}
-#endif
 		}
 
 		/// <summary>
-		/// Executes the region slicing algorithm to convert raw grid tiles into a simplified hierarchical node graph.
+		/// Step 2: Executes the region slicing algorithm.
+		/// Called by the "Perform Quote-on-Quote Bake" button in the Custom Editor.
 		/// </summary>
 		public void QuoteOnQuoteBake() {
+			if (this.gridDataContainer == null) {
+				Debug.LogError("Grid Data Container is not assigned. Please assign a PathFindingGridDataContainer ScriptableObject.");
+				return;
+			}
+
+			if (this._macroTileDictionary.Count == 0 || this._microTileDictionary.Count == 0) {
+				Debug.LogWarning("Tile dictionaries are empty! Please click 'Prepare Pathfinding Data For Bake' first.");
+				return;
+			}
+
 			this._rectanglePacker = GetRectangleSlicer(this.rectangleSlicer);
 
-			// Clear previous data
-			this._microGridNodeDict.Clear();
-			this._macroGridNodeDict.Clear();
-			this._macroAdjacencyList.Clear();
+			// Temporary dictionaries meant to be passed to the ScriptableObject
+			var microGridNodeDict = new SerializableDictionary<Vec2Int, MicroGridNode>();
+			var macroGridNodeDict = new SerializableDictionary<BoundingBox, MacroGridNode>();
+			var macroAdjacencyList = new SerializableDictionary<BoundingBox, List<MacroConnectionData>>();
 
 			// ==========================================
 			// 1. MACRO-LEVEL NODE GENERATION & SLICING
 			// ==========================================
+
+			// Extract all contiguous regions from the macro tile dictionary
 			var regionTiles = this._regionExtractor.Extract(this._macroTileDictionary);
 			var maxBoundSize = this.maxBoundingBoxSize;
 
+			// Slicing the regions into bounding boxes, and caching the results for gizmo drawing
 			System.Diagnostics.Stopwatch stopwatch = System.Diagnostics.Stopwatch.StartNew();
 			var slicedRegions = this._rectanglePacker.Slice(regionTiles, maxBoundSize);
 			stopwatch.Stop();
 
 			if (slicedRegions == null) return;
 
+			// Creating the micro tile and micro-to-macro mapping dictionaries, and 
+			// populating the macro grid node dictionary
 			int totalSizeForReserveDict = slicedRegions.AsValueEnumerable().Sum(kvp => kvp.Value.RegionTilePositions.Count);
+
 			BoundingBox[] slicedRegionArray = slicedRegions.Keys.AsValueEnumerable().ToArray();
+
 			Dictionary<(int x, int y), BoundingBox> microToMacroMapping = new(totalSizeForReserveDict);
 
 			this._bakedSlicesCache.Clear();
@@ -286,12 +266,15 @@ namespace Kope.Feature.PathFinding {
 				MovementCapability movementCapability = regionTile.Data.MovementType;
 
 				var currentMacroNode = new MacroGridNode(box, terrainType, movementCapability);
-				this._macroGridNodeDict.Add(box, currentMacroNode);
+				macroGridNodeDict.Add(box, currentMacroNode);
 
 				// ==========================================
 				// 2. MICRO TIER POPULATION
 				// ==========================================
 				foreach (Vec2Int tilePos in kvp.Value.RegionTilePositions) {
+					// Map the individual micro tile position to its macro bounding box container
+					microToMacroMapping[(tilePos.X, tilePos.Y)] = box;
+
 					MicroGridNode microNode;
 
 					if (this._microTileDictionary.TryGetValue(tilePos, out var microTile)) {
@@ -301,7 +284,6 @@ namespace Kope.Feature.PathFinding {
 							currentMacroNode
 						);
 					} else {
-						// If no micro tile is found, default to obstacle and warn.
 						microNode = new MicroGridNode(
 							tilePos,
 							true,
@@ -312,14 +294,12 @@ namespace Kope.Feature.PathFinding {
 						}
 					}
 
-					if (!this._microGridNodeDict.ContainsKey(tilePos)) {
-						this._microGridNodeDict.Add(tilePos, microNode);
-
-						// Safe to precheck add since we verified uniqueness in the dictionary above.
+					if (!microGridNodeDict.ContainsKey(tilePos)) {
+						microGridNodeDict.Add(tilePos, microNode);
 						currentMacroNode.PrecheckedAddMicroGridNodePosition(tilePos);
 					} else {
 						Debug.LogWarning($"Duplicate micro node detected at {tilePos}. Overwriting existing node.");
-						this._microGridNodeDict[tilePos] = microNode;
+						microGridNodeDict[tilePos] = microNode;
 					}
 				}
 			}
@@ -332,32 +312,38 @@ namespace Kope.Feature.PathFinding {
 
 			this._macroNeighbourCacheForGizmos = macroNeighbours;
 
-			// Translate raw box neighbors into MacroConnectionData structs for the runtime manager
 			foreach (var kvp in macroNeighbours) {
 				BoundingBox fromBox = kvp.Key;
-				List<MacroConnectionData> connections = new List<MacroConnectionData>();
+				List<MacroConnectionData> connections = new();
 
-				// Get origin capability
 				Vec2Int fromAnchor = this._bakedSlicesCache[fromBox].Anchor;
 				MovementCapability fromCapability = this._macroTileDictionary[fromAnchor].Data.MovementType;
 				bool toNarrativelyAccessible = this._macroTileDictionary[fromAnchor].Data.IsNarrativelyAccessible;
+
 				foreach (BoundingBox toBox in kvp.Value) {
-					// Get destination capability
 					Vec2Int toAnchor = this._bakedSlicesCache[toBox].Anchor;
 					MovementCapability toCapability = this._macroTileDictionary[toAnchor].Data.MovementType;
+					bool fromNarrativelyAccessible = this._macroTileDictionary[toAnchor].Data.IsNarrativelyAccessible;
 
-					// Combine capabilities just like MacroGraphManager.AddConnection does
-					MovementCapability combinedCapability = fromCapability | toCapability;
-					bool narritivelyAccessible = toNarrativelyAccessible &&
-					this._macroTileDictionary[toAnchor].Data.IsNarrativelyAccessible;
-					connections.Add(new MacroConnectionData(toBox, combinedCapability, narritivelyAccessible));
+					MacroConnectionData mcd = MacroConnectionData.CreateConnection(
+						toBox, fromCapability, toCapability, toNarrativelyAccessible, fromNarrativelyAccessible);
+
+					connections.Add(mcd);
 				}
 
-				this._macroAdjacencyList[fromBox] = connections;
+				macroAdjacencyList[fromBox] = connections;
 			}
 
+			// Update the ScriptableObject single source of truth
+			this.gridDataContainer.SetGridData(
+				microGridNodeDict,
+				macroGridNodeDict,
+				macroAdjacencyList
+			);
+
+
 			// ==========================================
-			// 4. UNIFIED SUMMARY REPORTING
+			// 4. UNIFIED SUMMARY REPORTING & CLEANUP
 			// ==========================================
 			this._summarizer.MakeSummary(
 				this._rectanglePacker,
@@ -367,7 +353,7 @@ namespace Kope.Feature.PathFinding {
 				stopwatch
 			);
 
-			// Free temporary buildup data. (We keep the baked dicts)
+			// Cleanup the temporary class dictionaries as requested
 			this._macroTileDictionary.Clear();
 			this._microTileDictionary.Clear();
 

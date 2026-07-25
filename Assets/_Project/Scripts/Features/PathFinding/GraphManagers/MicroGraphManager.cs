@@ -13,6 +13,7 @@ namespace Project.Scripts.Features.PathFinding.GraphManager {
 	/// Handles <c>O(1)</c> spatial lookups and evaluates local neighbor connectivity (ignoring static obstacles) 
 	/// for low-level path calculations like A* or Dijkstra.
 	/// </remarks>
+	[Serializable]
 	public class MicroGraphManager {
 		private readonly SerializableDictionary<Vec2Int, MicroGridNode> _microNodes;
 
@@ -67,26 +68,28 @@ namespace Project.Scripts.Features.PathFinding.GraphManager {
 	/// External systems (like AI controllers) should query this manager rather than interacting 
 	/// with the underlying micro/macro dictionaries directly.
 	/// </remarks>
+	/// 
+	[Serializable]
 	public class PathfindingGraphManager {
 
 		/// <summary>
 		/// Gets the Tier-1 macro graph responsible for region-to-region traversal calculations.
 		/// </summary>
-		public MacroGraphManager MacroGraph { get; }
+		private readonly MacroGraphManager _macroGraph;
 
 		/// <summary>
 		/// Gets the Tier-2 micro graph responsible for tile-by-tile local navigation.
 		/// </summary>
-		public MicroGraphManager MicroGraph { get; }
+		private readonly MicroGraphManager _microGraph;
 
 		public PathfindingGraphManager() {
-			MacroGraph = new MacroGraphManager();
-			MicroGraph = new MicroGraphManager();
+			this._macroGraph = new MacroGraphManager();
+			this._microGraph = new MicroGraphManager();
 		}
 
 		public PathfindingGraphManager(MacroGraphManager macroGraph, MicroGraphManager microGraph) {
-			MacroGraph = macroGraph ?? new MacroGraphManager();
-			MicroGraph = microGraph ?? new MicroGraphManager();
+			this._macroGraph = macroGraph ?? new MacroGraphManager();
+			this._microGraph = microGraph ?? new MicroGraphManager();
 		}
 
 		/// <summary>
@@ -95,14 +98,14 @@ namespace Project.Scripts.Features.PathFinding.GraphManager {
 		/// <param name="microNode">The micro node to register.</param>
 		public void RegisterMicroNode(MicroGridNode microNode) {
 			// 1. Add to the Micro graph
-			MicroGraph.RegisterNode(microNode);
+			this._microGraph.RegisterNode(microNode);
 
 			// 2. Add to the Parent Macro node's bounded list
 			if (microNode.ParentMacroGrid != null) {
 				microNode.ParentMacroGrid.AddMicroGridNodePosition(microNode.Position);
 
 				// 3. Ensure the macro node itself is registered in the macro graph
-				MacroGraph.RegisterNode(microNode.ParentMacroGrid);
+				this._macroGraph.RegisterNode(microNode.ParentMacroGrid);
 			} else {
 				Debug.LogWarning($"MicroGridNode at {microNode.Position} has no ParentMacroGrid assigned.");
 			}
@@ -112,7 +115,7 @@ namespace Project.Scripts.Features.PathFinding.GraphManager {
 		/// Registers a macro node. (Usually handled automatically by <see cref="RegisterMicroNode"/>).
 		/// </summary>
 		public void RegisterMacroNode(MacroGridNode macroNode) {
-			MacroGraph.RegisterNode(macroNode);
+			this._macroGraph.RegisterNode(macroNode);
 		}
 
 		/// <summary>
@@ -123,7 +126,7 @@ namespace Project.Scripts.Features.PathFinding.GraphManager {
 		/// <returns><c>true</c> if a valid micro node and its parent macro node were found; otherwise, <c>false</c>.</returns>
 		public bool TryGetMacroNodeFromPosition(Vec2Int position, out MacroGridNode macroNode) {
 			macroNode = null;
-			if (MicroGraph.TryGetNode(position, out MicroGridNode micro) && micro.ParentMacroGrid != null) {
+			if (this._microGraph.TryGetNode(position, out MicroGridNode micro) && micro.ParentMacroGrid != null) {
 				macroNode = micro.ParentMacroGrid;
 				return true;
 			}

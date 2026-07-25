@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Kope.Core.Attribute;
 using Kope.EntityIdentity;
 using UnityEngine;
 
@@ -26,9 +27,11 @@ namespace Kope.Feature.PathFinding {
 	/// and provides implicit conversions to and from Unity's <see cref="Vector2Int"/>.
 	/// </remarks>
 	[Serializable]
-	public readonly struct Vec2Int : IEquatable<Vec2Int> {
-		public int X { get; }
-		public int Y { get; }
+	public struct Vec2Int : IEquatable<Vec2Int> {
+		[SerializeField, ReadOnly] private int _x;
+		[SerializeField, ReadOnly] private int _y;
+		public readonly int X => this._x;
+		public readonly int Y => this._y;
 
 		/// <summary>
 		/// Cached hash code generated during construction for fast, zero-allocation dictionary lookups.
@@ -43,22 +46,27 @@ namespace Kope.Feature.PathFinding {
 		public static readonly Vec2Int Right = new(1, 0);
 
 		public Vec2Int(Vector2Int vector) {
-			this.X = vector.x;
-			this.Y = vector.y;
-			this._hashCode = HashCode.Combine(X, Y);
+			this._x = vector.x;
+			this._y = vector.y;
+			this._hashCode = HashCode.Combine(this._x, this._y);
+		}
+		public Vec2Int(Vec2Int vector) {
+			this._x = vector._x;
+			this._y = vector._y;
+			this._hashCode = HashCode.Combine(this._x, this._y);
 		}
 
-		public Vec2Int(int x, int y) {
-			this.X = x;
-			this.Y = y;
-			this._hashCode = HashCode.Combine(X, Y);
+		public Vec2Int(int _x, int _y) {
+			this._x = _x;
+			this._y = _y;
+			this._hashCode = HashCode.Combine(this._x, this._y);
 		}
 
 		public readonly bool Equals(Vec2Int other) {
 			return this.X == other.X && this.Y == other.Y;
 		}
 
-		public override bool Equals(object obj) {
+		public override readonly bool Equals(object obj) {
 			return obj is Vec2Int other && this.Equals(other);
 		}
 
@@ -73,8 +81,8 @@ namespace Kope.Feature.PathFinding {
 		public static implicit operator Vector2Int(Vec2Int v) => new(v.X, v.Y);
 		public static implicit operator Vec2Int(Vector2Int v) => new(v.x, v.y);
 
-		public override string ToString() => $"({X}, {Y})";
-		public override int GetHashCode() => this._hashCode;
+		public override readonly string ToString() => $"({X}, {Y})";
+		public override readonly int GetHashCode() => this._hashCode;
 	}
 
 
@@ -91,55 +99,74 @@ namespace Kope.Feature.PathFinding {
 	/// unnecessary Unity <see cref="UnityEngine.Object"/> wrapper footprint.
 	/// </para>
 	/// </remarks>
-	public readonly struct MicroGridNode : IEquatable<MicroGridNode> {
-		public Vec2Int Position { get; }
-		public bool IsStaticObstacle { get; }
-		public MacroGridNode ParentMacroGrid { get; }
+	[Serializable]
+	public struct MicroGridNode : IEquatable<MicroGridNode> {
+		/// <summary>
+		/// Base traversal cost for orthogonal (cardinal) movement.
+		/// Scaled by 10 (1.0 * 10) to enable fixed-point integer pathfinding
+		/// without floating-point overhead.
+		/// </summary>
+		public const int DIRECT_COST = 10;
+
+		/// <summary>
+		/// Base traversal cost for diagonal movement (sqrt(2) * 10 = 14.14, rounded to 14).
+		/// Provides an integer approximation of Euclidean distance for A* cost 
+		/// and heuristic evaluations.
+		/// </summary>
+		public const int DIAGONAL_COST = 14;
+		[SerializeField, ReadOnly] private Vec2Int _position;
+		[SerializeField, ReadOnly] private bool _isStaticObstacle;
+		[SerializeField, ReadOnly] private MacroGridNode _parentMacroGrid;
+
+
+		public readonly Vec2Int Position => this._position;
+		public readonly bool IsStaticObstacle => this._isStaticObstacle;
+		public readonly MacroGridNode ParentMacroGrid => this._parentMacroGrid;
 
 		public MicroGridNode(Vec2Int position, bool isStaticObstacle) {
-			this.Position = position;
-			this.IsStaticObstacle = isStaticObstacle;
-			this.ParentMacroGrid = null;
+			this._position = position;
+			this._isStaticObstacle = isStaticObstacle;
+			this._parentMacroGrid = null;
 		}
 
 		public MicroGridNode(Vec2Int position, bool isStaticObstacle, MacroGridNode parentMacroGrid) {
-			this.Position = position;
-			this.IsStaticObstacle = isStaticObstacle;
-			this.ParentMacroGrid = parentMacroGrid;
+			this._position = position;
+			this._isStaticObstacle = isStaticObstacle;
+			this._parentMacroGrid = parentMacroGrid;
 		}
 
 		public MicroGridNode(int x, int y, bool isStaticObstacle, MacroGridNode parentMacroGrid) {
-			this.Position = new Vec2Int(x, y);
-			this.IsStaticObstacle = isStaticObstacle;
-			this.ParentMacroGrid = parentMacroGrid;
+			this._position = new Vec2Int(x, y);
+			this._isStaticObstacle = isStaticObstacle;
+			this._parentMacroGrid = parentMacroGrid;
 		}
 
 		/// <summary>
 		/// Creates a copy of this node with modified optional parameters.
 		/// </summary>
-		public MicroGridNode CopyWith(Vec2Int? position = null, bool? isStaticObstacle = null,
+		public readonly MicroGridNode CopyWith(Vec2Int? position = null, bool? isStaticObstacle = null,
 		 MacroGridNode parentMacroGrid = null) {
 			return new MicroGridNode(
-				position ?? this.Position,
-				isStaticObstacle ?? this.IsStaticObstacle,
-				parentMacroGrid ?? this.ParentMacroGrid);
+				position ?? this._position,
+				isStaticObstacle ?? this._isStaticObstacle,
+				parentMacroGrid ?? this._parentMacroGrid);
 		}
 
-		public bool Equals(MicroGridNode other) {
-			return this.Position == other.Position &&
-				   this.IsStaticObstacle == other.IsStaticObstacle &&
-				   this.ParentMacroGrid == other.ParentMacroGrid;
+		public readonly bool Equals(MicroGridNode other) {
+			return this._position == other._position &&
+				   this._isStaticObstacle == other._isStaticObstacle &&
+				   this._parentMacroGrid == other._parentMacroGrid;
 		}
 
-		public override bool Equals(object obj) => obj is MicroGridNode other && this.Equals(other);
+		public override readonly bool Equals(object obj) => obj is MicroGridNode other && this.Equals(other);
 		public static bool operator ==(MicroGridNode left, MicroGridNode right) => left.Equals(right);
 		public static bool operator !=(MicroGridNode left, MicroGridNode right) => !left.Equals(right);
 
-		public override string ToString() {
+		public override readonly string ToString() {
 			return $"MicroGridNode(Position: {Position}, IsStaticObstacle: {IsStaticObstacle}, ParentMacroGrid: {ParentMacroGrid?.Bounds})";
 		}
 
-		public override int GetHashCode() => this.Position.GetHashCode();
+		public override readonly int GetHashCode() => this.Position.GetHashCode();
 	}
 
 	/// <summary>
@@ -154,10 +181,55 @@ namespace Kope.Feature.PathFinding {
 	/// and flexible runtime modification of region metadata.
 	/// </para>
 	/// </remarks>
+	[Serializable]
 	public sealed class MacroGridNode {
-		public BoundingBox Bounds { get; }
-		public TerrainType TerrainType { get; }
-		public MovementCapability AllowedTraversal { get; }
+		[SerializeField, ReadOnly] private BoundingBox _bounds;
+		[SerializeField, ReadOnly] private TerrainType _terrainType;
+		[SerializeField, ReadOnly] private MovementCapability _allowedTraversal;
+		public BoundingBox Bounds => this._bounds;
+		public TerrainType TerrainType => this._terrainType;
+		public MovementCapability AllowedTraversal => this._allowedTraversal;
+
+		private Vec2Int _directionCost = new(-1, -1);
+		/// <summary>
+		/// Gets the lazy-evaluated orthogonal (per-axis) traversal costs across the bounding box.
+		/// </summary>
+		/// <remarks>
+		/// Returns a <see cref="Vec2Int"/> because horizontal (X) and vertical (Y) traversal costs 
+		/// differ depending on the rectangular extent of the node.
+		/// </remarks>
+		public Vec2Int DirectionCost {
+			get {
+				if (this._directionCost.X < 0 || this._directionCost.Y < 0) {
+					this._directionCost = new Vec2Int(
+						this.Bounds.Size.X * MicroGridNode.DIRECT_COST,
+						this.Bounds.Size.Y * MicroGridNode.DIRECT_COST
+					);
+				}
+				return this._directionCost;
+			}
+		}
+		private int _diagonalCost = -1;
+
+		/// <summary>
+		/// Gets the lazy-evaluated Euclidean diagonal traversal cost across the bounding box.
+		/// </summary>
+		/// <remarks>
+		/// Calculated as the scaled hypotenuse (sqrt(W*W + H*H) * DIRECT_COST) rounded to an integer.
+		/// Unlike per-axis orthogonal costs, corner-to-corner diagonal distance is a single scalar 
+		/// that remains constant regardless of which diagonal path is chosen.
+		/// </remarks>
+		public int DiagonalCost {
+			get {
+				if (this._diagonalCost < 0) {
+					this._diagonalCost = Mathf.RoundToInt(Mathf.Sqrt(
+						this.Bounds.Size.X * this.Bounds.Size.X +
+						this.Bounds.Size.Y * this.Bounds.Size.Y
+					) * MicroGridNode.DIRECT_COST);
+				}
+				return this._diagonalCost;
+			}
+		}
 
 		/// <summary>
 		/// Internal list of micro grid node positions contained within this macro node's bounds.
@@ -183,10 +255,46 @@ namespace Kope.Feature.PathFinding {
 			TerrainType terrainType,
 			MovementCapability allowedTraversal,
 			List<Vec2Int> microGridsNodesPositions = null) {
-			Bounds = bounds;
-			TerrainType = terrainType;
-			AllowedTraversal = allowedTraversal;
-			microGridNodePositions = microGridsNodesPositions ?? new List<Vec2Int>();
+			this._bounds = bounds;
+			this._terrainType = terrainType;
+			this._allowedTraversal = allowedTraversal;
+			this.microGridNodePositions = microGridsNodesPositions ?? new List<Vec2Int>();
+		}
+
+		/// <summary>
+		/// Calculates the orthogonal transition cost between two macro nodes.
+		/// </summary>
+		/// <param name="to">The target macro node.</param>
+		/// <param name="from">The source macro node.</param>
+		/// <returns>A <see cref="Vec2Int"/> representing the per-axis center-to-center traversal costs.</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="to"/> or <paramref name="from"/> is null.</exception>
+		/// <remarks>
+		/// Evaluates the distance from the center of <paramref name="from"/> to the center of <paramref name="to"/> 
+		/// by summing their half-extents: (CostFrom / 2) + (CostTo / 2) = (CostFrom + CostTo) / 2.
+		/// </remarks>
+		public static Vec2Int GetDirectionalTraversalCost(MacroGridNode to, MacroGridNode from) {
+			if (to == null || from == null) {
+				throw new ArgumentNullException("MacroGridNode parameters cannot be null.");
+			}
+			return (to.DirectionCost + from.DirectionCost) / 2;
+		}
+
+		/// <summary>
+		/// Calculates the diagonal transition cost between two macro nodes.
+		/// </summary>
+		/// <param name="to">The target macro node.</param>
+		/// <param name="from">The source macro node.</param>
+		/// <returns>The scalar integer cost for diagonal center-to-center transition.</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="to"/> or <paramref name="from"/> is null.</exception>
+		/// <remarks>
+		/// Combines the half-hypotenuses of both bounding boxes to estimate region transitions: 
+		/// (DiagonalCostFrom / 2) + (DiagonalCostTo / 2) = (DiagonalCostFrom + DiagonalCostTo) / 2.
+		/// </remarks>
+		public static int GetDiagonalTraversalCost(MacroGridNode to, MacroGridNode from) {
+			if (to == null || from == null) {
+				throw new ArgumentNullException("MacroGridNode parameters cannot be null.");
+			}
+			return (to.DiagonalCost + from.DiagonalCost) / 2;
 		}
 
 		/// <summary>
@@ -235,14 +343,17 @@ namespace Kope.Feature.PathFinding {
 	/// Custom lightweight struct designed with pre-calculated hash codes for high-frequency spatial dictionary lookups,
 	/// avoiding the GC/overhead of Unity's native <see cref="Bounds"/> or <see cref="RectInt"/>.
 	/// </remarks>
-	public readonly struct BoundingBox : IEquatable<BoundingBox> {
-		public Vec2Int Min { get; }
-		public Vec2Int Max { get; }
+	[Serializable]
+	public struct BoundingBox : IEquatable<BoundingBox> {
+		[SerializeField, ReadOnly] private Vec2Int _min;
+		[SerializeField, ReadOnly] private Vec2Int _max;
+		public readonly Vec2Int Min => this._min;
+		public readonly Vec2Int Max => this._max;
 
 		/// <summary>
 		/// Gets the dimensions of the bounding box along the X and Y axes.
 		/// </summary>
-		public Vec2Int Size => this.Max - this.Min;
+		public readonly Vec2Int Size => this.Max - this.Min;
 
 		/// <summary>
 		/// Gets the width-to-height ratio of the bounding box. Returns -1 if height is zero.
@@ -260,35 +371,35 @@ namespace Kope.Feature.PathFinding {
 		private readonly int _hashCode;
 
 		public BoundingBox(Vec2Int min, Vec2Int max) {
-			this.Min = min;
-			this.Max = max;
-			this._hashCode = HashCode.Combine(Min, Max);
+			this._min = min;
+			this._max = max;
+			this._hashCode = HashCode.Combine(this._min, this._max);
 		}
 
 		public BoundingBox(int minX, int minY, int maxX, int maxY) {
-			this.Min = new Vec2Int(minX, minY);
-			this.Max = new Vec2Int(maxX, maxY);
-			this._hashCode = HashCode.Combine(Min, Max);
+			this._min = new Vec2Int(minX, minY);
+			this._max = new Vec2Int(maxX, maxY);
+			this._hashCode = HashCode.Combine(this._min, this._max);
 		}
 
 		/// <summary>
 		/// Determines whether the specified point lies inside or on the boundaries of this box.
 		/// </summary>
 		public readonly bool Contains(Vec2Int point) {
-			return point.X >= Min.X && point.X <= Max.X &&
-				   point.Y >= Min.Y && point.Y <= Max.Y;
+			return point.X >= this._min.X && point.X <= this._max.X &&
+				   point.Y >= this._min.Y && point.Y <= this._max.Y;
 		}
 
 		/// <summary>
 		/// Determines whether this bounding box overlaps with another bounding box.
 		/// </summary>
 		public readonly bool Intersects(BoundingBox other) {
-			return !(other.Min.X > Max.X || other.Max.X < Min.X ||
-					 other.Min.Y > Max.Y || other.Max.Y < Min.Y);
+			return !(other._min.X > this._max.X || other._max.X < this._min.X ||
+					 other._min.Y > this._max.Y || other._max.Y < this._min.Y);
 		}
 
 		public readonly bool Equals(BoundingBox other) {
-			return this.Min.Equals(other.Min) && this.Max.Equals(other.Max);
+			return this._min.Equals(other._min) && this._max.Equals(other._max);
 		}
 
 		public readonly override bool Equals(object obj) {
@@ -300,6 +411,6 @@ namespace Kope.Feature.PathFinding {
 		public static bool operator ==(BoundingBox left, BoundingBox right) => left.Equals(right);
 		public static bool operator !=(BoundingBox left, BoundingBox right) => !(left == right);
 
-		public readonly override string ToString() => $"BoundingBox(Min: {Min}, Max: {Max})";
+		public readonly override string ToString() => $"BoundingBox(Min: {this._min}, Max: {this._max})";
 	}
 }

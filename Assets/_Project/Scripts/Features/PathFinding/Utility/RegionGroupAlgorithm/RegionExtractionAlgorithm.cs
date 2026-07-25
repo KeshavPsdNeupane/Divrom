@@ -51,7 +51,7 @@ public class RegionExtractionAlgorithm {
 	// O(n) per call. Now, the comparer's spatial-hash-style mixing spreads adjacent coordinates
 	// across the full hash range, keeping Contains/Add close to true O(1) on real tile grids.
 	public Dictionary<Vec2Int, List<Vec2Int>> Extract(
-		SerializableDictionary<Vec2Int, HHSIMacroPathFindingTile> macroTileDictionary) {
+		Dictionary<Vec2Int, HHSIMacroPathFindingTile> macroTileDictionary) {
 
 		var visitedTiles = new HashSet<Vec2Int>(macroTileDictionary.Count);
 		var allRegions = new Dictionary<Vec2Int, List<Vec2Int>>();
@@ -83,7 +83,7 @@ public class RegionExtractionAlgorithm {
 	// a per-tile iterator allocation in the hot path.
 	private List<Vec2Int> ExploreRegion(
 			HashSet<Vec2Int> visitedTiles,
-			SerializableDictionary<Vec2Int, HHSIMacroPathFindingTile> _macroTileDictionary,
+			Dictionary<Vec2Int, HHSIMacroPathFindingTile> _macroTileDictionary,
 			Vec2Int anchorPos) {
 
 		var regionTiles = new List<Vec2Int>();

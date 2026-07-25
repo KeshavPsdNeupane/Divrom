@@ -2,7 +2,7 @@ using UnityEditor;
 using UnityEngine;
 #if UNITY_EDITOR
 namespace Kope.Feature.PathFinding.Editor {
-	[CustomEditor(typeof(PathChecker))]
+	[CustomEditor(typeof(PathFindingTileBaker))]
 	public class PathCheckerEditor : UnityEditor.Editor {
 		public override void OnInspectorGUI() {
 			DrawDefaultInspector();
@@ -19,7 +19,7 @@ namespace Kope.Feature.PathFinding.Editor {
 				MessageType.Info
 			);
 
-			PathChecker pathChecker = (PathChecker)target;
+			PathFindingTileBaker pathChecker = (PathFindingTileBaker)target;
 
 			EditorGUILayout.Space();
 			if (GUILayout.Button("Prepare Pathfinding Data For Bake")) {
