@@ -50,7 +50,6 @@ namespace Kope.AI.Utility {
 			private float biasWeight;
 			private bool isActive;
 
-
 			#region Debug
 			private float _lastRawScore; // Store the last raw score for debugging/visualization
 			private float _evaluatedScore; // Store the last evaluated score for debugging/visualization

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Kope.Component;
 using Kope.Component.Attack;
 using Kope.Component.Movement;
+using Kope.Core.Attribute;
 using Kope.Core.EntityComponentRegistry;
 using Kope.Core.LifeTimeManagement;
 using Kope.Core.Type.EnumAsset;
@@ -51,7 +52,7 @@ namespace Kope.Actor.States {
 		[SerializeField] private bool loadOnStart = true;
 
 		[Header("States")]
-		[Header("No need to worry about shared logic SOs here \n each entry is instantiated on init, \nso they can be reused as templates without risk of shared state.")]
+		[Message("No need to worry about shared logic SOs here  each entry is instantiated on init, so they can be reused as templates without risk of shared state.")]
 		[SerializeField] private AnimationStateData<AnimationStateProfile> defaultIdleStateData;
 		[SerializeField] private EnumTable<AnimationStateData<AnimationStateMappedProfile>> animationStateMap;
 

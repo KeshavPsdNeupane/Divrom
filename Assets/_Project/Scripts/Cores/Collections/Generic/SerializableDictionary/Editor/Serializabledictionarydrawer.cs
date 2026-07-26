@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using Kope.Core.Attribute;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
@@ -24,16 +25,17 @@ namespace Kope.Core.Collections.Editor {
 	///    the flattened children are drawn with ordinary PropertyField calls, so a value that is
 	///    itself a SerializableDictionary&lt;,&gt; recurses back into this same drawer.
 	///
-	/// PAGINATION: dictionaries with more than PAGE_SIZE entries are split into pages of
-	/// PAGE_SIZE rows. Only the current page's key/value properties are ever measured or drawn
-	/// — Unity's SerializedProperty height/draw calls are the expensive part of this drawer, so
-	/// this is what keeps a dictionary with hundreds or thousands of entries responsive. A
-	/// toolbar (prev/next buttons, a type-a-page-number field, and a "showing X–Y of Z"
-	/// readout) is inserted between the dictionary's foldout header and its rows whenever
-	/// pagination is active. Because only the visible page is ever inspected, TABLE vs.
-	/// COVERING mode is decided per-page rather than once for the whole dictionary — a huge
-	/// dictionary can render as a table on one page and switch to covering mode on another if
-	/// tall elements happen to land there.
+	/// PAGINATION: dictionaries with more entries than the page size are split into pages.
+	/// Page size defaults to DEFAULT_PAGE_SIZE (20) and can be overridden per-field with
+	/// [DictionaryPageSize(N)] on the dictionary field itself. Only the current page's key/value
+	/// properties are ever measured or drawn — Unity's SerializedProperty height/draw calls are
+	/// the expensive part of this drawer, so this is what keeps a dictionary with hundreds or
+	/// thousands of entries responsive. A toolbar (prev/next buttons, a type-a-page-number
+	/// field, and a "showing X–Y of Z" readout) is inserted between the dictionary's foldout
+	/// header and its rows whenever pagination is active. Because only the visible page is ever
+	/// inspected, TABLE vs. COVERING mode is decided per-page rather than once for the whole
+	/// dictionary — a huge dictionary can render as a table on one page and switch to covering
+	/// mode on another if tall elements happen to land there.
 	/// </summary>
 	[CustomPropertyDrawer(typeof(SerializableDictionary<,>), true)]
 	public class SerializableDictionaryDrawer : PropertyDrawer {
@@ -59,7 +61,9 @@ namespace Kope.Core.Collections.Editor {
 		private const float LIST_CONTENT_INDENT = 20f;
 
 		// ── Pagination ───────────────────────────────────────────────────────────
-		private const int PAGE_SIZE = 20;
+		// Fallback when a dictionary field has no [DictionaryPageSize] attribute. Override
+		// per-field with [DictionaryPageSize(N)] on the dictionary field — see ResolvePageSize.
+		private const int DEFAULT_PAGE_SIZE = 20;
 		private const float PAGE_NAV_BUTTON_WIDTH = 24f;
 		private const float PAGE_FIELD_WIDTH = 40f;
 
@@ -136,16 +140,28 @@ namespace Kope.Core.Collections.Editor {
 			return true;
 		}
 
-		private static int GetTotalPages(int totalCount) => totalCount <= 0 ? 1 : Mathf.CeilToInt(totalCount / (float)PAGE_SIZE);
+		private static int GetTotalPages(int totalCount, int pageSize) => totalCount <= 0 ? 1 : Mathf.CeilToInt(totalCount / (float)pageSize);
 
 		// Reads the stored page for this field, clamps it into range for the current element
 		// count (writing the clamped value back), and reports the total page count.
-		private int GetOrClampPage(string path, int totalCount, out int totalPages) {
-			totalPages = GetTotalPages(totalCount);
+		private int GetOrClampPage(string path, int totalCount, int pageSize, out int totalPages) {
+			totalPages = GetTotalPages(totalCount, pageSize);
 			int page = _pages.TryGetValue(path, out int cachedPage) ? cachedPage : 0;
 			page = Mathf.Clamp(page, 0, totalPages - 1);
 			_pages[path] = page;
 			return page;
+		}
+
+		// Reads the [DictionaryPageSize] override off the field this drawer instance is bound
+		// to (fieldInfo is set by Unity per-property, so this is correct even for nested
+		// dictionaries drawn recursively), falling back to DEFAULT_PAGE_SIZE. Resolved fresh
+		// wherever it's needed rather than cached, since it's cheap and that keeps every call
+		// site — including the onAdd/onRemove/onReorder lambdas in BuildList, which are created
+		// once but invoked across many later frames — trivially correct.
+		private int ResolvePageSize() {
+			DictionaryPageSizeAttribute attr = fieldInfo?.GetCustomAttribute<DictionaryPageSizeAttribute>();
+			int size = attr?.PageSize ?? DEFAULT_PAGE_SIZE;
+			return size > 0 ? size : DEFAULT_PAGE_SIZE;
 		}
 
 		private static object[] BuildPageBackingList(int pageCount) => new object[Mathf.Max(pageCount, 0)];
@@ -173,11 +189,12 @@ namespace Kope.Core.Collections.Editor {
 				ReorderableList list = GetList(property, keysProp, valuesProp);
 				string path = property.propertyPath;
 
+				int pageSize = ResolvePageSize();
 				int totalCount = keysProp.arraySize;
-				bool paginated = totalCount > PAGE_SIZE;
-				int currentPage = GetOrClampPage(path, totalCount, out int totalPages);
-				int pageStart = paginated ? currentPage * PAGE_SIZE : 0;
-				int pageCount = paginated ? Mathf.Min(PAGE_SIZE, totalCount - pageStart) : totalCount;
+				bool paginated = totalCount > pageSize;
+				int currentPage = GetOrClampPage(path, totalCount, pageSize, out int totalPages);
+				int pageStart = paginated ? currentPage * pageSize : 0;
+				int pageCount = paginated ? Mathf.Min(pageSize, totalCount - pageStart) : totalCount;
 
 				bool tableMode = true;
 
@@ -206,8 +223,8 @@ namespace Kope.Core.Collections.Editor {
 					if (newPage != currentPage) {
 						currentPage = newPage;
 						_pages[path] = currentPage;
-						pageStart = currentPage * PAGE_SIZE;
-						pageCount = Mathf.Min(PAGE_SIZE, totalCount - pageStart);
+						pageStart = currentPage * pageSize;
+						pageCount = Mathf.Min(pageSize, totalCount - pageStart);
 						RebindList(pageStart, pageCount);
 					}
 					y = pagerRect.yMax + ROW_SPACING;
@@ -238,11 +255,12 @@ namespace Kope.Core.Collections.Editor {
 			if (!property.isExpanded)
 				return EditorGUIUtility.singleLineHeight;
 
+			int pageSize = ResolvePageSize();
 			int totalCount = keysProp.arraySize;
-			bool paginated = totalCount > PAGE_SIZE;
-			int currentPage = GetOrClampPage(property.propertyPath, totalCount, out int totalPages);
-			int pageStart = paginated ? currentPage * PAGE_SIZE : 0;
-			int pageCount = paginated ? Mathf.Min(PAGE_SIZE, totalCount - pageStart) : totalCount;
+			bool paginated = totalCount > pageSize;
+			int currentPage = GetOrClampPage(property.propertyPath, totalCount, pageSize, out int totalPages);
+			int pageStart = paginated ? currentPage * pageSize : 0;
+			int pageCount = paginated ? Mathf.Min(pageSize, totalCount - pageStart) : totalCount;
 
 			bool tableMode = ComputeTableMode(keysProp, valuesProp, pageStart, pageCount);
 
@@ -589,7 +607,7 @@ namespace Kope.Core.Collections.Editor {
 
 				// Jump to whichever page now holds the freshly added row so it's visible
 				// immediately instead of silently landing off-screen on a big dictionary.
-				_pages[path] = GetTotalPages(newSize) - 1;
+				_pages[path] = GetTotalPages(newSize, ResolvePageSize()) - 1;
 			};
 
 			// FIX: Lock step removal 
@@ -597,8 +615,9 @@ namespace Kope.Core.Collections.Editor {
 				// l.index is local to the CURRENT PAGE (the list's backing IList only ever
 				// contains that page's placeholder entries) — translate it into an absolute
 				// index before touching keysProp/valuesProp.
-				int currentPage = GetOrClampPage(path, keysProp.arraySize, out int _);
-				int pageStart = keysProp.arraySize > PAGE_SIZE ? currentPage * PAGE_SIZE : 0;
+				int pageSize = ResolvePageSize();
+				int currentPage = GetOrClampPage(path, keysProp.arraySize, pageSize, out _);
+				int pageStart = keysProp.arraySize > pageSize ? currentPage * pageSize : 0;
 
 				int index = l.index >= 0 ? l.index + pageStart : keysProp.arraySize - 1;
 				if (index < 0 || index >= keysProp.arraySize) return;
@@ -622,7 +641,7 @@ namespace Kope.Core.Collections.Editor {
 
 				// The page we were on may no longer exist (e.g. we removed the last row on the
 				// last page) — clamp back into range for whatever's left.
-				_pages[path] = Mathf.Clamp(currentPage, 0, GetTotalPages(keysProp.arraySize) - 1);
+				_pages[path] = Mathf.Clamp(currentPage, 0, GetTotalPages(keysProp.arraySize, pageSize) - 1);
 			};
 
 			list.onReorderCallbackWithDetails = (_, oldIndex, newIndex) => {
@@ -630,8 +649,9 @@ namespace Kope.Core.Collections.Editor {
 				// Unity no longer auto-reorders keysProp for us on drag — we now move both
 				// arrays ourselves. Dragging is visually confined to rows on the current page,
 				// so oldIndex/newIndex are both local to that page; offset them the same way.
-				int currentPage = GetOrClampPage(path, keysProp.arraySize, out int _);
-				int pageStart = keysProp.arraySize > PAGE_SIZE ? currentPage * PAGE_SIZE : 0;
+				int pageSize = ResolvePageSize();
+				int currentPage = GetOrClampPage(path, keysProp.arraySize, pageSize, out int _);
+				int pageStart = keysProp.arraySize > pageSize ? currentPage * pageSize : 0;
 
 				int actualOld = oldIndex + pageStart;
 				int actualNew = newIndex + pageStart;

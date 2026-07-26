@@ -17,9 +17,14 @@ namespace ThirdParty.PriorityQueeu {
 
 
 	/// <summary>
-	/// Interface for objects that expose a cost/priority for use in a priority queue.
+	/// Defines an object that exposes a cost or priority value, typically used for priority queue evaluations.
 	/// </summary>
-	/// <typeparam name="TPriority">The type of the cost/priority.</typeparam>
+	/// <remarks>
+	/// This interface is intentionally unconstrained to support both reference types (classes) and value types (structs). 
+	/// If implementing this interface on a <c>struct</c>, it is strongly recommended to also implement 
+	/// <see cref="System.IEquatable{T}"/> to prevent performance overhead from boxing when used in generic collections or priority queues.
+	/// </remarks>
+	/// <typeparam name="TPriority">The type of the cost or priority metric.</typeparam>
 	public interface IHasCost<TPriority> {
 		TPriority GetCost();
 	}
@@ -53,10 +58,10 @@ namespace ThirdParty.PriorityQueeu {
 		/// </code>
 		/// </summary>
 		public PriorityQueueSimple(int capacity = 16, Comparer<TPriority> comparer = null) {
-			_nodes = new (TElement, TPriority)[Math.Max(4, capacity)];
-			_size = 0;
-			_comparer = comparer ?? Comparer<TPriority>.Default;
-			_indexMap = new Dictionary<TElement, int>();
+			this._nodes = new (TElement, TPriority)[Math.Max(4, capacity)];
+			this._size = 0;
+			this._comparer = comparer ?? Comparer<TPriority>.Default;
+			this._indexMap = new Dictionary<TElement, int>();
 		}
 
 		/// <summary>Returns the number of elements in the queue.</summary>
@@ -71,7 +76,7 @@ namespace ThirdParty.PriorityQueeu {
 		public TElement[] GetElements() {
 			TElement[] elements = new TElement[_size];
 			for (int i = 0; i < _size; i++) {
-				elements[i] = _nodes[i].Element;
+				elements[i] = this._nodes[i].Element;
 			}
 			return elements;
 		}
@@ -87,7 +92,7 @@ namespace ThirdParty.PriorityQueeu {
 		/// using an explicit priority value.
 		/// </summary>
 		public void EnqueueOrUpdate(TElement element, TPriority priority) {
-			if (_indexMap.ContainsKey(element)) {
+			if (this._indexMap.ContainsKey(element)) {
 				TryUpdatePriority(element, priority);
 			} else {
 				Enqueue((element, priority));
@@ -100,16 +105,16 @@ namespace ThirdParty.PriorityQueeu {
 		/// See <see cref="EnqueueOrUpdate(TElement)"/> for a method that also updates priority if the element already exists.
 		/// </summary>
 		public bool TryEnqueue(TElement element) {
-			if (_indexMap.ContainsKey(element)) return false;
+			if (this._indexMap.ContainsKey(element)) return false;
 			Enqueue((element, element.GetCost()));
 			return true;
 		}
 
 		private void Enqueue((TElement Element, TPriority Priority) node) {
-			if (_size == _nodes.Length) Array.Resize(ref _nodes, Math.Max(4, _size * 2));
-			_nodes[_size] = node;
-			_indexMap[node.Element] = _size;
-			MoveUp(_size++);
+			if (this._size == this._nodes.Length) Array.Resize(ref this._nodes, Math.Max(4, this._size * 2));
+			this._nodes[this._size] = node;
+			this._indexMap[node.Element] = this._size;
+			this.MoveUp(this._size++);
 		}
 
 		/// <summary>
@@ -117,12 +122,12 @@ namespace ThirdParty.PriorityQueeu {
 		/// </summary>
 		/// <exception cref="InvalidOperationException">Thrown when the queue is empty.</exception>
 		public TElement Dequeue() {
-			if (_size == 0) throw new InvalidOperationException("Queue is empty.");
-			var (Element, _) = _nodes[0];
-			_indexMap.Remove(Element);
-			_nodes[0] = _nodes[--_size];
-			if (_size > 0) {
-				_indexMap[_nodes[0].Element] = 0;
+			if (this._size == 0) throw new InvalidOperationException("Queue is empty.");
+			var (Element, _) = this._nodes[0];
+			this._indexMap.Remove(Element);
+			this._nodes[0] = this._nodes[--this._size];
+			if (this._size > 0) {
+				this._indexMap[this._nodes[0].Element] = 0;
 				MoveDown(0);
 			}
 			return Element;
@@ -130,7 +135,7 @@ namespace ThirdParty.PriorityQueeu {
 
 		/// <summary>Attempts to dequeue the minimal element, returns false if empty.</summary>
 		public bool TryDequeue(out TElement element) {
-			if (_size == 0) {
+			if (this._size == 0) {
 				element = default;
 				return false;
 			}
@@ -143,20 +148,20 @@ namespace ThirdParty.PriorityQueeu {
 		/// </summary>
 		/// <exception cref="InvalidOperationException">Thrown when the queue is empty.</exception>
 		public TElement Peek() {
-			if (_size == 0) throw new InvalidOperationException("Queue is empty.");
-			return _nodes[0].Element;
+			if (this._size == 0) throw new InvalidOperationException("Queue is empty.");
+			return this._nodes[0].Element;
 		}
 
 		/// <summary>
 		/// Peeks the minimal element and its priority without removing it.
 		/// </summary>
 		public bool TryPeek(out TElement element, out TPriority priority) {
-			if (_size == 0) {
+			if (this._size == 0) {
 				element = default;
 				priority = default;
 				return false;
 			}
-			var (Element, Priority) = _nodes[0];
+			var (Element, Priority) = this._nodes[0];
 			element = Element;
 			priority = Priority;
 			return true;
@@ -169,9 +174,9 @@ namespace ThirdParty.PriorityQueeu {
 
 		/// <summary>Clears all items from the queue.</summary>
 		public void Clear() {
-			Array.Clear(_nodes, 0, _size);
-			_size = 0;
-			_indexMap.Clear();
+			Array.Clear(this._nodes, 0, this._size);
+			this._size = 0;
+			this._indexMap.Clear();
 		}
 
 
@@ -187,11 +192,11 @@ namespace ThirdParty.PriorityQueeu {
 		/// Attempts to update the priority of an existing element. Returns true if updated, false if not found.
 		/// </summary>
 		public bool TryUpdatePriority(TElement element, TPriority newPriority) {
-			if (!_indexMap.TryGetValue(element, out int idx)) return false;
-			var old = _nodes[idx].Priority;
-			_nodes[idx] = (element, newPriority);
-			if (_comparer.Compare(newPriority, old) < 0) MoveUp(idx);
-			else if (_comparer.Compare(newPriority, old) > 0) MoveDown(idx);
+			if (!this._indexMap.TryGetValue(element, out int idx)) return false;
+			var old = this._nodes[idx].Priority;
+			this._nodes[idx] = (element, newPriority);
+			if (this._comparer.Compare(newPriority, old) < 0) MoveUp(idx);
+			else if (this._comparer.Compare(newPriority, old) > 0) MoveDown(idx);
 			return true;
 		}
 
@@ -199,11 +204,11 @@ namespace ThirdParty.PriorityQueeu {
 		/// Adds an element and immediately removes and returns the minimal element.
 		/// </summary>
 		public TElement EnqueueDequeue(TElement element, TPriority priority) {
-			if (_size != 0) {
-				var (Element, Priority) = _nodes[0];
-				if (_comparer.Compare(priority, Priority) > 0) {
-					_indexMap.Remove(Element);
-					_indexMap[element] = 0;
+			if (this._size != 0) {
+				var (Element, Priority) = this._nodes[0];
+				if (this._comparer.Compare(priority, Priority) > 0) {
+					this._indexMap.Remove(Element);
+					this._indexMap[element] = 0;
 					MoveDown((element, priority), 0);
 					return Element;
 				}
@@ -216,17 +221,17 @@ namespace ThirdParty.PriorityQueeu {
 		/// Returns true if removed, false if not found.
 		/// </summary>
 		public bool TryRemove(TElement element) {
-			if (!_indexMap.TryGetValue(element, out int idx))
+			if (!this._indexMap.TryGetValue(element, out int idx))
 				return false;
 
-			var removedPriority = _nodes[idx].Priority;
-			var lastNode = _nodes[--_size];
-			_nodes[idx] = lastNode;
-			_indexMap.Remove(element);
+			var removedPriority = this._nodes[idx].Priority;
+			var lastNode = this._nodes[--this._size];
+			this._nodes[idx] = lastNode;
+			this._indexMap.Remove(element);
 
-			if (idx < _size) {
-				_indexMap[lastNode.Element] = idx;
-				if (_comparer.Compare(lastNode.Priority, removedPriority) < 0) MoveUp(idx);
+			if (idx < this._size) {
+				this._indexMap[lastNode.Element] = idx;
+				if (this._comparer.Compare(lastNode.Priority, removedPriority) < 0) MoveUp(idx);
 				else MoveDown(idx);
 			}
 
@@ -238,13 +243,13 @@ namespace ThirdParty.PriorityQueeu {
 			var node = _nodes[index];
 			while (index > 0) {
 				int parent = (index - 1) >> Log2Arity;
-				if (_comparer.Compare(node.Priority, _nodes[parent].Priority) >= 0) break;
-				_nodes[index] = _nodes[parent];
-				_indexMap[_nodes[index].Element] = index;
+				if (this._comparer.Compare(node.Priority, this._nodes[parent].Priority) >= 0) break;
+				this._nodes[index] = this._nodes[parent];
+				this._indexMap[this._nodes[index].Element] = index;
 				index = parent;
 			}
-			_nodes[index] = node;
-			_indexMap[node.Element] = index;
+			this._nodes[index] = node;
+			this._indexMap[node.Element] = index;
 		}
 
 		private void MoveDown(int index) {
@@ -255,34 +260,34 @@ namespace ThirdParty.PriorityQueeu {
 				int minChild = child;
 				int childUpper = Math.Min(child + Arity, size);
 				for (int i = child + 1; i < childUpper; i++)
-					if (_comparer.Compare(_nodes[i].Priority, _nodes[minChild].Priority) < 0) minChild = i;
+					if (this._comparer.Compare(this._nodes[i].Priority, this._nodes[minChild].Priority) < 0) minChild = i;
 
-				if (_comparer.Compare(node.Priority, _nodes[minChild].Priority) <= 0) break;
-				_nodes[index] = _nodes[minChild];
-				_indexMap[_nodes[index].Element] = index;
+				if (this._comparer.Compare(node.Priority, this._nodes[minChild].Priority) <= 0) break;
+				this._nodes[index] = this._nodes[minChild];
+				this._indexMap[this._nodes[index].Element] = index;
 				index = minChild;
 			}
-			_nodes[index] = node;
-			_indexMap[node.Element] = index;
+			this._nodes[index] = node;
+			this._indexMap[node.Element] = index;
 		}
 
 		private void MoveDown((TElement Element, TPriority Priority) node, int index) {
 			int child;
 			(TElement Element, TPriority Priority)[] nodes = _nodes;
-			int size = _size;
+			int size = this._size;
 			while ((child = (index << Log2Arity) + 1) < size) {
 				int minChild = child;
 				int childUpper = Math.Min(child + Arity, size);
 				for (int i = child + 1; i < childUpper; i++)
-					if (_comparer.Compare(nodes[i].Priority, nodes[minChild].Priority) < 0) minChild = i;
+					if (this._comparer.Compare(this._nodes[i].Priority, this._nodes[minChild].Priority) < 0) minChild = i;
 
-				if (_comparer.Compare(node.Priority, nodes[minChild].Priority) <= 0) break;
+				if (this._comparer.Compare(node.Priority, this._nodes[minChild].Priority) <= 0) break;
 				nodes[index] = nodes[minChild];
-				_indexMap[nodes[index].Element] = index;
+				this._indexMap[nodes[index].Element] = index;
 				index = minChild;
 			}
 			nodes[index] = node;
-			_indexMap[node.Element] = index;
+			this._indexMap[node.Element] = index;
 		}
 		#endregion
 	}
