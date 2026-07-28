@@ -101,7 +101,7 @@ public class MacroPathfinderGizmos {
 		}
 	}
 
-	private static int CountOf(System.Collections.Generic.IEnumerable<BoundingBox> set) {
+	private static int CountOf(IEnumerable<BoundingBox> set) {
 		int n = 0;
 		foreach (var _ in set) n++;
 		return n;

@@ -109,14 +109,19 @@ namespace Kope.Feature.PathFinding.Node {
 		/// <returns>Computed integer directional path traversal cost.</returns>
 		/// <exception cref="ArgumentNullException">Thrown if either node parameter is null.</exception>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static int GetTraversalCost(BoundingBox to, BoundingBox from) {
-			if (to == null || from == null) {
-				throw new ArgumentNullException("MacroGridNode parameters cannot be null.");
-			}
+		public static int GetManHattenTraversalCost(BoundingBox to, BoundingBox from) {
 			int manhattanDistance = Vec2Int.ManhattanDistanceTo(from.Center, to.Center);
 			return manhattanDistance * TRAVERSAL_COST;
 		}
+		public static int GetTraversalCostEuclidean(BoundingBox to, BoundingBox from) {
+			float euclideanDistance = Vec2Int.EuclideanDistanceTo(from.Center, to.Center);
+			return Mathf.RoundToInt(euclideanDistance * TRAVERSAL_COST);
+		}
 
+		public static int GetTraversalCostOctile(BoundingBox to, BoundingBox from) {
+			int octileDistance = Vec2Int.OctileDistanceTo(from.Center, to.Center);
+			return octileDistance * TRAVERSAL_COST;
+		}
 		/// <summary>
 		/// Adds a unique micro grid position to this region's spatial registry.
 		/// </summary>

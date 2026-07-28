@@ -113,6 +113,12 @@ namespace Project.Scripts.Features.PathFinding.GraphManager {
 			return this._macroGraph.GetTraversableConnections(box, entityMovementCapability, out connections);
 		}
 
-	}
+
+
 		#endregion
+
+		public IEnumerable<(Vec2Int startPos, Vec2Int endPos)> GiveRandomTestPoints(int randomPathCount, int seed = 0) {
+			return this._microGraph.GiveRandomTestPointsLinq(randomPathCount, seed);
+		}
+	}
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Kope.Core.Collections;
 using Kope.Feature.PathFinding.Node;
 using UnityEngine;
@@ -76,5 +77,35 @@ namespace Project.Scripts.Features.PathFinding.GraphManager {
 				}
 			}
 		}
+
+#if UNITY_EDITOR
+		/// <summary>
+		/// Generates a specified number of random start and end coordinate pairs from the 
+		/// micro node collection for testing purposes.
+		/// </summary>
+		/// <param name="randomPathCount"></param>
+		/// <param name="seed"></param>
+		/// <returns></returns>
+		public IEnumerable<(Vec2Int startPos, Vec2Int endPos)> GiveRandomTestPointsLinq(int randomPathCount, int seed = 0) {
+			if (this._microNodes == null || this._microNodes.Count < 2) {
+				yield break;
+			}
+
+			var keys = this._microNodes.Keys.AsEnumerable().ToArray();
+			int count = keys.Length;
+
+			UnityEngine.Random.InitState(seed);
+
+			for (int i = 0; i < randomPathCount; i++) {
+				int startIdx = UnityEngine.Random.Range(0, count);
+				int endIdx;
+				do {
+					endIdx = UnityEngine.Random.Range(0, count);
+				} while (endIdx == startIdx && count > 1);
+
+				yield return (keys[startIdx], keys[endIdx]);
+			}
+		}
 	}
+#endif
 }

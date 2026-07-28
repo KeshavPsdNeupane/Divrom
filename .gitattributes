@@ -42,4 +42,4 @@
 [Tt]emp/**    merge=ours
 # for scene
 Assets/_Project/Scenes/*.unity filter=lfs diff=lfs merge=lfs -text
-Divrom/Assets/_Project/Resources/HugeFile/** filter=lfs diff=lfs merge=lfs -text
+Assets/_Project/Resources/HugeFile/** filter=lfs diff=lfs merge=lfs -text

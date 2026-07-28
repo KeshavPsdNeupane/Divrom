@@ -3,18 +3,19 @@ using System.Runtime.CompilerServices;
 using Kope.Feature.PathFinding.Node;
 using ThirdParty.PriorityQueeu;
 
-public readonly struct MacroPathFindingNode : IHasCost<float>, IEquatable<MacroPathFindingNode> {
+public readonly struct MacroPathFindingNode : IHasCost<int>, IEquatable<MacroPathFindingNode> {
 	public readonly MacroGridNode Node;
-	public readonly float GCost;
-	public readonly float HCost;
+	public readonly int GCost;
+	public readonly int HCost;
 	public readonly BoundingBox? Parent;
 
-	public float FCost {
+
+	public int FCost {
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		get => GCost + HCost;
 	}
 
-	public MacroPathFindingNode(MacroGridNode node, float gCost, float hCost, BoundingBox? parent) {
+	public MacroPathFindingNode(MacroGridNode node, int gCost, int hCost, BoundingBox? parent) {
 		Node = node;
 		GCost = gCost;
 		HCost = hCost;
@@ -22,7 +23,7 @@ public readonly struct MacroPathFindingNode : IHasCost<float>, IEquatable<MacroP
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public float GetCost() => FCost;
+	public int GetCost() => FCost;
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public bool Equals(MacroPathFindingNode other) {

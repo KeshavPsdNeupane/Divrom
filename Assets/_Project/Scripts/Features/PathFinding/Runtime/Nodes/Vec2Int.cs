@@ -84,7 +84,22 @@ namespace Kope.Feature.PathFinding.Node {
 		public static int ManhattanDistanceTo(Vec2Int firstCenter, Vec2Int secondCenter) {
 			return Mathf.Abs(firstCenter.X - secondCenter.X) + Mathf.Abs(firstCenter.Y - secondCenter.Y);
 		}
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static float EuclideanDistanceTo(Vec2Int firstCenter, Vec2Int secondCenter) {
+			int x = firstCenter.X - secondCenter.X;
+			int y = firstCenter.Y - secondCenter.Y;
+			return Mathf.Sqrt(x * x + y * y);
+		}
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static int OctileDistanceTo(Vec2Int first, Vec2Int second) {
+			int dx = Mathf.Abs(first.X - second.X);
+			int dy = Mathf.Abs(first.Y - second.Y);
 
+			int min = dx < dy ? dx : dy;
+			int max = dx > dy ? dx : dy;
+
+			return max + Mathf.FloorToInt(0.41421356f * min);
+		}
 		#endregion
 
 		#region Constructors
@@ -165,7 +180,7 @@ namespace Kope.Feature.PathFinding.Node {
 		/// <c>[x, x + 1)</c> under this project's <see cref="Mathf.FloorToInt"/> world-to-grid
 		/// convention. Its true center therefore sits at <c>x + 0.5</c>, not <c>x</c>.
 		/// <para>
-		/// Prefer this over the implicit <see cref="UnityEngine.Vector3"/> cast whenever the result
+		/// Prefer this over the implicit <see cref="Vector3"/> cast whenever the result
 		/// will be rendered, positioned, or compared against transform positions — the raw cast lands
 		/// on the cell's corner and reproduces the grid/world half-cell offset bug.
 		/// </para>

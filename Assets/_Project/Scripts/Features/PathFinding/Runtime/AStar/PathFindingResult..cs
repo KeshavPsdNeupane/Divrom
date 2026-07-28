@@ -2,10 +2,21 @@
 using System.Collections.Generic;
 using Kope.Feature.PathFinding.Node;
 
+public enum CostCalculationType {
+	Manhattan,
+	Euclidean,
+	Octile
+}
+
 public class PathFindingResult<Tlist> {
 	public List<Tlist> Path;
-	public int TotalNodeSearches;
+	public int TotalNodes;
 	public int TotalNodeEvaluations;
+	public int TotalNodeExpansions;
+	public int TotalNodeReevaluations;
+	public CostCalculationType CostCalculationType;
+	public float Greediness;
+
 }
 
 
