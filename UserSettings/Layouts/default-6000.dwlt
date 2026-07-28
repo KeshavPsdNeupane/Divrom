@@ -410,7 +410,7 @@ MonoBehaviour:
   m_Pos:
     serializedVersion: 2
     x: 0
-    y: 93
+    y: 24
     width: 237
     height: 548
   m_SerializedDataModeController:
@@ -486,7 +486,7 @@ MonoBehaviour:
   m_Pos:
     serializedVersion: 2
     x: 0
-    y: 57
+    y: 0
     width: 1920
     height: 36
   m_SerializedDataModeController:
@@ -3622,8 +3622,8 @@ MonoBehaviour:
     m_TextWithWhitespace: "Library Populator\u200B"
   m_Pos:
     serializedVersion: 2
-    x: 1306
-    y: 326
+    x: 1
+    y: 257
     width: 264
     height: 315
   m_SerializedDataModeController:
@@ -3662,8 +3662,8 @@ MonoBehaviour:
     m_TextWithWhitespace: "Grid Auto Slicer\u200B"
   m_Pos:
     serializedVersion: 2
-    x: 1306
-    y: 93
+    x: 1
+    y: 24
     width: 264
     height: 207
   m_SerializedDataModeController:
@@ -3746,8 +3746,8 @@ MonoBehaviour:
     m_TextWithWhitespace: "Scene\u200B"
   m_Pos:
     serializedVersion: 2
-    x: 238
-    y: 93
+    x: 239
+    y: 24
     width: 1066
     height: 548
   m_SerializedDataModeController:
@@ -4324,7 +4324,7 @@ MonoBehaviour:
   m_Position:
     m_Target: {x: 18.561054, y: -4.2937183, z: -0.053566396}
     speed: 2
-    m_Value: {x: 18.570354, y: -4.1234636, z: -0.057300545}
+    m_Value: {x: 18.561054, y: -4.2937183, z: -0.053566396}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -4377,7 +4377,7 @@ MonoBehaviour:
   m_Size:
     m_Target: 7.92471
     speed: 2
-    m_Value: 8.298125
+    m_Value: 7.92471
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -4886,8 +4886,7 @@ MonoBehaviour:
     - m_rawData: 568105584918860248
     - m_rawData: 568105584918860250
     - m_rawData: 568105584918860252
-    - m_rawData: 568105584918860468
-    - m_rawData: 568105584918860474
+    - m_rawData: 568105584918860254
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -4947,6 +4946,7 @@ MonoBehaviour:
     - m_rawData: 568105584918860248
     - m_rawData: 568105584918860250
     - m_rawData: 568105584918860252
+    - m_rawData: 568105584918860254
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -5036,7 +5036,7 @@ MonoBehaviour:
   m_Pos:
     serializedVersion: 2
     x: 0
-    y: 667
+    y: 598
     width: 1571
     height: 330
   m_SerializedDataModeController:
@@ -5075,8 +5075,8 @@ MonoBehaviour:
     m_TextWithWhitespace: "Inspector\u200B"
   m_Pos:
     serializedVersion: 2
-    x: 1572
-    y: 93
+    x: 1573
+    y: 24
     width: 347
     height: 904
   m_SerializedDataModeController:

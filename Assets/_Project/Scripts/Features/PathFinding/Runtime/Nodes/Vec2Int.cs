@@ -10,9 +10,12 @@ namespace Kope.Feature.PathFinding.Node {
 	/// </summary>
 	/// <remarks>
 	/// <para>
-	/// Implemented as a high-performance struct optimized for spatial lookups. It features 
-	/// pre-computed hash code caching to minimize dictionary allocation and lookup overhead,
-	/// alongside explicit and implicit conversions with Unity's native <see cref="Vector2Int"/>.
+	/// Implemented as an ultra-lightweight 8-byte struct (<c>sizeof(int) * 2</c>) optimized for high-frequency 
+	/// grid lookups and A* pathfinding algorithms. 
+	/// </para>
+	/// <para>
+	/// Features a deterministic, process-independent prime hash calculation (multiplier <c>397</c>) that eliminates 
+	/// field serialization overhead and guarantees zero domain reload desync when stored in ScriptableObject dictionaries.
 	/// </para>
 	/// </remarks>
 	[Serializable]
@@ -39,11 +42,6 @@ namespace Kope.Feature.PathFinding.Node {
 		[SerializeField, ReadOnly] private int _x;
 		[SerializeField, ReadOnly] private int _y;
 
-		/// <summary>
-		/// Cached hash code generated during construction for fast, zero-allocation dictionary lookups.
-		/// </summary>
-		private readonly int _hashCode;
-
 		#endregion
 
 		#region Properties
@@ -63,15 +61,13 @@ namespace Kope.Feature.PathFinding.Node {
 		/// <summary>Gets the squared Euclidean magnitude of the vector (avoids square root overhead).</summary>
 		public readonly int SquareMagnitude {
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			get {
-				return this._x * this._x + this._y * this._y;
-			}
+			get => this._x * this._x + this._y * this._y;
 		}
+
+		/// <summary>Gets the Euclidean magnitude of the vector.</summary>
 		public readonly float Magnitude {
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			get {
-				return Mathf.Sqrt(this.SquareMagnitude);
-			}
+			get => Mathf.Sqrt(this.SquareMagnitude);
 		}
 
 		/// <summary>
@@ -79,8 +75,7 @@ namespace Kope.Feature.PathFinding.Node {
 		/// </summary>
 		/// <remarks>
 		/// Operates directly on <see cref="Vec2Int"/> coordinates rather than <see cref="BoundingBox"/> instances 
-		/// to maintain a clean separation of concerns. This decouples the distance metric from box geometry, 
-		/// allowing the method to evaluate arbitrary coordinate pairs (such as region centers) independently and reusable.
+		/// to maintain a clean separation of concerns, allowing distance evaluations on arbitrary coordinate pairs.
 		/// </remarks>
 		/// <param name="firstCenter">The first coordinate point.</param>
 		/// <param name="secondCenter">The second coordinate point.</param>
@@ -90,7 +85,6 @@ namespace Kope.Feature.PathFinding.Node {
 			return Mathf.Abs(firstCenter.X - secondCenter.X) + Mathf.Abs(firstCenter.Y - secondCenter.Y);
 		}
 
-
 		#endregion
 
 		#region Constructors
@@ -99,21 +93,34 @@ namespace Kope.Feature.PathFinding.Node {
 		public Vec2Int(Vector2Int vector) {
 			this._x = vector.x;
 			this._y = vector.y;
-			this._hashCode = HashCode.Combine(this._x, this._y);
 		}
 
 		/// <summary>Initializes a new instance of <see cref="Vec2Int"/> copying an existing instance.</summary>
 		public Vec2Int(Vec2Int vector) {
 			this._x = vector._x;
 			this._y = vector._y;
-			this._hashCode = HashCode.Combine(this._x, this._y);
 		}
 
 		/// <summary>Initializes a new instance of <see cref="Vec2Int"/> with explicit X and Y coordinate values.</summary>
 		public Vec2Int(int x, int y) {
 			this._x = x;
 			this._y = y;
-			this._hashCode = HashCode.Combine(this._x, this._y);
+		}
+		public Vec2Int(Vector3 vector) {
+			this._x = Mathf.FloorToInt(vector.x);
+			this._y = Mathf.FloorToInt(vector.y);
+		}
+
+		/// <summary>Initializes a new instance of <see cref="Vec2Int"/> by truncating floating-point 
+		/// coordinates to integers. Also takes the floor of negative values (e.g., -1.5 becomes -2).</summary>
+		/// <remarks>
+		/// This constructor is useful for converting world-space positions to grid coordinates,
+		/// ensuring that any point within a grid cell maps to the correct integer index.
+		/// </remarks>
+		/// </summary>
+		public Vec2Int(float x, float y) {
+			this._x = Mathf.FloorToInt(x);
+			this._y = Mathf.FloorToInt(y);
 		}
 
 		#endregion
@@ -149,13 +156,49 @@ namespace Kope.Feature.PathFinding.Node {
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Vec2Int operator /(Vec2Int a, int scalar) => new(a.X / scalar, a.Y / scalar);
 
-		public static implicit operator Vector2Int(Vec2Int v) => new(v.X, v.Y);
-		public static implicit operator Vec2Int(Vector2Int v) => new(v.x, v.y);
+		//	public static implicit operator UnityEngine.Vector3(Vec2Int v) => new(v.X, v.Y, 0f);
+		/// <summary>
+		/// Converts this cell index to the world-space position of its center point.
+		/// </summary>
+		/// <remarks>
+		/// A cell index is a half-open interval — index <c>x</c> spans the world-space range
+		/// <c>[x, x + 1)</c> under this project's <see cref="Mathf.FloorToInt"/> world-to-grid
+		/// convention. Its true center therefore sits at <c>x + 0.5</c>, not <c>x</c>.
+		/// <para>
+		/// Prefer this over the implicit <see cref="UnityEngine.Vector3"/> cast whenever the result
+		/// will be rendered, positioned, or compared against transform positions — the raw cast lands
+		/// on the cell's corner and reproduces the grid/world half-cell offset bug.
+		/// </para>
+		/// </remarks>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public readonly Vector3 ToWorldCenter() => new(this._x + 0.5f, this._y + 0.5f, 0f);
+
+		#endregion
+
+
 
 		public override readonly string ToString() => $"({X}, {Y})";
 
+		/// <summary>
+		/// Computes a process-independent, deterministic hash code for fast dictionary lookups.
+		/// </summary>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public override readonly int GetHashCode() => this._hashCode;
+		public override readonly int GetHashCode() => GenerateHashCode(this._x, this._y);
+		#region Private Helpers
+
+		/// <summary>
+		/// Generates a deterministic hash code using prime multiplication.
+		/// Guaranteed to yield identical hash values across Unity Domain Reloads and editor restarts.
+		/// </summary>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static int GenerateHashCode(int x, int y) {
+			unchecked {
+				int hash = 17;
+				hash = (hash * 397) ^ x;
+				hash = (hash * 397) ^ y;
+				return hash;
+			}
+		}
 
 		#endregion
 	}

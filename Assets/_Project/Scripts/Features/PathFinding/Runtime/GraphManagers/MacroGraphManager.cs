@@ -87,14 +87,16 @@ namespace Project.Scripts.Features.PathFinding.GraphManager {
 		}
 
 		/// <summary>
-		/// Determines whether an entity with specified movement capabilities can traverse this connection.
+		/// Determines whether an entity with the specified movement capabilities can traverse this connection.
 		/// </summary>
-		/// <param name="capability">The movement capability flags of the traversing entity.</param>
-		/// <returns><c>true</c> if narrative access is granted and the entity satisfies required movement flags; otherwise, <c>false</c>.</returns>
+		/// <param name="capability">The movement capability bitmask of the traversing entity.</param>
+		/// <returns>
+		/// <c>true</c> if <see cref="IsNarrativelyAccessible"/> is <c>true</c> and <paramref name="capability"/> 
+		/// shares at least one flag with <c>AllowedTraversal</c>; otherwise, <c>false</c>.
+		/// </returns>
 		public readonly bool IsTraversable(MovementCapability capability) {
-			return IsNarrativelyAccessible && (AllowedTraversal & capability) == capability;
+			return IsNarrativelyAccessible && (AllowedTraversal & capability) != MovementCapability.None;
 		}
-
 		public readonly bool Equals(MacroConnectionData other) {
 			return ToBound == other.ToBound &&
 				   AllowedTraversal == other.AllowedTraversal &&
@@ -149,6 +151,9 @@ namespace Project.Scripts.Features.PathFinding.GraphManager {
 			SerializableDictionary<BoundingBox, List<MacroConnectionData>> adjacencyDict) {
 			this._macroNodes = macroNodes;
 			this._adjacencyDict = adjacencyDict;
+			// Debug.Log($"MacroGraphManager initialized with {macroNodes.Count} nodes and {adjacencyDict.Count} adjacency entries.");
+			// this._macroNodes.PrintFirstNEntries(5, "Macro Nodes");
+			// this._adjacencyDict.PrintFirstNEntries(5, "Adjacency List");
 		}
 
 		/// <summary>

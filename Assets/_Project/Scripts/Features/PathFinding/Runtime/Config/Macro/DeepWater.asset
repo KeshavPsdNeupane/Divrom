@@ -15,5 +15,5 @@ MonoBehaviour:
   data:
     terrainType: 20
     movementType: 2
-    isNarrativelyAccessible: 0
+    isNarrativelyAccessible: 1
     tileColor: {r: 0.16078429, g: 0.2433907, b: 0.8, a: 0.11764706}

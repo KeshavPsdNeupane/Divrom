@@ -9,9 +9,14 @@ namespace Kope.Feature.PathFinding.Node {
 	/// Represents an axis-aligned 2D bounding box defined by minimum and maximum grid points.
 	/// </summary>
 	/// <remarks>
-	/// A custom lightweight struct optimized with pre-calculated hash codes for high-frequency 
-	/// spatial dictionary lookups, entirely avoiding the memory footprint and overhead of Unity's 
-	/// native floating-point <see cref="Bounds"/> or <see cref="RectInt"/>.
+	/// <para>
+	/// A custom lightweight 16-byte struct optimized for high-frequency spatial dictionary lookups and region slicing,
+	/// completely avoiding the memory footprint and overhead of Unity's native floating-point <see cref="Bounds"/> or <see cref="RectInt"/>.
+	/// </para>
+	/// <para>
+	/// Hashes are generated dynamically by flattening all four scalar components through a 397 prime multiplication chain,
+	/// ensuring maximum bit dispersion, zero bucket cancellation, and complete Domain Reload stability.
+	/// </para>
 	/// </remarks>
 	[Serializable]
 	public struct BoundingBox : IEquatable<BoundingBox> {
@@ -19,11 +24,6 @@ namespace Kope.Feature.PathFinding.Node {
 
 		[SerializeField, ReadOnly] private Vec2Int _min;
 		[SerializeField, ReadOnly] private Vec2Int _max;
-
-		/// <summary>
-		/// Cached hash code constructed at instantiation to ensure safe, zero-allocation dictionary operations.
-		/// </summary>
-		private readonly int _hashCode;
 
 		#endregion
 
@@ -43,16 +43,11 @@ namespace Kope.Feature.PathFinding.Node {
 
 		/// <summary>
 		/// Gets the dimensions of the bounding box along the X and Y axes.
-		/// Calculated on the fly to eliminate serialized state storage bloat across scriptable objects,
-		/// and aggressively inlined to completely remove method call overhead in tight pathfinding loops.
+		/// Computed dynamically to eliminate serialized state bloat, and aggressively inlined for zero call overhead.
 		/// </summary>
 		public readonly Vec2Int Size {
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			get {
-				// Aligns with Unity's native math API design: aggressively inline trivial 
-				// property getters to ensure maximum execution speed in high-frequency code paths.
-				return this.Max - this.Min;
-			}
+			get => this.Max - this.Min;
 		}
 
 		/// <summary>
@@ -62,11 +57,8 @@ namespace Kope.Feature.PathFinding.Node {
 		/// </summary>
 		public readonly Vec2Int Center {
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			get {
-				return new Vec2Int((this.Min.X + this.Max.X) >> 1, (this.Min.Y + this.Max.Y) >> 1);
-			}
+			get => new((this.Min.X + this.Max.X) >> 1, (this.Min.Y + this.Max.Y) >> 1);
 		}
-
 
 		/// <summary>
 		/// Gets the width-to-height aspect ratio of the bounding box. Returns -1 if height is zero.
@@ -74,8 +66,8 @@ namespace Kope.Feature.PathFinding.Node {
 		public readonly float AspectRatio {
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get {
-				if (Size.Y == 0) return -1f;
-				return (float)Size.X / Size.Y;
+				if (this.Size.Y == 0) return -1f;
+				return (float)this.Size.X / this.Size.Y;
 			}
 		}
 
@@ -87,14 +79,12 @@ namespace Kope.Feature.PathFinding.Node {
 		public BoundingBox(Vec2Int min, Vec2Int max) {
 			this._min = min;
 			this._max = max;
-			this._hashCode = HashCode.Combine(this._min, this._max);
 		}
 
 		/// <summary>Initializes a bounding box using individual scalar boundary parameters.</summary>
 		public BoundingBox(int minX, int minY, int maxX, int maxY) {
 			this._min = new Vec2Int(minX, minY);
 			this._max = new Vec2Int(maxX, maxY);
-			this._hashCode = HashCode.Combine(this._min, this._max);
 		}
 
 		#endregion
@@ -119,17 +109,22 @@ namespace Kope.Feature.PathFinding.Node {
 					 other._min.Y > this._max.Y || other._max.Y < this._min.Y);
 		}
 
+		/// <summary>Determines whether this bounding box is structurally equal to another.</summary>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly bool Equals(BoundingBox other) {
 			return this._min.Equals(other._min) && this._max.Equals(other._max);
 		}
 
-		public readonly override bool Equals(object obj) {
+		/// <summary>Determines whether this bounding box is equal to a target object.</summary>
+		public override readonly bool Equals(object obj) {
 			return obj is BoundingBox other && this.Equals(other);
 		}
 
+		/// <summary>
+		/// Computes a process-independent, deterministic hash code by flattening all 4 scalar boundary coordinates.
+		/// </summary>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public readonly override int GetHashCode() => this._hashCode;
+		public override readonly int GetHashCode() => GenerateHashCode(this._min, this._max);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool operator ==(BoundingBox left, BoundingBox right) => left.Equals(right);
@@ -137,7 +132,27 @@ namespace Kope.Feature.PathFinding.Node {
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool operator !=(BoundingBox left, BoundingBox right) => !(left == right);
 
-		public readonly override string ToString() => $"BoundingBox(Min: {this._min}, Max: {this._max})";
+		public override readonly string ToString() => $"BoundingBox(Min: {this._min}, Max: {this._max})";
+
+		#endregion
+
+		#region Private Helpers
+
+		/// <summary>
+		/// Generates a deterministic hash code by directly cascading all four scalar coordinates (Min.X, Min.Y, Max.X, Max.Y) 
+		/// through a 397 prime multiplier. Prevents sub-hash bit cancellation and remains stable across Domain Reloads.
+		/// </summary>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static int GenerateHashCode(Vec2Int min, Vec2Int max) {
+			unchecked {
+				int hash = 17;
+				hash = (hash * 397) ^ min.X;
+				hash = (hash * 397) ^ min.Y;
+				hash = (hash * 397) ^ max.X;
+				hash = (hash * 397) ^ max.Y;
+				return hash;
+			}
+		}
 
 		#endregion
 	}

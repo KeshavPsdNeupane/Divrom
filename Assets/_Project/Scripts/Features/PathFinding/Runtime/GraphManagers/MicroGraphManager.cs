@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Kope.Core.Collections;
 using Kope.Feature.PathFinding.Node;
+using UnityEngine;
 
 namespace Project.Scripts.Features.PathFinding.GraphManager {
 
@@ -23,8 +24,9 @@ namespace Project.Scripts.Features.PathFinding.GraphManager {
 
 		public MicroGraphManager(SerializableDictionary<Vec2Int, MicroGridNode> microNodes) {
 			this._microNodes = microNodes;
+			//	Debug.Log($"MicroGraphManager initialized with {microNodes.Count} nodes.");
+			//this._microNodes.PrintFirstNEntries(5, "Micro Nodes");
 		}
-
 		/// <summary>
 		/// Registers or overwrites a micro grid node in the graph.
 		/// </summary>
@@ -50,7 +52,12 @@ namespace Project.Scripts.Features.PathFinding.GraphManager {
 		/// Attempts to retrieve a micro grid node at the specified coordinate.
 		/// </summary>
 		public bool TryGetNode(Vec2Int position, out MicroGridNode node) {
-			return this._microNodes.TryGetValue(position, out node);
+			if (!this._microNodes.TryGetValue(position, out node)) {
+				Debug.LogWarning($"No micro node found at position {position}. It may not exist in the graph.");
+				return false;
+			}
+			//			Debug.Log($"Micro node found at position {position}: {node}");
+			return true;
 		}
 
 		/// <summary>

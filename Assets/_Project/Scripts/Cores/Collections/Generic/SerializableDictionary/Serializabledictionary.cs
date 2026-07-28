@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 
 namespace Kope.Core.Collections {
@@ -89,6 +90,26 @@ namespace Kope.Core.Collections {
 		public void Clear() {
 			this._dict.Clear();
 			this._isDirty = true;
+		}
+
+		public void PrintFirstNEntries(int n, string label) {
+			int count = 0;
+			if (n <= 0) {
+				Debug.LogWarning("Requested to print zero or negative number of entries. No output will be shown.");
+				return;
+			}
+			if (this._dict.Count == 0) {
+				Debug.LogWarning("The dictionary is empty. No entries to print.");
+				return;
+			}
+			StringBuilder sb = new StringBuilder();
+			sb.AppendLine($"Printing first {n} entries of SerializableDictionary<{typeof(TKey).Name}, {typeof(TValue).Name}> ({label}):");
+			foreach (var kvp in this._dict) {
+				sb.AppendLine($"Key: {kvp.Key}, Value: {kvp.Value}");
+				count++;
+				if (count >= n) break;
+			}
+			Debug.Log(sb.ToString());
 		}
 
 		public bool Contains(KeyValuePair<TKey, TValue> item) =>

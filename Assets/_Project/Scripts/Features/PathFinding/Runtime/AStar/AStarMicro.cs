@@ -1,5 +1,4 @@
 using Kope.Feature.PathFinding.Node;
-using UnityEngine;
 
 public struct MicroPathFindingNode {
 	public MicroGridNode Node;
