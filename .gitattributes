@@ -1,6 +1,5 @@
 # Auto-detect text files and normalize line endings
 * text=auto
-
 # Force text files to use LF in repository
 *.cs     text diff=csharp
 *.shader text
@@ -8,7 +7,6 @@
 *.json   text
 *.xml    text
 *.asmdef text
-
 # Treat Unity YAML files as text for proper merging
 *.unity  text merge=unityyamlmerge eol=lf
 *.prefab text merge=unityyamlmerge eol=lf
@@ -18,7 +16,6 @@
 *.asset  text merge=unityyamlmerge eol=lf
 *.mask   text merge=unityyamlmerge eol=lf
 *.meta   text merge=unityyamlmerge eol=lf
-
 # Binary files
 *.fbx    binary
 *.png    binary
@@ -40,7 +37,9 @@
 *.zip    binary
 *.7z     binary
 *.unitypackage binary
-
 # Ignore merge for lock and cache files
 [Ll]ibrary/** merge=ours
 [Tt]emp/**    merge=ours
+# for scene
+Assets/_Project/Scenes/*.unity filter=lfs diff=lfs merge=lfs -text
+Divrom/Assets/_Project/Resources/HugeFile/** filter=lfs diff=lfs merge=lfs -text
