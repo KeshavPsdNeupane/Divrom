@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 1920
     height: 986
   m_ShowMode: 4
-  m_Title: Scene
+  m_Title: Hierarchy
   m_RootView: {fileID: 5}
   m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
@@ -4322,9 +4322,9 @@ MonoBehaviour:
   m_AudioPlay: 0
   m_DebugDrawModesUseInteractiveLightBakingData: 0
   m_Position:
-    m_Target: {x: 18.77884, y: -0.35883325, z: -0.13986915}
+    m_Target: {x: 18.561054, y: -4.2937183, z: -0.053566396}
     speed: 2
-    m_Value: {x: 18.77884, y: -0.35883325, z: -0.13986915}
+    m_Value: {x: 18.570354, y: -4.1234636, z: -0.057300545}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -4375,9 +4375,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 16.555004
+    m_Target: 7.92471
     speed: 2
-    m_Value: 16.555004
+    m_Value: 8.298125
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -4836,7 +4836,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/_Project/Scripts/Features/AI/UtilityAi
+    - Assets/_Project/_ThirdParty/PriorityQueue
     m_Globs: []
     m_ProductIds: 
     m_AnyWithAssetOrigin: 0
@@ -4846,47 +4846,48 @@ MonoBehaviour:
   m_ViewMode: 1
   m_StartGridSize: 74
   m_LastFolders:
-  - Assets/_Project/Scripts/Features/AI/UtilityAi
+  - Assets/_Project/_ThirdParty/PriorityQueue
   m_LastFoldersGridSize: 74
   m_LastProjectPath: /mnt/Development/GameDevelopment/Unity/projects/example/Divrom
   m_LockTracker:
     m_IsLocked: 0
   m_LastLocalAssetsSearchArea: 1
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 879}
+    scrollPos: {x: 0, y: 47}
     m_SelectedIDs:
-    - m_rawData: 568105584918860190
+    - m_rawData: 568105584918860600
     m_LastClickedID:
-      m_rawData: 568105584918860190
+      m_rawData: 568105584918860600
     m_ExpandedIDs:
     - m_rawData: 0
-    - m_rawData: 568105584918860158
-    - m_rawData: 568105584918860160
-    - m_rawData: 568105584918860162
-    - m_rawData: 568105584918860164
-    - m_rawData: 568105584918860166
-    - m_rawData: 568105584918860168
-    - m_rawData: 568105584918860172
-    - m_rawData: 568105584918860174
-    - m_rawData: 568105584918860176
-    - m_rawData: 568105584918860178
-    - m_rawData: 568105584918860180
-    - m_rawData: 568105584918860182
-    - m_rawData: 568105584918860184
-    - m_rawData: 568105584918860186
-    - m_rawData: 568105584918860188
-    - m_rawData: 568105584918860190
-    - m_rawData: 568105584918860192
-    - m_rawData: 568105584918860194
-    - m_rawData: 568105584918860196
-    - m_rawData: 568105584918860198
-    - m_rawData: 568105584918860200
     - m_rawData: 568105584918860202
     - m_rawData: 568105584918860204
     - m_rawData: 568105584918860206
-    - m_rawData: 568105584918860418
-    - m_rawData: 568105584918860420
-    - m_rawData: 568105584918865484
+    - m_rawData: 568105584918860208
+    - m_rawData: 568105584918860210
+    - m_rawData: 568105584918860212
+    - m_rawData: 568105584918860214
+    - m_rawData: 568105584918860216
+    - m_rawData: 568105584918860218
+    - m_rawData: 568105584918860220
+    - m_rawData: 568105584918860222
+    - m_rawData: 568105584918860224
+    - m_rawData: 568105584918860226
+    - m_rawData: 568105584918860228
+    - m_rawData: 568105584918860230
+    - m_rawData: 568105584918860232
+    - m_rawData: 568105584918860234
+    - m_rawData: 568105584918860236
+    - m_rawData: 568105584918860238
+    - m_rawData: 568105584918860240
+    - m_rawData: 568105584918860242
+    - m_rawData: 568105584918860244
+    - m_rawData: 568105584918860246
+    - m_rawData: 568105584918860248
+    - m_rawData: 568105584918860250
+    - m_rawData: 568105584918860252
+    - m_rawData: 568105584918860468
+    - m_rawData: 568105584918860474
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -4920,31 +4921,32 @@ MonoBehaviour:
       m_rawData: 0
     m_ExpandedIDs:
     - m_rawData: 0
-    - m_rawData: 568105584918860158
-    - m_rawData: 568105584918860160
-    - m_rawData: 568105584918860162
-    - m_rawData: 568105584918860164
-    - m_rawData: 568105584918860166
-    - m_rawData: 568105584918860168
-    - m_rawData: 568105584918860170
-    - m_rawData: 568105584918860172
-    - m_rawData: 568105584918860174
-    - m_rawData: 568105584918860176
-    - m_rawData: 568105584918860178
-    - m_rawData: 568105584918860180
-    - m_rawData: 568105584918860182
-    - m_rawData: 568105584918860184
-    - m_rawData: 568105584918860186
-    - m_rawData: 568105584918860188
-    - m_rawData: 568105584918860190
-    - m_rawData: 568105584918860192
-    - m_rawData: 568105584918860194
-    - m_rawData: 568105584918860196
-    - m_rawData: 568105584918860198
-    - m_rawData: 568105584918860200
     - m_rawData: 568105584918860202
     - m_rawData: 568105584918860204
     - m_rawData: 568105584918860206
+    - m_rawData: 568105584918860208
+    - m_rawData: 568105584918860210
+    - m_rawData: 568105584918860212
+    - m_rawData: 568105584918860214
+    - m_rawData: 568105584918860216
+    - m_rawData: 568105584918860218
+    - m_rawData: 568105584918860220
+    - m_rawData: 568105584918860222
+    - m_rawData: 568105584918860224
+    - m_rawData: 568105584918860226
+    - m_rawData: 568105584918860228
+    - m_rawData: 568105584918860230
+    - m_rawData: 568105584918860232
+    - m_rawData: 568105584918860234
+    - m_rawData: 568105584918860236
+    - m_rawData: 568105584918860238
+    - m_rawData: 568105584918860240
+    - m_rawData: 568105584918860242
+    - m_rawData: 568105584918860244
+    - m_rawData: 568105584918860246
+    - m_rawData: 568105584918860248
+    - m_rawData: 568105584918860250
+    - m_rawData: 568105584918860252
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 

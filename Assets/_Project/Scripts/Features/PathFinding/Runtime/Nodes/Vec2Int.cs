@@ -67,6 +67,29 @@ namespace Kope.Feature.PathFinding.Node {
 				return this._x * this._x + this._y * this._y;
 			}
 		}
+		public readonly float Magnitude {
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get {
+				return Mathf.Sqrt(this.SquareMagnitude);
+			}
+		}
+
+		/// <summary>
+		/// Calculates the Manhattan distance between two 2D integer points.
+		/// </summary>
+		/// <remarks>
+		/// Operates directly on <see cref="Vec2Int"/> coordinates rather than <see cref="BoundingBox"/> instances 
+		/// to maintain a clean separation of concerns. This decouples the distance metric from box geometry, 
+		/// allowing the method to evaluate arbitrary coordinate pairs (such as region centers) independently and reusable.
+		/// </remarks>
+		/// <param name="firstCenter">The first coordinate point.</param>
+		/// <param name="secondCenter">The second coordinate point.</param>
+		/// <returns>The calculated integer Manhattan distance.</returns>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static int ManhattanDistanceTo(Vec2Int firstCenter, Vec2Int secondCenter) {
+			return Mathf.Abs(firstCenter.X - secondCenter.X) + Mathf.Abs(firstCenter.Y - secondCenter.Y);
+		}
+
 
 		#endregion
 

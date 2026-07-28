@@ -179,12 +179,12 @@ namespace Kope.EntityIdentity {
 			: base(name, EntityNature.DYNAMIC) {
 			this.Relation = relation;
 			if (raceEnum == RaceEnum.All) {
-				throw new System.ArgumentException(RaceErrorMessage);
+				throw new ArgumentException(RaceErrorMessage);
 			}
 			this.Race = raceEnum;
 
 			if (genderEnum == GenderEnum.NEUTRAL) {
-				throw new System.ArgumentException(GenderErrorMessage);
+				throw new ArgumentException(GenderErrorMessage);
 			}
 			this.Gender = genderEnum;
 

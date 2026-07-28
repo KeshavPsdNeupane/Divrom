@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using Kope.EntityIdentity;
 using Kope.Feature.PathFinding.Node;
 using UnityEngine;
 
@@ -16,6 +18,10 @@ namespace Project.Scripts.Features.PathFinding.GraphManager {
 		/// Gets the Tier-2 micro graph responsible for tile-by-tile local navigation.
 		/// </summary>
 		private readonly MicroGraphManager _microGraph;
+
+
+		public int MacroNodeCount => this._macroGraph.MacroNodeCount;
+		public int MicroNodeCount => this._microGraph.MicroNodeCount;
 
 		public PathfindingGraphManager() {
 			this._macroGraph = new MacroGraphManager();
@@ -56,6 +62,12 @@ namespace Project.Scripts.Features.PathFinding.GraphManager {
 			}
 		}
 
+
+		#region  Macro Node Management
+
+		public bool TryGetMacroNode(BoundingBox box, [MaybeNullWhen(false)] out MacroGridNode macroNode) {
+			return this._macroGraph.TryGetNode(box, out macroNode);
+		}
 		/// <summary>
 		/// Registers a macro node. (Usually handled automatically by <see cref="RegisterMicroNode"/>).
 		/// </summary>
@@ -94,5 +106,13 @@ namespace Project.Scripts.Features.PathFinding.GraphManager {
 			}
 			return false;
 		}
+
+		public bool GetNeighboringMacroNodesConnectionData(
+			BoundingBox box, MovementCapability entityMovementCapability,
+			out IEnumerable<MacroConnectionData> connections) {
+			return this._macroGraph.GetTraversableConnections(box, entityMovementCapability, out connections);
+		}
+
 	}
+		#endregion
 }

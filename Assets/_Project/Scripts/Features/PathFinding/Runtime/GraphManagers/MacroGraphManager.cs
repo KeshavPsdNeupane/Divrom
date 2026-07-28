@@ -126,14 +126,10 @@ namespace Project.Scripts.Features.PathFinding.GraphManager {
 	/// </remarks>
 	[Serializable]
 	public class MacroGraphManager {
-
-		/// <summary>
-		/// Cached empty list returned when querying connections for unregistered nodes to avoid GC allocations.
-		/// </summary>
-		private static readonly List<MacroConnectionData> EmptyConnections = new();
-
 		private readonly SerializableDictionary<BoundingBox, MacroGridNode> _macroNodes;
 		private readonly SerializableDictionary<BoundingBox, List<MacroConnectionData>> _adjacencyDict;
+
+		public int MacroNodeCount => this._macroNodes.Count;
 
 		/// <summary>
 		/// Initializes an empty instance of the <see cref="MacroGraphManager"/> class.
@@ -304,13 +300,21 @@ namespace Project.Scripts.Features.PathFinding.GraphManager {
 		/// <param name="from">Origin macro node bounding box key.</param>
 		/// <param name="capability">Movement capabilities of the traversing entity.</param>
 		/// <returns>A collection of traversable <see cref="MacroConnectionData"/> instances.</returns>
-		public IEnumerable<MacroConnectionData> GetTraversableConnections(BoundingBox from, MovementCapability capability) {
-			var connections = this._adjacencyDict.TryGetValue(from, out var list)
-				? list
-				: EmptyConnections;
-
-			// Leverages ZLinq value-enumerable filtering before materializing the list
-			return connections.AsValueEnumerable().Where(c => c.IsTraversable(capability)).ToList();
+		public bool GetTraversableConnections(
+			BoundingBox from, MovementCapability capability,
+			out IEnumerable<MacroConnectionData> connections) {
+			connections = null;
+			if (!this._adjacencyDict.TryGetValue(from, out var list)) {
+				return false;
+			}
+			connections = list;
+			// Leverages ZLinq value-enumerable filtering before materializing the list,
+			// why use ZLinq? Because it avoids unnecessary allocations and improves 
+			// performance in high-frequency pathfinding scenarios.
+			// as this method is called frequently during pathfinding, we want to 
+			// avoid unnecessary allocations.
+			connections = connections.AsValueEnumerable().Where(c => c.IsTraversable(capability)).ToList();
+			return true;
 		}
 
 		/// <summary>

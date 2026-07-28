@@ -7,46 +7,58 @@ using Project.Scripts.Features.PathFinding.GraphManager;
 using ThirdParty.PriorityQueeu;
 using UnityEngine;
 
-public struct MacroPathFindingNode : IHasCost<float>, IEquatable<MacroPathFindingNode> {
-	public MacroGridNode Node;
-	public float GCost;
-	public float HCost;
-	public readonly float FCost {
+public readonly struct MacroPathFindingNode : IHasCost<float>, IEquatable<MacroPathFindingNode> {
+	public readonly MacroGridNode Node;
+	public readonly float GCost;
+	public readonly float HCost;
+	public readonly BoundingBox? Parent;
+
+	public float FCost {
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		get { return GCost + HCost; }
+		get => GCost + HCost;
 	}
-	public BoundingBox? Parent;
 
 	public MacroPathFindingNode(MacroGridNode node, float gCost, float hCost, BoundingBox? parent) {
-		this.Node = node;
-		this.GCost = gCost;
-		this.HCost = hCost;
-		this.Parent = parent;
+		Node = node;
+		GCost = gCost;
+		HCost = hCost;
+		Parent = parent;
 	}
 
-	public readonly float GetCost() => this.FCost;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public float GetCost() => FCost;
 
-	public readonly bool Equals(MacroPathFindingNode other) {
-		if (this.Node == null) return other.Node == null;
-		return this.Node.Equals(other.Node);
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public bool Equals(MacroPathFindingNode other) {
+		// why only compare the Node? Because the other fields (GCost, HCost, Parent)
+		// are not unique identifiers for the node. The Node itself is the unique 
+		// identifier in this context.
+		if (Node == null) return other.Node == null;
+		return Node.Equals(other.Node);
 	}
 
-	public override readonly bool Equals(object obj) => obj is MacroPathFindingNode otherNode && Equals(otherNode);
-	public override readonly int GetHashCode() => Node != null ? Node.GetHashCode() : 0;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public override bool Equals(object obj) => obj is MacroPathFindingNode otherNode && Equals(otherNode);
 
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public override int GetHashCode() => Node != null ? Node.GetHashCode() : 0;
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator ==(MacroPathFindingNode left, MacroPathFindingNode right) => left.Equals(right);
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator !=(MacroPathFindingNode left, MacroPathFindingNode right) => !left.Equals(right);
 
-	public override readonly string ToString() {
+	public override string ToString() {
 		string parentStr = Parent.HasValue ? Parent.Value.ToString() : "None";
 		return $"MacroPathFindingNode(Node: {Node}, GCost: {GCost}, HCost: {HCost}, FCost: {FCost}, Parent: {parentStr})";
 	}
 }
 
 public class AStarMacro {
-
-	public const int MAX_ITERATIONS = 1000;
+	public const float MAX_ITERATIONS_RATIO = 1f;
 	public const int DEFAULT_INITIAL_CAPACITY = 32;
+
 	/// <summary>
 	/// The maximum number of iterations the A* algorithm will perform
 	/// before giving up on finding a path.
@@ -54,101 +66,114 @@ public class AStarMacro {
 	/// For macro level pathfinding, this is usually sufficient, but can be adjusted based on
 	/// the size of the macro graph.
 	/// </summary>
-	private readonly int DefaultMAXIterations;
-	private readonly PathfindingGraphManager _pathFindingGraph;
+	private readonly float _maxIterationsRatio;
+
+	// default maximum iterations is set to 10, but can be adjusted 
+	// based on the size of the macro graph.
+	private int _maxIterations = 10;
+
+	private readonly PathfindingGraphManager _graphManager;
+
 	// Pooled collections to prevent garbage allocation on every pathfinding request
-	private readonly Dictionary<BoundingBox, MacroPathFindingNode> _usedNodes;
+	private readonly Dictionary<BoundingBox, MacroPathFindingNode> _nodeRecords;
 	private readonly HashSet<BoundingBox> _closedSet;
-	private readonly PriorityQueueSimple<MacroPathFindingNode, float> _openSet;
+	private readonly QuadPriorityQueue<MacroPathFindingNode, float> _openSet;
 
-	public AStarMacro(PathfindingGraphManager macroGraph,
-	int initialCapacity = DEFAULT_INITIAL_CAPACITY, int maxIterations = MAX_ITERATIONS) {
-
-		this._pathFindingGraph = macroGraph;
-		this._usedNodes = new Dictionary<BoundingBox, MacroPathFindingNode>(initialCapacity);
+	public AStarMacro(
+		PathfindingGraphManager macroGraph,
+		int initialCapacity = DEFAULT_INITIAL_CAPACITY,
+		float maxIterations = MAX_ITERATIONS_RATIO) {
+		this._graphManager = macroGraph;
+		this._nodeRecords = new Dictionary<BoundingBox, MacroPathFindingNode>(initialCapacity);
 		this._closedSet = new HashSet<BoundingBox>(initialCapacity);
-		this._openSet = new PriorityQueueSimple<MacroPathFindingNode, float>(initialCapacity);
-		this.DefaultMAXIterations = maxIterations;
+		this._openSet = new QuadPriorityQueue<MacroPathFindingNode, float>(initialCapacity);
+
+		//clamping to 0.1 to 1 becuase if ratio is 1, then it will treverse all nodes, and 
+		// if it's 0.1, then it will traverse 10% of the nodes.
+		// as default the MAX_ITERATIONS_RATIO is set to 1, but can be adjusted based 
+		// on the size of the macro graph.
+		this._maxIterationsRatio = Mathf.Clamp(maxIterations, 0.1f, 1f);
 	}
 
 	#region Pathfinding Methods
 	public List<BoundingBox> FindPath(Vec2Int start, Vec2Int end, MovementCapability entityMovementCapability) {
-		if (!_pathFindingGraph.TryGetMacroNodeFromPosition(start, out MacroGridNode startMacroNode)) {
+		if (!this._graphManager.TryGetMacroNodeFromPosition(start, out MacroGridNode startMacroNode)) {
 			Debug.LogWarning($"Start position {start} does not correspond to a valid macro node.");
 			return null;
 		}
-		if (!_pathFindingGraph.TryGetMacroNodeFromPosition(end, out MacroGridNode endMacroNode)) {
+
+		if (!this._graphManager.TryGetMacroNodeFromPosition(end, out MacroGridNode endMacroNode)) {
 			Debug.LogWarning($"End position {end} does not correspond to a valid macro node.");
 			return null;
 		}
 
-		this._usedNodes.Clear();
+		this._nodeRecords.Clear();
 		this._closedSet.Clear();
 		this._openSet.Clear();
 
+		// not fully caching the max iterations because the macro graph can 
+		// change in size, so we need to recalculate it each time.
+		// this is like 2 integer multiplications and a ceil, so it's not that expensive.
+		// will be done in like 10,000th of a second, so it's not a big deal.
+		this._maxIterations = Mathf.CeilToInt(this._maxIterationsRatio * this._graphManager.MacroNodeCount);
 
-		float initialHCost = BoundingBox.ManhattanDistanceTo(
-			startMacroNode.Bound.Center, endMacroNode.Bound.Center
-		);
+		float initialHCost = MacroGridNode.GetTraversalCost(endMacroNode.Bound, startMacroNode.Bound);
 
 		MacroPathFindingNode startNode = new(startMacroNode, 0f, initialHCost, null);
 
-
 		this._openSet.EnqueueOrUpdate(startNode);
-		this._usedNodes[startMacroNode.Bound] = startNode;
-
+		this._nodeRecords[startMacroNode.Bound] = startNode;
 
 		int iterations = 0;
-		while (this._openSet.Count > 0 && iterations < this.DefaultMAXIterations) {
-			MacroPathFindingNode current = this._openSet.Dequeue();
+		while (this._openSet.Count > 0 && iterations < this._maxIterations) {
+			MacroPathFindingNode currentRecord = this._openSet.Dequeue();
 			iterations++;
 
 			// Target reached!
-			if (current.Node == endMacroNode) {
-				return ReconstructPath(current, this._usedNodes);
+			if (currentRecord.Node == endMacroNode) {
+				return ReconstructPath(currentRecord);
 			}
 
-			this._closedSet.Add(current.Node.Bound);
+			this._closedSet.Add(currentRecord.Node.Bound);
 
-			// // Fetch neighbors 
-			// if (this._pathFindingGraph.TryGetConnections(current.Node.Bound, out IReadOnlyList<MacroConnectionData> connections)) {
+			// Fetch neighbors 
+			if (this._graphManager.GetNeighboringMacroNodesConnectionData(currentRecord.Node.Bound, entityMovementCapability, out IEnumerable<MacroConnectionData> connections)) {
+				foreach (MacroConnectionData connection in connections) {
+					BoundingBox neighborBounds = connection.ToBound;
 
-			// 	foreach (MacroConnectionData connection in connections) {
-			// 		BoundingBox neighborBounds = connection.ToBound;
+					if (this._closedSet.Contains(neighborBounds)) {
+						continue;
+					}
 
-			// 		if (this._closedSet.Contains(neighborBounds)) {
-			// 			continue;
-			// 		}
+					float tentativeGCost = currentRecord.GCost + MacroGridNode.GetTraversalCost(currentRecord.Node.Bound, neighborBounds);
 
-			// 		float tentativeGCost = current.GCost + connection.Cost;
+					// If it's an undiscovered node OR we found a faster route to a discovered node
+					if (!this._nodeRecords.TryGetValue(neighborBounds,
+					out MacroPathFindingNode neighborNodeRecord) || tentativeGCost < neighborNodeRecord.GCost) {
 
-			// 		// If it's an undiscovered node OR we found a faster route to a discovered node
-			// 		if (!this._usedNodes.TryGetValue(neighborBounds, out MacroPathFindingNode neighborNodeRecord) ||
-			// 			tentativeGCost < neighborNodeRecord.GCost) {
+						if (this._graphManager.TryGetMacroNode(neighborBounds, out MacroGridNode neighborGridNode)) {
+							float hCost = MacroGridNode.GetTraversalCost(endMacroNode.Bound, neighborGridNode.Bound);
 
-			// 			if (this._pathFindingGraph.TryGetMacroNode(neighborBounds, out MacroGridNode neighborGridNode)) {
+							MacroPathFindingNode newNeighborRecord = new(
+								neighborGridNode,
+								tentativeGCost,
+								hCost,
+								currentRecord.Node.Bound
+							);
 
-			// 				float hCost = BoundingBox.ManhattanDistanceTo(
-			// 					neighborGridNode.Bound.Center, endMacroNode.Bound.Center);
+							this._nodeRecords[neighborBounds] = newNeighborRecord;
 
-			// 				MacroPathFindingNode newNeighborRecord = new(
-			// 					neighborGridNode,
-			// 					tentativeGCost,
-			// 					hCost,
-			// 					current.Node.Bound
-			// 				);
-
-			// 				this._usedNodes[neighborBounds] = newNeighborRecord;
-
-			// 				// MAGIC HAPPENS HERE:
-			// 				// If the node is new, it enqueues. 
-			// 				// If it's already in the OpenSet, it finds it via Dictionary mapping 
-			// 				// and bubbles it up the heap to its new priority!
-			// 				this._openSet.EnqueueOrUpdate(newNeighborRecord);
-			// 			}
-			// 		}
-			// 	}
-			// }
+							// # Magic Happens Here
+							// If the neighbor is already in the open set, it will update
+							// its priority (FCost)
+							// If it's not in the open set, it will be added.
+							// Praise to our lord and savior, the QuadPriorityQueue.
+							// for making this so simple and efficient.
+							this._openSet.EnqueueOrUpdate(newNeighborRecord);
+						}
+					}
+				}
+			}
 		}
 
 		// Open set is empty and destination was never reached
@@ -157,17 +182,19 @@ public class AStarMacro {
 	#endregion
 
 	#region Utility Methods
-	public List<BoundingBox> ReconstructPath(MacroPathFindingNode current, Dictionary<BoundingBox, MacroPathFindingNode> usedNodes) {
+	public List<BoundingBox> ReconstructPath(MacroPathFindingNode current) {
 		List<BoundingBox> totalPath = new() { current.Node.Bound };
+
 		while (current.Parent.HasValue) {
 			BoundingBox parentBounds = current.Parent.Value;
 			totalPath.Add(parentBounds);
 
-			if (!usedNodes.TryGetValue(parentBounds, out current)) {
+			if (!this._nodeRecords.TryGetValue(parentBounds, out current)) {
 				Debug.LogWarning($"Parent node {parentBounds} not found in used nodes. Path reconstruction may be incomplete.");
 				break;
 			}
 		}
+
 		totalPath.Reverse();
 		return totalPath;
 	}

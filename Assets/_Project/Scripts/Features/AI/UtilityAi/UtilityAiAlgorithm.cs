@@ -101,13 +101,13 @@ namespace Kope.AI.Utility {
 		}
 
 		protected internal class Memory {
-			private readonly PriorityQueueSimple<ActionEntry, float> actionQueue;
+			private readonly QuadPriorityQueue<ActionEntry, float> actionQueue;
 
 			private readonly int memoryCapacity;
 			public int Count => this.actionQueue.Count;
 
 			public Memory(int capacity) {
-				this.actionQueue = new PriorityQueueSimple<ActionEntry, float>(capacity);
+				this.actionQueue = new QuadPriorityQueue<ActionEntry, float>(capacity);
 				this.memoryCapacity = capacity;
 			}
 

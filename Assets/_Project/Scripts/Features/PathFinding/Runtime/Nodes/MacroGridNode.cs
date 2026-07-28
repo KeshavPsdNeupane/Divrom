@@ -109,11 +109,11 @@ namespace Kope.Feature.PathFinding.Node {
 		/// <returns>Computed integer directional path traversal cost.</returns>
 		/// <exception cref="ArgumentNullException">Thrown if either node parameter is null.</exception>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static int GetDirectionalTraversalCost(MacroGridNode to, MacroGridNode from) {
+		public static int GetTraversalCost(BoundingBox to, BoundingBox from) {
 			if (to == null || from == null) {
 				throw new ArgumentNullException("MacroGridNode parameters cannot be null.");
 			}
-			int manhattanDistance = BoundingBox.ManhattanDistanceTo(from._bound.Center, to._bound.Center);
+			int manhattanDistance = Vec2Int.ManhattanDistanceTo(from.Center, to.Center);
 			return manhattanDistance * TRAVERSAL_COST;
 		}
 

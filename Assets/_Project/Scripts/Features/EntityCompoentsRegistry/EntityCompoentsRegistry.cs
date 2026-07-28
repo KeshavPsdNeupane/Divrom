@@ -101,7 +101,7 @@ namespace Kope.Core.EntityComponentRegistry {
 		/// <returns>A fully structured, scannable error string.</returns>
 		[HideInCallstack]
 		public string FormattedMessage<TCaller, TComponent>(TCaller caller, string hierarchyPath, bool isReadOnly = true)
-				where TCaller : UnityEngine.Object
+				where TCaller : Object
 				where TComponent : class {
 			string target = typeof(TComponent).Name;
 
@@ -135,7 +135,7 @@ namespace Kope.Core.EntityComponentRegistry {
 		/// <returns>True if the component was found and registered successfully; otherwise, false.</returns>
 		[HideInCallstack]
 		public bool TryFetchMutable<TCaller, TComponent>(TCaller caller, string hierarchyPath, out TComponent component)
-							where TCaller : UnityEngine.Object
+							where TCaller : Object
 							where TComponent : class {
 			if (!this.componentRegistry.TryGetMutable(out component)) {
 				// Passing 'caller' as the second parameter enables frame context picking inside the Inspector
@@ -162,7 +162,7 @@ namespace Kope.Core.EntityComponentRegistry {
 		/// <returns>True if the component was found and registered successfully; otherwise, false.</returns>
 		[HideInCallstack]
 		public bool TryFetchReadOnly<TCaller, TComponent>(TCaller caller, string hierarchyPath, out TComponent component, bool logTheError = true)
-			where TCaller : UnityEngine.Object
+			where TCaller : Object
 			where TComponent : class {
 			if (!this.componentRegistry.TryGetReadOnly(out component)) {
 				if (logTheError) {

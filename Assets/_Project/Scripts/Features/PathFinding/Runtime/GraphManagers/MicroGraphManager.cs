@@ -15,6 +15,7 @@ namespace Project.Scripts.Features.PathFinding.GraphManager {
 	[Serializable]
 	public class MicroGraphManager {
 		private readonly SerializableDictionary<Vec2Int, MicroGridNode> _microNodes;
+		public int MicroNodeCount => this._microNodes.Count;
 
 		public MicroGraphManager() {
 			this._microNodes = new SerializableDictionary<Vec2Int, MicroGridNode>();
