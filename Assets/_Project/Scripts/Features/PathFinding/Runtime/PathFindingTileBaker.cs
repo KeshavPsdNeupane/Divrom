@@ -13,6 +13,8 @@ using UnityEngine.Tilemaps;
 using ZLinq;
 using Debug = UnityEngine.Debug;
 using Kope.Feature.PathFinding.Node;
+using Kope.Feature.PathFinding.Data;
+
 
 
 #if UNITY_EDITOR
@@ -75,7 +77,7 @@ namespace Kope.Feature.PathFinding {
 		#region Serialized Fields
 
 		[Header("Bake Data Container")]
-		[SerializeField] private PathFindingGridDataContainer gridDataContainer;
+		[SerializeField] private GridDataContainerBase gridDataContainer;
 
 		[Header("Tilemap Targets")]
 		[SerializeField] private Tilemap microTilemap;
@@ -377,8 +379,8 @@ namespace Kope.Feature.PathFinding {
 
 			if (this.showRegionSlices) {
 				MacroRegionSliceGizmos.DrawRegionSlices(
-					this.gridDataContainer.GridData.MacroGridNodeDict,
-					this.gridDataContainer.GridData.RegionAnchorPoints,
+					this.gridDataContainer.MacroGridNodeDict,
+					this.gridDataContainer.RegionAnchorPoints,
 					this.macroTilemap,
 					this.sliceBoxBorderColor
 				);
@@ -386,7 +388,7 @@ namespace Kope.Feature.PathFinding {
 
 			if (this.showNeighborConnections) {
 				MacroCardinalNeighbourGizmos.DrawNeighbourLine(
-					this.gridDataContainer.GridData.MacroAdjacencyListWrapper,
+					this.gridDataContainer.MacroAdjacencyList,
 					this.macroTilemap,
 					this.neighborLineColor,
 					this.neighborLineThickness,

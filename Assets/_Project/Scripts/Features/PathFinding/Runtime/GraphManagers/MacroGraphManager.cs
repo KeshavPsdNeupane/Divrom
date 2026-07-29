@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Kope.Core.Attribute;
-using Kope.Core.Collections;
 using Kope.EntityIdentity;
 using Kope.Feature.PathFinding.Node;
 using UnityEngine;
@@ -128,8 +127,8 @@ namespace Project.Scripts.Features.PathFinding.GraphManager {
 	/// </remarks>
 	[Serializable]
 	public class MacroGraphManager {
-		private readonly SerializableDictionary<BoundingBox, MacroGridNode> _macroNodes;
-		private readonly SerializableDictionary<BoundingBox, List<MacroConnectionData>> _adjacencyDict;
+		private readonly Dictionary<BoundingBox, MacroGridNode> _macroNodes;
+		private readonly Dictionary<BoundingBox, List<MacroConnectionData>> _adjacencyDict;
 
 		public int MacroNodeCount => this._macroNodes.Count;
 
@@ -147,8 +146,8 @@ namespace Project.Scripts.Features.PathFinding.GraphManager {
 		/// <param name="macroNodes">Serialized map of bounding boxes to macro grid nodes.</param>
 		/// <param name="adjacencyDict">Serialized map of bounding boxes to outgoing connection lists.</param>
 		public MacroGraphManager(
-			SerializableDictionary<BoundingBox, MacroGridNode> macroNodes,
-			SerializableDictionary<BoundingBox, List<MacroConnectionData>> adjacencyDict) {
+			Dictionary<BoundingBox, MacroGridNode> macroNodes,
+			Dictionary<BoundingBox, List<MacroConnectionData>> adjacencyDict) {
 			this._macroNodes = macroNodes;
 			this._adjacencyDict = adjacencyDict;
 			// Debug.Log($"MacroGraphManager initialized with {macroNodes.Count} nodes and {adjacencyDict.Count} adjacency entries.");

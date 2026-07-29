@@ -4,29 +4,6 @@ using Kope.Core.Attribute;
 using UnityEngine;
 
 namespace Kope.Feature.PathFinding.Node {
-
-	[Serializable]
-	public struct MicroGridNodeSaveData {
-		// Internal field names are optimized for serialization size, not readability.
-		// Access data via public properties instead.
-		[SerializeField, ReadOnly] private BoundingBox _pmG;
-		[SerializeField, ReadOnly] private byte _isO;
-		public readonly BoundingBox ParentMacroGrid {
-			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			get => this._pmG;
-		}
-		public readonly bool IsStaticObstacle {
-			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			get => this._isO != 0;
-		}
-		public MicroGridNodeSaveData(BoundingBox parentMacroGrid, bool isStaticObstacle) {
-			this._pmG = parentMacroGrid;
-			this._isO = (byte)(isStaticObstacle ? 1 : 0);
-		}
-	}
-
-
-
 	/// <summary>
 	/// Represents a fine-grained, high-detail (Tier-2) node in the pathfinding grid.
 	/// </summary>
@@ -143,47 +120,6 @@ namespace Kope.Feature.PathFinding.Node {
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public override readonly int GetHashCode() => this.Position.GetHashCode();
-
-		#endregion
-
-
-
-		#region Internal Save Data Conversion
-		/// <summary>
-		/// Converts this <see cref="MicroGridNode"/> instance into a serializable save data representation.
-		/// The key (position) is returned separately to facilitate dictionary serialization.
-		/// The parent macro grid node is stored as a bounding box, and the static obstacle
-		/// flag is stored as a char (0 or 1) to minimize serialized data size.
-		/// </summary>
-		/// <returns></returns>
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public readonly (Vec2Int key, MicroGridNodeSaveData data) ToSaveData() {
-			return (this._position, new MicroGridNodeSaveData(
-				this._parentMacroGrid.Bound,
-				this._isStaticObstacle
-				)
-			);
-		}
-
-		/// <summary>
-		/// Creates a <see cref="MicroGridNode"/> instance from serialized save data.
-		/// Infer the key (position) from the dictionary key in the serialized dictionary, 
-		/// and use the provided save data to reconstruct the node.
-		/// and infer the parent macro grid node from the bounding box stored in the save data
-		/// on the parent macro grid dictionary.
-		/// </summary>
-		/// <param name="key"></param>
-		/// <param name="isStaticObstacle"></param>
-		/// <param name="parentMacroGrid"></param>
-		/// <returns></returns>
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static MicroGridNode FromSaveData(Vec2Int key, bool isStaticObstacle, MacroGridNode parentMacroGrid) {
-			return new MicroGridNode(
-				key,
-				isStaticObstacle,
-				parentMacroGrid
-			);
-		}
 
 		#endregion
 	}

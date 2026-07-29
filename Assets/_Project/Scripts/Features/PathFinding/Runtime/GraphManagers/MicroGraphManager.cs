@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Kope.Core.Collections;
 using Kope.Feature.PathFinding.Node;
 using UnityEngine;
 

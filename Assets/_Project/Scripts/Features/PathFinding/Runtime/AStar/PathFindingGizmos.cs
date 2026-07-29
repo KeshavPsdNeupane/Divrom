@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
-using Kope.Core.Collections;
 using Kope.EntityIdentity;
+using Kope.Feature.PathFinding.Data;
 using Kope.Feature.PathFinding.Node;
 using Project.Scripts.Features.PathFinding.GraphManager;
 using UnityEngine;
@@ -17,7 +17,7 @@ using ZLinq;
 /// </summary>
 public class PathFindingGizmos : MonoBehaviour {
 	[Header("Graph Data")]
-	[SerializeField] private PathFindingGridDataContainer _graphDataContainer;
+	[SerializeField] private GridDataContainerBase _graphDataContainer;
 	[Header("Graph Reference")]
 	[SerializeField] private PathfindingGraphManager _graphManager;
 
@@ -102,13 +102,9 @@ public class PathFindingGizmos : MonoBehaviour {
 			return;
 		}
 
-		var neighborDict = this._graphDataContainer.GridData.MacroAdjacencyListWrapper.AsValueEnumerable()
-		.Aggregate(new SerializableDictionary<BoundingBox, List<MacroConnectionData>>(), (dict, kvp) => {
-			dict[kvp.Key] = kvp.Value.Connections;
-			return dict;
-		});
+		var neighborDict = this._graphDataContainer.MacroAdjacencyList;
 
-		MacroGraphManager macroGraphManager = new(this._graphDataContainer.GridData.MacroGridNodeDict, neighborDict);
+		MacroGraphManager macroGraphManager = new(this._graphDataContainer.MacroGridNodeDict, neighborDict);
 		MicroGraphManager microGraphManager = new(this._graphDataContainer.MicroGridNodeDict);
 
 		this._graphManager = new(macroGraphManager, microGraphManager);

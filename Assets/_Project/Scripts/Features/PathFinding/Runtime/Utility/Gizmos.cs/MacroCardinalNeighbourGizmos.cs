@@ -5,6 +5,7 @@ using Project.Scripts.Features.PathFinding.GraphManager;
 using Kope.Feature.PathFinding.Node;
 
 
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -25,7 +26,7 @@ namespace Kope.Feature.PathFinding.Utility {
 		/// <param name="lineThickness">Line thickness when rendered in the Unity Editor.</param>
 		/// <param name="lineDrawRatio">1.0 draws center to center. 0.1 draws a small connector on the boundary.</param>
 		public static void DrawNeighbourLine(
-			IDictionary<BoundingBox, MacroConnectionListWrapper> macroAdjacencyListWrapper,
+			IDictionary<BoundingBox, List<MacroConnectionData>> macroAdjacencyListWrapper,
 			Tilemap macroTilemap,
 			Color lineColor,
 			float lineThickness = 2f,
@@ -38,7 +39,7 @@ namespace Kope.Feature.PathFinding.Utility {
 
 			foreach (var kvp in macroAdjacencyListWrapper) {
 				BoundingBox boxA = kvp.Key;
-				List<MacroConnectionData> neighbors = kvp.Value.Connections;
+				List<MacroConnectionData> neighbors = kvp.Value;
 
 				if (neighbors == null || neighbors.Count == 0) continue;
 
