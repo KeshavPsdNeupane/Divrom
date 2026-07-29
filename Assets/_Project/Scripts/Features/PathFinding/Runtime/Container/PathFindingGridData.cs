@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Kope.Core.Collections;
 using Kope.EntityIdentity;
 using Kope.Feature.PathFinding.Node;
 using UnityEngine;
@@ -9,29 +8,24 @@ namespace Kope.Feature.PathFinding.Data {
 
 	/*
      * ==============================================================================================
-     * ARCHITECTURAL RATIONALE: COLUMNAR PARALLEL PRIMITIVE STREAMING (SOA LAYOUT + HEX BIT-PACKING)
+     * ARCHITECTURAL RATIONALE: COLUMNAR PARALLEL PRIMITIVE STREAMING (SOA LAYOUT + 128-BIT HEX KEYS)
      * ==============================================================================================
      * 
      * [The Problem: Multi-Level Struct Hierarchy & YAML Key Replication]
      * In standard Unity serialization, complex spatial types like `Vec2Int` and `BoundingBox` generate 
      * massive ASCII text markup. Every `Vec2Int` adds 2 lines (`x:` and `y:`), while every `BoundingBox` 
      * introduces 6 lines with nested `min` and `max` struct keys. Across tens of thousands of micro-nodes 
-     * and macro region connections, this structural bloat inflates asset size to 5MB+ and  thousands of lines.
+     * and macro region connections, this structural bloat inflates asset size to 5MB+ and thousands of lines.
      * 
-     * [The Solution: Full Columnar Primitive Flattening & Hex Key Packing]
-     * This packed pipeline pivots Array-of-Structs (AoS) into Structure-of-Arrays (SoA) layout:
-     * 1. Multi-field domain structs are split into synchronized, index-aligned primitive arrays 
-     *    (e.g., `_minX`, `_minY`, `_maxX`, `_maxY` arrays replace `List<BoundingBox>`).
-     * 2. Coordinates (`Vec2Int`) are stored in parallel `int[]` arrays (`_mPosX`, `_mPosY`), stripping 
-     *    all repeating YAML property keys (`x:`, `y:`) and indentation levels into inline hex byte streams.
-     * 3. Dictionary keys (`BoundingBox`) are bit-packed into 64-bit primitive `ulong` integers, forcing 
-     *    Unity's C++ serializer to emit raw inline hex string representations for keys instead of YAML structs.
-     * 4. Field keys are intentionally shortened (`_tt`, `_trav`, `_conns`) to strip ASCII overhead 
-     *    while keeping clean public domain getters intact.
+     * [The Solution: 3-Way Structure-of-Arrays (SoA) for 128-Bit Key Pairs]
+     * Because Unity cannot serialize native 128-bit primitives or dictionaries, `PathFindingGridData` avoids 
+     * dictionary wrapper structs altogether. Instead, it uses a 3-way parallel columnar stream:
+     * 1. `_keysHigh`: `ulong[]` containing packed Min.X / Min.Y 32-bit coordinates.
+     * 2. `_keysLow`: `ulong[]` containing packed Max.X / Max.Y 32-bit coordinates.
+     * 3. `_values`: `MacroSaveData[]` index-aligned directly with `_keysHigh` and `_keysLow`.
      * 
-     * [Tradeoff & Execution: Zero-Alloc / On-Demand Re-hydration]
-     * The serialized footprint drops by ~99.5% (< 500 KB). At runtime, domain structs (`Vec2Int`, `BoundingBox`) 
-     * are re-hydrated on demand through `SaveDataSerializer` getters or during single-pass graph initialization.
+     * This layout forces Unity's C++ serializer to emit compact inline hex byte arrays for keys 
+     * while granting full +/- 2.14 billion 32-bit coordinate precision per axis.
      * 
      * ==============================================================================================
      * DATA HIERARCHY GRAPH (COLUMNAR INLINE HEX STREAMING)
@@ -42,26 +36,28 @@ namespace Kope.Feature.PathFinding.Data {
      * │   ├── _anchorsX: int[]  [X Coordinates -> Hex Stream]
      * │   └── _anchorsY: int[]  [Y Coordinates -> Hex Stream]
      * │
-     * └── _dict: SerializableDictionary<ulong, MacroSaveData>
-     *     └── [Key: ulong (Bit-Packed BoundingBox Hex)] ──► [Value: MacroSaveData]
-     *                                                        │
-     *                                                        ├── Micro-Node Columnar Coords & Flag Streams
-     *                                                        │   ├── _mPosX: int[]    [Local X Positions -> Hex Stream]
-     *                                                        │   ├── _mPosY: int[]    [Local Y Positions -> Hex Stream]
-     *                                                        │   └── _flags: List<byte> [Bitmasks / Static Obstacles]
-     *                                                        │
-     *                                                        ├── Macro Region Metadata
-     *                                                        │   ├── _tt: TerrainType
-     *                                                        │   └── _trav: MovementCapability
-     *                                                        │
-     *                                                        └── Outgoing Connection Streams (MacroConnectionSaveData)
-     *                                                            ├── Parallel Target Bounding Box Column Arrays
-     *                                                            │   ├── _minX: int[]
-     *                                                            │   ├── _minY: int[]
-     *                                                            │   ├── _maxX: int[]
-     *                                                            │   └── _maxY: int[]
-     *                                                            ├── _trav: List<MovementCapability>
-     *                                                            └── _narr: List<byte>
+     * └── 128-Bit Columnar Key/Value Streams (SoA Layout)
+     *     ├── _keysHigh: ulong[]            [Min.X/Y Packed 64-bit Hex Words]
+     *     ├── _keysLow: ulong[]             [Max.X/Y Packed 64-bit Hex Words]
+     *     └── _values: MacroSaveData[]      [Synchronized Macro Values]
+     *          │
+     *          ├── Micro-Node Columnar Coords & Flag Streams
+     *          │   ├── _mPosX: int[]        [Local X Positions -> Hex Stream]
+     *          │   ├── _mPosY: int[]        [Local Y Positions -> Hex Stream]
+     *          │   └── _flags: byte[]       [Bitmasks / Static Obstacles]
+     *          │
+     *          ├── Macro Region Metadata
+     *          │   ├── _tt: TerrainType
+     *          │   └── _trav: MovementCapability
+     *          │
+     *          └── Outgoing Connection Streams (MacroConnectionSaveData)
+     *              ├── Parallel Target Bounding Box Column Arrays
+     *              │   ├── _minX: int[]
+     *              │   ├── _minY: int[]
+     *              │   ├── _maxX: int[]
+     *              │   └── _maxY: int[]
+     *              ├── _trav: MovementCapability[]
+     *              └── _narr: byte[]
      * ==============================================================================================
      */
 
@@ -79,8 +75,8 @@ namespace Kope.Feature.PathFinding.Data {
 		[SerializeField] private int[] _maxX;
 		[SerializeField] private int[] _maxY;
 
-		[SerializeField] private List<MovementCapability> _trav;
-		[SerializeField] private List<byte> _narr;
+		[SerializeField] private MovementCapability[] _trav;
+		[SerializeField] private byte[] _narr;
 
 		#endregion
 
@@ -90,15 +86,11 @@ namespace Kope.Feature.PathFinding.Data {
 		/// Rehydrates the parallel primitive coordinate arrays (<c>_minX</c>, <c>_minY</c>, <c>_maxX</c>, <c>_maxY</c>) 
 		/// into strongly-typed <see cref="BoundingBox"/> domain objects on demand.
 		/// </summary>
-		public readonly List<BoundingBox> TargetRegions {
-			get {
-				return SaveDataSerializer.FromIntArrayPairsToBoundingBoxList(
-					this._minX, this._minY, this._maxX, this._maxY);
-			}
-		}
+		public readonly List<BoundingBox> TargetRegions =>
+			SaveDataSerializer.FromIntArrayPairsToBoundingBoxList(this._minX, this._minY, this._maxX, this._maxY);
 
-		public readonly List<MovementCapability> AllowedTraversal => this._trav;
-		public readonly List<byte> IsNarrativelyAccessible => this._narr;
+		public readonly MovementCapability[] AllowedTraversal => this._trav;
+		public readonly byte[] IsNarrativelyAccessible => this._narr;
 
 		#endregion
 
@@ -112,8 +104,20 @@ namespace Kope.Feature.PathFinding.Data {
 			((this._minX, this._minY), (this._maxX, this._maxY)) =
 				SaveDataSerializer.FromBoundingBoxListToIntArrayPairs(targetRegion ?? new());
 
-			this._trav = allowedTraversal ?? new();
-			this._narr = isNarrativelyAccessible ?? new();
+			this._trav = allowedTraversal != null ? allowedTraversal.ToArray() : Array.Empty<MovementCapability>();
+			this._narr = isNarrativelyAccessible != null ? isNarrativelyAccessible.ToArray() : Array.Empty<byte>();
+		}
+
+		public MacroConnectionSaveData(
+			List<BoundingBox> targetRegion,
+			MovementCapability[] allowedTraversal,
+			byte[] isNarrativelyAccessible) {
+
+			((this._minX, this._minY), (this._maxX, this._maxY)) =
+				SaveDataSerializer.FromBoundingBoxListToIntArrayPairs(targetRegion ?? new());
+
+			this._trav = allowedTraversal ?? Array.Empty<MovementCapability>();
+			this._narr = isNarrativelyAccessible ?? Array.Empty<byte>();
 		}
 
 		#endregion
@@ -131,7 +135,7 @@ namespace Kope.Feature.PathFinding.Data {
 		[SerializeField] private int[] _mPosX;
 		[SerializeField] private int[] _mPosY;
 
-		[SerializeField] private List<byte> _flags;
+		[SerializeField] private byte[] _flags;
 
 		[SerializeField] private TerrainType _tt;
 		[SerializeField] private MovementCapability _trav;
@@ -145,13 +149,10 @@ namespace Kope.Feature.PathFinding.Data {
 		/// Rehydrates parallel integer coordinate streams (<c>_mPosX</c>, <c>_mPosY</c>) 
 		/// back into strongly-typed <see cref="Vec2Int"/> domain positions.
 		/// </summary>
-		public readonly List<Vec2Int> MacroRegionAnchorPoints {
-			get {
-				return SaveDataSerializer.FromIntArraysToVec2(this._mPosX, this._mPosY);
-			}
-		}
+		public readonly List<Vec2Int> MacroRegionAnchorPoints =>
+			SaveDataSerializer.FromIntArraysToVec2(this._mPosX, this._mPosY);
 
-		public readonly List<byte> MacroRegionStaticObstacleFlags => this._flags;
+		public readonly byte[] MacroRegionStaticObstacleFlags => this._flags;
 		public readonly TerrainType TerrainType => this._tt;
 		public readonly MovementCapability AllowedTraversal => this._trav;
 		public readonly MacroConnectionSaveData NeighboringRegionBoundingBoxes => this._conns;
@@ -169,7 +170,22 @@ namespace Kope.Feature.PathFinding.Data {
 
 			(this._mPosX, this._mPosY) = SaveDataSerializer.FromVec2ToIntArrays(macroRegionAnchorPoints ?? new());
 
-			this._flags = macroRegionStaticObstacleFlags ?? new();
+			this._flags = macroRegionStaticObstacleFlags != null ? macroRegionStaticObstacleFlags.ToArray() : Array.Empty<byte>();
+			this._tt = terrainType;
+			this._trav = allowedTraversal;
+			this._conns = neighboringRegionConnections;
+		}
+
+		public MacroSaveData(
+			List<Vec2Int> macroRegionAnchorPoints,
+			byte[] macroRegionStaticObstacleFlags,
+			TerrainType terrainType,
+			MovementCapability allowedTraversal,
+			MacroConnectionSaveData neighboringRegionConnections) {
+
+			(this._mPosX, this._mPosY) = SaveDataSerializer.FromVec2ToIntArrays(macroRegionAnchorPoints ?? new());
+
+			this._flags = macroRegionStaticObstacleFlags ?? Array.Empty<byte>();
 			this._tt = terrainType;
 			this._trav = allowedTraversal;
 			this._conns = neighboringRegionConnections;
@@ -180,8 +196,8 @@ namespace Kope.Feature.PathFinding.Data {
 
 	/// <summary>
 	/// Root pathfinding serialization container.
-	/// Maps 64-bit bit-packed BoundingBox keys (<c>ulong</c>) to packed macro region save data.
-	/// Stores keys and position coordinates in parallel primitive streams for inline hex YAML serialization.
+	/// Stores 128-bit bit-packed BoundingBox keys in parallel primitive streams (<c>_keysHigh</c>, <c>_keysLow</c>)
+	/// aligned with a parallel list of macro values (<c>_values</c>).
 	/// </summary>
 	[Serializable]
 	public struct PathFindingGridData {
@@ -191,8 +207,10 @@ namespace Kope.Feature.PathFinding.Data {
 		[SerializeField] private int[] _anchorsX;
 		[SerializeField] private int[] _anchorsY;
 
-		// Bit-packed ulong keys force Unity YAML into serializing _keys as a single inline hex string.
-		[SerializeField] private SerializableDictionary<ulong, MacroSaveData> _dict;
+		// Parallel 128-bit key streams + value array (Structure-of-Arrays)
+		[SerializeField] private ulong[] _keysHigh;
+		[SerializeField] private ulong[] _keysLow;
+		[SerializeField] private MacroSaveData[] _values;
 
 		#endregion
 
@@ -202,24 +220,102 @@ namespace Kope.Feature.PathFinding.Data {
 		/// Rehydrates parallel anchor coordinate arrays (<c>_anchorsX</c>, <c>_anchorsY</c>) 
 		/// back into strongly-typed <see cref="Vec2Int"/> domain objects.
 		/// </summary>
-		public readonly List<Vec2Int> RegionAnchorPoints {
-			get {
-				return SaveDataSerializer.FromIntArraysToVec2(this._anchorsX, this._anchorsY);
+		public readonly List<Vec2Int> RegionAnchorPoints =>
+			SaveDataSerializer.FromIntArraysToVec2(this._anchorsX, this._anchorsY);
+
+		public readonly ulong[] KeysHigh => this._keysHigh;
+		public readonly ulong[] KeysLow => this._keysLow;
+		public readonly MacroSaveData[] Values => this._values;
+
+		/// <summary>
+		/// Re-hydrates the parallel key/value streams into a runtime dictionary indexed by <see cref="BoundingBox"/>.
+		/// </summary>
+		public readonly Dictionary<BoundingBox, MacroSaveData> ToBoundingBoxDictionary() {
+			int count = this._values != null ? this._values.Length : 0;
+			Dictionary<BoundingBox, MacroSaveData> dict = new(count);
+
+			for (int i = 0; i < count; i++) {
+				BoundingBox box = SaveDataSerializer.UnpackBoundingBox32(this._keysHigh[i], this._keysLow[i]);
+				dict[box] = this._values[i];
 			}
+
+			return dict;
 		}
 
-		public readonly SerializableDictionary<ulong, MacroSaveData> MicroGridNodeSaveDataDict => this._dict;
+		/// <summary>
+		/// Re-hydrates the parallel key/value streams into a runtime dictionary indexed by packed <c>(ulong high, ulong low)</c> tuples.
+		/// Useful for high-performance direct key lookups without instantiating <see cref="BoundingBox"/> structs.
+		/// </summary>
+		public readonly Dictionary<(ulong high, ulong low), MacroSaveData> ToTupleDictionary() {
+			int count = this._values != null ? this._values.Length : 0;
+			Dictionary<(ulong high, ulong low), MacroSaveData> dict = new(count);
+
+			for (int i = 0; i < count; i++) {
+				dict[(this._keysHigh[i], this._keysLow[i])] = this._values[i];
+			}
+
+			return dict;
+		}
 
 		#endregion
 
 		#region Constructors
 
+		/// <summary>
+		/// Direct columnar constructor for pre-split key/value streams.
+		/// </summary>
 		public PathFindingGridData(
 			List<Vec2Int> regionAnchorPoints,
-			SerializableDictionary<ulong, MacroSaveData> microGridNodeSaveDataDict) {
+			List<ulong> keysHigh,
+			List<ulong> keysLow,
+			List<MacroSaveData> values) {
 
 			(this._anchorsX, this._anchorsY) = SaveDataSerializer.FromVec2ToIntArrays(regionAnchorPoints ?? new());
-			this._dict = microGridNodeSaveDataDict ?? new();
+			this._keysHigh = keysHigh != null ? keysHigh.ToArray() : Array.Empty<ulong>();
+			this._keysLow = keysLow != null ? keysLow.ToArray() : Array.Empty<ulong>();
+			this._values = values != null ? values.ToArray() : Array.Empty<MacroSaveData>();
+		}
+
+		/// <summary>
+		/// Direct columnar constructor for pre-split array streams.
+		/// </summary>
+		public PathFindingGridData(
+			List<Vec2Int> regionAnchorPoints,
+			ulong[] keysHigh,
+			ulong[] keysLow,
+			MacroSaveData[] values) {
+
+			(this._anchorsX, this._anchorsY) = SaveDataSerializer.FromVec2ToIntArrays(regionAnchorPoints ?? new());
+			this._keysHigh = keysHigh ?? Array.Empty<ulong>();
+			this._keysLow = keysLow ?? Array.Empty<ulong>();
+			this._values = values ?? Array.Empty<MacroSaveData>();
+		}
+
+		/// <summary>
+		/// Convenience constructor that accepts a strongly-typed domain dictionary indexed by <see cref="BoundingBox"/>,
+		/// automatically bit-packing keys into 128-bit parallel high/low primitive streams via <c>SaveDataSerializer</c>.
+		/// </summary>
+		public PathFindingGridData(
+			List<Vec2Int> regionAnchorPoints,
+			Dictionary<BoundingBox, MacroSaveData> boundingBoxDict) {
+
+			(this._anchorsX, this._anchorsY) = SaveDataSerializer.FromVec2ToIntArrays(regionAnchorPoints ?? new());
+
+			int count = boundingBoxDict?.Count ?? 0;
+			this._keysHigh = new ulong[count];
+			this._keysLow = new ulong[count];
+			this._values = new MacroSaveData[count];
+
+			if (boundingBoxDict != null) {
+				int index = 0;
+				foreach (var kvp in boundingBoxDict) {
+					var (high, low) = SaveDataSerializer.PackBoundingBox32(kvp.Key);
+					this._keysHigh[index] = high;
+					this._keysLow[index] = low;
+					this._values[index] = kvp.Value;
+					index++;
+				}
+			}
 		}
 
 		#endregion

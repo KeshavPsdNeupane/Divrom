@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Project.Scripts.Features.PathFinding.GraphManager;
@@ -24,30 +25,31 @@ namespace Kope.Feature.PathFinding.Data {
      * 
      * 1. Storage Phase (Disk Payload):
      *    During editor baking (`SetGridDataInternal`), live graph nodes are bucketed by macro region in 
-     *    O(N) time and flattened into compact, index-aligned primitive arrays (List<Vec2Int>, List<byte>).
-     *    Dictionary keys are bit-packed into primitive 64-bit integer values (`ulong`), triggering Unity's 
-     *    C++ serializer to inline keys as raw hexadecimal byte streams instead of YAML objects.
-     *    This minimizes YAML text tags, shrinking the disk footprint by ~99.5%.
+     *    O(N) time and flattened into compact, index-aligned primitive arrays (int[], byte[]).
+     *    BoundingBox keys are split into 128-bit high/low primitive `ulong` pairs (`_keysHigh`, `_keysLow`),
+     *    triggering Unity's C++ serializer to inline keys as raw hexadecimal byte streams instead of YAML objects.
+     *    This eliminates structural YAML text tags, shrinking the disk footprint by ~99.5%.
      * 
      * 2. Runtime Phase (In-Memory Caches):
      *    On game boot or first property access, the container lazily re-hydrates primitive arrays and bit-packed 
-     *    keys into fully featured runtime lookup Dictionaries (`RebuildRuntimeCaches`).
+     *    tuple pairs into fully featured runtime lookup Dictionaries (`RebuildRuntimeCaches`).
      * 
      * ==============================================================================================
-     * DATA TRANSFORM & RE-HYDRATION GRAPH (INLINE HEX KEYS)
+     * DATA TRANSFORM & RE-HYDRATION GRAPH (COLUMNAR INLINE HEX KEYS)
      * ==============================================================================================
      * 
      * [BAKE TIME: SETGRIDDATAINTERNAL]
-     *  Live Runtime Objects ────► O(N) Macro Bucketing ────► Pack Keys (ulong) & Arrays ────► YAML Asset (Disk)
+     *  Live Runtime Objects ──► O(N) Macro Bucketing ──► Pack Keys (ulong high, low) & Arrays ──► YAML Asset (Disk)
      * 
      * [RUNTIME: LAZY RE-HYDRATION]
      *  YAML Asset (Disk)
      *   │
      *   ├── _gridData (PathFindingGridData)
-     *   │     └── SerializableDictionary<ulong, MacroSaveData>
-     *   │           ├── Key: ulong (64-Bit Bit-Packed BoundingBox Hex Stream)
-     *   │           ├── Parallel Lists: Vec2Int[], byte[] (Micro Nodes Hex Stream)
-     *   │           └── Parallel Lists: Target[], Traversal[], Flags[] (Connections)
+     *   │     ├── _keysHigh: ulong[] (Min.X / Min.Y Packed 64-bit Hex Words)
+     *   │     ├── _keysLow:  ulong[] (Max.X / Max.Y Packed 64-bit Hex Words)
+     *   │     └── _values:   MacroSaveData[]
+     *   │           ├── Parallel Column Arrays: _mPosX[], _mPosY[], _flags[]
+     *   │           └── Connection Columns: _minX[], _minY[], _maxX[], _maxY[]
      *   │
      *   ▼ (Triggered on 1st Property Getter Access)
      *  RebuildRuntimeCaches()  [Single-Pass Pre-Allocated Reconstruction]
@@ -159,8 +161,8 @@ namespace Kope.Feature.PathFinding.Data {
 		#region Baking Pipeline (SetGridDataInternal)
 
 		/// <summary>
-		/// Bakes live runtime grid graph objects into the compressed, parallel-list serialized struct format.
-		/// Bit-packs dictionary keys into primitive <c>ulong</c> values for inline hex string YAML output.
+		/// Bakes live runtime grid graph objects into the compressed, parallel-array serialized struct format.
+		/// Bit-packs BoundingBox keys into <c>(ulong high, ulong low)</c> primitive word pairs for inline hex string YAML output.
 		/// Executes in single-pass O(N) time by pre-bucketing micro nodes per macro bounding box.
 		/// </summary>
 		protected override void SetGridDataInternal(
@@ -181,9 +183,13 @@ namespace Kope.Feature.PathFinding.Data {
 				list.Add(microNode);
 			}
 
-			// STEP 2: Build the optimized macro save data dictionary with bit-packed ulong keys
-			var macroGridNodeSaveDataDict = new SerializableDictionary<ulong, MacroSaveData>(macroGridNodeDict.Count);
+			// STEP 2: Build the optimized macro save data arrays with 128-bit high/low key streams (Structure-of-Arrays)
+			int count = macroGridNodeDict.Count;
+			ulong[] keysHigh = new ulong[count];
+			ulong[] keysLow = new ulong[count];
+			MacroSaveData[] values = new MacroSaveData[count];
 
+			int index = 0;
 			foreach (var kvp in macroGridNodeDict) {
 				BoundingBox bbox = kvp.Key;
 				MacroGridNode macroNode = kvp.Value;
@@ -193,47 +199,51 @@ namespace Kope.Feature.PathFinding.Data {
 				int microCount = microNodesInRegion?.Count ?? 0;
 
 				List<Vec2Int> microRegionPositions = new(microCount);
-				List<byte> macroRegionStaticObstacleFlags = new(microCount);
+				byte[] macroRegionStaticObstacleFlags = new byte[microCount];
 
 				if (microNodesInRegion != null) {
 					for (int i = 0; i < microCount; i++) {
 						var micro = microNodesInRegion[i];
 						microRegionPositions.Add(micro.Position);
-						macroRegionStaticObstacleFlags.Add(SaveDataSerializer.ConvertBoolToByte(micro.IsStaticObstacle));
+						macroRegionStaticObstacleFlags[i] = SaveDataSerializer.ConvertBoolToByte(micro.IsStaticObstacle);
 					}
 				}
 
 				// Flatten outgoing neighboring connections into synchronized primitive arrays
 				macroAdjacencyList.TryGetValue(bbox, out List<MacroConnectionData> neighboringConnections);
-				neighboringConnections ??= new List<MacroConnectionData>();
+				int connCount = neighboringConnections?.Count ?? 0;
 
-				int connCount = neighboringConnections.Count;
 				List<BoundingBox> targetRegions = new(connCount);
-				List<MovementCapability> allowedTraversals = new(connCount);
-				List<byte> narrativeFlags = new(connCount);
+				MovementCapability[] allowedTraversals = new MovementCapability[connCount];
+				byte[] narrativeFlags = new byte[connCount];
 
-				for (int i = 0; i < connCount; i++) {
-					var conn = neighboringConnections[i];
-					targetRegions.Add(conn.ToBound);
-					allowedTraversals.Add(conn.AllowedTraversal);
-					narrativeFlags.Add(SaveDataSerializer.ConvertBoolToByte(conn.IsNarrativelyAccessible));
+				if (neighboringConnections != null) {
+					for (int i = 0; i < connCount; i++) {
+						var conn = neighboringConnections[i];
+						targetRegions.Add(conn.ToBound);
+						allowedTraversals[i] = conn.AllowedTraversal;
+						narrativeFlags[i] = SaveDataSerializer.ConvertBoolToByte(conn.IsNarrativelyAccessible);
+					}
 				}
 
-				// Bit-pack the BoundingBox key into a single ulong primitive
-				ulong packedKey = SaveDataSerializer.PackBoundingBox16(bbox);
+				// Bit-pack the 128-bit BoundingBox key into high/low ulong primitives
+				var (high, low) = SaveDataSerializer.PackBoundingBox32(bbox);
 
-				// Construct bucketed save struct for this macro region
-				macroGridNodeSaveDataDict[packedKey] = new MacroSaveData(
+				keysHigh[index] = high;
+				keysLow[index] = low;
+				values[index] = new MacroSaveData(
 					microRegionPositions,
 					macroRegionStaticObstacleFlags,
 					macroNode.TerrainType,
 					macroNode.AllowedTraversal,
 					new MacroConnectionSaveData(targetRegions, allowedTraversals, narrativeFlags)
 				);
+
+				index++;
 			}
 
-			// Assign final serialized struct payload and invalidate any old runtime caches
-			this._gridData = new PathFindingGridData(regionAnchorPoints, macroGridNodeSaveDataDict);
+			// Assign final serialized payload and invalidate any active runtime caches
+			this._gridData = new PathFindingGridData(regionAnchorPoints, keysHigh, keysLow, values);
 			Debug.Log($"PathFindingGridDataContainer: Grid data baked for {microGridNodeDict.Count} micro nodes across {macroGridNodeDict.Count} macro regions.");
 		}
 
@@ -243,27 +253,32 @@ namespace Kope.Feature.PathFinding.Data {
 
 		/// <summary>
 		/// Reconstructs full C# runtime domain instances (MacroGridNode, MicroGridNode, MacroConnectionData)
-		/// directly from bit-packed ulong keys and parallel primitive lists in a single pre-allocated pass.
+		/// directly from high/low key arrays and parallel primitive streams in a single pre-allocated pass.
 		/// </summary>
 		private void RebuildRuntimeCaches() {
-			var saveDataDict = this._gridData.MicroGridNodeSaveDataDict;
+			ulong[] keysHigh = this._gridData.KeysHigh;
+			ulong[] keysLow = this._gridData.KeysLow;
+			MacroSaveData[] values = this._gridData.Values;
+
+			int macroCount = values != null ? values.Length : 0;
 
 			// Pre-allocate dictionaries with exact capacities to eliminate internal array resizing/re-hashing
-			this._macroGridNodeDict = new Dictionary<BoundingBox, MacroGridNode>(saveDataDict.Count);
-			this._macroAdjacencyList = new Dictionary<BoundingBox, List<MacroConnectionData>>(saveDataDict.Count);
+			this._macroGridNodeDict = new Dictionary<BoundingBox, MacroGridNode>(macroCount);
+			this._macroAdjacencyList = new Dictionary<BoundingBox, List<MacroConnectionData>>(macroCount);
 
-			// Pre-calculate exact total micro-nodes across all macro regions for single-allocation capacity
+			// Pre-calculate total micro-nodes across all macro regions for a single allocation
 			int totalMicroNodes = 0;
-			foreach (var kvp in saveDataDict) {
-				totalMicroNodes += kvp.Value.MacroRegionAnchorPoints.Count;
+			for (int i = 0; i < macroCount; i++) {
+				totalMicroNodes += values[i].MacroRegionAnchorPoints.Count;
 			}
 			this._microGridNodeDict = new Dictionary<Vec2Int, MicroGridNode>(totalMicroNodes);
 
-			// Rehydrate domain objects from bit-packed keys and parallel primitive lists
-			foreach (var kvp in saveDataDict) {
-				ulong packedKey = kvp.Key;
-				BoundingBox bbox = SaveDataSerializer.UnpackBoundingBox16(packedKey);
-				MacroSaveData macroData = kvp.Value;
+			// Rehydrate domain objects directly from parallel primitive key/value streams
+			for (int i = 0; i < macroCount; i++) {
+				ulong high = keysHigh[i];
+				ulong low = keysLow[i];
+				BoundingBox bbox = SaveDataSerializer.UnpackBoundingBox32(high, low);
+				MacroSaveData macroData = values[i];
 
 				// 1. Reconstruct MacroGridNode instance
 				MacroGridNode macroNode = new(
@@ -273,30 +288,32 @@ namespace Kope.Feature.PathFinding.Data {
 				);
 				this._macroGridNodeDict[bbox] = macroNode;
 
-				// 2. Reconstruct MicroGridNodes directly from synchronized parallel lists
+				// 2. Reconstruct MicroGridNodes directly from synchronized parallel streams
 				var positions = macroData.MacroRegionAnchorPoints;
 				var obstacleFlags = macroData.MacroRegionStaticObstacleFlags;
 
-				for (int i = 0; i < positions.Count; i++) {
-					Vec2Int pos = positions[i];
-					bool isObstacle = SaveDataSerializer.ConvertByteToBool(obstacleFlags[i]);
+				int microNodeCount = positions.Count;
+				for (int j = 0; j < microNodeCount; j++) {
+					Vec2Int pos = positions[j];
+					bool isObstacle = SaveDataSerializer.ConvertByteToBool(obstacleFlags[j]);
 
 					// Instantiate MicroGridNode with direct parent reference to the newly created MacroGridNode
 					this._microGridNodeDict[pos] = new MicroGridNode(pos, isObstacle, macroNode);
 				}
 
-				// 3. Reconstruct MacroConnectionData graph edges from MacroConnectionSaveData lists
+				// 3. Reconstruct MacroConnectionData graph edges from MacroConnectionSaveData primitive arrays
 				var connData = macroData.NeighboringRegionBoundingBoxes;
 				var targets = connData.TargetRegions;
 				var traversals = connData.AllowedTraversal;
 				var narrativeFlags = connData.IsNarrativelyAccessible;
 
-				List<MacroConnectionData> connections = new(targets.Count);
-				for (int i = 0; i < targets.Count; i++) {
+				int connectionCount = targets.Count;
+				List<MacroConnectionData> connections = new(connectionCount);
+				for (int j = 0; j < connectionCount; j++) {
 					connections.Add(new MacroConnectionData(
-						targets[i],
-						traversals[i],
-						SaveDataSerializer.ConvertByteToBool(narrativeFlags[i])
+						targets[j],
+						traversals[j],
+						SaveDataSerializer.ConvertByteToBool(narrativeFlags[j])
 					));
 				}
 				this._macroAdjacencyList[bbox] = connections;

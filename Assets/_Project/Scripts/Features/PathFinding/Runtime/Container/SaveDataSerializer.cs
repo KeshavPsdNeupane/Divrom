@@ -15,23 +15,24 @@ namespace Kope.Feature.PathFinding.Data {
      * 
      *   Standard BoundingBox YAML Output (6 lines per item):
      *     _min:
-     *       x: -128
-     *       y: 64
+     *       x: -128000
+     *       y: 64000
      *     _max:
-     *       x: -64
-     *       y: 128
+     *       x: -64000
+     *       y: 128000
      * 
      * Across 50,000 grid nodes, these structural tags create millions of lines of pure whitespace 
      * and redundant text keys (`_min:`, `_max:`, `x:`, `y:`), inflating grid data assets to 5MB+.
      * 
-     * [The Engineering Solution: Bit-Packing & Columnar Inline Hex Streaming]
+     * [The Engineering Solution: 128-Bit Key Splitting & Columnar Inline Hex Streaming]
      * This utility class resolves YAML bloat through two primary memory transformations:
      * 
-     * 1. Primitive 64-Bit Bit-Packing (Dictionary Keys):
+     * 1. 128-Bit Tuple Bit-Packing (BoundingBox Keys):
      *    Unity's C++ serializer treats primitive integral types (`ulong`, `long`) as single-line hex 
-     *    streams when stored in arrays/dictionaries. By bit-shifting 4 spatial coordinates into a 
-     *    single 64-bit `ulong` word, we collapse a 6-line YAML struct key into a 1-line inline hex 
-     *    value, completely bypassing object node overhead.
+     *    streams when stored in arrays/lists. By splitting a full 128-bit BoundingBox (4 x 32-bit 
+     *    signed integers) into `(ulong high, ulong low)` primitive pairs, we maintain unconstrained 
+     *    32-bit coordinate space (-2.14B to +2.14B) while forcing Unity to emit compact, inline hex 
+     *    array entries with ZERO struct wrapper overhead.
      * 
      * 2. Structure-of-Arrays (SoA) Transposition (List Arrays):
      *    Lists of domain structs (`List<Vec2Int>`) are pivoted into parallel primitive integer 
@@ -48,17 +49,23 @@ namespace Kope.Feature.PathFinding.Data {
      *    │ Range: [-2,147,483,648 to 2,147,483,647]│ Range: [-2,147,483,648 to 2,147,483,647]│
      *    └────────────────────────────────────────┴────────────────────────────────────────┘
      * 
-     * 2. PackBoundingBox16 (64-Bit Unsigned ulong)
-     *    ┌───────────────────┬───────────────────┬───────────────────┬───────────────────┐
-     *    │ Bits 63..48 (16B) │ Bits 47..32 (16B) │ Bits 31..16 (16B) │ Bits 15..0  (16B) │
-     *    │ Min.X (-32k..32k) │ Min.Y (-32k..32k) │ Max.X (-32k..32k) │ Max.Y (-32k..32k) │
-     *    └───────────────────┴───────────────────┴───────────────────┴───────────────────┘
+     * 2. PackBoundingBox32 (128-Bit Split into High/Low 64-Bit ulong Tuple)
+     *    HIGH WORD (_keysHigh / ulong):
+     *    ┌────────────────────────────────────────┬────────────────────────────────────────┐
+     *    │ Bits 63..32 (32-Bit Signed int)        │ Bits 31..0  (32-Bit Signed int)        │
+     *    │ Min.X (-2,147,483,648 to 2,147,483,647)│ Min.Y (-2,147,483,648 to 2,147,483,647)│
+     *    └────────────────────────────────────────┴────────────────────────────────────────┘
+     *    LOW WORD (_keysLow / ulong):
+     *    ┌────────────────────────────────────────┬────────────────────────────────────────┐
+     *    │ Bits 63..32 (32-Bit Signed int)        │ Bits 31..0  (32-Bit Signed int)        │
+     *    │ Max.X (-2,147,483,648 to 2,147,483,647)│ Max.Y (-2,147,483,648 to 2,147,483,647)│
+     *    └────────────────────────────────────────┴────────────────────────────────────────┘
      * ==============================================================================================
      */
 
 	/// <summary>
 	/// Static serialization utility that flattens strongly-typed domain spatial structs (<see cref="Vec2Int"/>, <see cref="BoundingBox"/>)
-	/// into parallel primitive array columns (SoA) and bit-packed 64-bit integer keys (<c>ulong</c>/<c>long</c>).
+	/// into parallel primitive array columns (SoA) and bit-packed <c>(ulong high, ulong low)</c> tuples.
 	/// Eliminates Unity YAML structural tag replication, shrinking on-disk asset footprints by ~99.5%.
 	/// </summary>
 	public static class SaveDataSerializer {
@@ -69,10 +76,6 @@ namespace Kope.Feature.PathFinding.Data {
 		/// Bit-packs a 2D integer vector into a single 64-bit signed integer word (<c>long</c>).
 		/// Allocates 32 bits for X and 32 bits for Y, maintaining full 32-bit signed integer precision.
 		/// </summary>
-		/// <remarks>
-		/// When used as a key in serialized collections, Unity emits this primitive as a single inline 
-		/// hex value rather than expanding a full multi-line <c>Vec2Int</c> YAML object.
-		/// </remarks>
 		/// <param name="v">The 2D vector coordinate to pack.</param>
 		/// <returns>A 64-bit signed integer containing high-32 bit X and low-32 bit Y coordinates.</returns>
 		public static long PackVec2Int(Vec2Int v) {
@@ -92,42 +95,38 @@ namespace Kope.Feature.PathFinding.Data {
 		}
 
 		/// <summary>
-		/// Bit-packs a <see cref="BoundingBox"/> region into a single 64-bit unsigned integer word (<c>ulong</c>).
-		/// Shifts four 16-bit signed coordinate fields (<c>Min.X</c>, <c>Min.Y</c>, <c>Max.X</c>, <c>Max.Y</c>) 
-		/// into contiguous 16-bit bitfields within the 64-bit word.
+		/// Bit-packs a full 128-bit <see cref="BoundingBox"/> region into a 64-bit unsigned integer word tuple <c>(ulong high, ulong low)</c>.
+		/// Preserves full 32-bit signed <c>int</c> coordinate space across all 4 boundaries (<c>Min.X</c>, <c>Min.Y</c>, <c>Max.X</c>, <c>Max.Y</c>).
 		/// </summary>
-		/// <remarks>
-		/// <b>Spatial Boundaries &amp; Constraints:</b><br/>
-		/// Because each coordinate is constrained to 16 bits (<c>short</c>), spatial grid coordinates must remain 
-		/// within the bounds of <b>-32,768 to +32,767</b> units. This easily accommodates massive world grid maps 
-		/// while forcing Unity's C++ serializer to emit dictionary keys as single inline hexadecimal string lines.
-		/// </remarks>
 		/// <param name="box">The bounding box spatial region to pack.</param>
-		/// <returns>A 64-bit unsigned integer word containing all four packed 16-bit bounding coordinates.</returns>
-		public static ulong PackBoundingBox16(BoundingBox box) {
-			// Re-interpret signed 16-bit shorts as unsigned 16-bit ushorts for safe bitwise OR operations
-			ushort minX = (ushort)(short)box.Min.X;
-			ushort minY = (ushort)(short)box.Min.Y;
-			ushort maxX = (ushort)(short)box.Max.X;
-			ushort maxY = (ushort)(short)box.Max.Y;
-
-			return ((ulong)minX << 48) |
-				   ((ulong)minY << 32) |
-				   ((ulong)maxX << 16) |
-				   ((ulong)maxY);
+		/// <returns>A tuple containing high (Min.X, Min.Y) and low (Max.X, Max.Y) 64-bit unsigned integer words.</returns>
+		public static (ulong high, ulong low) PackBoundingBox32(BoundingBox box) {
+			// Cast int -> uint first to prevent C# sign-extension, then cast to ulong for bit shifts
+			ulong high = ((ulong)(uint)box.Min.X << 32) | (uint)box.Min.Y;
+			ulong low = ((ulong)(uint)box.Max.X << 32) | (uint)box.Max.Y;
+			return (high, low);
 		}
 
 		/// <summary>
-		/// Reconstructs a strongly-typed <see cref="BoundingBox"/> domain object from a 64-bit unsigned packed word.
+		/// Reconstructs a strongly-typed <see cref="BoundingBox"/> domain object from a <c>(ulong high, ulong low)</c> 64-bit word pair.
 		/// </summary>
-		/// <param name="packed">The 64-bit packed integer generated by <see cref="PackBoundingBox16"/>.</param>
+		/// <param name="packed">Tuple containing high (Min.X/Min.Y) and low (Max.X/Max.Y) 64-bit packed words.</param>
 		/// <returns>The re-hydrated <see cref="BoundingBox"/> domain instance.</returns>
-		public static BoundingBox UnpackBoundingBox16(ulong packed) {
-			// Shift and cast back to signed 16-bit short to restore negative coordinate signs correctly
-			short minX = (short)(packed >> 48);
-			short minY = (short)(packed >> 32);
-			short maxX = (short)(packed >> 16);
-			short maxY = (short)(packed & 0xFFFF);
+		public static BoundingBox UnpackBoundingBox32((ulong high, ulong low) packed) {
+			return UnpackBoundingBox32(packed.high, packed.low);
+		}
+
+		/// <summary>
+		/// Reconstructs a strongly-typed <see cref="BoundingBox"/> domain object from high and low 64-bit unsigned packed words.
+		/// </summary>
+		/// <param name="high">The 64-bit word containing packed Min.X (high 32) and Min.Y (low 32).</param>
+		/// <param name="low">The 64-bit word containing packed Max.X (high 32) and Max.Y (low 32).</param>
+		/// <returns>The re-hydrated <see cref="BoundingBox"/> domain instance.</returns>
+		public static BoundingBox UnpackBoundingBox32(ulong high, ulong low) {
+			int minX = (int)(high >> 32);
+			int minY = (int)(high & 0xFFFFFFFFL);
+			int maxX = (int)(low >> 32);
+			int maxY = (int)(low & 0xFFFFFFFFL);
 
 			return new BoundingBox(new Vec2Int(minX, minY), new Vec2Int(maxX, maxY));
 		}
@@ -140,14 +139,10 @@ namespace Kope.Feature.PathFinding.Data {
 		/// Transposes an Array-of-Structs (AoS) <c>List&lt;Vec2Int&gt;</c> into a Structure-of-Arrays (SoA) layout 
 		/// consisting of two parallel integer coordinate streams (<c>xArray</c>, <c>yArray</c>).
 		/// </summary>
-		/// <remarks>
-		/// Strips repeating field keys (<c>x:</c>, <c>y:</c>) from every list element in Unity YAML serialization, 
-		/// outputting compact primitive integer byte streams instead.
-		/// </remarks>
 		/// <param name="vec2List">Source list of 2D vector domain objects.</param>
 		/// <returns>A tuple containing synchronized, index-aligned X and Y integer primitive arrays.</returns>
 		public static (int[] xArray, int[] yArray) FromVec2ToIntArrays(List<Vec2Int> vec2List) {
-			int count = vec2List.Count;
+			int count = vec2List != null ? vec2List.Count : 0;
 			int[] xArray = new int[count];
 			int[] yArray = new int[count];
 
@@ -167,6 +162,8 @@ namespace Kope.Feature.PathFinding.Data {
 		/// <returns>A re-hydrated list of <see cref="Vec2Int"/> domain instances.</returns>
 		/// <exception cref="ArgumentException">Thrown if input arrays do not share identical lengths.</exception>
 		public static List<Vec2Int> FromIntArraysToVec2(int[] xArray, int[] yArray) {
+			if (xArray == null || yArray == null) return new List<Vec2Int>();
+
 			if (xArray.Length != yArray.Length) {
 				throw new ArgumentException("X and Y coordinate arrays must have identical lengths.");
 			}
@@ -188,15 +185,12 @@ namespace Kope.Feature.PathFinding.Data {
 		/// Transposes an Array-of-Structs (AoS) <c>List&lt;BoundingBox&gt;</c> into a Structure-of-Arrays (SoA) layout 
 		/// consisting of four parallel primitive integer streams (<c>minX</c>, <c>minY</c>, <c>maxX</c>, <c>maxY</c>).
 		/// </summary>
-		/// <remarks>
-		/// Strips nested <c>_min</c> and <c>_max</c> YAML object tags entirely across all graph connections.
-		/// </remarks>
 		/// <param name="boxList">Source list of bounding box domain objects.</param>
 		/// <returns>Nested tuples containing parallel primitive coordinate arrays for Min and Max points.</returns>
 		public static ((int[] minX, int[] minY) min, (int[] maxX, int[] maxY) max) FromBoundingBoxListToIntArrayPairs(
 			List<BoundingBox> boxList
 		) {
-			int count = boxList.Count;
+			int count = boxList != null ? boxList.Count : 0;
 			int[] minXArray = new int[count];
 			int[] minYArray = new int[count];
 			int[] maxXArray = new int[count];
@@ -216,16 +210,12 @@ namespace Kope.Feature.PathFinding.Data {
 		/// Re-hydrates four parallel primitive coordinate streams (<c>minX</c>, <c>minY</c>, <c>maxX</c>, <c>maxY</c>) 
 		/// back into a strongly-typed <c>List&lt;BoundingBox&gt;</c> domain collection.
 		/// </summary>
-		/// <param name="minX">Parallel Min.X coordinate array.</param>
-		/// <param name="minY">Parallel Min.Y coordinate array.</param>
-		/// <param name="maxX">Parallel Max.X coordinate array.</param>
-		/// <param name="maxY">Parallel Max.Y coordinate array.</param>
-		/// <returns>A re-hydrated list of <see cref="BoundingBox"/> domain instances.</returns>
-		/// <exception cref="ArgumentException">Thrown if any coordinate array differs in length.</exception>
 		public static List<BoundingBox> FromIntArrayPairsToBoundingBoxList(
 			int[] minX, int[] minY,
 			int[] maxX, int[] maxY
 		) {
+			if (minX == null || minY == null || maxX == null || maxY == null) return new List<BoundingBox>();
+
 			if (minX.Length != minY.Length ||
 				maxX.Length != maxY.Length ||
 				minX.Length != maxX.Length) {
@@ -249,7 +239,6 @@ namespace Kope.Feature.PathFinding.Data {
 
 		/// <summary>
 		/// Converts a C# boolean to a single primitive <c>byte</c> (1 for true, 0 for false).
-		/// Prevents Unity YAML from writing expanded string values (<c>true</c> / <c>false</c>).
 		/// </summary>
 		public static byte ConvertBoolToByte(bool value) => value ? (byte)1 : (byte)0;
 
