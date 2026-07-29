@@ -43,6 +43,13 @@ namespace Kope.Core.Collections {
 		public SerializableDictionary(IEqualityComparer<TKey> comparer) {
 			this._dict = new Dictionary<TKey, TValue>(comparer);
 		}
+		public SerializableDictionary(int capacity, IEqualityComparer<TKey> comparer = null) {
+			this._dict = new Dictionary<TKey, TValue>(capacity, comparer);
+		}
+		public SerializableDictionary(IDictionary<TKey, TValue> source) {
+			this._dict = new Dictionary<TKey, TValue>(source);
+			this._isDirty = true;
+		}
 
 		public SerializableDictionary(IDictionary<TKey, TValue> source, IEqualityComparer<TKey> comparer = null) {
 			this._dict = new Dictionary<TKey, TValue>(comparer);

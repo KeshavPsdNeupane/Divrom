@@ -16,14 +16,14 @@ namespace Project.Scripts.Features.PathFinding.GraphManager {
 	/// </remarks>
 	[Serializable]
 	public class MicroGraphManager {
-		private readonly SerializableDictionary<Vec2Int, MicroGridNode> _microNodes;
+		private readonly Dictionary<Vec2Int, MicroGridNode> _microNodes;
 		public int MicroNodeCount => this._microNodes.Count;
 
 		public MicroGraphManager() {
-			this._microNodes = new SerializableDictionary<Vec2Int, MicroGridNode>();
+			this._microNodes = new Dictionary<Vec2Int, MicroGridNode>();
 		}
 
-		public MicroGraphManager(SerializableDictionary<Vec2Int, MicroGridNode> microNodes) {
+		public MicroGraphManager(Dictionary<Vec2Int, MicroGridNode> microNodes) {
 			this._microNodes = microNodes;
 			//	Debug.Log($"MicroGraphManager initialized with {microNodes.Count} nodes.");
 			//this._microNodes.PrintFirstNEntries(5, "Micro Nodes");

@@ -295,7 +295,7 @@ namespace Kope.Feature.PathFinding {
 		}
 
 		public PathfindingGraphManager CreateRuntimeGraphManager() {
-			if (gridDataContainer == null || gridDataContainer.GridData.MicroGridNodeDict == null || gridDataContainer.GridData.MicroGridNodeDict.Count == 0) {
+			if (gridDataContainer == null || gridDataContainer.MicroGridNodeDict == null || gridDataContainer.MicroGridNodeDict.Count == 0) {
 				Debug.LogWarning("PathChecker has no baked data! Did you forget to bake the grid or assign the ScriptableObject?");
 			}
 

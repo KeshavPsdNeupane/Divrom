@@ -109,7 +109,7 @@ public class PathFindingGizmos : MonoBehaviour {
 		});
 
 		MacroGraphManager macroGraphManager = new(this._graphDataContainer.GridData.MacroGridNodeDict, neighborDict);
-		MicroGraphManager microGraphManager = new(this._graphDataContainer.GridData.MicroGridNodeDict);
+		MicroGraphManager microGraphManager = new(this._graphDataContainer.MicroGridNodeDict);
 
 		this._graphManager = new(macroGraphManager, microGraphManager);
 		this._pathfinder = new AStarMacro(this._graphManager, this._greedyNess, this._costCalculationType);

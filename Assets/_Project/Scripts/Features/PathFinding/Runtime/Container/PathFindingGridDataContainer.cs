@@ -35,6 +35,29 @@ public class PathFindingGridDataContainer : ScriptableObject {
 	/// </summary>
 	public PathFindingGridData GridData => this._gridData;
 
+
+	private Dictionary<Vec2Int, MicroGridNode> _microGridNodeDict;
+	public Dictionary<Vec2Int, MicroGridNode> MicroGridNodeDict {
+		// using a plane Dictionary here instead of a SerializableDictionary to avoid Unity 
+		// serialization overhead and to allow for more efficient runtime access. The data is baked and stored in
+		//  the serialized PathFindingGridData, so we can safely reconstruct the runtime dictionary on demand.
+		get {
+			if (this._microGridNodeDict == null || this._microGridNodeDict.Count == 0) {
+				this._microGridNodeDict = new(this._gridData.MicroGridNodeSaveDataDict.Count);
+				foreach (var kvp in this._gridData.MicroGridNodeSaveDataDict) {
+					var ParentMacroGrid = this._gridData.MacroGridNodeDict[kvp.Value.ParentMacroGrid];
+					this._microGridNodeDict[kvp.Key] = MicroGridNode.FromSaveData(
+						kvp.Key,
+						kvp.Value.IsStaticObstacle,
+						ParentMacroGrid
+					);
+				}
+			}
+			return this._microGridNodeDict;
+		}
+	}
+
+
 	/// <summary>
 	/// Populates and serializes the pathfinding grid datasets.
 	/// </summary>
@@ -49,8 +72,15 @@ public class PathFindingGridDataContainer : ScriptableObject {
 		// is not affected by external modifications after being set
 		// or GC is not marking these dictionaries for collection, 
 		// which would result in data loss
+
+		Dictionary<Vec2Int, MicroGridNodeSaveData> microGridNodeSaveDataDict = new(microGridNodeDict.Count);
+		foreach (var kvp in microGridNodeDict) {
+			microGridNodeSaveDataDict[kvp.Key] = kvp.Value.ToSaveData().data;
+		}
+
+
 		this._gridData = new PathFindingGridData(
-			new(microGridNodeDict),
+			new(microGridNodeSaveDataDict),
 			new(macroGridNodeDict),
 			new(macroAdjacencyList),
 			new(regionAnchorPoints)
