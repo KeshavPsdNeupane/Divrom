@@ -4,7 +4,6 @@ using Kope.Core.Attribute;
 using Kope.Core.Collections.Hashes;
 using UnityEngine;
 
-
 /*
  * PERFORMANCE ARCHITECTURE NOTE: HASH CODE CACHING
  * Do NOT cache or memoize GetHashCode() inside Vec2Int.
@@ -20,7 +19,6 @@ using UnityEngine;
  */
 
 namespace Kope.Feature.PathFinding.Node {
-
 	/// <summary>
 	/// Represents an immutable 2D integer coordinate in the pathfinding grid.
 	/// </summary>
@@ -102,10 +100,10 @@ namespace Kope.Feature.PathFinding.Node {
 			return Mathf.Abs(firstCenter.X - secondCenter.X) + Mathf.Abs(firstCenter.Y - secondCenter.Y);
 		}
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static float EuclideanDistanceTo(Vec2Int firstCenter, Vec2Int secondCenter) {
+		public static int EuclideanDistanceTo(Vec2Int firstCenter, Vec2Int secondCenter) {
 			int x = firstCenter.X - secondCenter.X;
 			int y = firstCenter.Y - secondCenter.Y;
-			return Mathf.Sqrt(x * x + y * y);
+			return Mathf.FloorToInt(Mathf.Sqrt(x * x + y * y));
 		}
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static int OctileDistanceTo(Vec2Int first, Vec2Int second) {
@@ -191,7 +189,6 @@ namespace Kope.Feature.PathFinding.Node {
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Vec2Int operator /(Vec2Int a, int scalar) => new(a.X / scalar, a.Y / scalar);
 
-		//	public static implicit operator UnityEngine.Vector3(Vec2Int v) => new(v.X, v.Y, 0f);
 		/// <summary>
 		/// Converts this cell index to the world-space position of its center point.
 		/// </summary>

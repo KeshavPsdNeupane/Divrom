@@ -94,34 +94,7 @@ namespace Kope.Feature.PathFinding.Node {
 
 		#endregion
 
-		#region Methods & Overrides
-
-		/// <summary>
-		/// Calculates the directional movement cost between two macro region nodes using Manhattan distance.
-		/// </summary>
-		/// <remarks>
-		/// Because macro regions vary in physical scale, this computes linear Manhattan spacing between 
-		/// centers multiplied by <see cref="TRAVERSAL_COST"/>, avoiding expensive square root math 
-		/// while ensuring equal step cost scaling.
-		/// </remarks>
-		/// <param name="to">Destination macro grid node.</param>
-		/// <param name="from">Origin macro grid node.</param>
-		/// <returns>Computed integer directional path traversal cost.</returns>
-		/// <exception cref="ArgumentNullException">Thrown if either node parameter is null.</exception>
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static int GetManHattenTraversalCost(BoundingBox to, BoundingBox from) {
-			int manhattanDistance = Vec2Int.ManhattanDistanceTo(from.Center, to.Center);
-			return manhattanDistance * TRAVERSAL_COST;
-		}
-		public static int GetTraversalCostEuclidean(BoundingBox to, BoundingBox from) {
-			float euclideanDistance = Vec2Int.EuclideanDistanceTo(from.Center, to.Center);
-			return Mathf.RoundToInt(euclideanDistance * TRAVERSAL_COST);
-		}
-
-		public static int GetTraversalCostOctile(BoundingBox to, BoundingBox from) {
-			int octileDistance = Vec2Int.OctileDistanceTo(from.Center, to.Center);
-			return octileDistance * TRAVERSAL_COST;
-		}
+		#region Methods 
 		/// <summary>
 		/// Adds a unique micro grid position to this region's spatial registry.
 		/// </summary>
@@ -146,7 +119,39 @@ namespace Kope.Feature.PathFinding.Node {
 		public void RemoveMicroGridNodePosition(Vec2Int position) {
 			this._microGridNodePositions.Remove(position);
 		}
+		#endregion
 
+		#region Cost Calculation
+		/// <summary>
+		/// Calculates the directional movement cost between two macro region nodes using Manhattan distance.
+		/// </summary>
+		/// <remarks>
+		/// Because macro regions vary in physical scale, this computes linear Manhattan spacing between 
+		/// centers multiplied by <see cref="TRAVERSAL_COST"/>, avoiding expensive square root math 
+		/// while ensuring equal step cost scaling.
+		/// </remarks>
+		/// <param name="to">Destination macro grid node.</param>
+		/// <param name="from">Origin macro grid node.</param>
+		/// <returns>Computed integer directional path traversal cost.</returns>
+		/// <exception cref="ArgumentNullException">Thrown if either node parameter is null.</exception>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static int ManHattenCost(BoundingBox to, BoundingBox from) {
+			int manhattanDistance = Vec2Int.ManhattanDistanceTo(from.Center, to.Center);
+			return manhattanDistance * TRAVERSAL_COST;
+		}
+		public static int EuclideanCost(BoundingBox to, BoundingBox from) {
+			float euclideanDistance = Vec2Int.EuclideanDistanceTo(from.Center, to.Center);
+			return Mathf.RoundToInt(euclideanDistance * TRAVERSAL_COST);
+		}
+
+		public static int OctileCost(BoundingBox to, BoundingBox from) {
+			int octileDistance = Vec2Int.OctileDistanceTo(from.Center, to.Center);
+			return octileDistance * TRAVERSAL_COST;
+		}
+		#endregion
+
+
+		#region Overrides
 		public override string ToString() =>
 			$"MacroGridNode(Bounds: {this._bound}, TerrainType: {this.TerrainType}, AllowedTraversal: {this.AllowedTraversal}, TotalMicroGrids: {this.TotalMicroGrids})";
 

@@ -27,6 +27,8 @@ namespace Project.Scripts.Features.PathFinding.GraphManager {
 			//	Debug.Log($"MicroGraphManager initialized with {microNodes.Count} nodes.");
 			//this._microNodes.PrintFirstNEntries(5, "Micro Nodes");
 		}
+
+
 		/// <summary>
 		/// Registers or overwrites a micro grid node in the graph.
 		/// </summary>
@@ -76,6 +78,7 @@ namespace Project.Scripts.Features.PathFinding.GraphManager {
 				}
 			}
 		}
+
 
 #if UNITY_EDITOR
 		/// <summary>

@@ -32,6 +32,11 @@ namespace Project.Scripts.Features.PathFinding.GraphManager {
 			this._macroGraph = macroGraph ?? new MacroGraphManager();
 			this._microGraph = microGraph ?? new MicroGraphManager();
 		}
+		#region  Micro Node Management
+		public bool TryGetMicroNode(Vec2Int position, [MaybeNullWhen(false)] out MicroGridNode microNode) {
+			return this._microGraph.TryGetNode(position, out microNode);
+		}
+
 
 		/// <summary>
 		/// Safely registers a micro node and automatically associates it with its parent macro region.
@@ -61,7 +66,7 @@ namespace Project.Scripts.Features.PathFinding.GraphManager {
 				Debug.LogWarning($"Attempted to remove MicroGridNode at {position}, but it does not exist.");
 			}
 		}
-
+		#endregion
 
 		#region  Macro Node Management
 

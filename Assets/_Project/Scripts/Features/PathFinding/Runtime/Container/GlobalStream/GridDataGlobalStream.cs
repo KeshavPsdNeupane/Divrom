@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Kope.Core.Attribute;
 using Kope.EntityIdentity;
 using Kope.Feature.PathFinding.Node;
 using UnityEngine;
@@ -59,7 +60,7 @@ namespace Kope.Feature.PathFinding.Data {
 		/// Serialized spatial anchor points encoded as packed 64-bit longs (X in High-32, Y in Low-32).
 		/// Used to establish macro region alignment in global world-space coordinates.
 		/// </summary>
-		[SerializeField] private long[] _anchors;
+		[SerializeField, ReadOnly] private long[] _anchors;
 
 		// ==========================================================================================
 		// PARALLEL MACRO REGION METADATA STREAMS (1-to-1 Index Alignment per Macro Region)
@@ -67,16 +68,16 @@ namespace Kope.Feature.PathFinding.Data {
 		// ==========================================================================================
 
 		/// <summary> High 64 bits of the 128-bit key identifying each Macro Region's BoundingBox. </summary>
-		[SerializeField] private ulong[] _keysHigh;
+		[SerializeField, ReadOnly] private ulong[] _keysHigh;
 
 		/// <summary> Low 64 bits of the 128-bit key identifying each Macro Region's BoundingBox. </summary>
-		[SerializeField] private ulong[] _keysLow;
+		[SerializeField, ReadOnly] private ulong[] _keysLow;
 
 		/// <summary> Terrain classification metadata column for each Macro Region. </summary>
-		[SerializeField] private TerrainType[] _tt;
+		[SerializeField, ReadOnly] private TerrainType[] _tt;
 
 		/// <summary> Allowed movement capability flags (e.g., Ground, Flying, Water) per Macro Region. </summary>
-		[SerializeField] private MovementCapability[] _trav;
+		[SerializeField, ReadOnly] private MovementCapability[] _trav;
 
 		/// <summary>
 		/// Bit-packed slice descriptors for Micro Nodes. 
@@ -84,7 +85,7 @@ namespace Kope.Feature.PathFinding.Data {
 		/// High 32 bits = Starting index in <see cref="_globMicroMPos"/> / <see cref="_globMicroFlags"/>.
 		/// Low 32 bits  = Number of sequential micro-nodes belonging to this Macro Region.
 		/// </summary>
-		[SerializeField] private long[] _globMicroSlices;
+		[SerializeField, ReadOnly] private long[] _globMicroSlices;
 
 		/// <summary>
 		/// Bit-packed slice descriptors for Macro Connections (Graph Edges).
@@ -92,7 +93,7 @@ namespace Kope.Feature.PathFinding.Data {
 		/// High 32 bits = Starting index in <see cref="_globConnMinPos"/> / <see cref="_globConnMaxPos"/> etc.
 		/// Low 32 bits  = Number of outgoing graph connection edges originating from this Macro Region.
 		/// </summary>
-		[SerializeField] private long[] _globConnSlices;
+		[SerializeField, ReadOnly] private long[] _globConnSlices;
 
 		// ==========================================================================================
 		// MONOLITHIC MASTER MICRO-NODE PRIMITIVE STREAMS
@@ -100,10 +101,10 @@ namespace Kope.Feature.PathFinding.Data {
 		// ==========================================================================================
 
 		/// <summary> Packed 64-bit local position data (<c>Vec2Int</c>) for every micro-node in the map. </summary>
-		[SerializeField] private long[] _globMicroMPos;
+		[SerializeField, ReadOnly] private long[] _globMicroMPos;
 
 		/// <summary> Packed bit-flags (e.g., static obstacle status, walkability) per micro-node. </summary>
-		[SerializeField] private byte[] _globMicroFlags;
+		[SerializeField, ReadOnly] private byte[] _globMicroFlags;
 
 		// ==========================================================================================
 		// MONOLITHIC MASTER MACRO-CONNECTION PRIMITIVE STREAMS
@@ -111,16 +112,16 @@ namespace Kope.Feature.PathFinding.Data {
 		// ==========================================================================================
 
 		/// <summary> High 64-bit packed representation of target BoundingBox min bounds. </summary>
-		[SerializeField] private long[] _globConnMinPos;
+		[SerializeField, ReadOnly] private long[] _globConnMinPos;
 
 		/// <summary> Low 64-bit packed representation of target BoundingBox max bounds. </summary>
-		[SerializeField] private long[] _globConnMaxPos;
+		[SerializeField, ReadOnly] private long[] _globConnMaxPos;
 
 		/// <summary> Traversal requirement flags for each connection edge. </summary>
-		[SerializeField] private MovementCapability[] _globConnTrav;
+		[SerializeField, ReadOnly] private MovementCapability[] _globConnTrav;
 
 		/// <summary> Narrative accessibility flags (e.g., locked doors, story gates) for each connection edge. </summary>
-		[SerializeField] private byte[] _globConnNarr;
+		[SerializeField, ReadOnly] private byte[] _globConnNarr;
 
 		#endregion
 

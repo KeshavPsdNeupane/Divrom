@@ -65,9 +65,9 @@ public class AStarMacro {
 	/// Lookup table pairing distance metric types with their static cost calculation functions.
 	/// </summary>
 	private readonly Dictionary<CostCalculationType, Func<BoundingBox, BoundingBox, int>> _costCalculators = new() {
-		{ CostCalculationType.Manhattan, MacroGridNode.GetManHattenTraversalCost },
-		{ CostCalculationType.Euclidean, MacroGridNode.GetTraversalCostEuclidean },
-		{ CostCalculationType.Octile, MacroGridNode.GetTraversalCostOctile }
+		{ CostCalculationType.Manhattan, MacroGridNode.ManHattenCost },
+		{ CostCalculationType.Euclidean, MacroGridNode.EuclideanCost },
+		{ CostCalculationType.Octile, MacroGridNode.OctileCost }
 	};
 
 	/// <summary>
@@ -144,6 +144,7 @@ public class AStarMacro {
 		if (!this._graphManager.TryGetMacroNodeFromPosition(start, out MacroGridNode startMacroNode)) {
 			Debug.LogWarning($"Start position {start} does not correspond to a valid macro node.");
 			return new MacroPathFindingResult {
+				Success = false,
 				Path = EMPTY_PATH,
 				TotalNodes = totalNode,
 				TotalNodeEvaluations = 0,
@@ -157,6 +158,7 @@ public class AStarMacro {
 		if (!this._graphManager.TryGetMacroNodeFromPosition(end, out MacroGridNode endMacroNode)) {
 			Debug.LogWarning($"End position {end} does not correspond to a valid macro node.");
 			return new MacroPathFindingResult {
+				Success = false,
 				Path = EMPTY_PATH,
 				TotalNodes = totalNode,
 				TotalNodeEvaluations = 0,
@@ -182,7 +184,7 @@ public class AStarMacro {
 		int rawInitialH = costCalculator(endMacroNode.Bound, startMacroNode.Bound);
 		int weightedInitialH = Mathf.FloorToInt(rawInitialH * this._greedyNess);
 
-		MacroPathFindingNode startNode = new(startMacroNode, gCost: 0, hCost: weightedInitialH, parent: null);
+		MacroPathFindingNode startNode = new(startMacroNode.Bound, gCost: 0, hCost: weightedInitialH, parent: null);
 
 		this._openSet.EnqueueOrUpdate(startNode);
 		this._nodeRecords[startMacroNode.Bound] = startNode;
@@ -199,16 +201,17 @@ public class AStarMacro {
 			if (recorder != null) {
 				this._recorderOpenListCache.Clear();
 				foreach (var node in this._openSet.GetElements()) {
-					this._recorderOpenListCache.Add(node.Node.Bound);
+					this._recorderOpenListCache.Add(node.NodeBox);
 				}
-				recorder.RecordStep(currentRecord.Node.Bound, this._recorderOpenListCache, this._closedSet);
+				recorder.RecordStep(currentRecord.NodeBox, this._recorderOpenListCache, this._closedSet);
 			}
 #endif
 
 			// Target condition: compare bounds rather than node references to guarantee stability
-			if (currentRecord.Node.Bound == endMacroNode.Bound) {
+			if (currentRecord.NodeBox == endMacroNode.Bound) {
 				List<BoundingBox> path = ReconstructPath(currentRecord);
 				return new MacroPathFindingResult {
+					Success = true,
 					Path = path,
 					TotalNodes = totalNode,
 					TotalNodeEvaluations = totalNodeEvaluation,
@@ -218,11 +221,11 @@ public class AStarMacro {
 				};
 			}
 
-			this._closedSet.Add(currentRecord.Node.Bound);
+			this._closedSet.Add(currentRecord.NodeBox);
 
 			// Fetch adjacent macro bounds matching the entity's capabilities
 			if (this._graphManager.GetNeighboringMacroNodesConnectionData(
-				currentRecord.Node.Bound, entityMovementCapability, out IEnumerable<MacroConnectionData> connections)) {
+				currentRecord.NodeBox, entityMovementCapability, out IEnumerable<MacroConnectionData> connections)) {
 
 				foreach (MacroConnectionData connection in connections) {
 					BoundingBox neighborBounds = connection.ToBound;
@@ -232,7 +235,7 @@ public class AStarMacro {
 					}
 
 					// Pure G-cost: actual travel effort accumulated from start to this neighbor
-					int stepCost = costCalculator(currentRecord.Node.Bound, neighborBounds);
+					int stepCost = costCalculator(currentRecord.NodeBox, neighborBounds);
 					int tentativeGCost = currentRecord.GCost + stepCost;
 
 					// If neighbor hasn't been visited OR a shorter path to it was discovered
@@ -246,10 +249,10 @@ public class AStarMacro {
 							int weightedHCost = Mathf.FloorToInt(rawHCost * this._greedyNess);
 
 							MacroPathFindingNode newNeighborRecord = new(
-								neighborGridNode,
+								neighborGridNode.Bound,
 								tentativeGCost,
 								weightedHCost,
-								currentRecord.Node.Bound
+								currentRecord.NodeBox
 							);
 
 							this._nodeRecords[neighborBounds] = newNeighborRecord;
@@ -265,6 +268,7 @@ public class AStarMacro {
 
 		// Exhausted open set or hit max iteration limit without reaching goal
 		return new MacroPathFindingResult {
+			Success = false,
 			Path = EMPTY_PATH,
 			TotalNodes = totalNode,
 			TotalNodeEvaluations = totalNodeEvaluation,
@@ -284,7 +288,7 @@ public class AStarMacro {
 	/// <param name="current">The destination node record reached by the search.</param>
 	/// <returns>A ordered sequence of bounding boxes representing the macro path corridor from start to end.</returns>
 	public List<BoundingBox> ReconstructPath(MacroPathFindingNode current) {
-		List<BoundingBox> totalPath = new() { current.Node.Bound };
+		List<BoundingBox> totalPath = new() { current.NodeBox };
 
 		while (current.Parent.HasValue) {
 			BoundingBox parentBounds = current.Parent.Value;

@@ -84,7 +84,6 @@ namespace Kope.Feature.PathFinding.Node {
 		#endregion
 
 		#region Methods & Overrides
-
 		/// <summary>
 		/// Creates a cloned instance of this node with selectively overridden properties.
 		/// </summary>
@@ -105,7 +104,23 @@ namespace Kope.Feature.PathFinding.Node {
 				   this._isStaticObstacle == other._isStaticObstacle &&
 				   this._parentMacroGrid == other._parentMacroGrid;
 		}
+		#endregion
+		#region Cost Calculation
+		public static int ManhattanCost(Vec2Int a, Vec2Int b) {
+			return Vec2Int.ManhattanDistanceTo(a, b) * DIRECT_COST;
+		}
+		public static int EuclideanCost(Vec2Int a, Vec2Int b) {
+			return Vec2Int.EuclideanDistanceTo(a, b) * DIRECT_COST;
+		}
+		public static int OctileCost(Vec2Int a, Vec2Int b) {
+			return Vec2Int.OctileDistanceTo(a, b) * DIRECT_COST;
+		}
+		#endregion
 
+
+
+
+		#region  Overrides & Operators
 		public override readonly bool Equals(object obj) => obj is MicroGridNode other && this.Equals(other);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]

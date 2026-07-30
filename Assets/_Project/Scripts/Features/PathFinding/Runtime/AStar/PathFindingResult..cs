@@ -9,11 +9,11 @@ public enum CostCalculationType {
 }
 
 public class PathFindingResult<Tlist> {
+	public bool Success;
 	public List<Tlist> Path;
 	public int TotalNodes;
 	public int TotalNodeEvaluations;
 	public int TotalNodeExpansions;
-	public int TotalNodeReevaluations;
 	public CostCalculationType CostCalculationType;
 	public float Greediness;
 
