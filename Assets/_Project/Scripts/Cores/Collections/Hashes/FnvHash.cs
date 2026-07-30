@@ -1,10 +1,12 @@
 using System;
+using System.Runtime.CompilerServices;
 namespace Kope.Core.Collections.Hashes {
 
 	public static class FnvHash {
 		private const int FNV_PRIME = 16777619;
 		private const int FNV_OFFSET = unchecked((int)2166136261u);
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static int Compute(string input) {
 			unchecked {
 				int hash = FNV_OFFSET;
@@ -22,6 +24,19 @@ namespace Kope.Core.Collections.Hashes {
 			// Use Math.Abs to ensure the modulo result is positive for the range calculation
 			int range = max - min + 1;
 			return (Math.Abs(hash) % range) + min;
+		}
+
+
+
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static int HashIntPair(int a, int b) {
+			unchecked {
+				int hash = FNV_OFFSET;
+				hash = (hash ^ a) * FNV_PRIME;
+				hash = (hash ^ b) * FNV_PRIME;
+				return hash;
+			}
 		}
 	}
 }

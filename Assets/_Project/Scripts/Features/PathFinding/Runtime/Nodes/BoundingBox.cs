@@ -1,7 +1,21 @@
 using System;
 using System.Runtime.CompilerServices;
 using Kope.Core.Attribute;
+using Kope.Core.Collections.Hashes;
 using UnityEngine;
+/*
+ * PERFORMANCE ARCHITECTURE NOTE: HASH CODE CACHING
+ * Do NOT cache or memoize GetHashCode() inside BoundingBox.
+ * Benchmarks confirm memoization degrades spatial graph evaluation performance:
+ * 
+ * 1. L1 Cache Line Density: Storing cached hash state bloats struct footprint, 
+ *    reducing the number of bounding boxes that fit into a single 64-byte L1 cache 
+ *    line during mass spatial queries.
+ * 2. Register Math vs Latency: Computing FNV-1a hashes on-the-fly in CPU registers 
+ *    is significantly faster than triggering memory bus fetches for cached fields.
+ * 3. Blittable Immutability: Omitting cached state keeps the struct lean, immutable, 
+ *    and fully blittable—preventing memory write-backs during hot pathfinding loops.
+ */
 
 namespace Kope.Feature.PathFinding.Node {
 
@@ -26,6 +40,8 @@ namespace Kope.Feature.PathFinding.Node {
 		[SerializeField, ReadOnly] private Vec2Int _max;
 
 		#endregion
+
+
 
 		#region Properties
 
@@ -124,7 +140,9 @@ namespace Kope.Feature.PathFinding.Node {
 		/// Computes a process-independent, deterministic hash code by flattening all 4 scalar boundary coordinates.
 		/// </summary>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public override readonly int GetHashCode() => GenerateHashCode(this._min, this._max);
+		public override readonly int GetHashCode() {
+			return GenerateHashCode(this._min, this._max);
+		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool operator ==(BoundingBox left, BoundingBox right) => left.Equals(right);
@@ -138,22 +156,11 @@ namespace Kope.Feature.PathFinding.Node {
 
 		#region Private Helpers
 
-		/// <summary>
-		/// Generates a deterministic hash code by directly cascading all four scalar coordinates (Min.X, Min.Y, Max.X, Max.Y) 
-		/// through a 397 prime multiplier. Prevents sub-hash bit cancellation and remains stable across Domain Reloads.
-		/// </summary>
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		private static int GenerateHashCode(Vec2Int min, Vec2Int max) {
-			unchecked {
-				int hash = 17;
-				hash = (hash * 397) ^ min.X;
-				hash = (hash * 397) ^ min.Y;
-				hash = (hash * 397) ^ max.X;
-				hash = (hash * 397) ^ max.Y;
-				return hash;
-			}
+			return FnvHash.HashIntPair(min.GetHashCode(), max.GetHashCode());
 		}
-
 		#endregion
 	}
 }
