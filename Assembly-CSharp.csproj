@@ -78,7 +78,7 @@
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/AStar/Macro/MacroNode.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/AStar/AStar.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/Tiles/HHSIMicroPathFindingTile.cs" />
-    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/Container/PathFindingGridData.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/Container/GlobalStream/GridDataContainerGlobalStream.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/Tiles/PathFindingTileData.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Ability/AbilityBase.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/AStar/Macro/MacroPathfinderGizmos.cs" />
@@ -92,7 +92,10 @@
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/AStar/PathFindingResult..cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/Utility/RectangleSlicer/DualAxisGreedyMeshingAlgorithm.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/GraphManagers/MacroGraphManager.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/Container/IGridDataCodex.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/Utility/GridGizmoUtil.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/Container/GlobalStream/GridDataCodexGlobalStream.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/Container/Packed/GridDataContainerPacked.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/DamageBased/DamageOverTimeEffect.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/Tiles/HHSIMacroPathFindingTile.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/AStar/Macro/MacroPathfindingRecorder.cs" />
@@ -109,8 +112,10 @@
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/TargetingManager.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/Utility/TileSpriteCache.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/HealBased/HealOverTimeEffect.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/Container/Packed/GridDataCodexPacked.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/_Interface/IRegion.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/DamageBased/VampericDamageEffect.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/Container/GlobalStream/GridDataGlobalStream.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/Nodes/Vec2Int.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/GraphManagers/PathfindingGraphManager.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Ability/DamageBased/DamageAbility.cs" />
@@ -121,11 +126,9 @@
     <Compile Include="Assets/_Project/Scripts/UI/UIState/InGameUI/InGameUIInitCaller.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/Utility/RegionGroupAlgorithm/RegionExtractionAlgorithm.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/Utility/RectangleSlicer/Marshalled/GreedyClusteringHistogramSlicer.cs" />
-    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/Container/SaveDataSerializer.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/AStar/PathFindingGizmos.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/TargetingStrategy.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/MovementBased/KnockBackEffect.cs" />
-    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/Container/PathFindingGridDataContainer.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/Container/GridDataContainerBase.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/GridSlicesLogUtility.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/ConcreteClass/AreaTargeting/AreaTargetingStrategy.cs" />
@@ -133,6 +136,7 @@
     <Compile Include="Assets/_Project/Scripts/Managers/ItemDragDropManager.cs" />
     <Compile Include="Assets/_Project/Scripts/UI/Menu/TabController.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/DamageBased/DamageEffectSetting.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/Container/Packed/GridDataPacked.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/PathFindingTileBaker.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/Nodes/TerrainType.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Ability/HealBased/HealAbility.cs" />
@@ -141,6 +145,7 @@
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/UI/ItemSlotUI/ItemSlotUI.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/DamageBased/InstantDamageEffect.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/TargetingSettings.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/Container/SpatialBitPacker.cs" />
     <Compile Include="Assets/_Project/Scripts/UI/UIState/UIState.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/AStar/AStarMicro.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/ConcreteClass/SingleTargetTargetingStrategy.cs" />

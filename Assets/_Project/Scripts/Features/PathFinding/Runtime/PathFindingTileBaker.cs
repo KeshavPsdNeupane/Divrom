@@ -76,6 +76,12 @@ namespace Kope.Feature.PathFinding {
 	public class PathFindingTileBaker : MonoBehaviour {
 		#region Serialized Fields
 
+		[Message(
+			"Supports both Packed and Global Stream data container formats for high-performance runtime usage:\n\n" +
+			"• GlobalStream (Preferred): Superior memory efficiency, reduced allocation overhead, and faster hydration.\n" +
+			"• Packed: Structured parallel arrays offering higher readability for debugging and inspection.",
+			MessageSeverity.Info
+		)]
 		[Header("Bake Data Container")]
 		[SerializeField] private GridDataContainerBase gridDataContainer;
 

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using Kope.Core.Attribute;
 using Kope.EntityIdentity;
 using Kope.Feature.PathFinding.Data;
 using Kope.Feature.PathFinding.Node;
@@ -16,17 +17,25 @@ using ZLinq;
 /// for the AStarMacro pathfinding system.
 /// </summary>
 public class PathFindingGizmos : MonoBehaviour {
+	[Message(
+		"Gizmo visualization supports both Packed and GlobalStream grid data container formats.\n\n" +
+		"• GlobalStream (Preferred for Baking & Storage): Superior memory efficiency, reduced " +
+		"disk footprint, and minimal allocation overhead during hydration.\n" +
+		"• Packed: Supported for live visualization and debug inspection.",
+		MessageSeverity.Info
+	)]
 	[Header("Graph Data")]
-	[SerializeField] private GridDataContainerBase _graphDataContainer;
+	[SerializeField] private GridDataContainerBase graphDataContainer;
+
 	[Header("Graph Reference")]
-	[SerializeField] private PathfindingGraphManager _graphManager;
+	[SerializeField] private PathfindingGraphManager graphManager;
 
 	[Header("Macro Request Settings")]
-	[SerializeField] private CostCalculationType _costCalculationType = CostCalculationType.Manhattan;
-	[SerializeField, Range(1f, 1.5f)] private float _greedyNess = 1f;
-	[SerializeField] private Transform _startTransform;
-	[SerializeField] private Transform _endTransform;
-	[SerializeField] private MovementCapability _capability;
+	[SerializeField] private CostCalculationType costCalculationType = CostCalculationType.Manhattan;
+	[SerializeField, Range(1f, 1.5f)] private float greedyNess = 1f;
+	[SerializeField] private Transform startTransform;
+	[SerializeField] private Transform endTransform;
+	[SerializeField] private MovementCapability capability = MovementCapability.Ground;
 
 	[Header("Recording Settings")]
 	[SerializeField, Tooltip(
@@ -35,33 +44,39 @@ public class PathFindingGizmos : MonoBehaviour {
 		"for max performance, so Animated/ManualScrub have no per-step open/closed set data to draw. " +
 		"FinalPathOnly is unaffected by this toggle — it draws straight from the FindPath result, not the recorder."
 	)]
-	private bool _enableRecording = true;
+	private bool enableRecording = true;
+
+	[Header("Start/End Gizmo Styling")]
+	[SerializeField] private Color startSphereColor = Color.green;
+	[SerializeField] private Color endSphereColor = Color.red;
+	[SerializeField, Min(0.01f)] private float startEndSphereRadius = 0.25f;
+
 
 	[Header("Macro Visualization Controls")]
 	[SerializeField, Tooltip("Master switch for the macro overlay gizmo. Off = nothing drawn in OnDrawGizmos, including start/end spheres.")]
-	private bool _showMacroOverlay = true;
+	private bool showMacroOverlay = true;
 	[SerializeField]
-	private MacroPathfinderGizmos.VisualizationMode _macroMode =
+	private MacroPathfinderGizmos.VisualizationMode macroMode =
 		MacroPathfinderGizmos.VisualizationMode.AnimatedStepByStep;
 	[SerializeField, Min(0.001f), Tooltip("Seconds each step is held before advancing. Drives Animated playback in BOTH Play Mode (coroutine) and Edit Mode (EditorApplication.update).")]
-	private float _secondsPerStep = 0.05f;
+	private float secondsPerStep = 0.05f;
 	[SerializeField, Tooltip("Drives ManualScrub, and doubles as the live cursor during Animated playback. One index past the last step reveals the final path.")]
-	private int _manualStepIndex = 0;
+	private int manualStepIndex = 0;
 
 	[Header("Macro Gizmo Styling")]
-	[SerializeField] private Color _currentColor = Color.yellow;
-	[SerializeField] private Color _openSetColor = new(0.15f, 0.9f, 0.3f, 0.5f);
-	[SerializeField] private Color _closedSetColor = new(0.8f, 0.2f, 0.2f, 0.25f);
-	[SerializeField] private Color _finalPathColor = Color.green;
-	[SerializeField] private bool _showStepLabel = true;
+	[SerializeField] private Color currentColor = Color.yellow;
+	[SerializeField] private Color openSetColor = new(0.15f, 0.9f, 0.3f, 0.5f);
+	[SerializeField] private Color closedSetColor = new(0.8f, 0.2f, 0.2f, 0.25f);
+	[SerializeField] private Color finalPathColor = Color.green;
+	[SerializeField] private bool showStepLabel = true;
 
 	[Header("Benchmark Settings")]
 	[SerializeField, Range(0.1f, 0.5f), Tooltip("How much to increment the greediness factor (w) per benchmark step (from 1.0 up to 1.5).")]
-	private float _benchmarkStep = 0.1f;
+	private float benchmarkStep = 0.1f;
 	[SerializeField, Min(1), Tooltip("How many times to run the pathfinder per configuration to calculate the average time/ticks.")]
-	private int _benchmarkIterations = 50;
+	private int benchmarkIterations = 50;
 	[SerializeField, Range(1, 100), Tooltip("How many random start/end pairs to generate for the benchmark suite.")]
-	private int _benchmarkRandomPairs = 5;
+	private int benchmarkRandomPairs = 5;
 
 	[Header("Random Benchmark Settings")]
 	[SerializeField, Tooltip(
@@ -69,7 +84,7 @@ public class PathFindingGizmos : MonoBehaviour {
 		"(pair, cost type) combo, bounded by the fixed RandomBenchmarkMinGreediness/MaxGreediness range " +
 		"(class constants, not exposed here). Same seed + same graph/pairs = same run."
 	)]
-	private int _randomBenchmarkSeed = 12345;
+	private int randomBenchmarkSeed = 12345;
 
 	// Fixed bounds for the greediness roll in RunRandomBenchmarkSuite. Intentionally NOT [SerializeField] —
 	// this mirrors AStarMacro's actual supported greediness range (see _greedyNess's [Range] above), not
@@ -92,23 +107,22 @@ public class PathFindingGizmos : MonoBehaviour {
 	}
 
 	private void OnDisable() {
-		// Covers component disable, destroy, and script recompiles — don't leak the update hook.
 		StopMacroAnimation();
 	}
 
 	private void EnsurePathfinder() {
-		if (this._graphDataContainer == null) {
+		if (this.graphDataContainer == null) {
 			Debug.LogWarning("Graph Data Container is not assigned. Cannot initialize Macro Pathfinder.");
 			return;
 		}
 
-		var neighborDict = this._graphDataContainer.MacroAdjacencyList;
+		var neighborDict = this.graphDataContainer.MacroAdjacencyList;
 
-		MacroGraphManager macroGraphManager = new(this._graphDataContainer.MacroGridNodeDict, neighborDict);
-		MicroGraphManager microGraphManager = new(this._graphDataContainer.MicroGridNodeDict);
+		MacroGraphManager macroGraphManager = new(this.graphDataContainer.MacroGridNodeDict, neighborDict);
+		MicroGraphManager microGraphManager = new(this.graphDataContainer.MicroGridNodeDict);
 
-		this._graphManager = new(macroGraphManager, microGraphManager);
-		this._pathfinder = new AStarMacro(this._graphManager, this._greedyNess, this._costCalculationType);
+		this.graphManager = new(macroGraphManager, microGraphManager);
+		this._pathfinder = new AStarMacro(this.graphManager, this.greedyNess, this.costCalculationType);
 	}
 
 	#region Context Menu Actions
@@ -122,12 +136,12 @@ public class PathFindingGizmos : MonoBehaviour {
 		EnsurePathfinder();
 		if (this._pathfinder == null) return;
 
-		if (this._startTransform == null || this._endTransform == null) {
+		if (this.startTransform == null || this.endTransform == null) {
 			Debug.LogWarning("Start/End transform not assigned. Cannot run Macro Pathfinding.");
 			return;
 		}
 
-		if (!this._enableRecording) {
+		if (!this.enableRecording) {
 			Debug.LogWarning(
 				"Recording is disabled (_enableRecording = false). Pathfinding will still run and log its " +
 				"result below. Animated/ManualScrub will have nothing to draw since they need per-step " +
@@ -141,11 +155,11 @@ public class PathFindingGizmos : MonoBehaviour {
 		MacroGizmos.FinalPath = null;
 
 		SyncMacroDrawerSettings();
-		this._manualStepIndex = 0;
+		this.manualStepIndex = 0;
 
 		// the float-> int logic is in the Vec2Int constructor, so we can just pass the world position directly
-		var startVec = new Vec2Int(this._startTransform.position);
-		var endVec = new Vec2Int(this._endTransform.position);
+		var startVec = new Vec2Int(this.startTransform.position);
+		var endVec = new Vec2Int(this.endTransform.position);
 
 		System.Diagnostics.Stopwatch stopwatch = new();
 
@@ -153,8 +167,8 @@ public class PathFindingGizmos : MonoBehaviour {
 		MacroPathFindingResult result = this._pathfinder.FindPath(
 			startVec,
 			endVec,
-			this._capability,
-			this._enableRecording ? MacroGizmos.Recorder : null
+			this.capability,
+			this.enableRecording ? MacroGizmos.Recorder : null
 		);
 		stopwatch.Stop();
 
@@ -171,7 +185,7 @@ public class PathFindingGizmos : MonoBehaviour {
 			"Macro",
 			startVec.ToString(),
 			endVec.ToString(),
-			this._capability.ToString(),
+			this.capability.ToString(),
 			stopwatch.ElapsedMilliseconds,
 			stopwatch.ElapsedTicks
 		);
@@ -189,7 +203,7 @@ public class PathFindingGizmos : MonoBehaviour {
 	/// </summary>
 	[ContextMenu("Play Macro Animation (No Rerun)")]
 	public void PlayRecordedMacroAnimation() {
-		if (!this._enableRecording) {
+		if (!this.enableRecording) {
 			Debug.LogWarning(
 				"Recording is disabled (_enableRecording = false), so no steps were captured on the last " +
 				"run. Enable \"Enable Recording\" and run \"Run Macro Pathfinding\" again before playing it back."
@@ -202,9 +216,9 @@ public class PathFindingGizmos : MonoBehaviour {
 			return;
 		}
 
-		this._macroMode = MacroPathfinderGizmos.VisualizationMode.AnimatedStepByStep;
+		this.macroMode = MacroPathfinderGizmos.VisualizationMode.AnimatedStepByStep;
 		SyncMacroDrawerSettings();
-		this._manualStepIndex = 0;
+		this.manualStepIndex = 0;
 
 		TryStartMacroAnimation();
 	}
@@ -229,12 +243,12 @@ public class PathFindingGizmos : MonoBehaviour {
 	[ContextMenu("Run Benchmark Suite")]
 	public void RunBenchmarkSuite() {
 		EnsurePathfinder();
-		if (this._graphManager == null) {
+		if (this.graphManager == null) {
 			Debug.LogError("Missing graph manager for benchmark.");
 			return;
 		}
 
-		var testPairs = this._graphManager.GiveRandomTestPoints(this._benchmarkRandomPairs);
+		var testPairs = this.graphManager.GiveRandomTestPoints(this.benchmarkRandomPairs);
 		int pairCount = testPairs != null ? testPairs.AsValueEnumerable().Count() : 0;
 		if (testPairs == null || pairCount == 0) {
 			Debug.LogError("No valid random test points could be generated from the micro graph.");
@@ -244,7 +258,7 @@ public class PathFindingGizmos : MonoBehaviour {
 		CostCalculationType[] costTypes = (CostCalculationType[])Enum.GetValues(typeof(CostCalculationType));
 
 		// Calculate total steps required (from 1.0 to 1.5 inclusive) to avoid float precision issues in the loop
-		int greedinessSteps = Mathf.RoundToInt((1.5f - 1.0f) / this._benchmarkStep);
+		int greedinessSteps = Mathf.RoundToInt((1.5f - 1.0f) / this.benchmarkStep);
 
 		// Reused across every timed call in the whole suite instead of allocated per iteration.
 		System.Diagnostics.Stopwatch sw = new();
@@ -271,7 +285,7 @@ public class PathFindingGizmos : MonoBehaviour {
 
 			StringBuilder sb = new();
 			sb.AppendLine($"<b><color=#00FFFF>=== MACRO BENCHMARK [{pairIndex}/{pairCount}] | Start: {startVec} -> End: {endVec} ===</color></b>");
-			sb.AppendLine($"<b>Settings:</b> {this._benchmarkIterations} iterations per step | Greediness Step: {this._benchmarkStep}");
+			sb.AppendLine($"<b>Settings:</b> {this.benchmarkIterations} iterations per step | Greediness Step: {this.benchmarkStep}");
 			sb.AppendLine(DescribePointRelationship(startVec, endVec));
 
 			// Per-pair bucket, one per cost type, so we can compare them once this pair's sweep is done.
@@ -284,21 +298,21 @@ public class PathFindingGizmos : MonoBehaviour {
 				var costSummary = new CostTypeSummary();
 
 				for (int stepIdx = 0; stepIdx <= greedinessSteps; stepIdx++) {
-					float currentGreediness = Mathf.Clamp(1.0f + (stepIdx * this._benchmarkStep), 1.0f, 1.5f); // Security clamp
+					float currentGreediness = Mathf.Clamp(1.0f + (stepIdx * this.benchmarkStep), 1.0f, 1.5f); // Security clamp
 
-					AStarMacro benchFinder = new(this._graphManager, currentGreediness, costType);
+					AStarMacro benchFinder = new(this.graphManager, currentGreediness, costType);
 
 					// WARMUP RUN — JIT + cache warm, recorder off for max speed.
-					benchFinder.FindPath(startVec, endVec, this._capability, null);
+					benchFinder.FindPath(startVec, endVec, this.capability, null);
 
 					long totalTicks = 0;
 					long totalExpansions = 0;
 					long totalEvaluations = 0;
 					int pathLength = 0;
 
-					for (int i = 0; i < this._benchmarkIterations; i++) {
+					for (int i = 0; i < this.benchmarkIterations; i++) {
 						sw.Restart();
-						var result = benchFinder.FindPath(startVec, endVec, this._capability, null);
+						var result = benchFinder.FindPath(startVec, endVec, this.capability, null);
 						sw.Stop();
 
 						totalTicks += sw.ElapsedTicks;
@@ -307,10 +321,10 @@ public class PathFindingGizmos : MonoBehaviour {
 						pathLength = result.Path != null ? result.Path.Count : 0;
 					}
 
-					float avgTicks = (float)totalTicks / this._benchmarkIterations;
-					float avgMs = (float)(totalTicks * 1000.0 / System.Diagnostics.Stopwatch.Frequency) / this._benchmarkIterations;
-					float avgExp = (float)totalExpansions / this._benchmarkIterations;
-					float avgEval = (float)totalEvaluations / this._benchmarkIterations;
+					float avgTicks = (float)totalTicks / this.benchmarkIterations;
+					float avgMs = (float)(totalTicks * 1000.0 / System.Diagnostics.Stopwatch.Frequency) / this.benchmarkIterations;
+					float avgExp = (float)totalExpansions / this.benchmarkIterations;
+					float avgEval = (float)totalEvaluations / this.benchmarkIterations;
 
 					sb.AppendLine($"{currentGreediness,-10:F2} | {pathLength,-8} | {avgExp,-14:F1} | {avgEval,-15:F1} | {avgTicks,-9:F0} | {avgMs,-6:F4}");
 
@@ -328,14 +342,14 @@ public class PathFindingGizmos : MonoBehaviour {
 		}
 
 		// Every pair has run — log the final rollup across the whole suite.
-		Debug.Log(BuildOverallSuiteSummary(overallSummaries, perGreedinessSummaries, greedinessSteps, this._benchmarkStep, pairCount));
+		Debug.Log(BuildOverallSuiteSummary(overallSummaries, perGreedinessSummaries, greedinessSteps, this.benchmarkStep, pairCount));
 	}
 
 	/// <summary>
 	/// Random counterpart to "Run Benchmark Suite". Instead of sweeping every greediness step for
 	/// every cost type, each (pair, cost type) combo gets exactly ONE greediness value, rolled
 	/// randomly within the fixed [<see cref="RandomBenchmarkMinGreediness"/>, <see cref="RandomBenchmarkMaxGreediness"/>]
-	/// range and drawn from a <see cref="System.Random"/> seeded with <see cref="_randomBenchmarkSeed"/> —
+	/// range and drawn from a <see cref="System.Random"/> seeded with <see cref="randomBenchmarkSeed"/> —
 	/// same seed against the same graph/pairs reproduces the exact same run.
 	///
 	/// Results are timed and aggregated the same way as the sweep suite (per-pair summary, then a
@@ -346,12 +360,12 @@ public class PathFindingGizmos : MonoBehaviour {
 	[ContextMenu("Run Random Benchmark Suite")]
 	public void RunRandomBenchmarkSuite() {
 		EnsurePathfinder();
-		if (this._graphManager == null) {
+		if (this.graphManager == null) {
 			Debug.LogError("Missing graph manager for benchmark.");
 			return;
 		}
 
-		var testPairs = this._graphManager.GiveRandomTestPoints(this._benchmarkRandomPairs);
+		var testPairs = this.graphManager.GiveRandomTestPoints(this.benchmarkRandomPairs);
 		int pairCount = testPairs != null ? testPairs.AsValueEnumerable().Count() : 0;
 		if (testPairs == null || pairCount == 0) {
 			Debug.LogError("No valid random test points could be generated from the micro graph.");
@@ -359,7 +373,7 @@ public class PathFindingGizmos : MonoBehaviour {
 		}
 
 		CostCalculationType[] costTypes = (CostCalculationType[])Enum.GetValues(typeof(CostCalculationType));
-		System.Random rng = new(this._randomBenchmarkSeed);
+		System.Random rng = new(this.randomBenchmarkSeed);
 		System.Diagnostics.Stopwatch sw = new();
 
 		// Suite-wide bucket, one per cost type, tallied across every pair — feeds the final verdict.
@@ -369,9 +383,9 @@ public class PathFindingGizmos : MonoBehaviour {
 		// Full report kept alongside the console logs so it can be sanitized and written to disk
 		// once the whole suite has finished.
 		StringBuilder fullReport = new();
-		fullReport.AppendLine($"<b><color=#00FFFF>=== RANDOM MACRO BENCHMARK SUITE | Seed: {this._randomBenchmarkSeed} ===</color></b>");
+		fullReport.AppendLine($"<b><color=#00FFFF>=== RANDOM MACRO BENCHMARK SUITE | Seed: {this.randomBenchmarkSeed} ===</color></b>");
 		fullReport.AppendLine(
-			$"<b>Settings:</b> {pairCount} pairs | {this._benchmarkIterations} iterations per config | " +
+			$"<b>Settings:</b> {pairCount} pairs | {this.benchmarkIterations} iterations per config | " +
 			$"Greediness Range: [{RandomBenchmarkMinGreediness:F2}, {RandomBenchmarkMaxGreediness:F2}]"
 		);
 
@@ -395,19 +409,19 @@ public class PathFindingGizmos : MonoBehaviour {
 				float randomGreediness = (float)(RandomBenchmarkMinGreediness +
 					(rng.NextDouble() * (RandomBenchmarkMaxGreediness - RandomBenchmarkMinGreediness)));
 
-				AStarMacro benchFinder = new(this._graphManager, randomGreediness, costType);
+				AStarMacro benchFinder = new(this.graphManager, randomGreediness, costType);
 
 				// WARMUP RUN — JIT + cache warm, recorder off for max speed.
-				benchFinder.FindPath(startVec, endVec, this._capability, null);
+				benchFinder.FindPath(startVec, endVec, this.capability, null);
 
 				long totalTicks = 0;
 				long totalExpansions = 0;
 				long totalEvaluations = 0;
 				int pathLength = 0;
 
-				for (int i = 0; i < this._benchmarkIterations; i++) {
+				for (int i = 0; i < this.benchmarkIterations; i++) {
 					sw.Restart();
-					var result = benchFinder.FindPath(startVec, endVec, this._capability, null);
+					var result = benchFinder.FindPath(startVec, endVec, this.capability, null);
 					sw.Stop();
 
 					totalTicks += sw.ElapsedTicks;
@@ -416,10 +430,10 @@ public class PathFindingGizmos : MonoBehaviour {
 					pathLength = result.Path != null ? result.Path.Count : 0;
 				}
 
-				float avgTicks = (float)totalTicks / this._benchmarkIterations;
-				float avgMs = (float)(totalTicks * 1000.0 / System.Diagnostics.Stopwatch.Frequency) / this._benchmarkIterations;
-				float avgExp = (float)totalExpansions / this._benchmarkIterations;
-				float avgEval = (float)totalEvaluations / this._benchmarkIterations;
+				float avgTicks = (float)totalTicks / this.benchmarkIterations;
+				float avgMs = (float)(totalTicks * 1000.0 / System.Diagnostics.Stopwatch.Frequency) / this.benchmarkIterations;
+				float avgExp = (float)totalExpansions / this.benchmarkIterations;
+				float avgEval = (float)totalEvaluations / this.benchmarkIterations;
 
 				sb.AppendLine($"{costType,-12} | {randomGreediness,-10:F4} | {pathLength,-8} | {avgExp,-14:F1} | {avgEval,-15:F1} | {avgTicks,-9:F0} | {avgMs,-6:F4}");
 
@@ -439,13 +453,13 @@ public class PathFindingGizmos : MonoBehaviour {
 		}
 
 		// Every pair has run — log and record the final rollup across the whole suite.
-		string overallBlock = BuildRandomOverallSuiteSummary(overallSummaries, pairCount, this._randomBenchmarkSeed);
+		string overallBlock = BuildRandomOverallSuiteSummary(overallSummaries, pairCount, this.randomBenchmarkSeed);
 		Debug.Log(overallBlock);
 		fullReport.AppendLine(overallBlock);
 
 		// Strip Unity's console-only rich-text markup before this hits disk, then save it.
 		string sanitized = SanitizeLogBloat(fullReport.ToString());
-		string writtenPath = WriteBenchmarkReportToFile(sanitized, "RandomMacroBenchmark", this._randomBenchmarkSeed);
+		string writtenPath = WriteBenchmarkReportToFile(sanitized, "RandomMacroBenchmark", this.randomBenchmarkSeed);
 
 		if (writtenPath != null) {
 			Debug.Log($"Random Benchmark Suite report saved to: {writtenPath}");
@@ -705,7 +719,7 @@ public class PathFindingGizmos : MonoBehaviour {
 	private void TryStartMacroAnimation() {
 		StopMacroAnimation();
 
-		if (this._macroMode != MacroPathfinderGizmos.VisualizationMode.AnimatedStepByStep) return;
+		if (this.macroMode != MacroPathfinderGizmos.VisualizationMode.AnimatedStepByStep) return;
 
 		if (Application.isPlaying) {
 			this._macroStepCoroutine = StartCoroutine(AnimateMacroStepsRoutine());
@@ -729,9 +743,9 @@ public class PathFindingGizmos : MonoBehaviour {
 
 	private IEnumerator AnimateMacroStepsRoutine() {
 		int maxStep = MacroGizmos.MaxStepIndex;
-		while (this._manualStepIndex < maxStep) {
-			yield return new WaitForSeconds(this._secondsPerStep);
-			this._manualStepIndex++;
+		while (this.manualStepIndex < maxStep) {
+			yield return new WaitForSeconds(this.secondsPerStep);
+			this.manualStepIndex++;
 		}
 	}
 
@@ -756,22 +770,22 @@ public class PathFindingGizmos : MonoBehaviour {
 			return;
 		}
 
-		if (Application.isPlaying || this._macroMode != MacroPathfinderGizmos.VisualizationMode.AnimatedStepByStep) {
+		if (Application.isPlaying || this.macroMode != MacroPathfinderGizmos.VisualizationMode.AnimatedStepByStep) {
 			StopEditModeAnimation();
 			return;
 		}
 
 		double now = UnityEditor.EditorApplication.timeSinceStartup;
-		if (now - this._editModeLastTickTime < this._secondsPerStep) return;
+		if (now - this._editModeLastTickTime < this.secondsPerStep) return;
 		this._editModeLastTickTime = now;
 
 		int maxStep = MacroGizmos.MaxStepIndex;
-		if (this._manualStepIndex >= maxStep) {
+		if (this.manualStepIndex >= maxStep) {
 			StopEditModeAnimation();
 			return;
 		}
 
-		this._manualStepIndex++;
+		this.manualStepIndex++;
 		UnityEditor.SceneView.RepaintAll();
 	}
 #endif
@@ -780,22 +794,28 @@ public class PathFindingGizmos : MonoBehaviour {
 	#region Visuals & Utilities
 
 	private void SyncMacroDrawerSettings() {
-		MacroGizmos.Mode = this._macroMode;
-		MacroGizmos.CurrentColor = this._currentColor;
-		MacroGizmos.OpenSetColor = this._openSetColor;
-		MacroGizmos.ClosedSetColor = this._closedSetColor;
-		MacroGizmos.FinalPathColor = this._finalPathColor;
-		MacroGizmos.ShowStepLabel = this._showStepLabel;
+		MacroGizmos.Mode = this.macroMode;
+		MacroGizmos.CurrentColor = this.currentColor;
+		MacroGizmos.OpenSetColor = this.openSetColor;
+		MacroGizmos.ClosedSetColor = this.closedSetColor;
+		MacroGizmos.FinalPathColor = this.finalPathColor;
+		MacroGizmos.ShowStepLabel = this.showStepLabel;
 	}
 
 	private void OnDrawGizmos() {
-		if (!this._showMacroOverlay) return;
+		if (!this.showMacroOverlay) return;
 
 		SyncMacroDrawerSettings();
-		MacroGizmos.DrawGizmos(this._manualStepIndex);
+		MacroGizmos.DrawGizmos(this.manualStepIndex);
 
-		if (this._startTransform != null) { Gizmos.color = Color.cyan; Gizmos.DrawSphere(this._startTransform.position, 0.3f); }
-		if (this._endTransform != null) { Gizmos.color = Color.magenta; Gizmos.DrawSphere(this._endTransform.position, 0.3f); }
+		if (this.startTransform != null) {
+			Gizmos.color = this.startSphereColor;
+			Gizmos.DrawSphere(this.startTransform.position, this.startEndSphereRadius);
+		}
+		if (this.endTransform != null) {
+			Gizmos.color = this.endSphereColor;
+			Gizmos.DrawSphere(this.endTransform.position, this.startEndSphereRadius);
+		}
 	}
 
 	public static void ResultLog<Tlist>(
