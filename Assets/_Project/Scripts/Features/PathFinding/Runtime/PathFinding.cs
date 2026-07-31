@@ -31,7 +31,10 @@ public class PathFinding : MonoBehaviour {
 	[SerializeField] private GridDataContainerBase graphDataContainer;
 
 	[Header("Graph Reference")]
-	[SerializeField] private PathfindingGraphManager graphManager;
+	[SerializeField]
+	private PathFindingManagerType graphManagerType =
+	PathFindingManagerType.PathfindingGraphManagerHybrid;
+	private IPathfindingGraphManager graphManager;
 
 	[Header("Macro Request Settings")]
 	[FormerlySerializedAs("costCalculationType")]
@@ -135,6 +138,22 @@ public class PathFinding : MonoBehaviour {
 		this._microGizmos?.Stop();
 	}
 
+
+	public IPathfindingGraphManager GetManager(PathFindingManagerType managerType,
+	Dictionary<Vec2Int, MicroGridNode> microNode,
+	Dictionary<BoundingBox, MacroGridNode> macroNode,
+	Dictionary<BoundingBox, List<MacroConnectionData>> adjacencyDict) {
+		return managerType switch {
+			PathFindingManagerType.PathfindingGraphManager => new PathfindingGraphManager(
+				microNode, macroNode, adjacencyDict),
+			PathFindingManagerType.PathfindingGraphManagerHybrid => new PathfindingGraphManagerHybrid(
+				microNode, macroNode, adjacencyDict),
+			_ => throw new ArgumentOutOfRangeException(nameof(managerType), managerType, null)
+		};
+	}
+
+
+
 	private void EnsurePathfinder() {
 		if (this.graphDataContainer == null) {
 			Debug.LogWarning("Graph Data Container is not assigned. Cannot initialize Pathfinder.");
@@ -142,8 +161,8 @@ public class PathFinding : MonoBehaviour {
 		}
 
 		var neighborDict = this.graphDataContainer.MacroAdjacencyList;
-		this.graphManager = new(
-			 this.graphDataContainer.MicroGridNodeDict, this.graphDataContainer.MacroGridNodeDict, neighborDict);
+		this.graphManager = GetManager(this.graphManagerType,
+			this.graphDataContainer.MicroGridNodeDict, this.graphDataContainer.MacroGridNodeDict, neighborDict);
 
 		PathFindingConfig macroConfig = new(
 			this.macroCostCalculationType, PathFindingConfig.DEFAULT_INITIAL_CAPACITY,

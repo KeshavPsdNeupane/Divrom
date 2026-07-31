@@ -40,7 +40,7 @@ namespace Kope.Feature.PathFinding.Algorithms {
 		/// <summary>
 		/// Reference to the centralized graph manager containing macro node bounds and topological connections.
 		/// </summary>
-		private readonly PathfindingGraphManager _graphManager;
+		private readonly IPathfindingGraphManager _graphManager;
 
 		/// <summary>
 		/// Active distance metric chosen for traversal and heuristic calculations.
@@ -96,10 +96,10 @@ namespace Kope.Feature.PathFinding.Algorithms {
 		/// <param name="initialCapacity">Pre-allocation capacity for internal dictionaries and sets to minimize GC allocations.</param>
 		/// <param name="maxIterations">Percentage ratio (0.1 to 1.0) of max graph nodes to evaluate before timing out.</param>
 		public AStarMacro(
-			PathfindingGraphManager macroGraph,
+			IPathfindingGraphManager macroGraph,
 			PathFindingConfig config = default) {
 
-			this._graphManager = macroGraph ?? throw new ArgumentNullException(nameof(macroGraph));
+			this._graphManager = macroGraph;
 			this._nodeRecords = new Dictionary<BoundingBox, MacroPathFindingNode>(config.InitialCapacity);
 			this._closedSet = new HashSet<BoundingBox>(config.InitialCapacity);
 			this._openSet = new QuadPriorityQueue<MacroPathFindingNode, int>(config.InitialCapacity);
@@ -129,7 +129,7 @@ namespace Kope.Feature.PathFinding.Algorithms {
 
 				if (!nodeCache.CanTraverse(entityMovementCapability)) {
 					Debug.LogWarning($"[{pointLabel}] Node at {pos} is not traversable for MovementCapability" +
-					$" '{entityMovementCapability}' (IsNarrativelyAccessible: {nodeCache.IsNarrativelyAccessible}).");
+					$" '{entityMovementCapability}' (IsNarrativelyAccessible: {nodeCache.IsBlocked}).");
 					return false;
 				}
 				return true;
@@ -173,8 +173,8 @@ namespace Kope.Feature.PathFinding.Algorithms {
 			this._maxIterations = Mathf.CeilToInt(this._maxIterationsRatio * this._totalNodesCache);
 			Func<BoundingBox, BoundingBox, int> costCalculator = this._costCalculators[this._costCalculationType];
 
-			BoundingBox startBound = this._startMacroNodeCache.Bound;
-			BoundingBox endBound = this._endMacroNodeCache.Bound;
+			BoundingBox startBound = this._startMacroNodeCache.BBox;
+			BoundingBox endBound = this._endMacroNodeCache.BBox;
 
 
 			// Initialize start node with weighted H-cost (Weighted A*: F = G + w * H)
@@ -217,7 +217,7 @@ namespace Kope.Feature.PathFinding.Algorithms {
 
 				// Fetch adjacent macro bounds matching the entity's capabilities
 				if (this._graphManager.GetNeighboringMacroNodesConnectionData(
-					currentRecord.NodeBox, entityMovementCapability, out IEnumerable<MacroConnectionData> connections)) {
+					currentRecord.NodeBox, entityMovementCapability, out var connections)) {
 
 					foreach (MacroConnectionData connection in connections) {
 						BoundingBox neighborBounds = connection.ToBound;

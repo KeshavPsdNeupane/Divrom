@@ -13,11 +13,11 @@ namespace Project.Scripts.Features.PathFinding.GraphManager {
 	public struct MacroConnectionData : IEquatable<MacroConnectionData> {
 		[SerializeField, ReadOnly] private BoundingBox _toBound;
 		[SerializeField, ReadOnly] private MovementCapability _allowedTraversal;
-		[SerializeField, ReadOnly] private bool _isNarrativelyAccessible;
+		[SerializeField, ReadOnly] private bool _isBlocked;
 
 		public readonly BoundingBox ToBound => this._toBound;
 		public readonly MovementCapability AllowedTraversal => this._allowedTraversal;
-		public readonly bool IsNarrativelyAccessible => this._isNarrativelyAccessible;
+		public readonly bool IsBlocked => this._isBlocked;
 
 		public MacroConnectionData(
 			BoundingBox targetBounds,
@@ -25,7 +25,7 @@ namespace Project.Scripts.Features.PathFinding.GraphManager {
 			bool isNarrativelyAccessible = true) {
 			this._toBound = targetBounds;
 			this._allowedTraversal = allowedTraversal;
-			this._isNarrativelyAccessible = isNarrativelyAccessible;
+			this._isBlocked = isNarrativelyAccessible;
 		}
 
 		public static MacroConnectionData CreateConnection(
@@ -42,22 +42,23 @@ namespace Project.Scripts.Features.PathFinding.GraphManager {
 		}
 
 		public readonly bool IsTraversable(MovementCapability capability) {
-			return IsNarrativelyAccessible && (AllowedTraversal & capability) != MovementCapability.None;
+			// must not be blocked and must have at least one overlapping movement capability with the provided capability
+			return !this.IsBlocked && (AllowedTraversal & capability) != MovementCapability.None;
 		}
 
 		public readonly bool Equals(MacroConnectionData other) {
 			return ToBound == other.ToBound &&
 				   AllowedTraversal == other.AllowedTraversal &&
-				   IsNarrativelyAccessible == other.IsNarrativelyAccessible;
+				   IsBlocked == other.IsBlocked;
 		}
 
 		public override readonly bool Equals(object obj) => obj is MacroConnectionData other && this.Equals(other);
-		public override readonly int GetHashCode() => HashCode.Combine(ToBound, AllowedTraversal, IsNarrativelyAccessible);
+		public override readonly int GetHashCode() => HashCode.Combine(ToBound, AllowedTraversal, IsBlocked);
 
 		public static bool operator ==(MacroConnectionData left, MacroConnectionData right) => left.Equals(right);
 		public static bool operator !=(MacroConnectionData left, MacroConnectionData right) => !left.Equals(right);
 
 		public override readonly string ToString() =>
-			$"MacroConnectionData(To: {ToBound}, AllowedTraversal: {AllowedTraversal}, IsNarrativelyAccessible: {IsNarrativelyAccessible})";
+			$"MacroConnectionData(To: {ToBound}, AllowedTraversal: {AllowedTraversal}, IsBlocked: {IsBlocked})";
 	}
 }

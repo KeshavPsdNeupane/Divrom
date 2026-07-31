@@ -208,26 +208,29 @@ namespace Kope.Feature.PathFinding {
 				HHSIMacroPathFindingTile regionTile = this._macroTileDictionary[regionAnchor];
 				TerrainType terrainType = regionTile.Data.TerrainType;
 				MovementCapability movementCapability = regionTile.Data.MovementType;
-				bool isNarrativelyAccessible = regionTile.Data.IsNarrativelyAccessible;
+				bool isBlocked = regionTile.Data.IsBlocked;
 
-				var currentMacroNode = new MacroGridNode(box, terrainType, movementCapability, isNarrativelyAccessible);
-				macroGridNodeDict.Add(box, currentMacroNode);
 
+				int microTileCount = kvp.Value.RegionTilePositions.Count;
+				Vec2Int[] microGridPositions = new Vec2Int[microTileCount];
+
+				int index = 0;
 				foreach (Vec2Int tilePos in kvp.Value.RegionTilePositions) {
 					microToMacroMapping[(tilePos.X, tilePos.Y)] = box;
+					microGridPositions[index++] = tilePos;
 
 					MicroGridNode microNode;
 					if (this._microTileDictionary.TryGetValue(tilePos, out var microTile)) {
 						microNode = new MicroGridNode(
 							tilePos,
 							microTile.Data.IsStaticObstacle,
-							currentMacroNode
+							box
 						);
 					} else {
 						microNode = new MicroGridNode(
 							tilePos,
 							true,
-							currentMacroNode
+							box
 						);
 						if (this.logMicroTileNotFoundWarnings) {
 							Debug.LogWarning($"Micro tile not found at {tilePos}. Defaulted to static obstacle.");
@@ -236,12 +239,17 @@ namespace Kope.Feature.PathFinding {
 
 					if (!microGridNodeDict.ContainsKey(tilePos)) {
 						microGridNodeDict.Add(tilePos, microNode);
-						currentMacroNode.PrecheckedAddMicroGridNodePosition(tilePos);
+						microGridPositions[index - 1] = tilePos;
 					} else {
 						Debug.LogWarning($"Duplicate micro node detected at {tilePos}. Overwriting.");
-						microGridNodeDict[tilePos] = microNode;
 					}
 				}
+				var currentMacroNode = new MacroGridNode(
+					box, terrainType, movementCapability,
+					isBlocked,
+					microGridPositions
+				);
+				macroGridNodeDict.Add(box, currentMacroNode);
 			}
 
 			// ==========================================
@@ -257,15 +265,15 @@ namespace Kope.Feature.PathFinding {
 
 				Vec2Int fromAnchor = slicedRegions[fromBox].regionAnchor;
 				MovementCapability fromCapability = this._macroTileDictionary[fromAnchor].Data.MovementType;
-				bool toNarrativelyAccessible = this._macroTileDictionary[fromAnchor].Data.IsNarrativelyAccessible;
+				bool toIsBlocked = this._macroTileDictionary[fromAnchor].Data.IsBlocked;
 
 				foreach (BoundingBox toBox in kvp.Value) {
 					Vec2Int toAnchor = slicedRegions[toBox].regionAnchor;
 					MovementCapability toCapability = this._macroTileDictionary[toAnchor].Data.MovementType;
-					bool fromNarrativelyAccessible = this._macroTileDictionary[toAnchor].Data.IsNarrativelyAccessible;
+					bool isBlocked = this._macroTileDictionary[toAnchor].Data.IsBlocked;
 
 					MacroConnectionData mcd = MacroConnectionData.CreateConnection(
-						toBox, fromCapability, toCapability, toNarrativelyAccessible, fromNarrativelyAccessible);
+						toBox, fromCapability, toCapability, toIsBlocked, isBlocked);
 
 					connections.Add(mcd);
 				}

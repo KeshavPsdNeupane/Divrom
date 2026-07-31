@@ -60,7 +60,7 @@ namespace Kope.Feature.PathFinding.Tile {
 	public struct MacroTerrainData : ITerrainData<MacroTerrainData> {
 		[SerializeField] private TerrainType terrainType;
 		[SerializeField] private MovementCapability movementType;
-		[SerializeField] private bool isNarrativelyAccessible;
+		[SerializeField] private bool isBlocked;
 		[SerializeField] private Color tileColor;
 
 		public readonly Color TileColor => new(
@@ -72,24 +72,24 @@ namespace Kope.Feature.PathFinding.Tile {
 
 		public readonly TerrainType TerrainType => this.terrainType;
 		public readonly MovementCapability MovementType => this.movementType;
-		public readonly bool IsNarrativelyAccessible => this.isNarrativelyAccessible;
+		public readonly bool IsBlocked => this.isBlocked;
 
 		public readonly bool Equals(MacroTerrainData other) =>
 			terrainType == other.terrainType &&
 			movementType == other.movementType &&
-			isNarrativelyAccessible == other.isNarrativelyAccessible &&
+			isBlocked == other.isBlocked &&
 			tileColor.Equals(other.tileColor);
 
 		public override readonly bool Equals(object obj) => obj is MacroTerrainData other && Equals(other);
 
 		public override readonly int GetHashCode() =>
-			HashCode.Combine(terrainType, movementType, isNarrativelyAccessible, tileColor);
+			HashCode.Combine(terrainType, movementType, isBlocked, tileColor);
 
 		public static bool operator ==(MacroTerrainData left, MacroTerrainData right) => left.Equals(right);
 
 		public static bool operator !=(MacroTerrainData left, MacroTerrainData right) => !left.Equals(right);
 
 		public override readonly string ToString() =>
-			$"TerrainType: {terrainType}, MovementType: {movementType}, IsNarrativelyAccessible: {isNarrativelyAccessible}, TileColor: {tileColor}";
+			$"TerrainType: {terrainType}, MovementType: {movementType}, IsNarrativelyAccessible: {isBlocked}, TileColor: {tileColor}";
 	}
 }

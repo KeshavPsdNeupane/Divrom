@@ -39,7 +39,7 @@ namespace Kope.Feature.PathFinding.Algorithms {
 		private readonly float _greedyNess = 1f;
 		private readonly CostCalculationType _costCalculationType = CostCalculationType.Manhattan;
 
-		private readonly PathfindingGraphManager _graphManager;
+		private readonly IPathfindingGraphManager _graphManager;
 		private readonly Dictionary<Vec2Int, MicroPathFindingNode> _nodeRecords;
 		private readonly HashSet<Vec2Int> _closedSet;
 		private readonly QuadPriorityQueue<MicroPathFindingNode, int> _openSet;
@@ -54,9 +54,9 @@ namespace Kope.Feature.PathFinding.Algorithms {
 #endif
 
 		public AStarMicro(
-			PathfindingGraphManager graphManager,
+			IPathfindingGraphManager graphManager,
 			PathFindingConfig config = default) {
-			this._graphManager = graphManager ?? throw new ArgumentNullException(nameof(graphManager));
+			this._graphManager = graphManager;
 			this._nodeRecords = new Dictionary<Vec2Int, MicroPathFindingNode>(config.InitialCapacity);
 			this._closedSet = new HashSet<Vec2Int>(config.InitialCapacity);
 			this._openSet = new QuadPriorityQueue<MicroPathFindingNode, int>(config.InitialCapacity);

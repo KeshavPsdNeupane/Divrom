@@ -90,7 +90,7 @@ namespace Kope.Feature.PathFinding.Data {
 
 			if (microGridNodeDict != null) {
 				foreach (var microNode in microGridNodeDict.Values) {
-					var bound = microNode.ParentMacroGrid.Bound;
+					var bound = microNode.ParentBBox;
 					if (!microNodesByMacro.TryGetValue(bound, out var list)) {
 						list = new List<MicroGridNode>();
 						microNodesByMacro[bound] = list;
@@ -150,11 +150,10 @@ namespace Kope.Feature.PathFinding.Data {
 					keysLow[currentMacroIdx] = low;
 					terrainTypes[currentMacroIdx] = macroNode.TerrainType;
 					allowedTraversals[currentMacroIdx] = macroNode.AllowedTraversal;
-					narrativeAccessFlags[currentMacroIdx] = SpatialBitPacker.ConvertBoolToByte(macroNode.IsNarrativelyAccessible);
+					narrativeAccessFlags[currentMacroIdx] = SpatialBitPacker.ConvertBoolToByte(macroNode.IsBlocked);
 
 					// 3b. Pack Micro Nodes & Bit-Pack Slice Descriptor
-					List<MicroGridNode> microList = null;
-					microNodesByMacro.TryGetValue(bbox, out microList);
+					microNodesByMacro.TryGetValue(bbox, out List<MicroGridNode> microList);
 					int microCount = microList?.Count ?? 0;
 
 					// Bit-pack starting write head position (Offset) and slice length (Count) into 64-bit long
@@ -263,12 +262,10 @@ namespace Kope.Feature.PathFinding.Data {
 				bool narr = (narrativeAccessFlags != null && i < narrativeAccessFlags.Length)
 					&& SpatialBitPacker.ConvertByteToBool(narrativeAccessFlags[i]);
 
-				// 1. Reconstruct MacroGridNode runtime object
-				MacroGridNode macroNode = new(bbox, tt, trav, narr);
-				macroDict[bbox] = macroNode;
 
 				// 2. Unpack 64-bit Micro Slice word -> (offset, count) tuple via bit shifting
 				var (uOffset, uCount) = GridDataGlobalStream.UnpackSlice(globMicroSlices[i]);
+				Vec2Int[] microPositions = new Vec2Int[uCount];
 
 				// Read contiguous slice out of global master micro streams
 				for (int j = 0; j < uCount; j++) {
@@ -277,14 +274,19 @@ namespace Kope.Feature.PathFinding.Data {
 					bool isObstacle = SpatialBitPacker.ConvertByteToBool(globMicroFlags[idx]);
 
 					// Instantiate runtime MicroGridNode and insert into lookup map
-					microDict[pos] = new MicroGridNode(pos, isObstacle, macroNode);
+					microDict[pos] = new MicroGridNode(pos, isObstacle, bbox);
 
 					// Register micro node to its parent macro node
 					// why prechecked? Because the micro nodes are already pre-bucketed by
 					//  their parent macro node during the baking phase, so we can safely add 
 					// them without checking for duplicates.
-					macroNode.PrecheckedAddMicroGridNodePosition(pos);
+					microPositions[j] = pos;
+
 				}
+				// 1. Reconstruct MacroGridNode runtime object
+				MacroGridNode macroNode = new(bbox, tt, trav, narr, microPositions);
+				macroDict[bbox] = macroNode;
+
 
 				// 3. Unpack 64-bit Connection Slice word -> (offset, count) tuple via bit shifting.
 				// Only the target BoundingBox was persisted per edge — capability/narrative-access are

@@ -39,7 +39,7 @@ namespace Kope.Feature.PathFinding.Node {
 
 		[SerializeField, ReadOnly] private Vec2Int _position;
 		[SerializeField, ReadOnly] private bool _isStaticObstacle;
-		[SerializeField, ReadOnly] private MacroGridNode _parentMacroGrid;
+		[SerializeField, ReadOnly] private BoundingBox _parentBBox;
 
 		#endregion
 
@@ -58,9 +58,9 @@ namespace Kope.Feature.PathFinding.Node {
 		}
 
 		/// <summary>Gets the parent macro region node that bounds this micro node.</summary>
-		public readonly MacroGridNode ParentMacroGrid {
+		public readonly BoundingBox ParentBBox {
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			get => this._parentMacroGrid;
+			get => this._parentBBox;
 		}
 
 		#endregion
@@ -68,17 +68,17 @@ namespace Kope.Feature.PathFinding.Node {
 		#region Constructors
 
 		/// <summary>Initializes a micro grid node bound to a specific parent macro node.</summary>
-		public MicroGridNode(Vec2Int position, bool isStaticObstacle, MacroGridNode parentMacroGrid) {
+		public MicroGridNode(Vec2Int position, bool isStaticObstacle, BoundingBox parentBBox) {
 			this._position = position;
 			this._isStaticObstacle = isStaticObstacle;
-			this._parentMacroGrid = parentMacroGrid;
+			this._parentBBox = parentBBox;
 		}
 
 		/// <summary>Initializes a micro grid node using distinct coordinate integers and a parent macro node.</summary>
-		public MicroGridNode(int x, int y, bool isStaticObstacle, MacroGridNode parentMacroGrid) {
+		public MicroGridNode(int x, int y, bool isStaticObstacle, BoundingBox parentBBox) {
 			this._position = new Vec2Int(x, y);
 			this._isStaticObstacle = isStaticObstacle;
-			this._parentMacroGrid = parentMacroGrid;
+			this._parentBBox = parentBBox;
 		}
 
 		#endregion
@@ -91,18 +91,18 @@ namespace Kope.Feature.PathFinding.Node {
 		public readonly MicroGridNode CopyWith(
 			Vec2Int? position = null,
 			bool? isStaticObstacle = null,
-			MacroGridNode parentMacroGrid = null) {
+			BoundingBox? parentBBox = null) {
 			return new MicroGridNode(
 				position ?? this._position,
 				isStaticObstacle ?? this._isStaticObstacle,
-				parentMacroGrid ?? this._parentMacroGrid);
+				parentBBox ?? this._parentBBox);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly bool Equals(MicroGridNode other) {
 			return this._position == other._position &&
 				   this._isStaticObstacle == other._isStaticObstacle &&
-				   this._parentMacroGrid == other._parentMacroGrid;
+				   this._parentBBox == other._parentBBox;
 		}
 		#endregion
 		#region Cost Calculation
@@ -130,7 +130,8 @@ namespace Kope.Feature.PathFinding.Node {
 		public static bool operator !=(MicroGridNode left, MicroGridNode right) => !left.Equals(right);
 
 		public override readonly string ToString() {
-			return $"MicroGridNode(Position: {Position}, IsStaticObstacle: {IsStaticObstacle}, ParentMacroGrid: {ParentMacroGrid?.Bound})";
+			return $"MicroGridNode(Position: {Position}, IsStaticObstacle: {IsStaticObstacle}," +
+			$" ParentMacroGrid: {ParentBBox})";
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]

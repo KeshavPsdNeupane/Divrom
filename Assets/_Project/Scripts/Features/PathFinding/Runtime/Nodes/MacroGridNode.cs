@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using Kope.Core.Attribute;
 using Kope.EntityIdentity;
 using UnityEngine;
 
@@ -20,28 +18,27 @@ namespace Kope.Feature.PathFinding.Node {
 	/// and maintain mutable state metadata for dynamic environment changes.
 	/// </para>
 	/// </remarks>
-	[Serializable]
 	public sealed class MacroGridNode {
 		#region Fields
 
-		[SerializeField, ReadOnly] private BoundingBox _bound;
-		[SerializeField, ReadOnly] private TerrainType _terrainType;
-		[SerializeField, ReadOnly] private MovementCapability _allowedTraversal;
-		[SerializeField, ReadOnly] private bool _isNarrativelyAccessible = true;
+		private BoundingBox _bound;
+		private readonly TerrainType _terrainType;
+		private readonly MovementCapability _allowedTraversal;
+		private readonly bool _isBlocked;
 
 		/// <summary>
 		/// Internal list tracking micro grid coordinate nodes enclosed by this macro node's boundary.
 		/// Stores lightweight <see cref="Vec2Int"/> structures rather than full node allocations to ensure 
 		/// rock-solid ScriptableObject serialization compatibility and avoid cross-reference memory leaks.
 		/// </summary>
-		[SerializeField, HideInInspector] private List<Vec2Int> _microGridNodePositions = new();
+		private readonly Vec2Int[] _microGridNodePositions;
 
 		#endregion
 
 		#region Properties
 
 		/// <summary>Gets the axis-aligned bounding box defining this macro region.</summary>
-		public BoundingBox Bound {
+		public BoundingBox BBox {
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get => this._bound;
 		}
@@ -57,9 +54,9 @@ namespace Kope.Feature.PathFinding.Node {
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get => this._allowedTraversal;
 		}
-		public bool IsNarrativelyAccessible {
+		public bool IsBlocked {
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			get => this._isNarrativelyAccessible;
+			get => this._isBlocked;
 		}
 
 		/// <summary>
@@ -69,15 +66,15 @@ namespace Kope.Feature.PathFinding.Node {
 		public const int DIAGONAL_TRAVERSAL_COST = MicroGridNode.DIAGONAL_COST;
 
 		/// <summary>Gets an immutable read-only view of all micro grid coordinates housed in this macro zone.</summary>
-		public IReadOnlyList<Vec2Int> MicroGridNodePositions {
+		public ReadOnlySpan<Vec2Int> MicroGridNodePositions {
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			get => this._microGridNodePositions.AsReadOnly();
+			get => this._microGridNodePositions;
 		}
 
 		/// <summary>Gets the total count of constituent micro grid coordinates registered to this macro area.</summary>
 		public int TotalMicroGrids {
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			get => this._microGridNodePositions.Count;
+			get => this._microGridNodePositions.Length;
 		}
 
 		#endregion
@@ -92,12 +89,12 @@ namespace Kope.Feature.PathFinding.Node {
 			TerrainType terrainType,
 			MovementCapability allowedTraversal,
 			bool isNarrativelyAccessible,
-			List<Vec2Int> microGridsNodesPositions = null) {
+			Vec2Int[] microGridsNodesPositions) {
 			this._bound = bounds;
 			this._terrainType = terrainType;
 			this._allowedTraversal = allowedTraversal;
-			this._isNarrativelyAccessible = isNarrativelyAccessible;
-			this._microGridNodePositions = microGridsNodesPositions ?? new List<Vec2Int>();
+			this._isBlocked = isNarrativelyAccessible;
+			this._microGridNodePositions = microGridsNodesPositions ?? Array.Empty<Vec2Int>();
 		}
 
 		#endregion
@@ -108,31 +105,7 @@ namespace Kope.Feature.PathFinding.Node {
 		public bool CanTraverse(MovementCapability capability) {
 			// Check if the macro node is narratively accessible and if the allowed traversal 
 			// capabilities include the specified capability.
-			return IsNarrativelyAccessible && (AllowedTraversal & capability) != MovementCapability.None;
-		}
-		/// <summary>
-		/// Adds a unique micro grid position to this region's spatial registry.
-		/// </summary>
-		public void AddMicroGridNodePosition(Vec2Int position) {
-			if (!this._microGridNodePositions.Contains(position)) {
-				this._microGridNodePositions.Add(position);
-			}
-		}
-
-		/// <summary>
-		/// Adds a micro grid node coordinate without running duplicate validation checks.
-		/// Intended for performance-sensitive batch setups where uniqueness is pre-guaranteed.
-		/// </summary>
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public void PrecheckedAddMicroGridNodePosition(Vec2Int position) {
-			this._microGridNodePositions.Add(position);
-		}
-
-		/// <summary>
-		/// Removes a specified micro grid position from this macro node's registry list.
-		/// </summary>
-		public void RemoveMicroGridNodePosition(Vec2Int position) {
-			this._microGridNodePositions.Remove(position);
+			return !this.IsBlocked && (this.AllowedTraversal & capability) != MovementCapability.None;
 		}
 		#endregion
 

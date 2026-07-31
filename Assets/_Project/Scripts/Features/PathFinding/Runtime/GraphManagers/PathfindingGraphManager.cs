@@ -5,7 +5,6 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using Kope.EntityIdentity;
 using Kope.Feature.PathFinding.Node;
-using UnityEngine;
 using ZLinq;
 
 namespace Project.Scripts.Features.PathFinding.GraphManager {
@@ -16,7 +15,7 @@ namespace Project.Scripts.Features.PathFinding.GraphManager {
 	/// This acts as the single source of truth for both Micro (tile-level) and Macro (region/room-level) pathing.
 	/// </summary>
 	[Serializable]
-	public class PathfindingGraphManager {
+	public class PathfindingGraphManager : IPathfindingGraphManager {
 
 		#region Fields
 
@@ -98,36 +97,6 @@ namespace Project.Scripts.Features.PathFinding.GraphManager {
 			return this._microNodes.TryGetValue(position, out microNode);
 		}
 
-		/// <summary>
-		/// Registers a micro node into the graph. 
-		/// Automatically synchronizes with its parent MacroGrid to ensure referential integrity.
-		/// </summary>
-		public void RegisterMicroNode(MicroGridNode microNode) {
-			this._microNodes[microNode.Position] = microNode;
-
-			if (microNode.ParentMacroGrid != null) {
-				// Bi-directional linkage: Tell the macro grid it owns this micro position
-				microNode.ParentMacroGrid.AddMicroGridNodePosition(microNode.Position);
-
-				// Ensure the macro node itself is registered in the master graph if it isn't already
-				if (!this._macroNodes.ContainsKey(microNode.ParentMacroGrid.Bound)) {
-					RegisterMacroNode(microNode.ParentMacroGrid);
-				}
-			} else {
-				Debug.LogWarning($"MicroGridNode at {microNode.Position} has no ParentMacroGrid assigned.");
-			}
-		}
-
-		/// <summary>
-		/// Removes a micro node and cleans up its reference from its parent MacroGrid.
-		/// </summary>
-		public void RemoveMicroNode(Vec2Int position) {
-			if (this._microNodes.TryGetValue(position, out MicroGridNode microNode)) {
-				this._microNodes.Remove(position);
-				// Sever the link from the macro layer
-				microNode.ParentMacroGrid?.RemoveMicroGridNodePosition(position);
-			}
-		}
 
 		/// <summary>
 		/// Retrieves walkable cardinal neighbors for a given position.
@@ -198,131 +167,50 @@ namespace Project.Scripts.Features.PathFinding.GraphManager {
 		/// </summary>
 		public bool TryGetMacroNodeFromPosition(Vec2Int position, [MaybeNullWhen(false)] out MacroGridNode macroNode) {
 			macroNode = null;
-			if (this._microNodes.TryGetValue(position, out MicroGridNode micro) && micro.ParentMacroGrid != null) {
-				macroNode = micro.ParentMacroGrid;
-				return true;
+			if (this._microNodes.TryGetValue(position, out MicroGridNode micro) && micro.ParentBBox != null) {
+				if (this._macroNodes.TryGetValue(micro.ParentBBox, out macroNode)) {
+					return true;
+				}
 			}
 			return false;
 		}
 
-		/// <summary>
-		/// Registers a Macro node and prepares its adjacency entry.
-		/// </summary>
-		public void RegisterMacroNode(MacroGridNode node) {
-			this._macroNodes[node.Bound] = node;
-
-			// Ensure adjacency list exists so we can safely add edges later
-			if (!this._adjacencyDict.ContainsKey(node.Bound)) {
-				this._adjacencyDict[node.Bound] = new List<MacroConnectionData>();
-			}
-		}
 
 		/// <summary>
-		/// Completely removes a Macro node from the system.
-		/// Cascades destruction: cleans up all incoming/outgoing connections, then deletes all child Micro nodes.
-		/// </summary>
-		public void RemoveMacroNode(BoundingBox box) {
-			if (!this._macroNodes.TryGetValue(box, out MacroGridNode removedNode)) {
-				return; // Nothing to remove
-			}
-
-			// Step 1: Cleanup Graph Adjacency (Incoming & Outgoing edges)
-			if (this._adjacencyDict.TryGetValue(box, out var connections)) {
-				foreach (var connection in connections) {
-					// Find nodes pointing back to this node and remove those reverse edges
-					if (this._adjacencyDict.TryGetValue(connection.ToBound, out var reverseConnections)) {
-						reverseConnections.RemoveAll(c => c.ToBound == box);
-					}
-				}
-				connections.Clear();
-				this._adjacencyDict.Remove(box);
-			}
-
-			// Step 2: Remove Macro Node itself
-			this._macroNodes.Remove(box);
-
-			// Step 3: Cascade Micro Deletions natively (Delete all tiles owned by this room/region)
-			foreach (var pos in removedNode.MicroGridNodePositions) {
-				this._microNodes.Remove(pos);
-			}
-		}
-
-		/// <summary>
-		/// Aggregates all Micro grid positions contained within a specific list of Macro nodes.
-		/// Reuses the internal _corridorPositions HashSet to prevent garbage collection spikes.
+		/// Aggregates all Micro grid positions contained within a span of Macro nodes.
+		/// Zero-allocation input and output processing.
 		/// </summary>
 		public HashSet<Vec2Int> GetAllCorridorPositions(List<BoundingBox> macroNodes) {
 			this._corridorPositions.Clear();
-			foreach (var bounds in macroNodes) {
-				if (this._macroNodes.TryGetValue(bounds, out MacroGridNode node)) {
-					this._corridorPositions.UnionWith(node.MicroGridNodePositions);
+
+			var macroDict = this._macroNodes;
+			for (int i = 0; i < macroNodes.Count; i++) {
+				if (macroDict.TryGetValue(macroNodes[i], out MacroGridNode node)) {
+					ReadOnlySpan<Vec2Int> positions = node.MicroGridNodePositions;
+					for (int j = 0; j < positions.Length; j++) {
+						this._corridorPositions.Add(positions[j]);
+					}
 				}
 			}
+
 			return this._corridorPositions;
 		}
 
 		#endregion
 
 		#region Macro Adjacency & Traversal Operations
-
-		/// <summary>
-		/// Defines a traversable edge between two Macro regions.
-		/// </summary>
-		/// <param name="Tocapability">Movement required by the target node.</param>
-		/// <param name="fromCapability">Movement required by the origin node.</param>
-		public void AddConnection(
-			BoundingBox from, BoundingBox to,
-			MovementCapability Tocapability, MovementCapability fromCapability,
-			bool toIsNarrativelyAccessible = true, bool fromIsNarrativelyAccessible = true,
-			bool isBidirectional = true) {
-
-			// Combine capabilities and access rules via bitwise/logical operations
-			MovementCapability capability = Tocapability | fromCapability;
-			bool isNarrativelyAccessible = toIsNarrativelyAccessible && fromIsNarrativelyAccessible;
-
-			AddDirectedConnection(from, to, capability, isNarrativelyAccessible);
-			if (isBidirectional) {
-				AddDirectedConnection(to, from, capability, isNarrativelyAccessible);
-			}
-		}
-
-		/// <summary>
-		/// Internal helper to push a one-way edge into the adjacency dictionary.
-		/// </summary>
-		private void AddDirectedConnection(BoundingBox from, BoundingBox to, MovementCapability capability, bool isNarrativelyAccessible) {
-			if (!this._adjacencyDict.TryGetValue(from, out var connections)) {
-				connections = new List<MacroConnectionData>();
-				this._adjacencyDict[from] = connections;
-			}
-
-			// Prevent duplicate edge registration
-			if (!connections.Exists(c => c.ToBound == to)) {
-				connections.Add(new MacroConnectionData(to, capability, isNarrativelyAccessible));
-			}
-		}
-
 		/// <summary>
 		/// Gets all outbound macro connections from a given box that satisfy the requested movement capability.
 		/// Note: Uses ZLinq's AsValueEnumerable to evaluate the struct sequence without allocating enumerators.
 		/// </summary>
 		public bool GetNeighboringMacroNodesConnectionData(
 			BoundingBox box, MovementCapability capability,
-			out IEnumerable<MacroConnectionData> connections) {
+			out IReadOnlyList<MacroConnectionData> connections) {
 			connections = null;
 			if (!this._adjacencyDict.TryGetValue(box, out var list)) return false;
 
 			connections = list.AsValueEnumerable().Where(c => c.IsTraversable(capability)).ToList();
 			return true;
-		}
-
-		/// <summary>
-		/// Checks if a valid edge exists from point A to point B matching the entity's traversal capabilities.
-		/// </summary>
-		public bool CanTraverseMacro(BoundingBox from, BoundingBox to, MovementCapability capability) {
-			if (this._adjacencyDict.TryGetValue(from, out var connections)) {
-				return connections.AsValueEnumerable().Any(c => c.ToBound == to && c.IsTraversable(capability));
-			}
-			return false;
 		}
 
 		/// <summary>

@@ -109,7 +109,7 @@ namespace Kope.Feature.PathFinding.Data {
 
 			if (microGridNodeDict != null) {
 				foreach (var microNode in microGridNodeDict.Values) {
-					var bound = microNode.ParentMacroGrid.Bound;
+					var bound = microNode.ParentBBox;
 					if (!microNodesByMacro.TryGetValue(bound, out var list)) {
 						list = new List<MicroGridNode>();
 						microNodesByMacro[bound] = list;
@@ -167,7 +167,7 @@ namespace Kope.Feature.PathFinding.Data {
 					keysLow[index] = low;
 					terrainTypes[index] = macroNode.TerrainType;
 					allowedTraversals[index] = macroNode.AllowedTraversal;
-					narrativeAccessFlags[index] = SpatialBitPacker.ConvertBoolToByte(macroNode.IsNarrativelyAccessible);
+					narrativeAccessFlags[index] = SpatialBitPacker.ConvertBoolToByte(macroNode.IsBlocked);
 
 					values[index] = new MacroSaveDataPacked(
 						microRegionPositions,
@@ -230,6 +230,8 @@ namespace Kope.Feature.PathFinding.Data {
 				ownRegionDataByBox[box] = (t, n);
 			}
 
+
+
 			// Rehydrate domain objects directly from parallel primitive key/metadata/value streams
 			for (int i = 0; i < macroCount; i++) {
 				ulong high = keysHigh[i];
@@ -242,28 +244,31 @@ namespace Kope.Feature.PathFinding.Data {
 				bool narr = narrativeAccessFlags != null && i < narrativeAccessFlags.Length
 					&& SpatialBitPacker.ConvertByteToBool(narrativeAccessFlags[i]);
 
-				// 1. Reconstruct MacroGridNode instance
-				MacroGridNode macroNode = new(bbox, tt, trav, narr);
-				macroGridNodeDict[bbox] = macroNode;
+
 
 				// 2. Reconstruct MicroGridNodes directly from synchronized parallel streams
 				var positions = macroData.MacroRegionAnchorPoints;
 				var obstacleFlags = macroData.MacroRegionStaticObstacleFlags;
 
 				int microNodeCount = positions != null ? positions.Count : 0;
+
+				Vec2Int[] microNodesInRegion = new Vec2Int[microNodeCount];
+
 				for (int j = 0; j < microNodeCount; j++) {
 					Vec2Int pos = positions[j];
 					bool isObstacle = SpatialBitPacker.ConvertByteToBool(obstacleFlags[j]);
 
 					// Instantiate MicroGridNode with direct parent reference to the newly created MacroGridNode
-					microGridNodeDict[pos] = new MicroGridNode(pos, isObstacle, macroNode);
+					microGridNodeDict[pos] = new MicroGridNode(pos, isObstacle, bbox);
 					// Register micro node to its parent macro node
 					// why prechecked? Because the micro nodes are already pre-bucketed by
 					// their parent macro node during the baking phase, so we can safely add 
 					// them without checking for duplicates.
-					macroNode.PrecheckedAddMicroGridNodePosition(pos);
-				}
+					microNodesInRegion[j] = pos;
 
+				}
+				MacroGridNode macroNode = new(bbox, tt, trav, narr, microNodesInRegion);
+				macroGridNodeDict[bbox] = macroNode;
 				// 3. Reconstruct MacroConnectionData graph edges. Only the target BoundingBox was persisted;
 				// the combined capability/narrative-access are rebuilt here from this region's own data
 				// (trav/narr, the "from" side) and the target's own data looked up above (the "to" side).

@@ -53,6 +53,7 @@
     <Analyzer Include="/home/keshav/Unity/Hub/Editor/6000.5.4f1/Editor/Data/BCLExtensions/TargetingPacks/netstandard2.1/analyzers/dotnet/roslyn4.0/cs/System.Text.Json.SourceGeneration.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/GraphManagers/PathfindingGraphManagerHybrid.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/EntityStat/UI/CharacterStatsGUI.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/Utility/Gizmos.cs/MacroRegionSliceGizmos.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/Gizmos/GridGizmoUtil.cs" />
@@ -87,6 +88,7 @@
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/Nodes/MacroGridNode.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/AStar/Micro/MicroNode.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/ConcreteClass/AreaTargeting/AreaTargetingStrategy2D.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/GraphManagers/IPathfindingGraphManager.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AnimationCurve/CurveAsset.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/Utility/RectangleSlicer/PureHistogramRegionSlicer.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/PlayerAbilityCaster.cs" />
@@ -116,6 +118,7 @@
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/DamageBased/VampericDamageEffect.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/Container/GlobalStream/GridDataGlobalStream.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/AStar/HierarchicalHomogeneousSpatialIndexingAStar.cs" />
+    <Compile Include="Assets/QuadPriorityQueueNative.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/Nodes/Vec2Int.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/GraphManagers/PathfindingGraphManager.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Ability/DamageBased/DamageAbility.cs" />

@@ -3,17 +3,16 @@ using Kope.EntityIdentity;
 using Kope.Feature.PathFinding.Algorithms;
 using Kope.Feature.PathFinding.Node;
 using Project.Scripts.Features.PathFinding.GraphManager;
-using UnityEngine;
 
 namespace Project.Scripts.Features.PathFinding.Algorithms {
 
 	public class HierarchicalHomogeneousSpatialIndexingAStar {
-		private readonly PathfindingGraphManager _graphManager;
+		private readonly IPathfindingGraphManager _graphManager;
 		private readonly AStarMicro _microAStar;
 		private readonly AStarMacro _macroAStar;
 
 		public HierarchicalHomogeneousSpatialIndexingAStar(
-			PathfindingGraphManager graphManager, PathFindingConfig microConfig,
+			IPathfindingGraphManager graphManager, PathFindingConfig microConfig,
 			PathFindingConfig macroConfig
 			) {
 			this._graphManager = graphManager ?? throw new ArgumentNullException(nameof(graphManager));
@@ -49,10 +48,14 @@ namespace Project.Scripts.Features.PathFinding.Algorithms {
 			if (macroResultFinal.pathFindingResultType != PathFindingResultType.Success) {
 				return new PathFindingResultAggregate(PathFindingErrorPath.MacroPathFinding, macroResultFinal, null);
 			}
+
+
 			//	Debug.Log($"Macro pathfinding successful. Macro path length: {macroResultFinal.Path.Count} | Start: {start} | End: {end}");
+			//var corridorArr = macroResultFinal.Path.AsEnumerable().ToArray();
 
 			var corridorsTileSet = this._graphManager.GetAllCorridorPositions(macroResultFinal.Path);
-			//	Debug.Log($"Corridor size: {corridorsTileSet.Count} | contains start {start}: {corridorsTileSet.Contains(start)} | contains end {end}: {corridorsTileSet.Contains(end)}");
+			//Debug.Log($"Corridor size: {corridorsTileSet.Count} | contains start {start}: {corridorsTileSet.Contains(start)} | contains end {end}: {corridorsTileSet.Contains(end)}");
+
 
 			var microResultFinal = this._microAStar.FindPath(start, end, corridorsTileSet, microRecorder);
 
