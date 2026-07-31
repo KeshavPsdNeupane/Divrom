@@ -5,84 +5,35 @@ using ThirdParty.PriorityQueeu;
 
 namespace Kope.Feature.PathFinding {
 	/// <summary>
-	/// Encapsulates pathfinding cost components and provides priority sorting logic.
+	/// Represents a evaluated pathfinding node wrapper inside the Open/Closed sets.
 	/// </summary>
-	public readonly struct MicroCost : IComparable<MicroCost>, IEquatable<MicroCost> {
+	public readonly struct MicroPathFindingNode : IHasCost<int>, IEquatable<MicroPathFindingNode> {
+		public readonly Vec2Int NodePosition;
+		public readonly Vec2Int? Parent;
+
+		#region Passthrough Properties
 		public readonly int GCost;
 		public readonly int HCost;
-
 		public int FCost {
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get => GCost + HCost;
 		}
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public MicroCost(int gCost, int hCost) {
-			GCost = gCost;
-			HCost = hCost;
-		}
-
-		/// <summary>
-		/// Sorts primarily by lowest FCost. Breaks ties using lowest HCost (closer to target).
-		/// </summary>
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public int CompareTo(MicroCost other) {
-			int compare = FCost.CompareTo(other.FCost);
-			if (compare == 0) {
-				compare = HCost.CompareTo(other.HCost);
-			}
-			return compare;
-		}
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public bool Equals(MicroCost other) => GCost == other.GCost && HCost == other.HCost;
-
-		public override bool Equals(object obj) => obj is MicroCost other && Equals(other);
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public override int GetHashCode() => (GCost * 397) ^ HCost;
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static bool operator ==(MicroCost left, MicroCost right) => left.Equals(right);
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static bool operator !=(MicroCost left, MicroCost right) => !left.Equals(right);
-
-		public override string ToString() => $"Cost(F:{FCost}, G:{GCost}, H:{HCost})";
-	}
-
-	/// <summary>
-	/// Represents a evaluated pathfinding node wrapper inside the Open/Closed sets.
-	/// </summary>
-	public readonly struct MicroPathFindingNode : IHasCost<MicroCost>, IEquatable<MicroPathFindingNode> {
-		public readonly Vec2Int NodePosition;
-		public readonly MicroCost Cost;
-		public readonly Vec2Int? Parent;
-
-		#region Passthrough Properties
-		public int GCost => Cost.GCost;
-		public int HCost => Cost.HCost;
-		public int FCost => Cost.FCost;
 		#endregion
 
 		#region Constructors
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public MicroPathFindingNode(Vec2Int nodePosition, MicroCost cost, Vec2Int? parent) {
-			NodePosition = nodePosition;
-			Cost = cost;
-			Parent = parent;
-		}
 
-		/// <summary>Convenience overload to construct directly with raw G and H integer costs.</summary>
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public MicroPathFindingNode(Vec2Int nodePosition, int gCost, int hCost, Vec2Int? parent)
-			: this(nodePosition, new MicroCost(gCost, hCost), parent) { }
+		public MicroPathFindingNode(Vec2Int nodePosition, int gCost, int hCost, Vec2Int? parent) {
+			this.NodePosition = nodePosition;
+			this.GCost = gCost;
+			this.HCost = hCost;
+			this.Parent = parent;
+		}
 
 		#endregion
 
 		#region IHasCost Implementation
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public MicroCost GetCost() => Cost;
+		public int GetCost() => FCost;
 		#endregion
 
 		#region IEquatable & Identity
@@ -103,7 +54,7 @@ namespace Kope.Feature.PathFinding {
 
 		public override string ToString() {
 			string parentStr = Parent.HasValue ? Parent.Value.ToString() : "None";
-			return $"MicroPathFindingNode(Node: {NodePosition}, {Cost}, Parent: {parentStr})";
+			return $"MicroPathFindingNode(Node: {NodePosition}, G: {GCost}, H: {HCost}, F: {FCost}, Parent: {parentStr})";
 		}
 		#endregion
 	}

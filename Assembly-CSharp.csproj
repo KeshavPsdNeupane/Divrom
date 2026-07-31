@@ -73,7 +73,6 @@
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Ability/ExampleAbility.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/HealBased/InstantHealEffect.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/PlayerItemCollector.cs" />
-    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/GraphManagers/MicroGraphManager.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/Nodes/BoundingBox.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Ability/StatBased/StatChangeAbility.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/AStar/Micro/AStarMicro.cs" />
@@ -84,6 +83,7 @@
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Ability/AbilityBase.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/Utility/RectangleSlicer/GreedyClusteringHistogramSlicer.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/UtilityClasses/AbilityAreaTargetingController.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/GraphManagers/PathFindingGraphManagerNew.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/Nodes/MacroGridNode.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/AStar/Micro/MicroNode.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/ConcreteClass/AreaTargeting/AreaTargetingStrategy2D.cs" />
@@ -93,7 +93,6 @@
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/AStar/PathFindingResult..cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/Utility/RectangleSlicer/DualAxisGreedyMeshingAlgorithm.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/PathFinding.cs" />
-    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/GraphManagers/MacroGraphManager.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/Container/IGridDataCodex.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/Container/GlobalStream/GridDataCodexGlobalStream.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/Container/Packed/GridDataContainerPacked.cs" />
@@ -125,8 +124,8 @@
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/Utility/RectangleSlicer/GreedyRectanglePackingAlogorithm.cs" />
     <Compile Include="Assets/_Project/Scripts/UI/UIState/UIStateManager.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/PathfindingBenchmarkReporter.cs" />
-    <Compile Include="Assets/_Project/Scripts/UI/UIState/InGameUI/InGameUIInitCaller.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/Utility/RegionGroupAlgorithm/RegionExtractionAlgorithm.cs" />
+    <Compile Include="Assets/_Project/Scripts/UI/UIState/InGameUI/InGameUIInitCaller.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/Utility/RectangleSlicer/Marshalled/GreedyClusteringHistogramSlicer.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/TargetingStrategy.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/MovementBased/KnockBackEffect.cs" />
@@ -151,6 +150,7 @@
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/TargetingSettings.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/Gizmos/MicroPathfinderGizmos.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/Container/SpatialBitPacker.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Runtime/Nodes/MacroConnectionData.cs" />
     <Compile Include="Assets/_Project/Scripts/UI/UIState/UIState.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/ConcreteClass/SingleTargetTargetingStrategy.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/UtilityClasses/ProjectileLineContrller.cs" />

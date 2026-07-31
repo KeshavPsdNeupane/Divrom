@@ -142,11 +142,8 @@ public class PathFinding : MonoBehaviour {
 		}
 
 		var neighborDict = this.graphDataContainer.MacroAdjacencyList;
-
-		MacroGraphManager macroGraphManager = new(this.graphDataContainer.MacroGridNodeDict, neighborDict);
-		MicroGraphManager microGraphManager = new(this.graphDataContainer.MicroGridNodeDict);
-
-		this.graphManager = new(macroGraphManager, microGraphManager);
+		this.graphManager = new(
+			 this.graphDataContainer.MicroGridNodeDict, this.graphDataContainer.MacroGridNodeDict, neighborDict);
 
 		PathFindingConfig macroConfig = new(
 			this.macroCostCalculationType, PathFindingConfig.DEFAULT_INITIAL_CAPACITY,

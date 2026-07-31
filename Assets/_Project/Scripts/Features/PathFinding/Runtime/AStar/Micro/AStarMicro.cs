@@ -42,7 +42,7 @@ namespace Kope.Feature.PathFinding.Algorithms {
 		private readonly PathfindingGraphManager _graphManager;
 		private readonly Dictionary<Vec2Int, MicroPathFindingNode> _nodeRecords;
 		private readonly HashSet<Vec2Int> _closedSet;
-		private readonly QuadPriorityQueue<MicroPathFindingNode, MicroCost> _openSet;
+		private readonly QuadPriorityQueue<MicroPathFindingNode, int> _openSet;
 
 		private int _totalNodesCache;
 
@@ -59,7 +59,7 @@ namespace Kope.Feature.PathFinding.Algorithms {
 			this._graphManager = graphManager ?? throw new ArgumentNullException(nameof(graphManager));
 			this._nodeRecords = new Dictionary<Vec2Int, MicroPathFindingNode>(config.InitialCapacity);
 			this._closedSet = new HashSet<Vec2Int>(config.InitialCapacity);
-			this._openSet = new QuadPriorityQueue<MicroPathFindingNode, MicroCost>(config.InitialCapacity);
+			this._openSet = new QuadPriorityQueue<MicroPathFindingNode, int>(config.InitialCapacity);
 
 			this._costCalculationType = config.CostCalculationType;
 			this._maxIterationsRatio = config.MaxIterationRatio;
@@ -114,8 +114,8 @@ namespace Kope.Feature.PathFinding.Algorithms {
 			int rawInitialH = costCalculator(start, end);
 			int weightedInitialH = Mathf.FloorToInt(rawInitialH * this._greedyNess);
 
-			MicroCost startCost = new(0, weightedInitialH);
-			MicroPathFindingNode startNode = new(start, startCost, null);
+
+			MicroPathFindingNode startNode = new(start, 0, weightedInitialH, null);
 
 			this._openSet.EnqueueOrUpdate(startNode);
 			this._nodeRecords[start] = startNode;
@@ -179,10 +179,10 @@ namespace Kope.Feature.PathFinding.Algorithms {
 							? rawHCost
 							: Mathf.FloorToInt(rawHCost * this._greedyNess);
 
-						MicroCost neighborCost = new(tentativeGCost, weightedHCost);
 						MicroPathFindingNode neighborRecord = new(
 							neighborPos,
-							neighborCost,
+							tentativeGCost,
+							weightedHCost,
 							currentRecord.NodePosition
 						);
 
