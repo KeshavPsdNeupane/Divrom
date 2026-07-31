@@ -22,15 +22,18 @@ namespace Kope.Feature.PathFinding.Data {
      *   A. BAKING TIME (Editor Pipeline - Encode):
      *      During editor baking (`Bake`), live graph nodes are bucketed by macro region in O(N) time 
      *      and flattened into compact, index-aligned primitive arrays (long[], byte[]). BoundingBox 
-     *      keys are split into 128-bit high/low primitive `ulong` pairs (`keysHigh`, `keysLow`), while 
-     *      region metadata (`terrainTypes`, `allowedTraversals`) is aligned in parallel columns on 
-     *      `PathFindingGridData`. This forces Unity's C++ serializer to inline data as raw hexadecimal 
-     *      byte streams, shrinking asset size on disk by ~99.5%.
+     *      keys are split into 128-bit high/low primitive `ulong` pairs (`keysHigh`, `keysLow`), and
+     *      region metadata (`terrainTypes`, `allowedTraversals`, `isNarrativelyAccessible`) is aligned
+     *      in parallel columns on `PathFindingGridData` — ONCE per region, since it's each region's own
+     *      data. Outgoing connections store only the target region's BoundingBox; the per-edge combined
+     *      capability/narrative-access is never persisted, since it's fully derivable from the two
+     *      endpoints' own top-level values.
      * 
      *   B. RUNTIME HYDRATION (Game Client - Decode):
      *      On game boot or first property access, `Hydrate` lazily reconstructs primitive arrays and 
      *      bit-packed tuple pairs into fully featured runtime lookup Dictionaries without upfront 
-     *      scene loading hitches.
+     *      scene loading hitches. Per-edge `MacroConnectionData` values are recomputed here via
+     *      `MacroConnectionData.CreateConnection`, combining each endpoint's own top-level data.
      * 
      * ==============================================================================================
      * DATA TRANSFORM & RE-HYDRATION GRAPH (PACKED PRIMITIVE STREAMING)
@@ -47,17 +50,19 @@ namespace Kope.Feature.PathFinding.Data {
      *   │     ├── _keysHigh: ulong[]  (Min.X / Min.Y Packed 64-bit Hex Words)
      *   │     ├── _keysLow:  ulong[]  (Max.X / Max.Y Packed 64-bit Hex Words)
      *   │     ├── _tt:       TerrainType[]
-     *   │     ├── _trav:     MovementCapability[]
+     *   │     ├── _trav:     MovementCapability[]   (each region's OWN capability)
+     *   │     ├── _narr:     byte[]                 (each region's OWN narrative access)
      *   │     └── _values:   MacroSaveData[]
      *   │           ├── Parallel Column Arrays: _mPos[] (Vec2Int), _flags[] (byte)
-     *   │           └── Connection Columns: _targetRegions (List<BoundingBox>), _trav[], _narr[]
+     *   │           └── Connection Columns: _targetRegions (List<BoundingBox>) ONLY
      *   │
      *   ▼ (Triggered on 1st Property Getter Access)
      *  Hydrate()  [Single-Pass Pre-Allocated Reconstruction]
      *   │
      *   ├──► MicroGridNodeDict  : Dictionary<Vec2Int, MicroGridNode>        (O(1) Micro Lookup)
      *   ├──► MacroGridNodeDict  : Dictionary<BoundingBox, MacroGridNode>     (O(1) Macro Lookup)
-     *   └──► MacroAdjacencyList : Dictionary<BoundingBox, List<Connection>> (O(1) Edge Lookup)
+     *   └──► MacroAdjacencyList : Dictionary<BoundingBox, List<Connection>> (edges rebuilt via
+     *          CreateConnection, combining each endpoint's own _trav/_narr looked up by BoundingBox)
      * ==============================================================================================
      */
 
@@ -89,6 +94,8 @@ namespace Kope.Feature.PathFinding.Data {
 		/// Bakes live runtime grid graph objects into compressed, parallel-array serialized struct streams.
 		/// Bit-packs BoundingBox keys into <c>(ulong high, ulong low)</c> primitive pairs and stores 
 		/// region data in parallel value structs. Executes in single-pass O(N) time by pre-bucketing micro nodes.
+		/// Per-connection capability/narrative-access are NOT stored — only the target BoundingBox is —
+		/// since they're a pure combination of each endpoint's own <c>_trav</c>/<c>_narr</c>, recomputed at hydrate time.
 		/// </summary>
 		public static GridDataPacked BakeStatic(
 			IDictionary<Vec2Int, MicroGridNode> microGridNodeDict,
@@ -116,6 +123,7 @@ namespace Kope.Feature.PathFinding.Data {
 			ulong[] keysLow = new ulong[macroCount];
 			TerrainType[] terrainTypes = new TerrainType[macroCount];
 			MovementCapability[] allowedTraversals = new MovementCapability[macroCount];
+			byte[] narrativeAccessFlags = new byte[macroCount];
 			MacroSaveDataPacked[] values = new MacroSaveDataPacked[macroCount];
 
 			int index = 0;
@@ -139,23 +147,16 @@ namespace Kope.Feature.PathFinding.Data {
 						}
 					}
 
-					// Flatten outgoing neighboring connections into synchronized primitive arrays
+					// Flatten outgoing connections down to just their target BoundingBox — the combined
+					// capability/narrative-access per edge is derived at hydrate time, not stored.
 					List<MacroConnectionData> neighboringConnections = null;
-					if (macroAdjacencyList != null) {
-						macroAdjacencyList.TryGetValue(bbox, out neighboringConnections);
-					}
+					macroAdjacencyList?.TryGetValue(bbox, out neighboringConnections);
 					int connCount = neighboringConnections?.Count ?? 0;
 
 					List<BoundingBox> targetRegions = new(connCount);
-					MovementCapability[] connAllowedTraversals = new MovementCapability[connCount];
-					byte[] narrativeFlags = new byte[connCount];
-
 					if (neighboringConnections != null) {
 						for (int i = 0; i < connCount; i++) {
-							var conn = neighboringConnections[i];
-							targetRegions.Add(conn.ToBound);
-							connAllowedTraversals[i] = conn.AllowedTraversal;
-							narrativeFlags[i] = SpatialBitPacker.ConvertBoolToByte(conn.IsNarrativelyAccessible);
+							targetRegions.Add(neighboringConnections[i].ToBound);
 						}
 					}
 
@@ -166,18 +167,20 @@ namespace Kope.Feature.PathFinding.Data {
 					keysLow[index] = low;
 					terrainTypes[index] = macroNode.TerrainType;
 					allowedTraversals[index] = macroNode.AllowedTraversal;
+					narrativeAccessFlags[index] = SpatialBitPacker.ConvertBoolToByte(macroNode.IsNarrativelyAccessible);
 
 					values[index] = new MacroSaveDataPacked(
 						microRegionPositions,
 						macroRegionStaticObstacleFlags,
-						new MacroConnectionSaveDataPacked(targetRegions, connAllowedTraversals, narrativeFlags)
+						new MacroConnectionSaveDataPacked(targetRegions)
 					);
 
 					index++;
 				}
 			}
 
-			return new GridDataPacked(regionAnchorPoints, keysHigh, keysLow, terrainTypes, allowedTraversals, values);
+			return new GridDataPacked(
+				regionAnchorPoints, keysHigh, keysLow, terrainTypes, allowedTraversals, narrativeAccessFlags, values);
 		}
 
 		#endregion
@@ -187,12 +190,15 @@ namespace Kope.Feature.PathFinding.Data {
 		/// <summary>
 		/// Reconstructs full C# runtime domain instances (MacroGridNode, MicroGridNode, MacroConnectionData)
 		/// directly from high/low key arrays, parallel metadata streams, and primitive value structs into a unified <see cref="GridDataRuntimeCache"/>.
+		/// Per-connection capability/narrative-access are rebuilt via <c>MacroConnectionData.CreateConnection</c>,
+		/// combining each endpoint's own top-level <c>_trav</c>/<c>_narr</c>.
 		/// </summary>
 		public static GridDataRuntimeCache HydrateStatic(in GridDataPacked gridData) {
 			ulong[] keysHigh = gridData.KeysHigh;
 			ulong[] keysLow = gridData.KeysLow;
 			TerrainType[] terrainTypes = gridData.TerrainTypes;
 			MovementCapability[] allowedTraversals = gridData.AllowedTraversal;
+			byte[] narrativeAccessFlags = gridData.IsNarrativelyAccessible;
 			MacroSaveDataPacked[] values = gridData.Values;
 
 			int macroCount = values != null ? values.Length : 0;
@@ -212,6 +218,18 @@ namespace Kope.Feature.PathFinding.Data {
 			}
 			var microGridNodeDict = new Dictionary<Vec2Int, MicroGridNode>(totalMicroNodes);
 
+			// Pre-pass: index each region's OWN traversal/narrative-access by BoundingBox. Needed because
+			// a connection's target region may not have been visited yet in the main loop below — this
+			// gives O(1) lookup of either endpoint's data regardless of iteration order.
+			var ownRegionDataByBox = new Dictionary<BoundingBox, (MovementCapability trav, bool narr)>(macroCount);
+			for (int i = 0; i < macroCount; i++) {
+				BoundingBox box = SpatialBitPacker.UnpackBoundingBoxUnsigned(keysHigh[i], keysLow[i]);
+				MovementCapability t = (allowedTraversals != null && i < allowedTraversals.Length) ? allowedTraversals[i] : default;
+				bool n = (narrativeAccessFlags != null && i < narrativeAccessFlags.Length)
+					&& SpatialBitPacker.ConvertByteToBool(narrativeAccessFlags[i]);
+				ownRegionDataByBox[box] = (t, n);
+			}
+
 			// Rehydrate domain objects directly from parallel primitive key/metadata/value streams
 			for (int i = 0; i < macroCount; i++) {
 				ulong high = keysHigh[i];
@@ -221,9 +239,11 @@ namespace Kope.Feature.PathFinding.Data {
 
 				TerrainType tt = (terrainTypes != null && i < terrainTypes.Length) ? terrainTypes[i] : default;
 				MovementCapability trav = (allowedTraversals != null && i < allowedTraversals.Length) ? allowedTraversals[i] : default;
+				bool narr = narrativeAccessFlags != null && i < narrativeAccessFlags.Length
+					&& SpatialBitPacker.ConvertByteToBool(narrativeAccessFlags[i]);
 
 				// 1. Reconstruct MacroGridNode instance
-				MacroGridNode macroNode = new(bbox, tt, trav);
+				MacroGridNode macroNode = new(bbox, tt, trav, narr);
 				macroGridNodeDict[bbox] = macroNode;
 
 				// 2. Reconstruct MicroGridNodes directly from synchronized parallel streams
@@ -237,22 +257,33 @@ namespace Kope.Feature.PathFinding.Data {
 
 					// Instantiate MicroGridNode with direct parent reference to the newly created MacroGridNode
 					microGridNodeDict[pos] = new MicroGridNode(pos, isObstacle, macroNode);
+					// Register micro node to its parent macro node
+					// why prechecked? Because the micro nodes are already pre-bucketed by
+					// their parent macro node during the baking phase, so we can safely add 
+					// them without checking for duplicates.
+					macroNode.PrecheckedAddMicroGridNodePosition(pos);
 				}
 
-				// 3. Reconstruct MacroConnectionData graph edges from MacroConnectionSaveDataPacked primitive arrays
+				// 3. Reconstruct MacroConnectionData graph edges. Only the target BoundingBox was persisted;
+				// the combined capability/narrative-access are rebuilt here from this region's own data
+				// (trav/narr, the "from" side) and the target's own data looked up above (the "to" side).
 				var connData = macroData.NeighboringRegionBoundingBoxes;
 				var targets = connData.TargetRegions;
-				var connTraversals = connData.AllowedTraversal;
-				var narrativeFlags = connData.IsNarrativelyAccessible;
 
 				int connectionCount = targets != null ? targets.Count : 0;
 				List<MacroConnectionData> connections = new(connectionCount);
 				for (int j = 0; j < connectionCount; j++) {
-					connections.Add(new MacroConnectionData(
-						targets[j],
-						connTraversals[j],
-						SpatialBitPacker.ConvertByteToBool(narrativeFlags[j])
-					));
+					BoundingBox toBox = targets[j];
+
+					MovementCapability toCapability = default;
+					bool toNarrativelyAccessible = false;
+					if (ownRegionDataByBox.TryGetValue(toBox, out var toData)) {
+						toCapability = toData.trav;
+						toNarrativelyAccessible = toData.narr;
+					}
+
+					connections.Add(MacroConnectionData.CreateConnection(
+						toBox, toCapability, trav, toNarrativelyAccessible, narr));
 				}
 				macroAdjacencyList[bbox] = connections;
 			}

@@ -208,8 +208,9 @@ namespace Kope.Feature.PathFinding {
 				HHSIMacroPathFindingTile regionTile = this._macroTileDictionary[regionAnchor];
 				TerrainType terrainType = regionTile.Data.TerrainType;
 				MovementCapability movementCapability = regionTile.Data.MovementType;
+				bool isNarrativelyAccessible = regionTile.Data.IsNarrativelyAccessible;
 
-				var currentMacroNode = new MacroGridNode(box, terrainType, movementCapability);
+				var currentMacroNode = new MacroGridNode(box, terrainType, movementCapability, isNarrativelyAccessible);
 				macroGridNodeDict.Add(box, currentMacroNode);
 
 				foreach (Vec2Int tilePos in kvp.Value.RegionTilePositions) {

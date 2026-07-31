@@ -6,271 +6,217 @@ using Project.Scripts.Features.PathFinding.GraphManager;
 using ThirdParty.PriorityQueeu;
 using UnityEngine;
 
-public class AStarMicro {
-	private static readonly List<Vec2Int> EMPTY_PATH = new();
-	private static readonly (int, int)[] _neighborOffset = new[]{
-		(0, 1),   // Up
-		(1, 0),   // Right
-		(0, -1),  // Down
-		(-1, 0),  // Left
-		(1, 1),   // Up-Right
-		(1, -1),  // Down-Right
-		(-1, -1), // Down-Left
-		(-1, 1)   // Up-Left
-	};
-	private static readonly Dictionary<(int, int), ((int, int), (int, int))> _nebouringRuleMap = new(){
-		{ (1, 1), ((1, 0), (0, 1)) }, // Up-Right rule: both right and up must be walkable
-		{ (1, -1), ((1, 0), (0, -1)) }, // Down-Right: both right and down must be walkable
-		{ (-1, -1), ((-1, 0), (0, -1)) }, // Down-Left : both left and down must be walkable
-		{ (-1, 1), ((-1, 0), (0, 1)) } // Up-Left : both left and up must be walkable
-	};
-	private readonly Dictionary<CostCalculationType, Func<Vec2Int, Vec2Int, int>> _costCalculators = new() {
-		{ CostCalculationType.Manhattan, MicroGridNode.ManhattanCost },
-		{ CostCalculationType.Euclidean, MicroGridNode.EuclideanCost },
-		{ CostCalculationType.Octile, MicroGridNode.OctileCost }
-	};
+namespace Kope.Feature.PathFinding.Algorithms {
 
-	/// <summary>
-	/// Default cap ratio on max search iterations relative to total nodes in the macro graph.
-	/// </summary>
-	public const float MAX_ITERATIONS_RATIO = 1f;
+	public class AStarMicro {
+		private static readonly List<Vec2Int> EMPTY_PATH = new();
+		private static readonly Vec2Int[] NEIGHBOR_OFFSET = new[] {
+			new Vec2Int(0, 1),   // Up
+            new Vec2Int(1, 0),   // Right
+            new Vec2Int(0, -1),  // Down
+            new Vec2Int(-1, 0),  // Left
+            new Vec2Int(1, 1),   // Up-Right
+            new Vec2Int(1, -1),  // Down-Right
+            new Vec2Int(-1, -1), // Down-Left
+            new Vec2Int(-1, 1)   // Up-Left
+        };
 
-	/// <summary>
-	/// Default allocation capacity for internal collections to prevent runtime garbage collection (GC) re-allocations.
-	/// </summary>
-	public const int DEFAULT_INITIAL_CAPACITY = 32;
+		private static readonly Dictionary<Vec2Int, (Vec2Int, Vec2Int)> NEIGHBORING_RULE_MAP = new() {
+			{ new Vec2Int(1, 1),   (new Vec2Int(1, 0), new Vec2Int(0, 1)) },   // Up-Right rule
+            { new Vec2Int(1, -1),  (new Vec2Int(1, 0), new Vec2Int(0, -1)) },  // Down-Right rule
+            { new Vec2Int(-1, -1), (new Vec2Int(-1, 0), new Vec2Int(0, -1)) }, // Down-Left rule
+            { new Vec2Int(-1, 1),  (new Vec2Int(-1, 0), new Vec2Int(0, 1)) }   // Up-Left rule
+        };
 
-	/// <summary>
-	/// Maximum allowed heuristic weighting factor (w) for Weighted A*.
-	/// </summary>
-	public const float MAX_GREEDINESS = 1.5f;
+		private readonly Dictionary<CostCalculationType, Func<Vec2Int, Vec2Int, int>> _costCalculators = new() {
+			{ CostCalculationType.Manhattan, MicroGridNode.ManhattanCost },
+			{ CostCalculationType.Euclidean, MicroGridNode.EuclideanCost },
+			{ CostCalculationType.Octile, MicroGridNode.OctileCost }
+		};
 
-	/// <summary>
-	/// Ratio used to calculate maximum allowed iterations before aborting search: <c>_maxIterationsRatio * MacroNodeCount</c>.
-	/// </summary>
-	private readonly float _maxIterationsRatio;
+		private readonly float _maxIterationsRatio;
+		private int _maxIterations = 10;
+		private readonly float _greedyNess = 1f;
+		private readonly CostCalculationType _costCalculationType = CostCalculationType.Manhattan;
 
-	/// <summary>
-	/// Evaluated at runtime based on <see cref="_maxIterationsRatio"/> and total macro nodes in the graph.
-	/// </summary>
-	private int _maxIterations = 10;
+		private readonly PathfindingGraphManager _graphManager;
+		private readonly Dictionary<Vec2Int, MicroPathFindingNode> _nodeRecords;
+		private readonly HashSet<Vec2Int> _closedSet;
+		private readonly QuadPriorityQueue<MicroPathFindingNode, MicroCost> _openSet;
 
-	/// <summary>
-	/// The heuristic multiplier $w \ge 1.0$. 
-	/// Higher values accelerate search towards goal at the potential expense of absolute path length.
-	/// </summary>
-	private readonly float _greedyNess = 1f;
+		private int _totalNodesCache;
 
-	private readonly CostCalculationType _costCalculationType = CostCalculationType.Manhattan;
+#if UNITY_EDITOR
+		/// <summary>
+		/// Reusable buffer for editor visualization tools. Stripped out completely in standalone builds.
+		/// </summary>
+		private readonly List<Vec2Int> _recorderOpenListCache = new(PathFindingConfig.DEFAULT_INITIAL_CAPACITY);
+#endif
 
-	/// <summary>
-	/// Reference to the centralized graph manager containing macro node bounds and topological connections.
-	/// </summary>
-	private readonly PathfindingGraphManager _graphManager;
+		public AStarMicro(
+			PathfindingGraphManager graphManager,
+			PathFindingConfig config = default) {
+			this._graphManager = graphManager ?? throw new ArgumentNullException(nameof(graphManager));
+			this._nodeRecords = new Dictionary<Vec2Int, MicroPathFindingNode>(config.InitialCapacity);
+			this._closedSet = new HashSet<Vec2Int>(config.InitialCapacity);
+			this._openSet = new QuadPriorityQueue<MicroPathFindingNode, MicroCost>(config.InitialCapacity);
 
-	/// <summary>
-	/// Tracks evaluated path records mapped by bounding box key to support fast lookup and parent tracing.
-	/// </summary>
-	private readonly Dictionary<Vec2Int, MicroPathFindingNode> _nodeRecords;
-
-	/// <summary>
-	/// Closed set tracking bounding boxes whose shortest path has already been finalized.
-	/// </summary>
-	private readonly HashSet<Vec2Int> _closedSet;
-
-	/// <summary>
-	/// Open set priority queue (min-heap variant) holding frontier nodes sorted by total estimated cost (F = G + w * H).
-	/// </summary>
-	private readonly QuadPriorityQueue<MicroPathFindingNode, int> _openSet;
-
-
-	//caching
-	private MicroGridNode _startMicroNodeCache;
-	private MicroGridNode _endMicroNodeCache;
-	private int _totalNodesCache;
-
-	public AStarMicro(PathfindingGraphManager graphManager,
-	CostCalculationType ca = CostCalculationType.Manhattan,
-		float maxIterationsRatio = MAX_ITERATIONS_RATIO, float greedyNess = 1f,
-	 int initialCapacity = DEFAULT_INITIAL_CAPACITY) {
-		this._graphManager = graphManager ?? throw new ArgumentNullException(nameof(graphManager));
-		this._costCalculationType = ca;
-		this._maxIterationsRatio = Math.Max(0f, maxIterationsRatio);
-		this._greedyNess = Math.Clamp(greedyNess, 1f, MAX_GREEDINESS);
-		this._nodeRecords = new Dictionary<Vec2Int, MicroPathFindingNode>(initialCapacity);
-		this._closedSet = new HashSet<Vec2Int>(initialCapacity);
-		this._openSet = new QuadPriorityQueue<MicroPathFindingNode, int>(initialCapacity);
-	}
-
-	public bool PreCheck(Vec2Int start, Vec2Int end, MovementCapability _, out MicroPathFindingResult preCheckResult) {
-		this._startMicroNodeCache = default;
-		this._endMicroNodeCache = default;
-		this._totalNodesCache = this._graphManager.MicroNodeCount;
-
-		if (!this._graphManager.TryGetMicroNode(start, out var startMicroNode)) {
-			this._startMicroNodeCache = startMicroNode;
-			if (startMicroNode.IsStaticObstacle) {
-				Debug.LogWarning($"Start position {start} is a static obstacle and cannot be used as a pathfinding node.");
-
-			} else {
-				Debug.LogWarning($"Start position {start} is not a valid micro node in the graph.");
-			}
-			preCheckResult = CreateFailureResult(0, 0);
-			return false;
+			this._costCalculationType = config.CostCalculationType;
+			this._maxIterationsRatio = config.MaxIterationRatio;
+			this._greedyNess = config.Greediness;
 		}
-		if (!this._graphManager.TryGetMicroNode(end, out var endMicroNode)) {
-			if (endMicroNode.IsStaticObstacle) {
-				Debug.LogWarning($"End position {end} is a static obstacle and cannot be used as a pathfinding node.");
-			} else {
-				Debug.LogWarning($"End position {end} is not a valid micro node in the graph.");
+
+		public bool PreCheck(Vec2Int start, Vec2Int end, MovementCapability _, out MicroPathFindingResult preCheckResult) {
+			this._totalNodesCache = this._graphManager.MicroNodeCount;
+
+			bool TryValidateNode(Vec2Int pos, string pointLabel, out MicroGridNode nodeCache) {
+				if (!this._graphManager.TryGetMicroNode(pos, out nodeCache)) {
+					Debug.LogWarning($"[{pointLabel}] Position {pos} is not a valid micro node in the graph.");
+					return false;
+				}
+
+				if (nodeCache.IsStaticObstacle) {
+					Debug.LogWarning($"[{pointLabel}] Node at {pos} cannot be used for pathfinding (IsStaticObstacle: {nodeCache.IsStaticObstacle}).");
+					return false;
+				}
+
+				return true;
 			}
-			preCheckResult = CreateFailureResult(0, 0);
-			return false;
+
+			if (!TryValidateNode(start, "Start", out var _) ||
+				!TryValidateNode(end, "End", out var _)) {
+				preCheckResult = CreateFailureResult(PathFindingResultType.InvalidStartOrEnd, 0, 0);
+				return false;
+			}
+
+			preCheckResult = default;
+			return true;
 		}
-		preCheckResult = default;
-		return true;
-	}
 
+		/// <summary>
+		/// Finds a path from the specified start position to the end position using Weighted A*, restricted to the corridor tile set.
+		/// </summary>
+		public MicroPathFindingResult FindPath(
+			Vec2Int start, Vec2Int end, HashSet<Vec2Int> corridorsTileSet,
+			MicroPathfindingRecorder recorder = null) {
+			// Clear previous state
+			this._nodeRecords.Clear();
+			this._closedSet.Clear();
+			this._openSet.Clear();
+#if UNITY_EDITOR
+			recorder?.Clear();
+#endif
 
+			this._maxIterations = Mathf.CeilToInt(this._maxIterationsRatio * this._totalNodesCache);
 
-	/// <summary>
-	/// Finds a path from the specified start position to the end position, considering the entity's movement capabilities.
-	/// </summary>
-	/// <param name="start">The starting position.</param>
-	/// <param name="end">The destination position.</param>
-	/// <param name="entityMovementCapability">The movement capabilities of the entity.</param>
-	/// <returns>The result of the pathfinding operation.</returns>
-	public MicroPathFindingResult FindPath(
-			Vec2Int start,
-			Vec2Int end,
-			MovementCapability _) {
+			Func<Vec2Int, Vec2Int, int> costCalculator = this._costCalculators[this._costCalculationType];
 
+			int rawInitialH = costCalculator(start, end);
+			int weightedInitialH = Mathf.FloorToInt(rawInitialH * this._greedyNess);
 
-		//clear the previous state
-		this._nodeRecords.Clear();
-		this._closedSet.Clear();
-		this._openSet.Clear();
+			MicroCost startCost = new(0, weightedInitialH);
+			MicroPathFindingNode startNode = new(start, startCost, null);
 
-		this._maxIterations = Mathf.CeilToInt(this._maxIterationsRatio * this._graphManager.MacroNodeCount);
-		Func<Vec2Int, Vec2Int, int> costCalculator = this._costCalculators[this._costCalculationType];
+			this._openSet.EnqueueOrUpdate(startNode);
+			this._nodeRecords[start] = startNode;
 
-		int rawInitialH = costCalculator(start, end);
-		int weightedInitialH = Mathf.FloorToInt(rawInitialH * this._greedyNess);
+			int totalExpansion = 0;
+			int totalNodeEvaluation = 0;
 
+			while (this._openSet.Count > 0 && totalNodeEvaluation < this._maxIterations) {
+				totalNodeEvaluation++;
+				MicroPathFindingNode currentRecord = this._openSet.Dequeue();
 
-		MicroPathFindingNode startNode = new(start, 0, weightedInitialH, null);
+#if UNITY_EDITOR
+				if (recorder != null) {
+					this._recorderOpenListCache.Clear();
+					foreach (var node in this._openSet.GetElements()) {
+						this._recorderOpenListCache.Add(node.NodePosition);
+					}
+					recorder.RecordStep(currentRecord.NodePosition, this._recorderOpenListCache, this._closedSet);
+				}
+#endif
 
-		this._openSet.EnqueueOrUpdate(startNode);
-		this._nodeRecords[this._startMicroNodeCache.Position] = startNode;
-
-		int totalExpansion = 0;
-		int totalNodeEvaluation = 0;
-
-		while (this._openSet.Count > 0 && totalNodeEvaluation < this._maxIterations) {
-			totalNodeEvaluation++;
-			MicroPathFindingNode currentRecord = this._openSet.Dequeue();
-
-			if (currentRecord.NodePosition == this._endMicroNodeCache.Position) {
-				List<Vec2Int> path = ReconstructPath(currentRecord);
-				return new MicroPathFindingResult {
-					Path = path,
-					TotalNodes = this._totalNodesCache,
-					TotalNodeEvaluations = totalNodeEvaluation,
-					TotalNodeExpansions = totalExpansion,
-					Success = true,
-					CostCalculationType = this._costCalculationType,
-					Greediness = this._greedyNess,
-				};
-			}
-
-			this._closedSet.Add(currentRecord.NodePosition);
-			totalExpansion++;
-
-			foreach (var offset in _neighborOffset) {
-				Vec2Int neighborPos = currentRecord.NodePosition + new Vec2Int(offset.Item1, offset.Item2);
-
-				if (this._closedSet.Contains(neighborPos)) {
-					continue; // if contain skip the bastard.
+				if (currentRecord.NodePosition == end) {
+					List<Vec2Int> path = ReconstructPath(currentRecord);
+					return new MicroPathFindingResult(
+						PathFindingResultType.Success, path,
+						this._totalNodesCache, totalNodeEvaluation,
+						totalExpansion, this._costCalculationType,
+						this._greedyNess
+					);
 				}
 
+				this._closedSet.Add(currentRecord.NodePosition);
+				totalExpansion++;
 
-				if (!this._graphManager.TryGetMicroNode(neighborPos, out var neighborNode)) {
-					continue; // Skip if neighbor is not a valid micro node
-				}
+				// Delegated neighbor retrieval: handles boundary checks, obstacles, 
+				// diagonal corner rules, and closed-set skipping
+				foreach (var neighborNode in this._graphManager.GetWalkableMicroNeighboringNodesWithRules(
+					currentRecord.NodePosition,
+					NEIGHBOR_OFFSET,
+					NEIGHBORING_RULE_MAP,
+					this._closedSet)) {
 
-				if (neighborNode.IsStaticObstacle) {
-					continue; // Skip if entity cannot traverse to the neighbor
-				}
+					Vec2Int neighborPos = neighborNode.Position;
 
-				bool ruleCheck = _nebouringRuleMap.TryGetValue((offset.Item1, offset.Item2),
-				 out var requiredOffsets);
-				// if there is a rule for this neighbor, check if the required positions are walkable
-				if (ruleCheck) {
-					Vec2Int requiredPos1 = currentRecord.NodePosition +
-					new Vec2Int(requiredOffsets.Item1.Item1, requiredOffsets.Item1.Item2);
-					Vec2Int requiredPos2 = currentRecord.NodePosition +
-					new Vec2Int(requiredOffsets.Item2.Item1, requiredOffsets.Item2.Item2);
-
-					if (!this._graphManager.TryGetMicroNode(requiredPos1, out var requiredNode1)
-					|| requiredNode1.IsStaticObstacle ||
-						!this._graphManager.TryGetMicroNode(requiredPos2, out var requiredNode2)
-						|| requiredNode2.IsStaticObstacle) {
+					// Restrict neighbor expansion strictly to the corridor set
+					if (corridorsTileSet != null && !corridorsTileSet.Contains(neighborPos)) {
 						continue;
 					}
+
+					int stepCost = costCalculator(currentRecord.NodePosition, neighborPos);
+					int tentativeGCost = currentRecord.GCost + stepCost;
+
+					// Update node record if unvisited or if a cheaper path is discovered
+					if (!this._nodeRecords.TryGetValue(neighborPos, out var existingNeighborRecord)
+						|| tentativeGCost < existingNeighborRecord.GCost) {
+
+						int rawHCost = costCalculator(neighborPos, end);
+
+
+						int weightedHCost = (this._greedyNess == PathFindingConfig.DEFAULT_GREEDINESS)
+							? rawHCost
+							: Mathf.FloorToInt(rawHCost * this._greedyNess);
+
+						MicroCost neighborCost = new(tentativeGCost, weightedHCost);
+						MicroPathFindingNode neighborRecord = new(
+							neighborPos,
+							neighborCost,
+							currentRecord.NodePosition
+						);
+
+						this._nodeRecords[neighborPos] = neighborRecord;
+						this._openSet.EnqueueOrUpdate(neighborRecord);
+					}
+
+					totalNodeEvaluation++;
 				}
-
-
-				int stepCost = costCalculator(currentRecord.NodePosition, neighborPos);
-				int tentativeGCost = currentRecord.GCost + stepCost;
-
-
-
-				// the neighbor is either not in the records or we found a better path to it
-				if (this._nodeRecords.TryGetValue(neighborPos, out var existingNeighborRecord)
-				|| tentativeGCost < existingNeighborRecord.GCost) {
-					int rawHCost = costCalculator(neighborPos, end);
-					int weightedHCost = Mathf.FloorToInt(rawHCost * this._greedyNess);
-
-					MicroPathFindingNode neighborRecord = new(
-						neighborPos,
-						tentativeGCost,
-						weightedHCost,
-						currentRecord.NodePosition
-					);
-
-					this._nodeRecords[neighborPos] = neighborRecord;
-					this._openSet.EnqueueOrUpdate(neighborRecord);
-
-				}
-				totalNodeEvaluation++;
 			}
+
+			return CreateFailureResult(PathFindingResultType.NoPathFound, totalNodeEvaluation, totalExpansion);
 		}
 
-		return CreateFailureResult(totalNodeEvaluation, totalExpansion);
-	}
-	private List<Vec2Int> ReconstructPath(MicroPathFindingNode current) {
-		List<Vec2Int> totalPath = new() { current.NodePosition };
+		private List<Vec2Int> ReconstructPath(MicroPathFindingNode current) {
+			List<Vec2Int> totalPath = new() { current.NodePosition };
 
-		while (current.Parent.HasValue) {
-			Vec2Int parentPos = current.Parent.Value;
-			totalPath.Add(parentPos);
-			current = this._nodeRecords[parentPos];
+			while (current.Parent.HasValue) {
+				Vec2Int parentPos = current.Parent.Value;
+				totalPath.Add(parentPos);
+				current = this._nodeRecords[parentPos];
+			}
+
+			totalPath.Reverse();
+			return totalPath;
 		}
 
-		totalPath.Reverse();
-		return totalPath;
-	}
-
-	private MicroPathFindingResult CreateFailureResult(int totalNodeEvaluations, int totalNodeExpansions) {
-		return new MicroPathFindingResult {
-			Path = EMPTY_PATH,
-			TotalNodes = this._totalNodesCache,
-			TotalNodeEvaluations = totalNodeEvaluations,
-			TotalNodeExpansions = totalNodeExpansions,
-			Success = false,
-			CostCalculationType = this._costCalculationType,
-			Greediness = this._greedyNess,
-		};
+		private MicroPathFindingResult CreateFailureResult(PathFindingResultType resultType, int totalNodeEvaluations, int totalNodeExpansions) {
+			return new MicroPathFindingResult(
+				resultType,
+				EMPTY_PATH, this._totalNodesCache,
+				totalNodeEvaluations, totalNodeExpansions,
+				this._costCalculationType, this._greedyNess
+			);
+		}
 	}
 }
-

@@ -28,7 +28,7 @@ namespace Kope.Feature.PathFinding.Node {
 	/// grid lookups and A* pathfinding algorithms. 
 	/// </para>
 	/// <para>
-	/// Features a deterministic, process-independent prime hash calculation (multiplier <c>397</c>) that eliminates 
+	/// Features a deterministic, process-independent prime hash calculation that eliminates 
 	/// field serialization overhead and guarantees zero domain reload desync when stored in ScriptableObject dictionaries.
 	/// </para>
 	/// </remarks>
@@ -105,15 +105,23 @@ namespace Kope.Feature.PathFinding.Node {
 			int y = firstCenter.Y - secondCenter.Y;
 			return Mathf.FloorToInt(Mathf.Sqrt(x * x + y * y));
 		}
+
+		/// <summary>
+		/// Not using a typed const since this method should never depend on a specific cost value, 
+		/// and the default values are provided for convenience.
+		/// </summary>
+		/// <param name="first"></param>
+		/// <param name="second"></param>
+		/// <param name="directCost"></param>
+		/// <param name="diagonalCost"></param>
+		/// <returns></returns>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static int OctileDistanceTo(Vec2Int first, Vec2Int second) {
+		public static int OctileDistanceTo(Vec2Int first, Vec2Int second, int directCost = 10, int diagonalCost = 14) {
 			int dx = Mathf.Abs(first.X - second.X);
 			int dy = Mathf.Abs(first.Y - second.Y);
-
 			int min = dx < dy ? dx : dy;
-			int max = dx > dy ? dx : dy;
-
-			return max + Mathf.FloorToInt(0.41421356f * min);
+			int max = dx < dy ? dy : dx;
+			return directCost * max + ((diagonalCost - directCost) * min);
 		}
 		#endregion
 

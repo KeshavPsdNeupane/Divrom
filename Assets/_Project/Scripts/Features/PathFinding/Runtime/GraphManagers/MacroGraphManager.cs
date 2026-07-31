@@ -68,8 +68,8 @@ namespace Project.Scripts.Features.PathFinding.GraphManager {
 		/// </remarks>
 		public static MacroConnectionData CreateConnection(
 			BoundingBox to, MovementCapability toCapability,
-			MovementCapability fromCapability, bool toIsNarrativelyAccessible = true,
-			bool fromIsNarrativelyAccessible = true) {
+			MovementCapability fromCapability, bool toIsNarrativelyAccessible,
+			bool fromIsNarrativelyAccessible) {
 
 			MovementCapability combinedCapability = toCapability | fromCapability;
 			bool combinedNarrativeAccess = toIsNarrativelyAccessible && fromIsNarrativelyAccessible;
@@ -96,6 +96,7 @@ namespace Project.Scripts.Features.PathFinding.GraphManager {
 		public readonly bool IsTraversable(MovementCapability capability) {
 			return IsNarrativelyAccessible && (AllowedTraversal & capability) != MovementCapability.None;
 		}
+
 		public readonly bool Equals(MacroConnectionData other) {
 			return ToBound == other.ToBound &&
 				   AllowedTraversal == other.AllowedTraversal &&
@@ -244,6 +245,25 @@ namespace Project.Scripts.Features.PathFinding.GraphManager {
 		public bool TryGetNode(BoundingBox bounds, out MacroGridNode node) {
 			return this._macroNodes.TryGetValue(bounds, out node);
 		}
+
+
+
+		private readonly HashSet<Vec2Int> corridorPostion = new();
+		public HashSet<Vec2Int> GetAllCorridorPositions(List<BoundingBox> macroNodes) {
+			corridorPostion.Clear();
+			foreach (var macroNode in macroNodes) {
+				if (!this._macroNodes.TryGetValue(macroNode, out MacroGridNode node)) {
+
+					Debug.LogWarning($"Macro node with bounds {macroNode} not found in the graph. Skipping.");
+					continue;
+				}
+				//Debug.Log($"Macro node {macroNode} has {node.MicroGridNodePositions.Count} micro positions.");
+				corridorPostion.UnionWith(node.MicroGridNodePositions);
+			}
+			return corridorPostion;
+		}
+
+
 
 
 		/// <summary>

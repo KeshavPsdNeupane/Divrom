@@ -23,10 +23,17 @@ namespace Kope.Feature.PathFinding.Data {
      * 2. Bounding Boxes (`BoundingBox`): Packed into 2 `long` words (`_minPos` and `_maxPos` 64-bit pairs).
      * 3. Grid Keys & Region Metadata: Maintained as parallel columnar streams on `PathFindingGridData`:
      *    - 128-bit key pairs (`_keysHigh`, `_keysLow` ulong arrays)
-     *    - Parallel enum streams (`_tt` TerrainType[], `_trav` MovementCapability[])
+     *    - Parallel enum/flag streams (`_tt` TerrainType[], `_trav` MovementCapability[], `_narr` byte[])
      *    - Synchronized value payloads (`_values` MacroSaveDataPacked[])
      * 
      * This layout forces Unity's C++ serializer to emit compact inline hex byte arrays for all spatial data.
+     * 
+     * [Why `_trav` / `_narr` live only at the top level]
+     * A macro region's `MovementCapability` and narrative-accessibility are properties of the REGION,
+     * not of any individual edge. Per-connection values are a pure `OR` (capability) / `AND` (narrative
+     * access) combination of the two connected regions' own values (see `MacroConnectionData.CreateConnection`).
+     * Persisting that combination per-edge is redundant — it's cheaper to store each region's own value
+     * once and recompute the combined edge value on demand during hydration.
      * 
      * ==============================================================================================
      * DATA HIERARCHY GRAPH (PACKED PRIMITIVE STREAMING)
@@ -40,7 +47,8 @@ namespace Kope.Feature.PathFinding.Data {
      *     ├── _keysHigh: ulong[]           [Min.X/Y Packed 64-bit Hex Words]
      *     ├── _keysLow: ulong[]            [Max.X/Y Packed 64-bit Hex Words]
      *     ├── _tt: TerrainType[]           [Macro Region Terrain Types]
-     *     ├── _trav: MovementCapability[]  [Macro Region Movement Capabilities]
+     *     ├── _trav: MovementCapability[]  [Macro Region's OWN Movement Capability]
+     *     ├── _narr: byte[]                [Macro Region's OWN Narrative Accessibility]
      *     └── _values: MacroSaveDataPacked[]     [Synchronized Macro Values]
      *          │
      *          ├── Micro-Node Position & Flag Streams
@@ -48,17 +56,21 @@ namespace Kope.Feature.PathFinding.Data {
      *          │   └── _flags: byte[]      [Bitmasks / Static Obstacles]
      *          │
      *          └── Outgoing Connection Streams (MacroConnectionSaveDataPacked)
-     *              ├── Target Bounding Box Dual Long Streams (2 Longs per Region)
-     *              │   ├── _minPos: long[] [Packed Min.X/Y Vec2Int Hex Stream]
-     *              │   └── _maxPos: long[] [Packed Max.X/Y Vec2Int Hex Stream]
-     *              ├── _trav: MovementCapability[]
-     *              └── _narr: byte[]
+     *              └── Target Bounding Box Dual Long Streams (2 Longs per Region) ONLY.
+     *                  ├── _minPos: long[] [Packed Min.X/Y Vec2Int Hex Stream]
+     *                  └── _maxPos: long[] [Packed Max.X/Y Vec2Int Hex Stream]
+     *                  (traversal/narrative access for each edge are derived at hydrate time
+     *                   from the top-level _trav/_narr of both endpoints, via CreateConnection)
      * ==============================================================================================
      */
 
 	/// <summary>
 	/// Packed columnar storage for outgoing macro region connections.
-	/// Replaces nested <c>BoundingBox</c> structs with 2 parallel bit-packed <c>long[]</c> arrays (<c>_minPos</c>, <c>_maxPos</c>).
+	/// Stores only the target region bounding boxes (<c>_minPos</c>, <c>_maxPos</c>) as bit-packed <c>long[]</c> arrays.
+	/// Per-connection <c>MovementCapability</c> and narrative-access are intentionally NOT stored here —
+	/// they were previously a pure combination (OR / AND) of the two connected regions' own top-level
+	/// values, so they're redundant on disk. They're recomputed at hydration time via
+	/// <c>MacroConnectionData.CreateConnection</c> using each endpoint's own data (see <see cref="GridDataPacked"/>).
 	/// </summary>
 	[Serializable]
 	public struct MacroConnectionSaveDataPacked {
@@ -67,9 +79,6 @@ namespace Kope.Feature.PathFinding.Data {
 
 		[SerializeField] private long[] _minPos;
 		[SerializeField] private long[] _maxPos;
-
-		[SerializeField] private MovementCapability[] _trav;
-		[SerializeField] private byte[] _narr;
 
 		#endregion
 
@@ -82,33 +91,17 @@ namespace Kope.Feature.PathFinding.Data {
 		public readonly List<BoundingBox> TargetRegions =>
 			SpatialBitPacker.UnpackBoundingBoxList(this._minPos, this._maxPos);
 
-		public readonly MovementCapability[] AllowedTraversal => this._trav;
-		public readonly byte[] IsNarrativelyAccessible => this._narr;
-
 		#endregion
 
 		#region Constructors
 
-		public MacroConnectionSaveDataPacked(
-			List<BoundingBox> targetRegion,
-			List<MovementCapability> allowedTraversal,
-			List<byte> isNarrativelyAccessible) {
-
+		public MacroConnectionSaveDataPacked(List<BoundingBox> targetRegion) {
 			(this._minPos, this._maxPos) = SpatialBitPacker.PackBoundingBoxList(targetRegion ?? new());
-
-			this._trav = allowedTraversal != null ? allowedTraversal.ToArray() : Array.Empty<MovementCapability>();
-			this._narr = isNarrativelyAccessible != null ? isNarrativelyAccessible.ToArray() : Array.Empty<byte>();
 		}
 
-		public MacroConnectionSaveDataPacked(
-			List<BoundingBox> targetRegion,
-			MovementCapability[] allowedTraversal,
-			byte[] isNarrativelyAccessible) {
-
-			(this._minPos, this._maxPos) = SpatialBitPacker.PackBoundingBoxList(targetRegion ?? new());
-
-			this._trav = allowedTraversal ?? Array.Empty<MovementCapability>();
-			this._narr = isNarrativelyAccessible ?? Array.Empty<byte>();
+		public MacroConnectionSaveDataPacked(BoundingBox[] targetRegion) {
+			(this._minPos, this._maxPos) = SpatialBitPacker.PackBoundingBoxList(
+				targetRegion != null ? new List<BoundingBox>(targetRegion) : new());
 		}
 
 		#endregion
@@ -116,7 +109,8 @@ namespace Kope.Feature.PathFinding.Data {
 
 	/// <summary>
 	/// Optimized macro region container utilizing 64-bit packed position streams (<c>_mPos</c>)
-	/// and connection data. Region-level metadata (<c>TerrainType</c>, <c>MovementCapability</c>) is stored in top-level parallel arrays.
+	/// and connection data. Region-level metadata (<c>TerrainType</c>, <c>MovementCapability</c>,
+	/// narrative-accessibility) is stored in top-level parallel arrays on <see cref="GridDataPacked"/>.
 	/// </summary>
 	[Serializable]
 	public struct MacroSaveDataPacked {
@@ -172,7 +166,7 @@ namespace Kope.Feature.PathFinding.Data {
 	/// <summary>
 	/// Root pathfinding serialization container.
 	/// Stores packed 64-bit anchor coordinates (<c>_anchors</c>), 128-bit bit-packed BoundingBox keys,
-	/// and top-level parallel metadata arrays (<c>_tt</c>, <c>_trav</c>) aligned with <c>_values</c>.
+	/// and top-level parallel metadata arrays (<c>_tt</c>, <c>_trav</c>, <c>_narr</c>) aligned with <c>_values</c>.
 	/// </summary>
 	[Serializable]
 	public struct GridDataPacked {
@@ -187,6 +181,7 @@ namespace Kope.Feature.PathFinding.Data {
 
 		[SerializeField] private TerrainType[] _tt;
 		[SerializeField] private MovementCapability[] _trav;
+		[SerializeField] private byte[] _narr;
 
 		[SerializeField] private MacroSaveDataPacked[] _values;
 
@@ -205,6 +200,7 @@ namespace Kope.Feature.PathFinding.Data {
 		public readonly ulong[] KeysLow => this._keysLow;
 		public readonly TerrainType[] TerrainTypes => this._tt;
 		public readonly MovementCapability[] AllowedTraversal => this._trav;
+		public readonly byte[] IsNarrativelyAccessible => this._narr;
 		public readonly MacroSaveDataPacked[] Values => this._values;
 
 		/// <summary>
@@ -247,6 +243,7 @@ namespace Kope.Feature.PathFinding.Data {
 			List<ulong> keysLow,
 			List<TerrainType> terrainTypes,
 			List<MovementCapability> allowedTraversal,
+			List<byte> isNarrativelyAccessible,
 			List<MacroSaveDataPacked> values) {
 
 			this._anchors = SpatialBitPacker.PackVec2List(regionAnchorPoints ?? new());
@@ -254,6 +251,7 @@ namespace Kope.Feature.PathFinding.Data {
 			this._keysLow = keysLow != null ? keysLow.ToArray() : Array.Empty<ulong>();
 			this._tt = terrainTypes != null ? terrainTypes.ToArray() : Array.Empty<TerrainType>();
 			this._trav = allowedTraversal != null ? allowedTraversal.ToArray() : Array.Empty<MovementCapability>();
+			this._narr = isNarrativelyAccessible != null ? isNarrativelyAccessible.ToArray() : Array.Empty<byte>();
 			this._values = values != null ? values.ToArray() : Array.Empty<MacroSaveDataPacked>();
 		}
 
@@ -263,6 +261,7 @@ namespace Kope.Feature.PathFinding.Data {
 			ulong[] keysLow,
 			TerrainType[] terrainTypes,
 			MovementCapability[] allowedTraversal,
+			byte[] isNarrativelyAccessible,
 			MacroSaveDataPacked[] values) {
 
 			this._anchors = SpatialBitPacker.PackVec2List(regionAnchorPoints ?? new());
@@ -270,6 +269,7 @@ namespace Kope.Feature.PathFinding.Data {
 			this._keysLow = keysLow ?? Array.Empty<ulong>();
 			this._tt = terrainTypes ?? Array.Empty<TerrainType>();
 			this._trav = allowedTraversal ?? Array.Empty<MovementCapability>();
+			this._narr = isNarrativelyAccessible ?? Array.Empty<byte>();
 			this._values = values ?? Array.Empty<MacroSaveDataPacked>();
 		}
 
@@ -277,7 +277,8 @@ namespace Kope.Feature.PathFinding.Data {
 			List<Vec2Int> regionAnchorPoints,
 			Dictionary<BoundingBox, MacroSaveDataPacked> boundingBoxDict,
 			TerrainType[] terrainTypes,
-			MovementCapability[] allowedTraversal) {
+			MovementCapability[] allowedTraversal,
+			byte[] isNarrativelyAccessible) {
 
 			this._anchors = SpatialBitPacker.PackVec2List(regionAnchorPoints ?? new());
 
@@ -286,6 +287,7 @@ namespace Kope.Feature.PathFinding.Data {
 			this._keysLow = new ulong[count];
 			this._tt = terrainTypes ?? Array.Empty<TerrainType>();
 			this._trav = allowedTraversal ?? Array.Empty<MovementCapability>();
+			this._narr = isNarrativelyAccessible ?? Array.Empty<byte>();
 			this._values = new MacroSaveDataPacked[count];
 
 			if (boundingBoxDict != null) {

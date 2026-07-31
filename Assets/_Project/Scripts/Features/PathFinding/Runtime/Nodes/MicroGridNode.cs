@@ -25,13 +25,13 @@ namespace Kope.Feature.PathFinding.Node {
 		/// Base traversal cost for orthogonal (cardinal) movement. 
 		/// Scaled by 10 to implement integer fixed-point path arithmetic.
 		/// </summary>
-		public const int DIRECT_COST = 10;
+		public const int DIRECT_COST = 100;
 
 		/// <summary>
 		/// Base traversal cost for diagonal movement (<c>1.414 * 10 = 14</c>).
 		/// Provides an efficient integer approximation for diagonal path weight calculations.
 		/// </summary>
-		public const int DIAGONAL_COST = 14;
+		public const int DIAGONAL_COST = 141;
 
 		#endregion
 
@@ -113,7 +113,7 @@ namespace Kope.Feature.PathFinding.Node {
 			return Vec2Int.EuclideanDistanceTo(a, b) * DIRECT_COST;
 		}
 		public static int OctileCost(Vec2Int a, Vec2Int b) {
-			return Vec2Int.OctileDistanceTo(a, b) * DIRECT_COST;
+			return Vec2Int.OctileDistanceTo(a, b, DIRECT_COST, DIAGONAL_COST);
 		}
 		#endregion
 

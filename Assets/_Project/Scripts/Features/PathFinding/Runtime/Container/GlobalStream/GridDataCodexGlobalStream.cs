@@ -17,10 +17,14 @@ namespace Kope.Feature.PathFinding.Data {
      *      Flattens high-level graph dictionaries (`IDictionary<K, V>`) into monolithic master 
      *      primitive streams (SoA) and constructs bit-packed 64-bit slice range arrays (`long[]`). 
      *      This eliminates Unity serialized struct key overhead and compresses disk footprint.
+     *      Connection edges store only the target BoundingBox — traversal/narrative-access per edge
+     *      are never persisted, since they're a pure combination of each endpoint's own top-level
+     *      `_trav`/`_narr` (see `MacroConnectionData.CreateConnection`).
      * 
      *   B. RUNTIME HYDRATION (Game Client - Decode):
      *      Reads primitive streams from disk and lazily re-hydrates runtime graph objects into $O(1)$ 
-     *      lookup dictionaries without upfront scene load spikes.
+     *      lookup dictionaries without upfront scene load spikes. Per-edge capability/narrative-access
+     *      are recomputed here via `CreateConnection`.
      * 
      * [2. STREAM SLICING EXECUTION FLOW]
      * 
@@ -65,6 +69,9 @@ namespace Kope.Feature.PathFinding.Data {
 
 		/// <summary>
 		/// Flattens spatial graph dictionaries into a single bit-packed <see cref="GridDataGlobalStream"/> primitive payload.
+		/// Connection edges are flattened down to their target BoundingBox only — the combined
+		/// capability/narrative-access is never written, since it's derivable from each endpoint's
+		/// own top-level <c>_trav</c>/<c>_narr</c> at hydration time.
 		/// </summary>
 		public static GridDataGlobalStream BakeStatic(
 			IDictionary<Vec2Int, MicroGridNode> microGridNodeDict,
@@ -109,6 +116,7 @@ namespace Kope.Feature.PathFinding.Data {
 			ulong[] keysLow = new ulong[macroCount];
 			TerrainType[] terrainTypes = new TerrainType[macroCount];
 			MovementCapability[] allowedTraversals = new MovementCapability[macroCount];
+			byte[] narrativeAccessFlags = new byte[macroCount];
 
 			// Bit-packed slice descriptor streams (1 long per macro region: Offset << 32 | Count)
 			long[] globMicroSlices = new long[macroCount];
@@ -118,11 +126,9 @@ namespace Kope.Feature.PathFinding.Data {
 			long[] globMicroMPos = new long[totalMicroCount];
 			byte[] globMicroFlags = new byte[totalMicroCount];
 
-			// Monolithic global Macro Connection master buffers
+			// Monolithic global Macro Connection master buffers — target BoundingBox only
 			long[] globConnMinPos = new long[totalConnCount];
 			long[] globConnMaxPos = new long[totalConnCount];
-			MovementCapability[] globConnTrav = new MovementCapability[totalConnCount];
-			byte[] globConnNarr = new byte[totalConnCount];
 
 			// ======================================================================================
 			// STEP 3: SEQUENTIAL STREAM WRITING & BIT-PACKING
@@ -144,6 +150,7 @@ namespace Kope.Feature.PathFinding.Data {
 					keysLow[currentMacroIdx] = low;
 					terrainTypes[currentMacroIdx] = macroNode.TerrainType;
 					allowedTraversals[currentMacroIdx] = macroNode.AllowedTraversal;
+					narrativeAccessFlags[currentMacroIdx] = SpatialBitPacker.ConvertBoolToByte(macroNode.IsNarrativelyAccessible);
 
 					// 3b. Pack Micro Nodes & Bit-Pack Slice Descriptor
 					List<MicroGridNode> microList = null;
@@ -161,7 +168,7 @@ namespace Kope.Feature.PathFinding.Data {
 					}
 					currentMicroOffset += microCount; // Advance master micro stream write head
 
-					// 3c. Pack Macro Connections & Bit-Pack Slice Descriptor
+					// 3c. Pack Macro Connections & Bit-Pack Slice Descriptor (target box only)
 					List<MacroConnectionData> connList = null;
 					macroAdjacencyList?.TryGetValue(bbox, out connList);
 
@@ -170,15 +177,13 @@ namespace Kope.Feature.PathFinding.Data {
 					// Bit-pack starting write head position (Offset) and slice length (Count) into 64-bit long
 					globConnSlices[currentMacroIdx] = GridDataGlobalStream.PackSlice(currentConnOffset, connCount);
 
-					// Copy connection data into contiguous master primitive buffers
+					// Copy connection target boxes into contiguous master primitive buffers
 					for (int i = 0; i < connCount; i++) {
 						var conn = connList[i];
 						var (minP, maxP) = SpatialBitPacker.PackBoundingBox(conn.ToBound);
 
 						globConnMinPos[currentConnOffset + i] = minP;
 						globConnMaxPos[currentConnOffset + i] = maxP;
-						globConnTrav[currentConnOffset + i] = conn.AllowedTraversal;
-						globConnNarr[currentConnOffset + i] = SpatialBitPacker.ConvertBoolToByte(conn.IsNarrativelyAccessible);
 					}
 					currentConnOffset += connCount; // Advance master connection stream write head
 
@@ -192,10 +197,10 @@ namespace Kope.Feature.PathFinding.Data {
 			// ======================================================================================
 			return new GridDataGlobalStream(
 				regionAnchorPoints,
-				keysHigh, keysLow, terrainTypes, allowedTraversals,
+				keysHigh, keysLow, terrainTypes, allowedTraversals, narrativeAccessFlags,
 				globMicroSlices, globConnSlices,
 				globMicroMPos, globMicroFlags,
-				globConnMinPos, globConnMaxPos, globConnTrav, globConnNarr
+				globConnMinPos, globConnMaxPos
 			);
 		}
 
@@ -206,12 +211,15 @@ namespace Kope.Feature.PathFinding.Data {
 		/// <summary>
 		/// Reads baked primitive arrays from disk, bit-unpacks 64-bit slice range descriptors, 
 		/// and reconstructs high-level domain dictionaries into a unified <see cref="GridDataRuntimeCache"/>.
+		/// Per-connection capability/narrative-access are rebuilt via <c>MacroConnectionData.CreateConnection</c>,
+		/// combining each endpoint's own top-level <c>_trav</c>/<c>_narr</c>.
 		/// </summary>
 		public static GridDataRuntimeCache HydrateStatic(in GridDataGlobalStream gridData) {
 			ulong[] keysHigh = gridData.KeysHigh;
 			ulong[] keysLow = gridData.KeysLow;
 			TerrainType[] terrainTypes = gridData.TerrainTypes;
 			MovementCapability[] allowedTraversals = gridData.AllowedTraversal;
+			byte[] narrativeAccessFlags = gridData.IsNarrativelyAccessible;
 
 			long[] globMicroSlices = gridData.GlobMicroSlices;
 			long[] globConnSlices = gridData.GlobConnSlices;
@@ -221,8 +229,6 @@ namespace Kope.Feature.PathFinding.Data {
 
 			long[] globConnMinPos = gridData.GlobConnMinPos;
 			long[] globConnMaxPos = gridData.GlobConnMaxPos;
-			MovementCapability[] globConnTrav = gridData.GlobConnTrav;
-			byte[] globConnNarr = gridData.GlobConnNarr;
 
 			int macroCount = keysHigh != null ? keysHigh.Length : 0;
 			int microCount = globMicroMPos != null ? globMicroMPos.Length : 0;
@@ -231,6 +237,18 @@ namespace Kope.Feature.PathFinding.Data {
 			var macroDict = new Dictionary<BoundingBox, MacroGridNode>(macroCount);
 			var adjacencyList = new Dictionary<BoundingBox, List<MacroConnectionData>>(macroCount);
 			var microDict = new Dictionary<Vec2Int, MicroGridNode>(microCount);
+
+			// Pre-pass: index each region's OWN traversal/narrative-access by BoundingBox. Required
+			// because a connection's target region may be sequenced after the current index in the
+			// arrays below — this gives O(1) lookup of either endpoint's data regardless of order.
+			var ownRegionDataByBox = new Dictionary<BoundingBox, (MovementCapability trav, bool narr)>(macroCount);
+			for (int i = 0; i < macroCount; i++) {
+				BoundingBox box = SpatialBitPacker.UnpackBoundingBoxUnsigned(keysHigh[i], keysLow[i]);
+				MovementCapability t = (allowedTraversals != null && i < allowedTraversals.Length) ? allowedTraversals[i] : default;
+				bool n = (narrativeAccessFlags != null && i < narrativeAccessFlags.Length)
+					&& SpatialBitPacker.ConvertByteToBool(narrativeAccessFlags[i]);
+				ownRegionDataByBox[box] = (t, n);
+			}
 
 			// ======================================================================================
 			// FAST SEQUENTIAL READ OVER STREAM BUFFERS
@@ -242,9 +260,11 @@ namespace Kope.Feature.PathFinding.Data {
 
 				TerrainType tt = (terrainTypes != null && i < terrainTypes.Length) ? terrainTypes[i] : default;
 				MovementCapability trav = (allowedTraversals != null && i < allowedTraversals.Length) ? allowedTraversals[i] : default;
+				bool narr = (narrativeAccessFlags != null && i < narrativeAccessFlags.Length)
+					&& SpatialBitPacker.ConvertByteToBool(narrativeAccessFlags[i]);
 
 				// 1. Reconstruct MacroGridNode runtime object
-				MacroGridNode macroNode = new(bbox, tt, trav);
+				MacroGridNode macroNode = new(bbox, tt, trav, narr);
 				macroDict[bbox] = macroNode;
 
 				// 2. Unpack 64-bit Micro Slice word -> (offset, count) tuple via bit shifting
@@ -258,9 +278,18 @@ namespace Kope.Feature.PathFinding.Data {
 
 					// Instantiate runtime MicroGridNode and insert into lookup map
 					microDict[pos] = new MicroGridNode(pos, isObstacle, macroNode);
+
+					// Register micro node to its parent macro node
+					// why prechecked? Because the micro nodes are already pre-bucketed by
+					//  their parent macro node during the baking phase, so we can safely add 
+					// them without checking for duplicates.
+					macroNode.PrecheckedAddMicroGridNodePosition(pos);
 				}
 
-				// 3. Unpack 64-bit Connection Slice word -> (offset, count) tuple via bit shifting
+				// 3. Unpack 64-bit Connection Slice word -> (offset, count) tuple via bit shifting.
+				// Only the target BoundingBox was persisted per edge — capability/narrative-access are
+				// rebuilt from this region's own (trav, narr) — the "from" side — and the target's own
+				// data looked up via the pre-pass above — the "to" side.
 				var (cOffset, cCount) = GridDataGlobalStream.UnpackSlice(globConnSlices[i]);
 				List<MacroConnectionData> connections = new(cCount);
 
@@ -269,11 +298,15 @@ namespace Kope.Feature.PathFinding.Data {
 					int idx = cOffset + j; // Index into global connection arrays
 					BoundingBox targetBound = SpatialBitPacker.UnpackBoundingBox(globConnMinPos[idx], globConnMaxPos[idx]);
 
-					connections.Add(new MacroConnectionData(
-						targetBound,
-						globConnTrav[idx],
-						SpatialBitPacker.ConvertByteToBool(globConnNarr[idx])
-					));
+					MovementCapability toCapability = default;
+					bool toNarrativelyAccessible = false;
+					if (ownRegionDataByBox.TryGetValue(targetBound, out var toData)) {
+						toCapability = toData.trav;
+						toNarrativelyAccessible = toData.narr;
+					}
+
+					connections.Add(MacroConnectionData.CreateConnection(
+						targetBound, toCapability, trav, toNarrativelyAccessible, narr));
 				}
 				adjacencyList[bbox] = connections;
 			}

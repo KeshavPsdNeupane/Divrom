@@ -40,6 +40,15 @@ namespace Kope.Feature.PathFinding.Data {
      *  Max Slicing Capability per Stream:
      *  - Max Offset : 2,147,483,647 (2.14 Billion elements in global master array)
      *  - Max Count  : 2,147,483,647 (2.14 Billion elements per macro region slice)
+     * 
+     * [4. WHY CONNECTION TRAVERSAL/NARRATIVE FLAGS ARE NOT STORED PER-EDGE]
+     * A macro region's `MovementCapability` and narrative-accessibility (`_trav`, `_narr` below) are
+     * properties of the REGION itself, not of any individual outgoing edge. The combined value for a
+     * given edge is a pure `OR` (capability) / `AND` (narrative access) of the two connected regions'
+     * own values — see `MacroConnectionData.CreateConnection`. Persisting that combination once per
+     * edge (`_globConnTrav`/`_globConnNarr`) duplicated data already present once per region. Only the
+     * target `BoundingBox` (`_globConnMinPos`/`_globConnMaxPos`) is retained in the connection stream;
+     * the combined value is recomputed on hydration from each endpoint's own top-level `_trav`/`_narr`.
      * ==============================================================================================
      */
 
@@ -76,8 +85,11 @@ namespace Kope.Feature.PathFinding.Data {
 		/// <summary> Terrain classification metadata column for each Macro Region. </summary>
 		[SerializeField, ReadOnly] private TerrainType[] _tt;
 
-		/// <summary> Allowed movement capability flags (e.g., Ground, Flying, Water) per Macro Region. </summary>
+		/// <summary> Allowed movement capability flags (e.g., Ground, Flying, Water) — each Macro Region's OWN value. </summary>
 		[SerializeField, ReadOnly] private MovementCapability[] _trav;
+
+		/// <summary> Narrative accessibility flag — each Macro Region's OWN value. </summary>
+		[SerializeField, ReadOnly] private byte[] _narr;
 
 		/// <summary>
 		/// Bit-packed slice descriptors for Micro Nodes. 
@@ -90,7 +102,7 @@ namespace Kope.Feature.PathFinding.Data {
 		/// <summary>
 		/// Bit-packed slice descriptors for Macro Connections (Graph Edges).
 		/// <para>Each element maps 1-to-1 with a Macro Region index.</para>
-		/// High 32 bits = Starting index in <see cref="_globConnMinPos"/> / <see cref="_globConnMaxPos"/> etc.
+		/// High 32 bits = Starting index in <see cref="_globConnMinPos"/> / <see cref="_globConnMaxPos"/>.
 		/// Low 32 bits  = Number of outgoing graph connection edges originating from this Macro Region.
 		/// </summary>
 		[SerializeField, ReadOnly] private long[] _globConnSlices;
@@ -108,7 +120,9 @@ namespace Kope.Feature.PathFinding.Data {
 
 		// ==========================================================================================
 		// MONOLITHIC MASTER MACRO-CONNECTION PRIMITIVE STREAMS
-		// Single flattened arrays storing all graph connection edges contiguously.
+		// Single flattened arrays storing all graph connection edges contiguously. Only the target
+		// BoundingBox is stored — traversal/narrative-access for each edge is derived at hydration
+		// time from the two endpoints' own top-level _trav/_narr (see rationale [4] above).
 		// ==========================================================================================
 
 		/// <summary> High 64-bit packed representation of target BoundingBox min bounds. </summary>
@@ -116,12 +130,6 @@ namespace Kope.Feature.PathFinding.Data {
 
 		/// <summary> Low 64-bit packed representation of target BoundingBox max bounds. </summary>
 		[SerializeField, ReadOnly] private long[] _globConnMaxPos;
-
-		/// <summary> Traversal requirement flags for each connection edge. </summary>
-		[SerializeField, ReadOnly] private MovementCapability[] _globConnTrav;
-
-		/// <summary> Narrative accessibility flags (e.g., locked doors, story gates) for each connection edge. </summary>
-		[SerializeField, ReadOnly] private byte[] _globConnNarr;
 
 		#endregion
 
@@ -141,8 +149,11 @@ namespace Kope.Feature.PathFinding.Data {
 		/// <summary> Terrain classification array for Macro Regions. </summary>
 		public readonly TerrainType[] TerrainTypes => this._tt;
 
-		/// <summary> Movement capability requirements array for Macro Regions. </summary>
+		/// <summary> Movement capability array — each Macro Region's OWN value. </summary>
 		public readonly MovementCapability[] AllowedTraversal => this._trav;
+
+		/// <summary> Narrative accessibility array — each Macro Region's OWN value. </summary>
+		public readonly byte[] IsNarrativelyAccessible => this._narr;
 
 		/// <summary> Raw 64-bit packed micro-node slice descriptors. </summary>
 		public readonly long[] GlobMicroSlices => this._globMicroSlices;
@@ -161,12 +172,6 @@ namespace Kope.Feature.PathFinding.Data {
 
 		/// <summary> Monolithic master array of target connection max bounding values. </summary>
 		public readonly long[] GlobConnMaxPos => this._globConnMaxPos;
-
-		/// <summary> Monolithic master array of connection traversal capabilities. </summary>
-		public readonly MovementCapability[] GlobConnTrav => this._globConnTrav;
-
-		/// <summary> Monolithic master array of narrative accessibility bytes. </summary>
-		public readonly byte[] GlobConnNarr => this._globConnNarr;
 
 		#endregion
 
@@ -236,14 +241,13 @@ namespace Kope.Feature.PathFinding.Data {
 			ulong[] keysLow,
 			TerrainType[] terrainTypes,
 			MovementCapability[] allowedTraversal,
+			byte[] isNarrativelyAccessible,
 			long[] globMicroSlices,
 			long[] globConnSlices,
 			long[] globMicroMPos,
 			byte[] globMicroFlags,
 			long[] globConnMinPos,
-			long[] globConnMaxPos,
-			MovementCapability[] globConnTrav,
-			byte[] globConnNarr) {
+			long[] globConnMaxPos) {
 
 			// Serialize world space anchors using custom fast long packer
 			this._anchors = SpatialBitPacker.PackVec2List(regionAnchorPoints ?? new());
@@ -253,6 +257,7 @@ namespace Kope.Feature.PathFinding.Data {
 			this._keysLow = keysLow ?? Array.Empty<ulong>();
 			this._tt = terrainTypes ?? Array.Empty<TerrainType>();
 			this._trav = allowedTraversal ?? Array.Empty<MovementCapability>();
+			this._narr = isNarrativelyAccessible ?? Array.Empty<byte>();
 
 			// Assign bit-packed slice range streams
 			this._globMicroSlices = globMicroSlices ?? Array.Empty<long>();
@@ -262,11 +267,9 @@ namespace Kope.Feature.PathFinding.Data {
 			this._globMicroMPos = globMicroMPos ?? Array.Empty<long>();
 			this._globMicroFlags = globMicroFlags ?? Array.Empty<byte>();
 
-			// Assign monolithic master Macro Connection primitive streams
+			// Assign monolithic master Macro Connection primitive streams (target box only)
 			this._globConnMinPos = globConnMinPos ?? Array.Empty<long>();
 			this._globConnMaxPos = globConnMaxPos ?? Array.Empty<long>();
-			this._globConnTrav = globConnTrav ?? Array.Empty<MovementCapability>();
-			this._globConnNarr = globConnNarr ?? Array.Empty<byte>();
 		}
 
 		#endregion

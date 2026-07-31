@@ -27,6 +27,7 @@ namespace Kope.Feature.PathFinding.Node {
 		[SerializeField, ReadOnly] private BoundingBox _bound;
 		[SerializeField, ReadOnly] private TerrainType _terrainType;
 		[SerializeField, ReadOnly] private MovementCapability _allowedTraversal;
+		[SerializeField, ReadOnly] private bool _isNarrativelyAccessible = true;
 
 		/// <summary>
 		/// Internal list tracking micro grid coordinate nodes enclosed by this macro node's boundary.
@@ -56,11 +57,16 @@ namespace Kope.Feature.PathFinding.Node {
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get => this._allowedTraversal;
 		}
+		public bool IsNarrativelyAccessible {
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get => this._isNarrativelyAccessible;
+		}
 
 		/// <summary>
 		/// Base scaling factor for macro-level traversal costs aligned with base grid units.
 		/// </summary>
 		public const int TRAVERSAL_COST = MicroGridNode.DIRECT_COST;
+		public const int DIAGONAL_TRAVERSAL_COST = MicroGridNode.DIAGONAL_COST;
 
 		/// <summary>Gets an immutable read-only view of all micro grid coordinates housed in this macro zone.</summary>
 		public IReadOnlyList<Vec2Int> MicroGridNodePositions {
@@ -85,16 +91,25 @@ namespace Kope.Feature.PathFinding.Node {
 			BoundingBox bounds,
 			TerrainType terrainType,
 			MovementCapability allowedTraversal,
+			bool isNarrativelyAccessible,
 			List<Vec2Int> microGridsNodesPositions = null) {
 			this._bound = bounds;
 			this._terrainType = terrainType;
 			this._allowedTraversal = allowedTraversal;
+			this._isNarrativelyAccessible = isNarrativelyAccessible;
 			this._microGridNodePositions = microGridsNodesPositions ?? new List<Vec2Int>();
 		}
 
 		#endregion
 
 		#region Methods 
+
+
+		public bool CanTraverse(MovementCapability capability) {
+			// Check if the macro node is narratively accessible and if the allowed traversal 
+			// capabilities include the specified capability.
+			return IsNarrativelyAccessible && (AllowedTraversal & capability) != MovementCapability.None;
+		}
 		/// <summary>
 		/// Adds a unique micro grid position to this region's spatial registry.
 		/// </summary>
@@ -143,10 +158,11 @@ namespace Kope.Feature.PathFinding.Node {
 			float euclideanDistance = Vec2Int.EuclideanDistanceTo(from.Center, to.Center);
 			return Mathf.RoundToInt(euclideanDistance * TRAVERSAL_COST);
 		}
-
 		public static int OctileCost(BoundingBox to, BoundingBox from) {
-			int octileDistance = Vec2Int.OctileDistanceTo(from.Center, to.Center);
-			return octileDistance * TRAVERSAL_COST;
+			int octileDistance = Vec2Int.OctileDistanceTo(
+				from.Center, to.Center, TRAVERSAL_COST,
+				DIAGONAL_TRAVERSAL_COST);
+			return octileDistance;
 		}
 		#endregion
 
