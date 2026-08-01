@@ -2,31 +2,16 @@ using System;
 using System.Collections.Generic;
 using Kope.EntityIdentity;
 using Kope.Feature.PathFinding.Node;
-using Project.Scripts.Features.PathFinding.GraphManager;
+using Project.Scripts.Features.PathFindingOld.GraphManager;
 using ThirdParty.PriorityQueeu;
 using UnityEngine;
 
 namespace Kope.Feature.PathFinding.Algorithms {
 
 	public class AStarMicro {
-		private static readonly List<Vec2Int> EMPTY_PATH = new();
-		private static readonly Vec2Int[] NEIGHBOR_OFFSET = new[] {
-			new Vec2Int(0, 1),   // Up
-            new Vec2Int(1, 0),   // Right
-            new Vec2Int(0, -1),  // Down
-            new Vec2Int(-1, 0),  // Left
-            new Vec2Int(1, 1),   // Up-Right
-            new Vec2Int(1, -1),  // Down-Right
-            new Vec2Int(-1, -1), // Down-Left
-            new Vec2Int(-1, 1)   // Up-Left
-        };
 
-		private static readonly Dictionary<Vec2Int, (Vec2Int, Vec2Int)> NEIGHBORING_RULE_MAP = new() {
-			{ new Vec2Int(1, 1),   (new Vec2Int(1, 0), new Vec2Int(0, 1)) },   // Up-Right rule
-            { new Vec2Int(1, -1),  (new Vec2Int(1, 0), new Vec2Int(0, -1)) },  // Down-Right rule
-            { new Vec2Int(-1, -1), (new Vec2Int(-1, 0), new Vec2Int(0, -1)) }, // Down-Left rule
-            { new Vec2Int(-1, 1),  (new Vec2Int(-1, 0), new Vec2Int(0, 1)) }   // Up-Left rule
-        };
+
+		private static readonly List<Vec2Int> EMPTY_PATH = new();
 
 		private readonly Dictionary<CostCalculationType, Func<Vec2Int, Vec2Int, int>> _costCalculators = new() {
 			{ CostCalculationType.Manhattan, MicroGridNode.ManhattanCost },
@@ -34,10 +19,8 @@ namespace Kope.Feature.PathFinding.Algorithms {
 			{ CostCalculationType.Octile, MicroGridNode.OctileCost }
 		};
 
-		private readonly float _maxIterationsRatio;
 		private int _maxIterations = 10;
-		private readonly float _greedyNess = 1f;
-		private readonly CostCalculationType _costCalculationType = CostCalculationType.Manhattan;
+		private PathFindingConfig _config;
 
 		private readonly IPathfindingGraphManager _graphManager;
 		private readonly Dictionary<Vec2Int, MicroPathFindingNode> _nodeRecords;
@@ -61,9 +44,7 @@ namespace Kope.Feature.PathFinding.Algorithms {
 			this._closedSet = new HashSet<Vec2Int>(config.InitialCapacity);
 			this._openSet = new QuadPriorityQueue<MicroPathFindingNode, int>(config.InitialCapacity);
 
-			this._costCalculationType = config.CostCalculationType;
-			this._maxIterationsRatio = config.MaxIterationRatio;
-			this._greedyNess = config.Greediness;
+			this._config = config;
 		}
 
 		public bool PreCheck(Vec2Int start, Vec2Int end, MovementCapability _, out MicroPathFindingResult preCheckResult) {
@@ -103,16 +84,23 @@ namespace Kope.Feature.PathFinding.Algorithms {
 			this._nodeRecords.Clear();
 			this._closedSet.Clear();
 			this._openSet.Clear();
+
+
+
 #if UNITY_EDITOR
 			recorder?.Clear();
 #endif
 
-			this._maxIterations = Mathf.CeilToInt(this._maxIterationsRatio * this._totalNodesCache);
+			this._maxIterations = Mathf.CeilToInt(this._config.MaxIterationRatio * this._totalNodesCache);
 
-			Func<Vec2Int, Vec2Int, int> costCalculator = this._costCalculators[this._costCalculationType];
+			var costCalculationType = this._config.CostCalculationType;
+			var greedyNess = this._config.GreedyNess;
+
+
+			Func<Vec2Int, Vec2Int, int> costCalculator = this._costCalculators[costCalculationType];
 
 			int rawInitialH = costCalculator(start, end);
-			int weightedInitialH = Mathf.FloorToInt(rawInitialH * this._greedyNess);
+			int weightedInitialH = Mathf.FloorToInt(rawInitialH * greedyNess);
 
 
 			MicroPathFindingNode startNode = new(start, 0, weightedInitialH, null);
@@ -142,8 +130,8 @@ namespace Kope.Feature.PathFinding.Algorithms {
 					return new MicroPathFindingResult(
 						PathFindingResultType.Success, path,
 						this._totalNodesCache, totalNodeEvaluation,
-						totalExpansion, this._costCalculationType,
-						this._greedyNess
+						totalExpansion, costCalculationType,
+						greedyNess
 					);
 				}
 
@@ -153,12 +141,13 @@ namespace Kope.Feature.PathFinding.Algorithms {
 				// Delegated neighbor retrieval: handles boundary checks, obstacles, 
 				// diagonal corner rules, and closed-set skipping
 				foreach (var neighborNode in this._graphManager.GetWalkableMicroNeighboringNodesWithRules(
-					currentRecord.NodePosition,
-					NEIGHBOR_OFFSET,
-					NEIGHBORING_RULE_MAP,
-					this._closedSet)) {
+					currentRecord.NodePosition)) {
 
 					Vec2Int neighborPos = neighborNode.Position;
+
+					if (this._closedSet.Contains(neighborPos)) {
+						continue;
+					}
 
 					// Restrict neighbor expansion strictly to the corridor set
 					if (corridorsTileSet != null && !corridorsTileSet.Contains(neighborPos)) {
@@ -166,22 +155,22 @@ namespace Kope.Feature.PathFinding.Algorithms {
 					}
 
 					int stepCost = costCalculator(currentRecord.NodePosition, neighborPos);
-					int tentativeGCost = currentRecord.GCost + stepCost;
+					int tentativeCost = currentRecord.GCost + stepCost;
 
 					// Update node record if unvisited or if a cheaper path is discovered
 					if (!this._nodeRecords.TryGetValue(neighborPos, out var existingNeighborRecord)
-						|| tentativeGCost < existingNeighborRecord.GCost) {
+						|| tentativeCost < existingNeighborRecord.GCost) {
 
 						int rawHCost = costCalculator(neighborPos, end);
 
 
-						int weightedHCost = (this._greedyNess == PathFindingConfig.DEFAULT_GREEDINESS)
+						int weightedHCost = (greedyNess == PathFindingConfig.DEFAULT_GREEDINESS)
 							? rawHCost
-							: Mathf.FloorToInt(rawHCost * this._greedyNess);
+							: Mathf.FloorToInt(rawHCost * greedyNess);
 
 						MicroPathFindingNode neighborRecord = new(
 							neighborPos,
-							tentativeGCost,
+							tentativeCost,
 							weightedHCost,
 							currentRecord.NodePosition
 						);
@@ -210,12 +199,13 @@ namespace Kope.Feature.PathFinding.Algorithms {
 			return totalPath;
 		}
 
-		private MicroPathFindingResult CreateFailureResult(PathFindingResultType resultType, int totalNodeEvaluations, int totalNodeExpansions) {
+		private MicroPathFindingResult CreateFailureResult(
+			PathFindingResultType resultType, int totalNodeEvaluations, int totalNodeExpansions) {
 			return new MicroPathFindingResult(
 				resultType,
 				EMPTY_PATH, this._totalNodesCache,
 				totalNodeEvaluations, totalNodeExpansions,
-				this._costCalculationType, this._greedyNess
+				this._config.CostCalculationType, this._config.GreedyNess
 			);
 		}
 	}

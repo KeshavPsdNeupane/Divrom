@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Project.Scripts.Features.PathFinding.GraphManager;
+using Project.Scripts.Features.PathFindingOld.GraphManager;
 using Kope.Feature.PathFinding.Node;
 using Kope.EntityIdentity;
 

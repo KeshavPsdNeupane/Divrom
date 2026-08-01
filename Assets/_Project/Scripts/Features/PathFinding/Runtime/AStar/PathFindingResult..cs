@@ -40,7 +40,7 @@ public struct PathFindingConfig {
 	public const float DEFAULT_GREEDINESS = 1f;
 
 	public CostCalculationType CostCalculationType;
-	public float Greediness;
+	public float GreedyNess;
 	public float MaxIterationRatio;
 	public int InitialCapacity;
 	public PathFindingConfig(CostCalculationType costCalculationType = CostCalculationType.Octile,
@@ -50,7 +50,7 @@ public struct PathFindingConfig {
 
 		CostCalculationType = costCalculationType;
 
-		Greediness = Mathf.Clamp(greediness, 1f, MAX_GREEDINESS);
+		GreedyNess = Mathf.Clamp(greediness, 1f, MAX_GREEDINESS);
 
 		MaxIterationRatio = Mathf.Clamp(maxIterationRatio, MIN_ITERATIONS_RATIO, MAX_ITERATIONS_RATIO);
 

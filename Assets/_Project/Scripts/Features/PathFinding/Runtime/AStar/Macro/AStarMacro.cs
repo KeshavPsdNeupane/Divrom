@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Kope.EntityIdentity;
 using Kope.Feature.PathFinding.Node;
-using Project.Scripts.Features.PathFinding.GraphManager;
+using Project.Scripts.Features.PathFindingOld.GraphManager;
 using ThirdParty.PriorityQueeu;
 using UnityEngine;
 namespace Kope.Feature.PathFinding.Algorithms {
@@ -105,7 +105,7 @@ namespace Kope.Feature.PathFinding.Algorithms {
 			this._openSet = new QuadPriorityQueue<MacroPathFindingNode, int>(config.InitialCapacity);
 
 
-			this._greedyNess = config.Greediness;
+			this._greedyNess = config.GreedyNess;
 			this._costCalculationType = config.CostCalculationType;
 			this._maxIterationsRatio = config.MaxIterationRatio;
 		}
@@ -217,14 +217,16 @@ namespace Kope.Feature.PathFinding.Algorithms {
 
 				// Fetch adjacent macro bounds matching the entity's capabilities
 				if (this._graphManager.GetNeighboringMacroNodesConnectionData(
-					currentRecord.NodeBox, entityMovementCapability, out var connections)) {
+					currentRecord.NodeBox, out var connections)) {
 
 					foreach (MacroConnectionData connection in connections) {
 						BoundingBox neighborBounds = connection.ToBound;
-
 						if (this._closedSet.Contains(neighborBounds)) {
 							continue;
 						}
+						if (!connection.IsTraversable(entityMovementCapability))
+							continue;
+
 
 						int stepCost = costCalculator(currentRecord.NodeBox, neighborBounds);
 						int tentativeGCost = currentRecord.GCost + stepCost;

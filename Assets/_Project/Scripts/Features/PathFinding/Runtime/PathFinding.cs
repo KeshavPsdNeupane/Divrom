@@ -6,8 +6,8 @@ using Kope.EntityIdentity;
 using Kope.Feature.PathFinding.Algorithms;
 using Kope.Feature.PathFinding.Data;
 using Kope.Feature.PathFinding.Node;
-using Project.Scripts.Features.PathFinding.Algorithms;
-using Project.Scripts.Features.PathFinding.GraphManager;
+using Project.Scripts.Features.PathFindingOld.Algorithms;
+using Project.Scripts.Features.PathFindingOld.GraphManager;
 using UnityEngine;
 using UnityEngine.Serialization;
 using ZLinq;
@@ -31,15 +31,13 @@ public class PathFinding : MonoBehaviour {
 	[SerializeField] private GridDataContainerBase graphDataContainer;
 
 	[Header("Graph Reference")]
-	[SerializeField]
-	private PathFindingManagerType graphManagerType =
-	PathFindingManagerType.PathfindingGraphManagerHybrid;
-	private IPathfindingGraphManager graphManager;
+	// [SerializeField]
+	// private PathFindingManagerType graphManagerType =
+	// PathFindingManagerType.PathfindingGraphManagerHybrid;
+	private IPathfindingGraphManager _graphManager;
 
 	[Header("Macro Request Settings")]
-	[FormerlySerializedAs("costCalculationType")]
 	[SerializeField] private CostCalculationType macroCostCalculationType = CostCalculationType.Manhattan;
-	[FormerlySerializedAs("greedyNess")]
 	[SerializeField, Range(1f, 1.5f)] private float macroGreedyNess = 1f;
 
 	[Header("Micro Request Settings")]
@@ -49,7 +47,7 @@ public class PathFinding : MonoBehaviour {
 	[Header("Shared Request Settings")]
 	[SerializeField] private Transform startTransform;
 	[SerializeField] private Transform endTransform;
-	[SerializeField] private MovementCapability capability = MovementCapability.Ground;
+	[SerializeField] private MovementCapability capability = MovementCapability.Move;
 
 	[Header("Recording Settings")]
 	[SerializeField, Tooltip(
@@ -71,23 +69,16 @@ public class PathFinding : MonoBehaviour {
 	private bool showMacroOverlay = true;
 	[FormerlySerializedAs("macroMode")]
 	[SerializeField] private PathfindingVisualizationMode macroMode = PathfindingVisualizationMode.AnimatedStepByStep;
-	[FormerlySerializedAs("secondsPerStep")]
 	[SerializeField, Min(0.001f), Tooltip("Seconds each macro step is held before advancing. Drives Animated playback in BOTH Play Mode and Edit Mode, independently of the micro visualizer's own speed.")]
 	private float macroSecondsPerStep = 0.05f;
-	[FormerlySerializedAs("manualStepIndex")]
 	[SerializeField, Tooltip("Drives ManualScrub, and doubles as the live cursor during Animated playback. One index past the last step reveals the final macro path.")]
 	private int macroManualStepIndex = 0;
 
 	[Header("Macro Gizmo Styling")]
-	[FormerlySerializedAs("currentColor")]
 	[SerializeField] private Color macroCurrentColor = Color.yellow;
-	[FormerlySerializedAs("openSetColor")]
 	[SerializeField] private Color macroOpenSetColor = new(0.15f, 0.9f, 0.3f, 0.5f);
-	[FormerlySerializedAs("closedSetColor")]
 	[SerializeField] private Color macroClosedSetColor = new(0.8f, 0.2f, 0.2f, 0.25f);
-	[FormerlySerializedAs("finalPathColor")]
 	[SerializeField] private Color macroFinalPathColor = Color.green;
-	[FormerlySerializedAs("showStepLabel")]
 	[SerializeField] private bool macroShowStepLabel = true;
 
 	[Header("Micro Visualization Controls")]
@@ -139,19 +130,6 @@ public class PathFinding : MonoBehaviour {
 	}
 
 
-	public IPathfindingGraphManager GetManager(PathFindingManagerType managerType,
-	Dictionary<Vec2Int, MicroGridNode> microNode,
-	Dictionary<BoundingBox, MacroGridNode> macroNode,
-	Dictionary<BoundingBox, List<MacroConnectionData>> adjacencyDict) {
-		return managerType switch {
-			PathFindingManagerType.PathfindingGraphManager => new PathfindingGraphManager(
-				microNode, macroNode, adjacencyDict),
-			PathFindingManagerType.PathfindingGraphManagerHybrid => new PathfindingGraphManagerHybrid(
-				microNode, macroNode, adjacencyDict),
-			_ => throw new ArgumentOutOfRangeException(nameof(managerType), managerType, null)
-		};
-	}
-
 
 
 	private void EnsurePathfinder() {
@@ -161,19 +139,19 @@ public class PathFinding : MonoBehaviour {
 		}
 
 		var neighborDict = this.graphDataContainer.MacroAdjacencyList;
-		this.graphManager = GetManager(this.graphManagerType,
+		this._graphManager = new PathFindingGridManager(
 			this.graphDataContainer.MicroGridNodeDict, this.graphDataContainer.MacroGridNodeDict, neighborDict);
 
 		PathFindingConfig macroConfig = new(
-			this.macroCostCalculationType, PathFindingConfig.DEFAULT_INITIAL_CAPACITY,
+			this.macroCostCalculationType, 32,
 			this.macroGreedyNess, PathFindingConfig.MAX_ITERATIONS_RATIO
 			);
 		PathFindingConfig microConfig = new(
-			this.microCostCalculationType, PathFindingConfig.DEFAULT_INITIAL_CAPACITY,
+			this.microCostCalculationType, 256,
 			this.microGreedyNess, PathFindingConfig.MAX_ITERATIONS_RATIO
 			);
 
-		this._pathfinder = new HierarchicalHomogeneousSpatialIndexingAStar(this.graphManager, microConfig, macroConfig);
+		this._pathfinder = new HierarchicalHomogeneousSpatialIndexingAStar(this._graphManager, microConfig, macroConfig);
 	}
 
 	#region Context Menu Actions
@@ -224,19 +202,34 @@ public class PathFinding : MonoBehaviour {
 		if (result.MicroResult != null) MicroGizmos.FinalPath = result.MicroResult.Path;
 
 		// Quick standard read on what kind of request this was before diving into the result numbers.
-		Debug.Log(PathfindingBenchmarkReporter.DescribePointRelationship(startVec, endVec));
+
 		// Debug.Log(
 		// 	$"Hierarchical Pathfinding finished — ErrorPath: {result.ErrorPath} " +
 		// 	$"(Total: {stopwatch.ElapsedMilliseconds}ms / {stopwatch.ElapsedTicks} ticks)."
 		// );
 
-		if (result.MacroResult != null) {
-			ResultLog(result.MacroResult, "Macro", startVec.ToString(), endVec.ToString(), this.capability.ToString(), stopwatch.ElapsedMilliseconds, stopwatch.ElapsedTicks);
+		StringBuilder resultLogBuilder = new();
+		resultLogBuilder.AppendLine("<b><color=#00FFFF>=== HIERARCHICAL PATHFINDING RESULT ===</color></b>");
+
+		// Only inject the warning if the recorder is actually turned on
+		if (this.enableRecording) {
+			resultLogBuilder.AppendLine("<b><color=#FFCC00>Note: Recorder is ACTIVE. This adds significant overhead to the timing metrics. Disable it for true production speed.</color></b>");
 		}
-		if (result.MicroResult != null) {
-			ResultLog(result.MicroResult, "Micro", startVec.ToString(), endVec.ToString(), this.capability.ToString(), stopwatch.ElapsedMilliseconds, stopwatch.ElapsedTicks);
+		resultLogBuilder.AppendLine(PathfindingBenchmarkReporter.DescribePointRelationship(startVec, endVec));
+		resultLogBuilder.AppendLine($"<b>Settings:</b> Macro: {this.macroCostCalculationType} | Micro: {this.microCostCalculationType} | Greediness: Macro {this.macroGreedyNess}, Micro {this.microGreedyNess}");
+		resultLogBuilder.AppendLine($"<b>Timing:</b> Total: {stopwatch.ElapsedMilliseconds}ms / {stopwatch.ElapsedTicks} ticks");
+		// Cache these so we don't call ToString() multiple times
+		string startStr = startVec.ToString();
+		string endStr = endVec.ToString();
+
+		if (result.MacroResult != null) {
+			AppendResultLog(resultLogBuilder, result.MacroResult, "Macro", startStr, endStr);
 		}
 
+		if (result.MicroResult != null) {
+			AppendResultLog(resultLogBuilder, result.MicroResult, "Micro", startStr, endStr);
+		}
+		Debug.Log(resultLogBuilder.ToString());
 		TryStartPlayback();
 
 #if UNITY_EDITOR
@@ -289,12 +282,12 @@ public class PathFinding : MonoBehaviour {
 	[ContextMenu("Run Benchmark Suite")]
 	public void RunBenchmarkSuite() {
 		EnsurePathfinder();
-		if (this.graphManager == null) {
+		if (this._graphManager == null) {
 			Debug.LogError("Missing graph manager for benchmark.");
 			return;
 		}
 
-		var testPairs = this.graphManager.GiveRandomTestPoints(this.benchmarkRandomPairs);
+		var testPairs = this._graphManager.GiveRandomTestPoints(this.benchmarkRandomPairs);
 		int pairCount = testPairs != null ? testPairs.AsValueEnumerable().Count() : 0;
 		if (testPairs == null || pairCount == 0) {
 			Debug.LogError("No valid random test points could be generated from the micro graph.");
@@ -350,7 +343,7 @@ public class PathFinding : MonoBehaviour {
 						costType, PathFindingConfig.DEFAULT_INITIAL_CAPACITY,
 						currentGreediness, PathFindingConfig.MAX_ITERATIONS_RATIO
 						);
-					AStarMacro benchFinder = new(this.graphManager, config);
+					AStarMacro benchFinder = new(this._graphManager, config);
 
 					// Validate once per benchFinder — start/end are identical across the warmup run and
 					// every timed iteration below, so a single PreCheck here covers all of them instead
@@ -470,17 +463,32 @@ public class PathFinding : MonoBehaviour {
 		}
 	}
 
-	public static void ResultLog<Tlist>(
-		PathFindingResult<Tlist> tresult, string pathfindingType,
-		string startPos, string endPos, string capability, long elapsedMilliseconds, long elapsedTicks) {
+	public static void AppendResultLog<Tlist>(
+		StringBuilder sb,
+		PathFindingResult<Tlist> tresult,
+		string metricName,
+		string startPos,
+		string endPos) {
+		int pathCount = tresult.Path?.Count ?? 0;
 
-		string pathString = tresult.Path != null ? string.Join(" -> ", tresult.Path) : "No path found";
+		// Log the Result Type (e.g., Success, Failed) instead of the redundant settings
+		sb.AppendLine($"[{metricName}] Result Status: {tresult.pathFindingResultType}");
+		sb.AppendLine($"Total Nodes: {tresult.TotalNodes}, Total Expansions: {tresult.TotalNodeExpansions}, Total Node Evaluations: {tresult.TotalNodeEvaluations}, Path length: {pathCount} nodes.");
+		sb.AppendLine($"Start: {startPos}, End: {endPos}");
 
-		Debug.Log($"{pathfindingType} Pathfinding with {tresult.CostCalculationType} Greedyness: {tresult.Greediness} cost calculation completed on time({elapsedMilliseconds}ms/{elapsedTicks} ticks).\n" +
-		$"Total Nodes: {tresult.TotalNodes}, Total Expansions: {tresult.TotalNodeExpansions}, " +
-		$"Total Node Evaluations: {tresult.TotalNodeEvaluations}, Path found: {(tresult.Path != null ? tresult.Path.Count : 0)} nodes.\n" +
-		$"Start: {startPos}, End: {endPos}, Capability: {capability}\nPath: {pathString}");
+		sb.Append("Path: ");
+		if (tresult.Path != null && pathCount > 0) {
+			for (int i = 0; i < pathCount; i++) {
+				sb.Append(tresult.Path[i]);
+				if (i < pathCount - 1) {
+					sb.Append(" -> ");
+				}
+			}
+			sb.AppendLine();
+		} else {
+			sb.AppendLine("No path found");
+		}
+		sb.AppendLine("------------------------------------------------------------------------------------------------------------------\n");
 	}
-
 	#endregion
 }

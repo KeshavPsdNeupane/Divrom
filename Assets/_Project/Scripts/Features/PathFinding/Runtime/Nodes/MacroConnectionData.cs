@@ -4,7 +4,7 @@ using Kope.EntityIdentity;
 using Kope.Feature.PathFinding.Node;
 using UnityEngine;
 
-namespace Project.Scripts.Features.PathFinding.GraphManager {
+namespace Project.Scripts.Features.PathFindingOld.GraphManager {
 
 	/// <summary>
 	/// Represents directed edge connection data between two macro grid nodes.

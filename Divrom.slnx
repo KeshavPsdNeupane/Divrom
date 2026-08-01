@@ -1,8 +1,8 @@
 ﻿<Solution>
-  <Project Path="Assembly-CSharp.csproj" />
   <Project Path="Kope.AI.Runtime.csproj" />
   <Project Path="Kope.ModularSpriteAnimation.Runtime.csproj" />
   <Project Path="Kope.Components.csproj" />
+  <Project Path="Assembly-CSharp.csproj" />
   <Project Path="Kope.Core.Runtime.csproj" />
   <Project Path="Kope.EntityComponentSystem.Runtime.csproj" />
   <Project Path="Kope.Character.Stats.Runtime.csproj" />

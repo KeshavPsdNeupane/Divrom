@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using Project.Scripts.Features.PathFinding.GraphManager;
+using Project.Scripts.Features.PathFindingOld.GraphManager;
 using Kope.Feature.PathFinding.Node;
 
 

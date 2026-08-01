@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
-using Project.Scripts.Features.PathFinding.GraphManager;
+using Project.Scripts.Features.PathFindingOld.GraphManager;
 using Kope.Core.Collections;
 using Kope.Core.Attribute;
 using Kope.Feature.PathFinding.Node;

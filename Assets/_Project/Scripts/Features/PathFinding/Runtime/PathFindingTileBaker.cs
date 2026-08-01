@@ -7,7 +7,7 @@ using Kope.EntityIdentity;
 using Kope.Feature.PathFinding.Interface;
 using Kope.Feature.PathFinding.Tile;
 using Kope.Feature.PathFinding.Utility;
-using Project.Scripts.Features.PathFinding.GraphManager;
+using Project.Scripts.Features.PathFindingOld.GraphManager;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using ZLinq;
@@ -93,7 +93,7 @@ namespace Kope.Feature.PathFinding {
 		[SerializeField] private RectangleSlicerAlgorithm rectangleSlicer = RectangleSlicerAlgorithm.Greedy;
 
 		[Header("Bounding Box Constraints")]
-		[SerializeField] private Vec2Int maxBoundingBoxSize = new(16, 16);
+		[SerializeField] private Vector2Int maxBoundingBoxSize = new(16, 16);
 
 		[Header("Error Visualizer Configurations")]
 		[SerializeField] private bool logMicroTileNotFoundWarnings = false;
@@ -189,7 +189,7 @@ namespace Kope.Feature.PathFinding {
 			var maxBoundSize = this.maxBoundingBoxSize;
 
 			Stopwatch stopwatch = Stopwatch.StartNew();
-			var slicedRegions = rectanglePacker.Slice(regionTiles, maxBoundSize);
+			var slicedRegions = rectanglePacker.Slice(regionTiles, new Vec2Int(maxBoundSize));
 			stopwatch.Stop();
 
 			if (slicedRegions == null || slicedRegions.Count == 0) return;
@@ -296,7 +296,7 @@ namespace Kope.Feature.PathFinding {
 			// ==========================================
 			this._summarizer.MakeSummary(
 				rectanglePacker,
-				maxBoundSize,
+				new Vec2Int(maxBoundSize),
 				regionTiles != null ? regionTiles.Count : 0,
 				slicedRegions,
 				stopwatch
@@ -311,7 +311,7 @@ namespace Kope.Feature.PathFinding {
 #endif
 		}
 
-		public PathfindingGraphManager CreateRuntimeGraphManager() {
+		public PathFindingGridManager CreateRuntimeGraphManager() {
 			if (gridDataContainer == null || gridDataContainer.MicroGridNodeDict == null || gridDataContainer.MicroGridNodeDict.Count == 0) {
 				Debug.LogWarning("PathChecker has no baked data! Did you forget to bake the grid or assign the ScriptableObject?");
 			}

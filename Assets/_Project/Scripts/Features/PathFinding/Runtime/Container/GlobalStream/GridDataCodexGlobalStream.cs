@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Kope.Feature.PathFinding.Node;
 using Kope.EntityIdentity;
-using Project.Scripts.Features.PathFinding.GraphManager;
+using Project.Scripts.Features.PathFindingOld.GraphManager;
 
 namespace Kope.Feature.PathFinding.Data {
 

@@ -13,7 +13,6 @@ namespace Kope.Feature.PathFinding.Tile {
 	/// <typeparam name="T">The underlying terrain data structure, governed by the primary data contract (<see cref="ITerrainData{T}"/>).</typeparam>
 	public abstract class PathFindingTile<T> : TileBase where T : struct, ITerrainData<T> {
 		[SerializeField] protected T data;
-
 		/// <summary>
 		/// Gets the principal terrain data associated with this tile instance.
 		/// </summary>

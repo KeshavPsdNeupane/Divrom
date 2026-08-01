@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Kope.Feature.PathFinding.Node;
-using Project.Scripts.Features.PathFinding.GraphManager;
+using Project.Scripts.Features.PathFindingOld.GraphManager;
 
 namespace Kope.Feature.PathFinding.Data {
 

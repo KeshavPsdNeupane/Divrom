@@ -28,11 +28,11 @@ namespace Kope.EntityIdentity {
 		/// </summary>
 		None = 0,
 		/// <summary>Can traverse ground-based paths.</summary>
-		Ground = 1 << 0,
+		Move = 1 << 0,
 		/// <summary>Can traverse water-based paths.</summary>
-		Water = 1 << 1,
+		Swim = 1 << 1,
 		/// <summary>Can traverse air-based paths.</summary>
-		Air = 1 << 2,
+		Fly = 1 << 2,
 	}
 
 	/// <summary>

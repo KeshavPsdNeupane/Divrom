@@ -2,7 +2,7 @@ using UnityEngine;
 using Kope.Core.Collections;
 using Kope.Feature.PathFinding.Node;
 using System.Collections.Generic;
-using Project.Scripts.Features.PathFinding.GraphManager;
+using Project.Scripts.Features.PathFindingOld.GraphManager;
 
 
 

@@ -33,6 +33,7 @@ namespace Kope.Feature.PathFinding.Node {
 		/// </summary>
 		private readonly Vec2Int[] _microGridNodePositions;
 
+
 		#endregion
 
 		#region Properties
@@ -95,6 +96,7 @@ namespace Kope.Feature.PathFinding.Node {
 			this._allowedTraversal = allowedTraversal;
 			this._isBlocked = isNarrativelyAccessible;
 			this._microGridNodePositions = microGridsNodesPositions ?? Array.Empty<Vec2Int>();
+			// this.MicroGridNodePositionsSet = new HashSet<Vec2Int>(this._microGridNodePositions);
 		}
 
 		#endregion
