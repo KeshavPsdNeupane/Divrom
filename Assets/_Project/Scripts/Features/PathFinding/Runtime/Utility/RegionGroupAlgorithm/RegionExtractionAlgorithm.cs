@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using ZLinq;
-using Kope.Feature.PathFinding.Tile;
-using Kope.Feature.PathFinding.Node;
+using Kope.Feature.PathFindingOld.Tile;
+using Kope.Feature.PathFindingOld.Node;
 
 
 

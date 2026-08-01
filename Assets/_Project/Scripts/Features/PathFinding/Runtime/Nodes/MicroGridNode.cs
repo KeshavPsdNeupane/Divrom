@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 using Kope.Core.Attribute;
 using UnityEngine;
 
-namespace Kope.Feature.PathFinding.Node {
+namespace Kope.Feature.PathFindingOld.Node {
 	/// <summary>
 	/// Represents a fine-grained, high-detail (Tier-2) node in the pathfinding grid.
 	/// </summary>

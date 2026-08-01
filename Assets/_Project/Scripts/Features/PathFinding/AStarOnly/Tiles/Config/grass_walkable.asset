@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Kope.Feature.PathFindingNew.Tile.AStarTile
   data:
     _tileColor: {r: 0, g: 1, b: 0.07796383, a: 0.4117647}
-    _biomeType: 1
+    _tileType: 1
     _isTraversable: 1
     _allowedCapabilities: -1
     _moveCostMultiplier: 1

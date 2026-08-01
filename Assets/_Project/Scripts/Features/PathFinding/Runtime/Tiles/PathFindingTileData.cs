@@ -1,9 +1,9 @@
 using System;
 using Kope.EntityIdentity;
-using Kope.Feature.PathFinding.Interface;
+using Kope.Feature.PathFindingOld.Interface;
 using UnityEngine;
 
-namespace Kope.Feature.PathFinding.Tile {
+namespace Kope.Feature.PathFindingOld.Tile {
 	/// <summary>
 	/// Represents the principal terrain data for micro-level pathfinding tiles. 
 	/// Implements the <see cref="ITerrainData{T}"/> contract to ensure strict type safety, 

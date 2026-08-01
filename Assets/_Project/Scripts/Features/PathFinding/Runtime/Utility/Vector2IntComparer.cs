@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
-namespace Kope.Feature.PathFinding.Utility {
+namespace Kope.Feature.PathFindingOld.Utility {
 
 	/// <summary>
 	/// Optimization Note: Vector2Int's built-in GetHashCode() is "x.GetHashCode() ^ (y.GetHashCode() &lt;&lt; 2)".

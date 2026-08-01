@@ -1,9 +1,9 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using Kope.Feature.PathFinding.Utility;
+using Kope.Feature.PathFindingOld.Utility;
 
-namespace Kope.Feature.PathFinding.Tile {
-	using Kope.Feature.PathFinding.Interface;
+namespace Kope.Feature.PathFindingOld.Tile {
+	using Kope.Feature.PathFindingOld.Interface;
 
 	/// <summary>
 	/// The universal base class for all pathfinding tiles in the framework. 

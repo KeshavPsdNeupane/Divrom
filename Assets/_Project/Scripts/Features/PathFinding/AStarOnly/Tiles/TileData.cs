@@ -9,7 +9,7 @@ namespace Kope.Feature.PathFindingNew.Tile {
 	/// Represents terrain and tile classification.
 	/// Values are grouped in blocks of 200 per biome to enable range-based biome checks and clean future expansion.
 	/// </summary>
-	public enum BiomeType : ushort {
+	public enum TileType : ushort {
 		// ==========================================
 		// 0 - 199: TEMPERATE / BASIC TERRAIN
 		// ==========================================
@@ -117,7 +117,7 @@ namespace Kope.Feature.PathFindingNew.Tile {
 			"• Allows for biome-based logic like a fire enemy not being able to traverse water tiles," +
 			" or a frost enemy avoiding lava tiles."
 		)]
-		private BiomeType _biomeType;
+		private TileType _tileType;
 
 		[SerializeField, Tooltip(
 			"Master traversal toggle.\n" +
@@ -169,7 +169,7 @@ namespace Kope.Feature.PathFindingNew.Tile {
 			}
 		}
 
-		public readonly BiomeType BiomeType => this._biomeType;
+		public readonly TileType TileType => this._tileType;
 
 		/// <summary>Master toggle: returns true if this tile allows traversal at all.</summary>
 		public readonly bool IsTraversable => this._isTraversable;
@@ -186,14 +186,14 @@ namespace Kope.Feature.PathFindingNew.Tile {
 
 		public TileTerrainData(
 			Color tileColor,
-			BiomeType biomeType,
+			TileType biomeType,
 			bool isTraversable = true,
 			MovementCapability allowedCapabilities = MovementCapability.Move,
 			float moveCost = 1f,
 			float swimCost = 1f,
 			float flyCost = 1f) {
 			this._tileColor = tileColor;
-			this._biomeType = biomeType;
+			this._tileType = biomeType;
 			this._isTraversable = isTraversable;
 			this._allowedCapabilities = allowedCapabilities;
 			this._moveCostMultiplier = moveCost;
@@ -255,7 +255,7 @@ namespace Kope.Feature.PathFindingNew.Tile {
 
 		public readonly bool Equals(TileTerrainData other) {
 			return this._tileColor.Equals(other._tileColor) &&
-				   this._biomeType == other._biomeType &&
+				   this._tileType == other._tileType &&
 				   this._isTraversable == other._isTraversable &&
 				   this._allowedCapabilities == other._allowedCapabilities &&
 				   this._moveCostMultiplier == other._moveCostMultiplier &&
@@ -270,7 +270,7 @@ namespace Kope.Feature.PathFindingNew.Tile {
 		public override readonly int GetHashCode() {
 			return HashCode.Combine(
 				this._tileColor,
-				this._biomeType,
+				this._tileType,
 				this._isTraversable,
 				this._allowedCapabilities,
 				this._moveCostMultiplier,
@@ -288,7 +288,7 @@ namespace Kope.Feature.PathFindingNew.Tile {
 		}
 
 		public override readonly string ToString() {
-			return $"TileTerrainData(Biome: {this._biomeType}, Traversable: {this._isTraversable}, Allowed: {this._allowedCapabilities}, " +
+			return $"TileTerrainData(Biome: {this._tileType}, Traversable: {this._isTraversable}, Allowed: {this._allowedCapabilities}, " +
 				   $"MoveCost: {this._moveCostMultiplier}, SwimCost: {this._swimCostMultiplier}, FlyCost: {this._flyCostMultiplier})";
 		}
 

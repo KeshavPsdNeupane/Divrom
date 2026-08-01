@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Kope.Feature.PathFinding.Tile {
+namespace Kope.Feature.PathFindingOld.Tile {
 	/// <summary>
 	/// A concrete implementation of a pathfinding tile that uses MicroTerrainData 
 	/// as its terrain data type.

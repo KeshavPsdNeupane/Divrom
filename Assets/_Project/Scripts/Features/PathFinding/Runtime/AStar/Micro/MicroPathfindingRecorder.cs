@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Kope.Feature.PathFinding.Node;
+using Kope.Feature.PathFindingOld.Node;
 
 public class MicroPathfindingRecorder {
 	public struct StepSnapshot {

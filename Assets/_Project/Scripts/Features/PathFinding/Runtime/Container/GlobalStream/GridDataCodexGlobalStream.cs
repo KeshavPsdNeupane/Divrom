@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using Kope.Feature.PathFinding.Node;
+using Kope.Feature.PathFindingOld.Node;
 using Kope.EntityIdentity;
 using Project.Scripts.Features.PathFindingOld.GraphManager;
 
-namespace Kope.Feature.PathFinding.Data {
+namespace Kope.Feature.PathFindingOld.Data {
 
 	/*
      * ==============================================================================================

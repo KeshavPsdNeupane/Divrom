@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 
-namespace Kope.Feature.PathFinding.Utility {
+namespace Kope.Feature.PathFindingOld.Utility {
 	/// <summary>
 	/// A utility class that caches and manages sprites for pathfinding 
 	/// tiles based on their colors.

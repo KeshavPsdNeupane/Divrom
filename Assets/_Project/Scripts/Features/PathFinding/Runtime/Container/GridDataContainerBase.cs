@@ -1,6 +1,6 @@
 using UnityEngine;
 using Kope.Core.Collections;
-using Kope.Feature.PathFinding.Node;
+using Kope.Feature.PathFindingOld.Node;
 using System.Collections.Generic;
 using Project.Scripts.Features.PathFindingOld.GraphManager;
 
@@ -12,7 +12,7 @@ using Project.Scripts.Features.PathFindingOld.GraphManager;
 using UnityEditor;
 #endif
 
-namespace Kope.Feature.PathFinding.Data {
+namespace Kope.Feature.PathFindingOld.Data {
 	/// <summary>
 	/// Abstract non-generic ScriptableObject container for baked graph/grid data assets.
 	/// Manages Editor persistence pipelines, dirtying, and runtime cache lifecycles.

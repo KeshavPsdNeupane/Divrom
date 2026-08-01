@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 
-namespace Kope.Feature.PathFinding.Utility {
-	using Kope.Feature.PathFinding.Interface;
-	using Kope.Feature.PathFinding.Node;
+namespace Kope.Feature.PathFindingOld.Utility {
+	using Kope.Feature.PathFindingOld.Interface;
+	using Kope.Feature.PathFindingOld.Node;
 
 	public class MacroCardinalNeighbourFinder : IMacroNeighbourFinder {
 

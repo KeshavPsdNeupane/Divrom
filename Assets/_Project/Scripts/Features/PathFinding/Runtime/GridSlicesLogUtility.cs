@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Text;
-using Kope.Feature.PathFinding.Interface;
-using Kope.Feature.PathFinding.Node;
+using Kope.Feature.PathFindingOld.Interface;
+using Kope.Feature.PathFindingOld.Node;
 using UnityEngine;
 
-namespace Kope.Feature.PathFinding.Utility {
+namespace Kope.Feature.PathFindingOld.Utility {
 	public class SliceAnalysisSummarizer {
 		// Lightweight value type to aggregate stats per anchor without heap allocations
 		private struct RegionStats {

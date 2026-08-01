@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets/_Project/Scripts/Features/SaveSystem/Editor/StableSaveId/SaveTypeDatabaseEditor.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/AStarOnly/Storage/Editor/PathCheckerEditor.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AnimationCurve/Editor/CurveEditorWindow.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/Editor/PathCheckerEditor.cs" />
   </ItemGroup>

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using Kope.Feature.PathFinding.Interface;
-using Kope.Feature.PathFinding.Node;
+using Kope.Feature.PathFindingOld.Interface;
+using Kope.Feature.PathFindingOld.Node;
 using UnityEngine;
 
 public class GreedyRectanglePackingAlogorithm : IRectangleRegionSlicer {

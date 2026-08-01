@@ -410,7 +410,7 @@ MonoBehaviour:
   m_Pos:
     serializedVersion: 2
     x: 0
-    y: 93
+    y: 24
     width: 221
     height: 425
   m_SerializedDataModeController:
@@ -486,7 +486,7 @@ MonoBehaviour:
   m_Pos:
     serializedVersion: 2
     x: 0
-    y: 57
+    y: 0
     width: 1920
     height: 36
   m_SerializedDataModeController:
@@ -3622,8 +3622,8 @@ MonoBehaviour:
     m_TextWithWhitespace: "Library Populator\u200B"
   m_Pos:
     serializedVersion: 2
-    x: 1227
-    y: 306
+    x: 1
+    y: 237
     width: 251
     height: 212
   m_SerializedDataModeController:
@@ -3662,8 +3662,8 @@ MonoBehaviour:
     m_TextWithWhitespace: "Grid Auto Slicer\u200B"
   m_Pos:
     serializedVersion: 2
-    x: 1227
-    y: 93
+    x: 1
+    y: 24
     width: 251
     height: 187
   m_SerializedDataModeController:
@@ -3746,8 +3746,8 @@ MonoBehaviour:
     m_TextWithWhitespace: "Scene\u200B"
   m_Pos:
     serializedVersion: 2
-    x: 222
-    y: 93
+    x: 223
+    y: 24
     width: 1003
     height: 425
   m_SerializedDataModeController:
@@ -4807,7 +4807,7 @@ MonoBehaviour:
   m_Pos:
     serializedVersion: 2
     x: 0
-    y: 544
+    y: 475
     width: 1479
     height: 453
   m_SerializedDataModeController:
@@ -4860,16 +4860,15 @@ MonoBehaviour:
       m_rawData: 568105584918861928
     m_ExpandedIDs:
     - m_rawData: 0
-    - m_rawData: 568105584918860264
-    - m_rawData: 568105584918860266
-    - m_rawData: 568105584918860268
-    - m_rawData: 568105584918860270
-    - m_rawData: 568105584918860272
-    - m_rawData: 568105584918860274
-    - m_rawData: 568105584918860276
-    - m_rawData: 568105584918860278
-    - m_rawData: 568105584918860280
-    - m_rawData: 568105584918860510
+    - m_rawData: 568105584918860308
+    - m_rawData: 568105584918860310
+    - m_rawData: 568105584918860312
+    - m_rawData: 568105584918860314
+    - m_rawData: 568105584918860316
+    - m_rawData: 568105584918860318
+    - m_rawData: 568105584918860320
+    - m_rawData: 568105584918860322
+    - m_rawData: 568105584918860324
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -4903,15 +4902,15 @@ MonoBehaviour:
       m_rawData: 0
     m_ExpandedIDs:
     - m_rawData: 0
-    - m_rawData: 568105584918860264
-    - m_rawData: 568105584918860266
-    - m_rawData: 568105584918860268
-    - m_rawData: 568105584918860270
-    - m_rawData: 568105584918860272
-    - m_rawData: 568105584918860274
-    - m_rawData: 568105584918860276
-    - m_rawData: 568105584918860278
-    - m_rawData: 568105584918860280
+    - m_rawData: 568105584918860308
+    - m_rawData: 568105584918860310
+    - m_rawData: 568105584918860312
+    - m_rawData: 568105584918860314
+    - m_rawData: 568105584918860316
+    - m_rawData: 568105584918860318
+    - m_rawData: 568105584918860320
+    - m_rawData: 568105584918860322
+    - m_rawData: 568105584918860324
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -5040,8 +5039,8 @@ MonoBehaviour:
     m_TextWithWhitespace: "Inspector\u200B"
   m_Pos:
     serializedVersion: 2
-    x: 1480
-    y: 93
+    x: 1481
+    y: 24
     width: 439
     height: 904
   m_SerializedDataModeController:

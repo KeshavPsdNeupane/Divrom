@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using Kope.Feature.PathFinding.Interface;
-using Kope.Feature.PathFinding.Node;
-namespace Kope.Feature.PathFinding.Utility {
+using Kope.Feature.PathFindingOld.Interface;
+using Kope.Feature.PathFindingOld.Node;
+namespace Kope.Feature.PathFindingOld.Utility {
 
 	/// <summary>
 	/// =========================================================================================

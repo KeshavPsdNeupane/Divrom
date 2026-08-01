@@ -3,9 +3,9 @@ using UnityEngine;
 using Project.Scripts.Features.PathFindingOld.GraphManager;
 using Kope.Core.Collections;
 using Kope.Core.Attribute;
-using Kope.Feature.PathFinding.Node;
+using Kope.Feature.PathFindingOld.Node;
 
-namespace Kope.Feature.PathFinding.Data {
+namespace Kope.Feature.PathFindingOld.Data {
 
 	/// <summary>
 	/// ScriptableObject container that stores baked pathfinding grid data assets in a high-density, 

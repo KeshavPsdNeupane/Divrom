@@ -4,16 +4,16 @@ using System.Diagnostics;
 using Kope.Core.Attribute;
 using Kope.Core.Collections;
 using Kope.EntityIdentity;
-using Kope.Feature.PathFinding.Interface;
-using Kope.Feature.PathFinding.Tile;
-using Kope.Feature.PathFinding.Utility;
+using Kope.Feature.PathFindingOld.Interface;
+using Kope.Feature.PathFindingOld.Tile;
+using Kope.Feature.PathFindingOld.Utility;
 using Project.Scripts.Features.PathFindingOld.GraphManager;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using ZLinq;
 using Debug = UnityEngine.Debug;
-using Kope.Feature.PathFinding.Node;
-using Kope.Feature.PathFinding.Data;
+using Kope.Feature.PathFindingOld.Node;
+using Kope.Feature.PathFindingOld.Data;
 
 
 
@@ -21,7 +21,7 @@ using Kope.Feature.PathFinding.Data;
 using UnityEditor;
 #endif
 
-namespace Kope.Feature.PathFinding {
+namespace Kope.Feature.PathFindingOld {
 
 	#region Enums & Error Configuration Types
 

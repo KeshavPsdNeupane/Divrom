@@ -1,6 +1,6 @@
 using System;
 using System.Runtime.CompilerServices;
-using Kope.Feature.PathFinding.Node;
+using Kope.Feature.PathFindingOld.Node;
 using ThirdParty.PriorityQueeu;
 
 public readonly struct MacroPathFindingNode : IHasCost<int>, IEquatable<MacroPathFindingNode> {

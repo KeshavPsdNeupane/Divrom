@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 #if UNITY_EDITOR
-namespace Kope.Feature.PathFinding.Editor {
+namespace Kope.Feature.PathFindingOld.Editor {
 	[CustomEditor(typeof(PathFindingTileBaker))]
 	public class PathCheckerEditor : UnityEditor.Editor {
 		public override void OnInspectorGUI() {

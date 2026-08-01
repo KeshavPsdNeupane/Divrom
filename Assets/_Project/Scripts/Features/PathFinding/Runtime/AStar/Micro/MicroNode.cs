@@ -1,9 +1,9 @@
 using System;
 using System.Runtime.CompilerServices;
-using Kope.Feature.PathFinding.Node;
+using Kope.Feature.PathFindingOld.Node;
 using ThirdParty.PriorityQueeu;
 
-namespace Kope.Feature.PathFinding {
+namespace Kope.Feature.PathFindingOld {
 	/// <summary>
 	/// Represents a evaluated pathfinding node wrapper inside the Open/Closed sets.
 	/// </summary>

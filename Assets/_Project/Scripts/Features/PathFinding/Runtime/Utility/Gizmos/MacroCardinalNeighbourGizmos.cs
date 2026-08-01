@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using Project.Scripts.Features.PathFindingOld.GraphManager;
-using Kope.Feature.PathFinding.Node;
+using Kope.Feature.PathFindingOld.Node;
 
 
 
@@ -10,7 +10,7 @@ using Kope.Feature.PathFinding.Node;
 using UnityEditor;
 #endif
 
-namespace Kope.Feature.PathFinding.Utility {
+namespace Kope.Feature.PathFindingOld.Utility {
 
 	public static class MacroCardinalNeighbourGizmos {
 

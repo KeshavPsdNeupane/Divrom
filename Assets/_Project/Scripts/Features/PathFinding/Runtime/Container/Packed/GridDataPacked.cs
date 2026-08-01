@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using Kope.EntityIdentity;
-using Kope.Feature.PathFinding.Node;
+using Kope.Feature.PathFindingOld.Node;
 using UnityEngine;
 
-namespace Kope.Feature.PathFinding.Data {
+namespace Kope.Feature.PathFindingOld.Data {
 
 	/*
      * ==============================================================================================

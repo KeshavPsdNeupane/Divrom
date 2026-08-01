@@ -1,24 +1,26 @@
+using Kope.Core.Attribute;
 using Kope.EntityIdentity;
 using Kope.Feature.PathFindingNew.Tile;
 using UnityEngine;
-public struct TileStorageData {
-	[SerializeField] private long[] _pPos;
-	[SerializeField] private byte[] _isTraversable;
-	[SerializeField] private BiomeType[] _biomeType;
-	[SerializeField] private MovementCapability[] _allowedCapabilities;
-	[SerializeField] private int[] _qCostMul;
-	public TileStorageData(long[] pPos, byte[] isTraversable,
-	BiomeType[] biomeType, MovementCapability[] allowedCapabilities, int[] qCostMul) {
+[System.Serializable]
+public struct GridStorageData {
+	[SerializeField, ReadOnly] private long[] _pPos;
+	[SerializeField, ReadOnly] private byte[] _iT;
+	[SerializeField, ReadOnly] private TileType[] _tt;
+	[SerializeField, ReadOnly] private MovementCapability[] _ac;
+	[SerializeField, ReadOnly] private int[] _qC;
+	public GridStorageData(long[] pPos, byte[] isTraversable,
+	TileType[] biomeType, MovementCapability[] allowedCapabilities, int[] qCostMul) {
 		this._pPos = pPos;
-		this._isTraversable = isTraversable;
-		this._biomeType = biomeType;
-		this._allowedCapabilities = allowedCapabilities;
-		this._qCostMul = qCostMul;
+		this._iT = isTraversable;
+		this._tt = biomeType;
+		this._ac = allowedCapabilities;
+		this._qC = qCostMul;
 	}
 
 	public readonly long[] PackedPosition => this._pPos;
-	public readonly byte[] IsTraversable => this._isTraversable;
-	public readonly BiomeType[] BiomeType => this._biomeType;
-	public readonly MovementCapability[] AllowedCapabilities => this._allowedCapabilities;
-	public readonly int[] QCostMultiplier => this._qCostMul;
+	public readonly byte[] IsTraversable => this._iT;
+	public readonly TileType[] TileType => this._tt;
+	public readonly MovementCapability[] AllowedCapabilities => this._ac;
+	public readonly int[] QCostMultiplier => this._qC;
 }

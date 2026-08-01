@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
-using Kope.Feature.PathFinding.Node;
+using Kope.Feature.PathFindingOld.Node;
+using Kope.Feature.PathFindingOld.PathFinding;
 using UnityEngine;
 
 /// <summary>

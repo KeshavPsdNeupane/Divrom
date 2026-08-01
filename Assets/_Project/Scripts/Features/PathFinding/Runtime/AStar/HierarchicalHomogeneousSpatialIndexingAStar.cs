@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using Kope.EntityIdentity;
-using Kope.Feature.PathFinding.Algorithms;
-using Kope.Feature.PathFinding.Node;
+using Kope.Feature.PathFindingOld.Algorithms;
+using Kope.Feature.PathFindingOld.Node;
+using Kope.Feature.PathFindingOld.PathFinding;
 using Project.Scripts.Features.PathFindingOld.GraphManager;
 using UnityEngine;
 

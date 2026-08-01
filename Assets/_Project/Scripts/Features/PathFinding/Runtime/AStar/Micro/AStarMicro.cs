@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
 using Kope.EntityIdentity;
-using Kope.Feature.PathFinding.Node;
+using Kope.Feature.PathFindingOld.Node;
+using Kope.Feature.PathFindingOld.PathFinding;
 using Project.Scripts.Features.PathFindingOld.GraphManager;
 using ThirdParty.PriorityQueeu;
 using UnityEngine;
 
-namespace Kope.Feature.PathFinding.Algorithms {
+namespace Kope.Feature.PathFindingOld.Algorithms {
 
 	public class AStarMicro {
 

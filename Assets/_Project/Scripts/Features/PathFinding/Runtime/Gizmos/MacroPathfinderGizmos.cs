@@ -1,5 +1,6 @@
 using System.Collections.Generic;
-using Kope.Feature.PathFinding.Node;
+using Kope.Feature.PathFindingOld;
+using Kope.Feature.PathFindingOld.Node;
 using UnityEngine;
 /// <summary>
 /// Shared playback mode for both <see cref="MacroPathfinderGizmos"/> and

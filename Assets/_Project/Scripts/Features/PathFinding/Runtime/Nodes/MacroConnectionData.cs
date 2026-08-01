@@ -1,7 +1,7 @@
 using System;
 using Kope.Core.Attribute;
 using Kope.EntityIdentity;
-using Kope.Feature.PathFinding.Node;
+using Kope.Feature.PathFindingOld.Node;
 using UnityEngine;
 
 namespace Project.Scripts.Features.PathFindingOld.GraphManager {

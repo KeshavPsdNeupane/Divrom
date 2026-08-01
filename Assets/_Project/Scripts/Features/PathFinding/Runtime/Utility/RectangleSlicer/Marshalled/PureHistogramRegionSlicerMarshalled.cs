@@ -4,10 +4,10 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Jobs;
 using Unity.Mathematics;
-using Kope.Feature.PathFinding.Interface;
-using Kope.Feature.PathFinding.Node;
+using Kope.Feature.PathFindingOld.Interface;
+using Kope.Feature.PathFindingOld.Node;
 
-namespace Kope.Feature.PathFinding.Utility {
+namespace Kope.Feature.PathFindingOld.Utility {
 
 	/// <summary>
 	/// Blittable output record shared by every Burst-job slicer in this family (currently

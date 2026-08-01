@@ -1,14 +1,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using Kope.Feature.PathFinding.Node;
+using Kope.Feature.PathFindingOld.Node;
 
 
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
-namespace Kope.Feature.PathFinding.Utility {
+namespace Kope.Feature.PathFindingOld.Utility {
 
 	/// <summary>
 	/// Utility class for rendering macro region bounding box outlines and anchor points in the Scene view.

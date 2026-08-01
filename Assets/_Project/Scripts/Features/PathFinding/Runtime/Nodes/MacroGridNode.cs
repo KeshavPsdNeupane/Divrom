@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 using Kope.EntityIdentity;
 using UnityEngine;
 
-namespace Kope.Feature.PathFinding.Node {
+namespace Kope.Feature.PathFindingOld.Node {
 
 	/// <summary>
 	/// Represents a coarse-grained, high-level (Tier-1) region node in the pathfinding grid graph.

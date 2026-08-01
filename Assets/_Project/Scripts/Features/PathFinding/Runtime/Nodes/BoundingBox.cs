@@ -17,7 +17,7 @@ using UnityEngine;
  *    and fully blittable—preventing memory write-backs during hot pathfinding loops.
  */
 
-namespace Kope.Feature.PathFinding.Node {
+namespace Kope.Feature.PathFindingOld.Node {
 
 	/// <summary>
 	/// Represents an axis-aligned 2D bounding box defined by minimum and maximum grid points.

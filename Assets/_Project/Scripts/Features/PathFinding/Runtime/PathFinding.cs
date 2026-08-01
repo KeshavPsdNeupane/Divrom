@@ -1,16 +1,19 @@
+
 using System;
 using System.Collections.Generic;
 using System.Text;
 using Kope.Core.Attribute;
 using Kope.EntityIdentity;
-using Kope.Feature.PathFinding.Algorithms;
-using Kope.Feature.PathFinding.Data;
-using Kope.Feature.PathFinding.Node;
+using Kope.Feature.PathFindingOld.Algorithms;
+using Kope.Feature.PathFindingOld.Data;
+using Kope.Feature.PathFindingOld.Node;
+using Kope.Feature.PathFindingOld.PathFinding;
 using Project.Scripts.Features.PathFindingOld.Algorithms;
 using Project.Scripts.Features.PathFindingOld.GraphManager;
 using UnityEngine;
 using UnityEngine.Serialization;
 using ZLinq;
+
 
 /// <summary>
 /// Handles Inspector-driven pathfinding requests, benchmarking, and gizmo visualization.

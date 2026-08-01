@@ -1,10 +1,10 @@
 
-namespace Kope.Feature.PathFinding.Utility {
+namespace Kope.Feature.PathFindingOld.Utility {
 	using System.Collections.Generic;
 	using UnityEngine;
 	using System;
-	using Kope.Feature.PathFinding.Interface;
-	using Kope.Feature.PathFinding.Node;
+	using Kope.Feature.PathFindingOld.Interface;
+	using Kope.Feature.PathFindingOld.Node;
 
 	[Obsolete("Deprecated: Diagonal neighbor detection on 2D tile grids is impractical" +
 	" to implement and maintain—corner overlaps share a single zero-length vertex" +

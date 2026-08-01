@@ -18,7 +18,7 @@ using UnityEngine;
  *    stateful memory writes, introducing branch mispredictions and store stalls in hot loops.
  */
 
-namespace Kope.Feature.PathFinding.Node {
+namespace Kope.Feature.PathFindingOld.Node {
 	/// <summary>
 	/// Represents an immutable 2D integer coordinate in the pathfinding grid.
 	/// </summary>

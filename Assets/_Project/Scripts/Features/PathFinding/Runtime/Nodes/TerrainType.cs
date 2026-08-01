@@ -1,4 +1,4 @@
-namespace Kope.Feature.PathFinding {
+namespace Kope.Feature.PathFindingOld {
 
 	/// <summary>
 	/// Defines the terrain characteristics and traversal cost categories for a pathfinding region.

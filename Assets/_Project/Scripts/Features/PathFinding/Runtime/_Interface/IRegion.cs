@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using Kope.Core.Collections;
-using Kope.Feature.PathFinding.Node;
-using Kope.Feature.PathFinding.Tile;
-namespace Kope.Feature.PathFinding.Interface {
+using Kope.Feature.PathFindingOld.Node;
+using Kope.Feature.PathFindingOld.Tile;
+namespace Kope.Feature.PathFindingOld.Interface {
 
 	public interface IRegionExtractor {
 		Dictionary<Vec2Int, List<Vec2Int>> Extract(

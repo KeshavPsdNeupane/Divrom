@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Kope.Feature.PathFinding.Interface {
+namespace Kope.Feature.PathFindingOld.Interface {
 	/// <summary>
 	/// Defines the interface for terrain data used in pathfinding tiles. Implementing this
 	///  interface allows for the creation of custom terrain types with specific properties,
