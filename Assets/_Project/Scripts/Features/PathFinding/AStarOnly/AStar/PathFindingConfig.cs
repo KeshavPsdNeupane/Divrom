@@ -4,12 +4,16 @@ using Kope.Feature.PathFindingNew.Utility;
 using UnityEngine;
 
 namespace Kope.Feature.PathFindingNew.PathFinding {
+	public enum AStarType {
+		Standard,
+		Bidirectional
+	}
 	public enum CostCalculationType {
 		Manhattan,
 		Euclidean,
 		Octile
 	}
-	public enum PathFindingResultType {
+	public enum PathFindingStatus {
 		Success = 0,
 		NoPathFound = 1,
 		InvalidStartOrEnd = 2,
@@ -76,18 +80,18 @@ namespace Kope.Feature.PathFindingNew.PathFinding {
 	}
 
 	public class PathFindingResult {
-		public PathFindingResultType pathFindingResultType;
+		public PathFindingStatus Status;
 		public List<Vec2Int> Path;
 		public int TotalNodes;
 		public int TotalNodeEvaluations;
 		public int TotalNodeExpansions;
 		public CostCalculationType CostCalculationType;
 		public float Greediness;
-		public PathFindingResult(PathFindingResultType resultType,
+		public PathFindingResult(PathFindingStatus resultType,
 		List<Vec2Int> path, int totalNodes, int totalNodeEvaluations,
 		int totalNodeExpansions, CostCalculationType costCalculationType,
 		 float greediness) {
-			pathFindingResultType = resultType;
+			Status = resultType;
 			Path = path;
 			TotalNodes = totalNodes;
 			TotalNodeEvaluations = totalNodeEvaluations;

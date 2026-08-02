@@ -1,4 +1,3 @@
-using Kope.EntityIdentity;
 using UnityEngine;
 
 namespace Kope.Feature.PathFindingNew.Utility {
@@ -55,7 +54,7 @@ namespace Kope.Feature.PathFindingNew.Utility {
 		/// <param name="borderColor">Color of the wireframe border.</param>
 		public static void DrawFlatRect(Vec2Int cell, float zOffset, Color fillColor, Color borderColor) {
 			Vector3 center = LayeredCenter(cell, zOffset);
-			Vector3 size = new Vector3(CellSize * FillRatio, CellSize * FillRatio, SlabThickness);
+			Vector3 size = new(CellSize * FillRatio, CellSize * FillRatio, SlabThickness);
 
 			Gizmos.color = fillColor;
 			Gizmos.DrawCube(center, size);

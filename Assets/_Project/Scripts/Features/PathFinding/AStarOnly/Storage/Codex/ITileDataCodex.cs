@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Kope.EntityIdentity;
 using Kope.Feature.PathFindingNew.Tile;
 using Kope.Feature.PathFindingNew.Utility;
 

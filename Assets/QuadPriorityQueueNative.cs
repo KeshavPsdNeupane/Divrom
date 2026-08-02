@@ -365,7 +365,7 @@ namespace ThirdParty.PriorityQueeu {
 		private void EnsureNodeCapacity() {
 			if (this._size == this._nodes.Length) {
 				int newCap = Math.Max(4, this._nodes.Length * 2);
-				NativeArray<Node> newNodes = new NativeArray<Node>(newCap, this._allocator, NativeArrayOptions.UninitializedMemory);
+				NativeArray<Node> newNodes = new(newCap, this._allocator, NativeArrayOptions.UninitializedMemory);
 				NativeArray<Node>.Copy(this._nodes, newNodes, this._size);
 				this._nodes.Dispose();
 				this._nodes = newNodes;

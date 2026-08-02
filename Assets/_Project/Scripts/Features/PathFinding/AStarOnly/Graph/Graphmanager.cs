@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Kope.EntityIdentity;
 using Kope.Feature.PathFindingNew.Utility;
 using UnityEngine;
 
@@ -67,8 +68,6 @@ namespace Kope.Feature.PathFindingNew.Graph {
 
 		private const int INITIAL_CAPACITY = 512;
 		private readonly Dictionary<Vec2Int, GridNode> nodes;
-
-
 		public int TotalNodeCount => nodes.Count;
 
 		public Graphmanager() {
@@ -126,7 +125,8 @@ namespace Kope.Feature.PathFindingNew.Graph {
 		/// </param>
 		/// <returns>A zero-allocation <see cref="ReadOnlySpan{GridNode}"/> view representing the valid subset of filtered neighbors.</returns>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public ReadOnlySpan<GridNode> TryGetNeighbors(Vec2Int position, GridNode[] fetchBuffer, Span<GridNode> neighborsBuffer, out byte diagonalMask) {
+		public ReadOnlySpan<GridNode> TryGetNeighbors(Vec2Int position, GridNode[] fetchBuffer,
+		 Span<GridNode> neighborsBuffer, out byte diagonalMask) {
 			// NOTE: no longer clearing fetchBuffer here. The second pass below only ever reads
 			// fetchBuffer[i] when walkableMask's bit i is set, and walkableMask is a fresh local
 			// that only gets bits set for slots actually written in the first pass this call —
@@ -183,7 +183,6 @@ namespace Kope.Feature.PathFindingNew.Graph {
 
 				neighborsBuffer[count++] = fetchBuffer[i];
 			}
-
 			return neighborsBuffer[..count];
 		}
 
@@ -192,7 +191,7 @@ namespace Kope.Feature.PathFindingNew.Graph {
 		/// use by the benchmark suite (<c>PathFindingNewDebugger.RunBenchmarkSuite</c>). Both ends
 		/// of a pair are drawn independently, so a pair may occasionally land on the same node or
 		/// on two disconnected nodes — the benchmark's warmup call already treats
-		/// <see cref="Kope.Feature.PathFindingNew.PathFinding.PathFindingResultType.InvalidStartOrEnd"/> as a skip, and a
+		/// <see cref="Kope.Feature.PathFindingNew.PathFinding.PathFindingStatus.InvalidStartOrEnd"/> as a skip, and a
 		/// same-node or no-path pair is still a valid (if trivial/zero-length) timing sample, so
 		/// no extra filtering is done here.
 		/// </summary>
@@ -212,6 +211,9 @@ namespace Kope.Feature.PathFindingNew.Graph {
 			}
 
 			return pairs;
+		}
+		public bool IsWalkable(Vec2Int position, MovementCapability movementCapability) {
+			return nodes.TryGetValue(position, out GridNode node) && node.IsTraversable(movementCapability);
 		}
 	}
 }

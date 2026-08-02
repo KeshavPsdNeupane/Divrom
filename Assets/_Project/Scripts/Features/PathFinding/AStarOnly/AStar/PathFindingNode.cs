@@ -1,4 +1,3 @@
-using System;
 using System.Runtime.CompilerServices;
 using Kope.Feature.PathFindingNew.Utility;
 using ThirdParty.PriorityQueeu;
@@ -26,7 +25,7 @@ namespace Kope.Feature.PathFindingNew.PathFinding {
 		/// <summary>
 		/// Default sentinel coordinate representing an unassigned or root parent position (-1, -1).
 		/// </summary>
-		public static readonly Vec2Int StartPosition = new(-1, -1);
+		public static readonly Vec2Int NoParent = new(-1, -1);
 
 		/// <summary>
 		/// The coordinate of this node within the grid topology.
@@ -80,7 +79,7 @@ namespace Kope.Feature.PathFindingNew.PathFinding {
 			this.Position = position;
 			this.GCost = gCost;
 			this.HCost = hCost;
-			this.ParentPosition = parentPosition == default ? StartPosition : parentPosition;
+			this.ParentPosition = parentPosition == default ? NoParent : parentPosition;
 		}
 		#region IEquatable Implementation
 

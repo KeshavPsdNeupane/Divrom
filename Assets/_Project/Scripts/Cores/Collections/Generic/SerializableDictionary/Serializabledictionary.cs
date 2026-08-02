@@ -109,7 +109,7 @@ namespace Kope.Core.Collections {
 				Debug.LogWarning("The dictionary is empty. No entries to print.");
 				return;
 			}
-			StringBuilder sb = new StringBuilder();
+			StringBuilder sb = new();
 			sb.AppendLine($"Printing first {n} entries of SerializableDictionary<{typeof(TKey).Name}, {typeof(TValue).Name}> ({label}):");
 			foreach (var kvp in this._dict) {
 				sb.AppendLine($"Key: {kvp.Key}, Value: {kvp.Value}");

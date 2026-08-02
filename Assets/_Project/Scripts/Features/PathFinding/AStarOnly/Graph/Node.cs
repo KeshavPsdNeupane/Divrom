@@ -3,7 +3,6 @@ using Kope.EntityIdentity;
 using Kope.Feature.PathFindingNew.Tile;
 using Kope.Feature.PathFindingNew.Utility;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 /// <summary>
 /// Immutable, lightweight representation of a single tile node in the pathfinding grid.
@@ -55,6 +54,7 @@ public readonly struct GridNode : System.IEquatable<GridNode> {
 	/// </summary>
 	/// <param name="validModes">Bitmask of movement modes supported by the querying agent.</param>
 	/// <returns><c>true</c> if the node is walkable and shares at least one compatible mode; otherwise, <c>false</c>.</returns>
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public bool IsTraversable(MovementCapability validModes) =>
 		this.isTraversable && (validModes & this.movementType) != MovementCapability.None;
 
@@ -63,6 +63,7 @@ public readonly struct GridNode : System.IEquatable<GridNode> {
 	/// </summary>
 	/// <param name="validModes">Bitmask of movement modes supported by the querying agent.</param>
 	/// <returns>The cheapest valid cost multiplier, or <c>-1f</c> if no compatible mode exists.</returns>
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public float GetCostMultiplier(MovementCapability validModes) {
 		// Previously this recomputed `validModes & movementType` inside each of the three branches
 		// on top of an already-redundant `(validModes & X) != 0` guard (that guard is implied by

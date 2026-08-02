@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Kope.EntityIdentity;
 using Kope.Feature.PathFindingNew.Graph;
+using Kope.Feature.PathFindingNew.Interface;
 using Kope.Feature.PathFindingNew.PathFinding;
 using Kope.Feature.PathFindingNew.Storage;
 using Kope.Feature.PathFindingNew.Utility;
@@ -20,7 +21,13 @@ public class PathFindingNewDebugger : MonoBehaviour {
 	[Header("Graph Data")]
 	[SerializeField] private GridDataStorageBase graphDataStorage;
 
+
 	[Header("Request Settings")]
+	[Kope.Core.Attribute.Message("Algorithm Configuration Guide based on empirical testing:\n" +
+	"- Standard A*: Use Octile heuristic with a greediness factor around 1.3 for optimal performance and clean grid paths.\n" +
+	"- Bidirectional A*: Use Euclidean heuristic with a greediness factor of 1.4 for the best search expansion balance.")]
+	[SerializeField] private AStarType astarType = AStarType.Standard;
+
 	[SerializeField] private CostCalculationType costCalculationType = CostCalculationType.Octile;
 	[SerializeField, Range(PathFindingConfig.DEFAULT_GREEDINESS, PathFindingConfig.MAX_GREEDINESS)]
 	private float greediness = PathFindingConfig.DEFAULT_GREEDINESS;
@@ -60,6 +67,11 @@ public class PathFindingNewDebugger : MonoBehaviour {
 	[SerializeField] private Color finalPathColor = Color.blue;
 	[SerializeField] private bool showStepLabel = true;
 
+	[Header("Run N number of time")]
+	[SerializeField, Min(1), Tooltip("How many times to run the pathfinder per configuration to calculate the average time/ticks.")]
+	private int runCount = 10;
+
+
 	[Header("Benchmark Settings")]
 	[SerializeField, Range(0.1f, 0.5f), Tooltip("How much to increment the greediness factor (w) per benchmark step.")]
 	private float benchmarkStep = 0.1f;
@@ -76,7 +88,7 @@ public class PathFindingNewDebugger : MonoBehaviour {
 	// The one real pathfinding entry point. The gizmo overlay never sees this — it only ever gets
 	// handed a Recorder to fill and a result Path to draw.
 	private Graphmanager _graphManager;
-	private AStar _pathfinder;
+	private IPathFinder _pathfinder;
 
 	private void Awake() {
 		EnsurePathfinder();
@@ -102,7 +114,14 @@ public class PathFindingNewDebugger : MonoBehaviour {
 			PathFindingConfig.MAX_NODE_SEARCH_RATIO
 		);
 
-		this._pathfinder = new AStar(this._graphManager, config);
+		switch (this.astarType) {
+			case AStarType.Standard:
+				this._pathfinder = new AStar(this._graphManager, config);
+				break;
+			case AStarType.Bidirectional:
+				this._pathfinder = new BidirectionalAStar(this._graphManager, config);
+				break;
+		}
 	}
 
 	#region Context Menu Actions
@@ -145,8 +164,7 @@ public class PathFindingNewDebugger : MonoBehaviour {
 		);
 		stopwatch.Stop();
 
-		// Decoupled from the recorder on purpose: FinalPath is set straight from the result, so
-		// FinalPathOnly (and the end-of-animation reveal) works even with recording off.
+
 		PathGizmos.FinalPath = result.Path;
 
 		StringBuilder resultLogBuilder = new();
@@ -167,6 +185,101 @@ public class PathFindingNewDebugger : MonoBehaviour {
 		UnityEditor.SceneView.RepaintAll();
 #endif
 	}
+
+	[ContextMenu("Run Pathfinding N Times")]
+	public void RunPathfindingNtimes() {
+		EnsurePathfinder();
+		if (this._pathfinder == null) return;
+		if (this.startTransform == null || this.endTransform == null) {
+			Debug.LogWarning("Start/End transform not assigned. Cannot run Pathfinding.");
+			return;
+		}
+
+		var startVec = new Vec2Int(this.startTransform.position);
+		var endVec = new Vec2Int(this.endTransform.position);
+
+		if (this.runCount <= 0) {
+			Debug.LogWarning("Run count must be greater than 0.");
+			return;
+		}
+
+		// Warmup run to ensure JIT compilation and cache warming before timing the actual runs.
+		_ = this._pathfinder.FindPath(
+					startVec,
+					endVec,
+					this.capability,
+					this.enableRecording ? PathGizmos.Recorder : null
+				);
+
+		long totalTicks = 0;
+		long totalMilliseconds = 0;
+
+		// Track individual run metrics for detailed logging
+		long[] runTicks = new long[this.runCount];
+		long[] runMilliseconds = new long[this.runCount];
+
+		PathFindingResult finalResult = default;
+
+		System.Diagnostics.Stopwatch stopwatch = new();
+
+		for (int i = 0; i < this.runCount; i++) {
+			stopwatch.Restart();
+			finalResult = this._pathfinder.FindPath(
+			   startVec,
+			   endVec,
+			   this.capability,
+			   this.enableRecording ? PathGizmos.Recorder : null
+		   );
+			stopwatch.Stop();
+
+			long ticks = stopwatch.ElapsedTicks;
+			long ms = stopwatch.ElapsedMilliseconds;
+
+			runTicks[i] = ticks;
+			runMilliseconds[i] = ms;
+
+			totalTicks += ticks;
+			totalMilliseconds += ms;
+		}
+
+		// Calculate Mean (Average)
+		double avgTicks = (double)totalTicks / this.runCount;
+		double avgMs = (double)totalMilliseconds / this.runCount;
+
+		// Calculate Median
+		Array.Sort(runTicks);
+		Array.Sort(runMilliseconds);
+
+		double medianTicks;
+		double medianMs;
+		int mid = this.runCount / 2;
+		if (this.runCount % 2 == 0) {
+			medianTicks = (runTicks[mid - 1] + runTicks[mid]) / 2.0;
+			medianMs = (runMilliseconds[mid - 1] + runMilliseconds[mid]) / 2.0;
+		} else {
+			medianTicks = runTicks[mid];
+			medianMs = runMilliseconds[mid];
+		}
+
+		StringBuilder resultLogBuilder = new();
+		resultLogBuilder.AppendLine("<b><color=#00FFFF>=== PATHFINDING N-TIMES BENCHMARK RESULT ===</color></b>");
+		resultLogBuilder.AppendLine(DescribePointRelationship(startVec, endVec));
+		resultLogBuilder.AppendLine($"<b>Settings:</b> Cost: {this.costCalculationType} | Greediness: {this.greediness} | Runs: {this.runCount}");
+		resultLogBuilder.AppendLine($"<b>Mean (Average):</b> {avgMs:F2}ms / {avgTicks:F1} ticks per run");
+		resultLogBuilder.AppendLine($"<b>Median:</b> {medianMs:F2}ms / {medianTicks:F1} ticks per run (Total: {totalMilliseconds}ms / {totalTicks} ticks)");
+
+		// Append full path details only once using the existing helper method
+		AppendResultLog(resultLogBuilder, finalResult, startVec.ToString(), endVec.ToString());
+
+		resultLogBuilder.AppendLine("<b>--- Individual Run Breakdown ---</b>");
+		for (int i = 0; i < this.runCount; i++) {
+			resultLogBuilder.AppendLine($"Run {i + 1}: {runMilliseconds[i]}ms / {runTicks[i]} ticks");
+		}
+		resultLogBuilder.AppendLine("------------------------------------------------------------------------------------------------------------------");
+
+		Debug.Log(resultLogBuilder.ToString());
+	}
+
 
 	[ContextMenu("Play Recorded Animation (No Rerun)")]
 	public void PlayRecordedAnimation() {
@@ -253,7 +366,7 @@ public class PathFindingNewDebugger : MonoBehaviour {
 					// WARMUP RUN — JIT + cache warm, recorder off for max speed. Also doubles as
 					// the validity check (AStar has no separate PreCheck like the old AStarMacro).
 					var warmup = benchFinder.FindPath(startVec, endVec, this.capability, null);
-					if (warmup.pathFindingResultType == PathFindingResultType.InvalidStartOrEnd) {
+					if (warmup.Status == PathFindingStatus.InvalidStartOrEnd) {
 						sb.AppendLine($"{currentGreediness,-10:F2} | Invalid start/end for {startVec} -> {endVec} — skipped.");
 						continue;
 					}
@@ -353,7 +466,7 @@ public class PathFindingNewDebugger : MonoBehaviour {
 	private static void AppendResultLog(StringBuilder sb, PathFindingResult result, string startPos, string endPos) {
 		int pathCount = result.Path?.Count ?? 0;
 
-		sb.AppendLine($"Result Status: {result.pathFindingResultType}");
+		sb.AppendLine($"Result Status: {result.Status}");
 		sb.AppendLine($"Total Nodes: {result.TotalNodes}, Total Expansions: {result.TotalNodeExpansions}, Total Node Evaluations: {result.TotalNodeEvaluations}, Path length: {pathCount} nodes.");
 		sb.AppendLine($"Start: {startPos}, End: {endPos}");
 

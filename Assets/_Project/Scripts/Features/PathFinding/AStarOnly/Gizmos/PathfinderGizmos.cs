@@ -1,8 +1,15 @@
 using System.Collections.Generic;
-using Kope.EntityIdentity;
 using Kope.Feature.PathFindingNew.PathFinding;
 using Kope.Feature.PathFindingNew.Utility;
 using UnityEngine;
+
+
+public enum PathfindingVisualizationMode {
+	AnimatedStepByStep,
+	ManualScrub,
+	FinalPathOnly
+}
+
 
 /// <summary>
 /// Gizmo overlay for the single-tier <see cref="AStar"/> search (Kope.Feature.PathFindingNew).

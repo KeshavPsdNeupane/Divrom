@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Kope.EntityIdentity;
 using Kope.Feature.PathFindingNew.Graph;
+using Kope.Feature.PathFindingNew.Interface;
 using Kope.Feature.PathFindingNew.Utility;
 using ThirdParty.PriorityQueeu;
 using UnityEngine;
@@ -16,7 +17,7 @@ namespace Kope.Feature.PathFindingNew.PathFinding {
 	/// via <see cref="Graphmanager"/> to eliminate Garbage Collection overhead during search loops.
 	/// </para>
 	/// </summary>
-	public class AStar {
+	public class AStar : IPathFinder {
 
 		// NOTE: this table is exclusively for estimating H-cost (distance-to-goal). It must never be
 		// used to price an actual G-cost edge step — see the rationale comment in the neighbor loop
@@ -34,7 +35,15 @@ namespace Kope.Feature.PathFindingNew.PathFinding {
 		private PathFindingConfig _config;
 		private int _maxIterations;
 
+		// Node-record storage: a single position-keyed dictionary holding every record created
+		// this search. This is the non-index variant — PathFindingNode stores its parent as a
+		// Vec2Int (ParentPosition) rather than a slot index, so both "does a record already exist
+		// for this grid cell" (neighbor revisit checks) and "find my parent record" (path
+		// reconstruction) go through the same Vec2Int-hashed lookup. Simpler than an indexed
+		// variant, at the cost of one dictionary lookup per backtrace step in ReconstructPath
+		// instead of plain array indexing.
 		private readonly Dictionary<Vec2Int, PathFindingNode> _nodeRecords;
+
 		private readonly QuadPriorityQueue<PathFindingNode, int> _openSet;
 		private readonly HashSet<Vec2Int> _closedSet;
 
@@ -81,7 +90,7 @@ namespace Kope.Feature.PathFindingNew.PathFinding {
 		/// </summary>
 		/// <param name="start">Starting grid coordinate.</param>
 		/// <param name="end">Destination target grid coordinate.</param>
-		/// <param name="path">Receives the reconstructed sequence of grid coordinates if a path is found.</param>
+		/// <param name="movementCapability">Movement modes supported by the querying agent.</param>
 		/// <param name="recorder">Optional editor recorder for step-by-step pathfinding visualization.</param>
 		/// <returns>A <see cref="PathFindingResult"/> containing status metadata and execution metrics.</returns>
 		public PathFindingResult FindPath(
@@ -91,7 +100,7 @@ namespace Kope.Feature.PathFindingNew.PathFinding {
 			PathfindingRecorder recorder = null) {
 
 			if (!this._graphManager.TryGetNode(start, out _) || !this._graphManager.TryGetNode(end, out _)) {
-				return CreateErrorResult(PathFindingResultType.InvalidStartOrEnd, EmptyPath);
+				return CreateErrorResult(PathFindingStatus.InvalidStartOrEnd, EmptyPath);
 			}
 
 			// Reset query state
@@ -118,7 +127,7 @@ namespace Kope.Feature.PathFindingNew.PathFinding {
 				? Mathf.FloorToInt(rawInitialH * greediness)
 				: rawInitialH;
 
-			PathFindingNode startNode = new(start.X, start.Y, 0, weightedInitialH, PathFindingNode.StartPosition);
+			PathFindingNode startNode = new(start.X, start.Y, 0, weightedInitialH, PathFindingNode.NoParent);
 
 			this._nodeRecords[start] = startNode;
 			this._openSet.EnqueueOrUpdate(startNode, startNode.FCost);
@@ -153,8 +162,8 @@ namespace Kope.Feature.PathFindingNew.PathFinding {
 				// Destination Reached
 				if (currentRecord.Position == end) {
 					return new PathFindingResult(
-						PathFindingResultType.Success,
-						ReconstructPath(currentRecord),
+						PathFindingStatus.Success,
+						ReconstructPath(currentRecord, movementCapability),
 						this._graphManager.TotalNodeCount,
 						totalEvaluations,
 						TotalNodeSearched,
@@ -177,9 +186,6 @@ namespace Kope.Feature.PathFindingNew.PathFinding {
 				);
 
 				for (int i = 0; i < neighbors.Length; i++) {
-					// ref readonly avoids copying the GridNode struct (7 fields) on every edge —
-					// previously `neighbors[i]` was indexed twice (once into neighborNode, once
-					// again for .Position), each a separate struct copy off the span.
 					ref readonly GridNode neighborNode = ref neighbors[i];
 					Vec2Int neighborPos = neighborNode.Position;
 
@@ -187,38 +193,26 @@ namespace Kope.Feature.PathFindingNew.PathFinding {
 						continue;
 					}
 
-					// Fused traversability + cost-multiplier lookup: replaces the old
-					// IsTraversable(...) + GetCostMultiplier(...) pair, which each recomputed a
-					// validModes & movementType-style intersection independently.
 					if (!neighborNode.TryGetTraversalCost(movementCapability, out float costMultiplier)) {
 						continue;
 					}
 
-					// G-COST FIX: step cost between two adjacent grid cells must reflect actual
-					// move geometry (cardinal vs. diagonal), not the heuristic distance metric the
-					// user picked for goal estimation. The previous code called `heuristicFunc`
-					// (Manhattan/Euclidean/Octile — whichever CostCalculationType was configured)
-					// to price this edge too, which meant the real traversal cost silently changed
-					// with the heuristic setting. E.g. with Manhattan selected, a diagonal step
-					// priced out to round(2 * mult) * 10 = 20 instead of the correct
-					// GridNode.DIAGONAL_COST of 14 — diagonal movement became artificially
-					// expensive purely as a side effect of an unrelated config value, and diagonal
-					// vs. cardinal costs were inconsistent across heuristic types. Since adjacency
-					// is always known statically here (diagonalMask), we go straight to the
-					// grid's own DIRECT_COST/DIAGONAL_COST constants — correct regardless of
-					// heuristic choice, and skips a redundant distance calculation (including a
-					// sqrt for Euclidean/Octile) per edge.
+					// G-COST: step cost between two adjacent grid cells reflects actual move
+					// geometry (cardinal vs. diagonal) via GridNode.DIRECT_COST/DIAGONAL_COST,
+					// never the heuristic distance metric — see AStar's H-cost usage below, which
+					// is the only place HEURISTIC_FUNCTIONS may be called.
 					bool isDiagonal = (diagonalMask & (1 << i)) != 0;
 					int baseStepCost = isDiagonal ? GridNode.DIAGONAL_COST : GridNode.DIRECT_COST;
 					int stepCost = Mathf.RoundToInt(baseStepCost * costMultiplier);
 
 					int tentativeGCost = currentRecord.GCost + stepCost;
 
-					if (!this._nodeRecords.TryGetValue(neighborPos, out PathFindingNode existingRecord) ||
-						tentativeGCost < existingRecord.GCost) {
+					bool hasExisting = this._nodeRecords.TryGetValue(neighborPos, out PathFindingNode existingRecord);
 
-						// heuristicFunc is now called exactly once per neighbor (H-cost estimate
-						// only) instead of twice (previously also used for step cost above).
+					if (!hasExisting || tentativeGCost < existingRecord.GCost) {
+						// Pure goal-distance estimate — unit cost multiplier. H-cost approximates
+						// remaining distance to the goal; it isn't scaled by any single tile's
+						// terrain multiplier along the way.
 						int rawHCost = heuristicFunc(neighborPos, end, 1.0f);
 						int weightedHCost = useGreediness
 							? Mathf.FloorToInt(rawHCost * greediness)
@@ -240,27 +234,38 @@ namespace Kope.Feature.PathFindingNew.PathFinding {
 				}
 			}
 
-			return CreateErrorResult(PathFindingResultType.NoPathFound, EmptyPath);
+			return CreateErrorResult(PathFindingStatus.NoPathFound, EmptyPath);
 		}
 
-		private List<Vec2Int> ReconstructPath(PathFindingNode endNode) {
+		/// <summary>
+		/// Walks <see cref="PathFindingNode.ParentPosition"/> back to the root via <see cref="_nodeRecords"/>
+		/// lookups, one dictionary hit per step. Safe without an existence guard because the invariant is
+		/// structural: a record's ParentPosition is only ever set to a position that was already inserted
+		/// into <see cref="_nodeRecords"/> before the child that references it.
+		/// </summary>
+		private List<Vec2Int> ReconstructPath(PathFindingNode endNode, MovementCapability movementCapability) {
 			List<Vec2Int> path = new(16) { endNode.Position };
 			PathFindingNode current = endNode;
 
-			while (current.ParentPosition != PathFindingNode.StartPosition) {
-				Vec2Int parentPos = current.ParentPosition;
-				path.Add(parentPos);
-
-				if (!this._nodeRecords.TryGetValue(parentPos, out current)) {
-					break;
-				}
+			while (current.ParentPosition != PathFindingNode.NoParent) {
+				current = this._nodeRecords[current.ParentPosition];
+				path.Add(current.Position);
 			}
 
 			path.Reverse();
+			// // Decoupled from the recorder on purpose: FinalPath is set straight from the result, so
+			// // FinalPathOnly (and the end-of-animation reveal) works even with recording off.
+			// path = PathSmoother.StringPull(
+			// 	path,
+			// 	(fromPoint, toPoint) => PathSmoother.HasLineOfSight(
+			// 		fromPoint, toPoint,
+			// 		pos => this._graphManager.IsWalkable(pos, movementCapability)
+			// ));
 			return path;
 		}
 
-		private PathFindingResult CreateErrorResult(PathFindingResultType resultType, List<Vec2Int> path) {
+
+		private PathFindingResult CreateErrorResult(PathFindingStatus resultType, List<Vec2Int> path) {
 			return new PathFindingResult(
 				resultType,
 				path,

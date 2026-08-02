@@ -2,7 +2,6 @@
 
 using System;
 using System.Runtime.CompilerServices;
-using Kope.Core.Attribute;
 using Kope.Core.Collections.Hashes;
 using UnityEngine;
 
