@@ -12,6 +12,10 @@ public readonly struct GridNode : System.IEquatable<GridNode> {
 	public const int DIRECT_COST = 10;
 	public const int DIAGONAL_COST = 14;
 
+	// just cascade from TileTerrainData to avoid a circular dependency between Graph and Tile,
+	// and stale values if the constant is ever changed in TileTerrainData.
+	public const ushort NON_TRAVERSABLE_REGION_ID = TileTerrainData.NON_TRAVERSABLE_REGION_ID;
+
 
 	private readonly ushort regionId;
 	private readonly Vec2Int position;
@@ -53,13 +57,33 @@ public readonly struct GridNode : System.IEquatable<GridNode> {
 	}
 
 	/// <summary>
-	/// Determines whether this node can be traversed by an agent with the given movement capabilities.
+	/// Determines whether two nodes reside within the same connected region and are topologically reachable from each other.
+	/// <para>
+	/// <b>Note:</b> Reachability and Traversability are distinct concepts. <i>Traversability</i> defines whether an individual 
+	/// node can be walked on given an agent's capabilities, whereas <i>Reachability</i> guarantees an existing path exists 
+	/// between two traversable nodes via matching region IDs.
+	/// </para>
 	/// </summary>
-	/// <param name="validModes">Bitmask of movement modes supported by the querying agent.</param>
-	/// <returns><c>true</c> if the node is walkable and shares at least one compatible mode; otherwise, <c>false</c>.</returns>
+	/// <param name="a">The origin grid node.</param>
+	/// <param name="b">The destination grid node.</param>
+	/// <returns><c>true</c> if both nodes belong to valid, traversable regions and share the same region ID; otherwise, <c>false</c>.</returns>
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool IsRegionReachable(GridNode a, GridNode b) {
+		return a.regionId != NON_TRAVERSABLE_REGION_ID &&
+			   b.regionId != NON_TRAVERSABLE_REGION_ID &&
+			   a.regionId == b.regionId;
+	}
+
+	/// <summary>
+	/// Determines whether this node can be traversed by an agent with the specified movement capabilities.
+	/// </summary>
+	/// <param name="validModes">Bitmask representing the active movement capabilities of the querying agent (e.g., Move, Swim, Fly).</param>
+	/// <returns><c>true</c> if the node is master-traversable, non-void, and shares at least one compatible movement mode; otherwise, <c>false</c>.</returns>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public bool IsTraversable(MovementCapability validModes) =>
 		this.isTraversable && this.tileType != TileType.VOID && (validModes & this.movementType) != MovementCapability.NoAbilityToMove;
+
+
 
 	/// <summary>
 	/// Evaluates the lowest movement cost multiplier among all modes shared between this node and the agent.

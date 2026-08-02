@@ -55,12 +55,14 @@
   <ItemGroup>
     <Compile Include="Assets/_Project/Scripts/Features/EntityStat/UI/CharacterStatsGUI.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/AStarOnly/Utility/RegionIdExtraction.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/AStarOnly/AStar/PathFinderBase.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/UI/InventoryDisplays/InventoryDisplay.cs" />
     <Compile Include="Assets/_Project/Scripts/UI/Common/PanelFader.cs" />
     <Compile Include="Assets/_Project/_BootStrap/GlobalBootStrap.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AnimationCurve/Curve.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/AStarOnly/Utility/Gizmos/GizmoPlaybackController.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/StatBased/ResistanceStatModifierEffect.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/AStarOnly/AStar/PathFindindManager.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/AStarOnly/Utility/Common/SpatialBitPacker.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/ConcreteClass/AreaTargeting/AreaTargetingStrategy3D.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/AStarOnly/AStar/PathFindingNode.cs" />

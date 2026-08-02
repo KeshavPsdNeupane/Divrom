@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Kope.EntityIdentity;
+using Kope.Feature.PathFindingNew.Base;
 using Kope.Feature.PathFindingNew.Graph;
 using Kope.Feature.PathFindingNew.Interface;
 using Kope.Feature.PathFindingNew.Utility;
@@ -73,7 +74,7 @@ namespace Kope.Feature.PathFindingNew.PathFinding {
 	/// optimality proof — just consistent with the same trade-off AStar already makes.
 	/// </para>
 	/// </summary>
-	public class BidirectionalAStar : IPathFinder {
+	public class BidirectionalAStar : PathFinderBase {
 
 		// H-cost estimation only — never used to price an actual step. See ExpandNode.
 		private static readonly Dictionary<CostCalculationType, Func<Vec2Int, Vec2Int, float, int>>
@@ -107,8 +108,6 @@ namespace Kope.Feature.PathFindingNew.PathFinding {
 			}
 		}
 
-		private readonly Graphmanager _graphManager;
-		private readonly PathFindingConfig _config;
 		private readonly int _maxIterations;
 
 		private readonly SearchFrontier _forward;
@@ -119,6 +118,7 @@ namespace Kope.Feature.PathFindingNew.PathFinding {
 		// interleaved within one.
 		private readonly GridNode[] _fetchBuffer = new GridNode[8];
 		private readonly GridNode[] _neighbourBuffer = new GridNode[8];
+		private GridNode _startNode, _endNode;
 
 #if UNITY_EDITOR
 		private readonly List<Vec2Int> _recorderOpenListCache;
@@ -131,9 +131,8 @@ namespace Kope.Feature.PathFindingNew.PathFinding {
 		/// <param name="graphManager">The graph topology provider.</param>
 		/// <param name="config">Configuration settings controlling search limits, heuristic types, and greediness.</param>
 		/// <returns>A new instance of the <see cref="BidirectionalAStar"/> pathfinder.</returns>
-		public BidirectionalAStar(Graphmanager graphManager, PathFindingConfig config) {
-			this._graphManager = graphManager;
-			this._config = config;
+		public BidirectionalAStar(GraphManager graphManager, PathFindingConfig config)
+		: base(graphManager, config) {
 
 			int capacity = config.InitialCapacity;
 			this._forward = new SearchFrontier(capacity);
@@ -157,6 +156,35 @@ namespace Kope.Feature.PathFindingNew.PathFinding {
 #endif
 		}
 
+
+		/// <summary>
+		/// Performs a pre-check to determine if the pathfinding operation is feasible.
+		/// </summary>
+		/// <param name="start">Starting grid coordinate.</param>
+		/// <param name="end">Destination target grid coordinate.</param>
+		/// <param name="movementCapability">Bitmask of movement modes supported by the querying agent.</param>
+		/// <returns>A <see cref="PathFindingResult"/> containing status metadata and execution metrics.</returns>
+		public PathFindingResult PreCheckFeasibility(Vec2Int start, Vec2Int end, MovementCapability movementCapability) {
+			if (this._startNode.Position == this._endNode.Position) {
+				return CreateErrorResult(PathFindingStatus.StartEqualsEnd);
+			}
+			// 2. Reachability check
+			if (this._startNode.RegionId != this._endNode.RegionId) {
+				return CreateErrorResult(PathFindingStatus.UnReachableTarget);
+			}
+
+			// 3. Node Existence & Traversability
+			if (!this._graphManager.TryGetNode(start, out this._startNode) ||
+				!this._graphManager.TryGetNode(end, out this._endNode) ||
+				!this._startNode.IsTraversable(movementCapability) ||
+				!this._endNode.IsTraversable(movementCapability)) {
+				return CreateErrorResult(PathFindingStatus.InvalidStartOrEnd);
+			}
+			return CreateErrorResult(PathFindingStatus.Success);
+		}
+
+
+
 		/// <summary>
 		/// Finds the shortest walkable path between two points using bidirectional Weighted A*.
 		/// </summary>
@@ -165,15 +193,13 @@ namespace Kope.Feature.PathFindingNew.PathFinding {
 		/// <param name="movementCapability">Movement modes supported by the querying agent.</param>
 		/// <param name="recorder">Optional editor recorder for step-by-step pathfinding visualization.</param>
 		/// <returns>A <see cref="PathFindingResult"/> containing status metadata and execution metrics.</returns>
-		public PathFindingResult FindPath(
+		public override PathFindingResult FindPath(
 			Vec2Int start,
 			Vec2Int end,
 			MovementCapability movementCapability,
 			PathfindingRecorder recorder = null) {
-
-			if (!this._graphManager.TryGetNode(start, out _) || !this._graphManager.TryGetNode(end, out _)) {
-				return CreateErrorResult(PathFindingStatus.InvalidStartOrEnd);
-			}
+			this._startNode = default;
+			this._endNode = default;
 
 			this._forward.Clear();
 			this._backward.Clear();
@@ -422,18 +448,6 @@ namespace Kope.Feature.PathFindingNew.PathFinding {
 			}
 
 			return path;
-		}
-
-		private PathFindingResult CreateErrorResult(PathFindingStatus resultType) {
-			return new PathFindingResult(
-				resultType,
-				AStar.EmptyPath,
-				this._graphManager.TotalNodeCount,
-				this._forward.Closed.Count + this._backward.Closed.Count,
-				this._forward.Open.Count + this._backward.Open.Count,
-				this._config.CostCalculationType,
-				this._config.GreedyNess
-			);
 		}
 	}
 }

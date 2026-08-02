@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using Kope.EntityIdentity;
 using Kope.Feature.PathFindingNew.Graph;
-using Kope.Feature.PathFindingNew.Interface;
 using Kope.Feature.PathFindingNew.PathFinding;
 using Kope.Feature.PathFindingNew.Storage;
 using Kope.Feature.PathFindingNew.Utility;
@@ -36,6 +35,9 @@ public class PathFindingNewDebugger : MonoBehaviour {
 	[SerializeField] private Transform startTransform;
 	[SerializeField] private Transform endTransform;
 	[SerializeField] private MovementCapability capability = MovementCapability.Move;
+	[SerializeField, Tooltip("If true, the reachability check will be performed before pathfinding. Use" +
+	" with caution as it may lead to invalid paths.")]
+	private bool doReachabilityCheck = true;
 
 	[Header("Recording Settings")]
 	[SerializeField, Tooltip(
@@ -87,8 +89,8 @@ public class PathFindingNewDebugger : MonoBehaviour {
 
 	// The one real pathfinding entry point. The gizmo overlay never sees this — it only ever gets
 	// handed a Recorder to fill and a result Path to draw.
-	private Graphmanager _graphManager;
-	private IPathFinder _pathfinder;
+	private GraphManager _graphManager;
+	private PathFindingService _pathFindingService;
 
 	private void Awake() {
 		EnsurePathfinder();
@@ -105,7 +107,7 @@ public class PathFindingNewDebugger : MonoBehaviour {
 			return;
 		}
 
-		this._graphManager = new Graphmanager(this.graphDataStorage.GridNodeDict);
+		this._graphManager = new GraphManager(this.graphDataStorage.GridNodeDict);
 
 		PathFindingConfig config = new(
 			this.costCalculationType,
@@ -114,14 +116,7 @@ public class PathFindingNewDebugger : MonoBehaviour {
 			PathFindingConfig.MAX_NODE_SEARCH_RATIO
 		);
 
-		switch (this.astarType) {
-			case AStarType.Standard:
-				this._pathfinder = new AStar(this._graphManager, config);
-				break;
-			case AStarType.Bidirectional:
-				this._pathfinder = new BidirectionalAStar(this._graphManager, config);
-				break;
-		}
+		this._pathFindingService = new PathFindingService(this.astarType, this._graphManager, config);
 	}
 
 	#region Context Menu Actions
@@ -129,7 +124,7 @@ public class PathFindingNewDebugger : MonoBehaviour {
 	[ContextMenu("Run Pathfinding")]
 	public void ExecutePathfindingEditMode() {
 		EnsurePathfinder();
-		if (this._pathfinder == null) return;
+		if (this._pathFindingService == null) return;
 
 		if (this.startTransform == null || this.endTransform == null) {
 			Debug.LogWarning("Start/End transform not assigned. Cannot run Pathfinding.");
@@ -156,10 +151,11 @@ public class PathFindingNewDebugger : MonoBehaviour {
 
 		System.Diagnostics.Stopwatch stopwatch = new();
 		stopwatch.Start();
-		PathFindingResult result = this._pathfinder.FindPath(
+		PathFindingResult result = this._pathFindingService.FindPath(
 			startVec,
 			endVec,
 			this.capability,
+			this.doReachabilityCheck,
 			this.enableRecording ? PathGizmos.Recorder : null
 		);
 		stopwatch.Stop();
@@ -173,8 +169,10 @@ public class PathFindingNewDebugger : MonoBehaviour {
 		if (this.enableRecording) {
 			resultLogBuilder.AppendLine("<b><color=#FFCC00>Note: Recorder is ACTIVE. This adds overhead to the timing metrics. Disable it for true production speed.</color></b>");
 		}
-		resultLogBuilder.AppendLine(DescribePointRelationship(startVec, endVec));
+		resultLogBuilder.Append($"<b>Algorithm:</b> {this.astarType}");
+		resultLogBuilder.AppendLine($"<b>Do Reachability Check:</b> {this.doReachabilityCheck}");
 		resultLogBuilder.AppendLine($"<b>Settings:</b> Cost: {this.costCalculationType} | Greediness: {this.greediness}");
+		resultLogBuilder.AppendLine(DescribePointRelationship(startVec, endVec));
 		resultLogBuilder.AppendLine($"<b>Timing:</b> {stopwatch.ElapsedMilliseconds}ms / {stopwatch.ElapsedTicks} ticks");
 		AppendResultLog(resultLogBuilder, result, startVec.ToString(), endVec.ToString());
 
@@ -189,7 +187,7 @@ public class PathFindingNewDebugger : MonoBehaviour {
 	[ContextMenu("Run Pathfinding N Times")]
 	public void RunPathfindingNtimes() {
 		EnsurePathfinder();
-		if (this._pathfinder == null) return;
+		if (this._pathFindingService == null) return;
 		if (this.startTransform == null || this.endTransform == null) {
 			Debug.LogWarning("Start/End transform not assigned. Cannot run Pathfinding.");
 			return;
@@ -204,10 +202,11 @@ public class PathFindingNewDebugger : MonoBehaviour {
 		}
 
 		// Warmup run to ensure JIT compilation and cache warming before timing the actual runs.
-		_ = this._pathfinder.FindPath(
+		_ = this._pathFindingService.FindPath(
 					startVec,
 					endVec,
 					this.capability,
+					this.doReachabilityCheck,
 					this.enableRecording ? PathGizmos.Recorder : null
 				);
 
@@ -224,10 +223,11 @@ public class PathFindingNewDebugger : MonoBehaviour {
 
 		for (int i = 0; i < this.runCount; i++) {
 			stopwatch.Restart();
-			finalResult = this._pathfinder.FindPath(
+			finalResult = this._pathFindingService.FindPath(
 			   startVec,
 			   endVec,
 			   this.capability,
+			   this.doReachabilityCheck,
 			   this.enableRecording ? PathGizmos.Recorder : null
 		   );
 			stopwatch.Stop();
@@ -263,6 +263,8 @@ public class PathFindingNewDebugger : MonoBehaviour {
 
 		StringBuilder resultLogBuilder = new();
 		resultLogBuilder.AppendLine("<b><color=#00FFFF>=== PATHFINDING N-TIMES BENCHMARK RESULT ===</color></b>");
+		resultLogBuilder.Append($"<b>Algorithm:</b> {this.astarType}");
+		resultLogBuilder.AppendLine($"\t<b>Do Reachability Check:</b> {this.doReachabilityCheck}");
 		resultLogBuilder.AppendLine(DescribePointRelationship(startVec, endVec));
 		resultLogBuilder.AppendLine($"<b>Settings:</b> Cost: {this.costCalculationType} | Greediness: {this.greediness} | Runs: {this.runCount}");
 		resultLogBuilder.AppendLine($"<b>Mean (Average):</b> {avgMs:F2}ms / {avgTicks:F1} ticks per run");

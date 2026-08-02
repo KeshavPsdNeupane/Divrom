@@ -11,7 +11,7 @@ namespace Kope.Feature.PathFindingNew.Graph {
 	/// Manages the runtime graph topology, offering zero-allocation, thread-safe spatial lookups 
 	/// and bitmask-validated 8-directional neighbor expansion for pathfinding queries.
 	/// </summary>
-	public class Graphmanager {
+	public class GraphManager {
 
 		/// <summary>
 		/// Contains constants and lookup tables used for neighbor expansion and movement validation in the graph.
@@ -70,11 +70,11 @@ namespace Kope.Feature.PathFindingNew.Graph {
 		private readonly Dictionary<Vec2Int, GridNode> nodes;
 		public int TotalNodeCount => nodes.Count;
 
-		public Graphmanager() {
+		public GraphManager() {
 			nodes = new Dictionary<Vec2Int, GridNode>(INITIAL_CAPACITY);
 		}
 
-		public Graphmanager(Dictionary<Vec2Int, GridNode> nodes) {
+		public GraphManager(Dictionary<Vec2Int, GridNode> nodes) {
 			this.nodes = nodes;
 		}
 

@@ -16,8 +16,11 @@ namespace Kope.Feature.PathFindingNew.PathFinding {
 	public enum PathFindingStatus {
 		Success = 0,
 		NoPathFound = 1,
-		InvalidStartOrEnd = 2,
-		ExceededMaxIterations = 3,
+		UnReachableTarget = 20,
+		InvalidStartOrEnd = 30,
+		ExceededMaxIterations = 31,
+		StartEqualsEnd = 50,
+
 	}
 
 	public struct PathFindingConfig {

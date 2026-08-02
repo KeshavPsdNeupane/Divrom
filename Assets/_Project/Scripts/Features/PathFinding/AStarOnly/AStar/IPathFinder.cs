@@ -6,12 +6,22 @@ namespace Kope.Feature.PathFindingNew.Interface {
 
 	/// <summary>
 	/// Common contract for pathfinding strategies operating over the shared
-	/// <see cref="Graph.Graphmanager"/> grid topology. Extracted so call sites (and benchmark/debug
+	/// <see cref="Graph.GraphManager"/> grid topology. Extracted so call sites (and benchmark/debug
 	/// tooling) can depend on "a pathfinder" instead of concretely on <see cref="AStar"/>, letting
 	/// alternative strategies — e.g. <see cref="BidirectionalAStar"/> — be swapped in without touching
 	/// anything downstream.
 	/// </summary>
 	public interface IPathFinder {
+		/// <summary>
+		/// Performs a pre-check to determine if the pathfinding operation is feasible.
+		/// </summary>
+		/// <param name="start">Starting grid coordinate.</param>
+		/// <param name="end">Destination target grid coordinate.</param>
+		/// <param name="movementCapability">Bitmask of movement modes supported by the querying agent.</param>
+		/// <param name="doReachabilityCheck">If true, the reachability check will be performed.</param>
+		/// <returns>A <see cref="PathFindingResult"/> containing status metadata and execution metrics.</returns>
+		PathFindingResult PreCheckFeasibility(Vec2Int start, Vec2Int end, MovementCapability movementCapability,
+		 bool doReachabilityCheck = false);
 
 		/// <summary>
 		/// Finds the shortest walkable path between two points.
@@ -23,4 +33,6 @@ namespace Kope.Feature.PathFindingNew.Interface {
 		/// <returns>A <see cref="PathFindingResult"/> containing status metadata and execution metrics.</returns>
 		PathFindingResult FindPath(Vec2Int start, Vec2Int end, MovementCapability movementCapability, PathfindingRecorder recorder = null);
 	}
+
+
 }

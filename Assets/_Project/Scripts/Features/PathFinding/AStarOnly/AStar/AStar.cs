@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using Kope.EntityIdentity;
+using Kope.Feature.PathFindingNew.Base;
 using Kope.Feature.PathFindingNew.Graph;
-using Kope.Feature.PathFindingNew.Interface;
 using Kope.Feature.PathFindingNew.Utility;
 using ThirdParty.PriorityQueeu;
 using UnityEngine;
@@ -14,10 +14,10 @@ namespace Kope.Feature.PathFindingNew.PathFinding {
 	/// <para>
 	/// Leverages a 4-ary implicit heap priority queue (<see cref="QuadPriorityQueue{TElement, TPriority}"/>),
 	/// transient value-type node records (<see cref="PathFindingNode"/>), and stack/buffer-backed spatial neighbor lookups
-	/// via <see cref="Graphmanager"/> to eliminate Garbage Collection overhead during search loops.
+	/// via <see cref="GraphManager"/> to eliminate Garbage Collection overhead during search loops.
 	/// </para>
 	/// </summary>
-	public class AStar : IPathFinder {
+	public class AStar : PathFinderBase {
 
 		// NOTE: this table is exclusively for estimating H-cost (distance-to-goal). It must never be
 		// used to price an actual G-cost edge step — see the rationale comment in the neighbor loop
@@ -29,11 +29,7 @@ namespace Kope.Feature.PathFindingNew.PathFinding {
 			{ CostCalculationType.Octile, GridNode.OctileDistanceTo }
 		};
 
-		public static readonly List<Vec2Int> EmptyPath = new(0);
-
-		private readonly Graphmanager _graphManager;
-		private PathFindingConfig _config;
-		private int _maxIterations;
+		private readonly int _maxIterations;
 
 		// Node-record storage: a single position-keyed dictionary holding every record created
 		// this search. This is the non-index variant — PathFindingNode stores its parent as a
@@ -50,6 +46,7 @@ namespace Kope.Feature.PathFindingNew.PathFinding {
 		#region Buffers for Zero-Allocation Neighbor Expansion
 		private readonly GridNode[] _fetchBuffer = new GridNode[8];
 		private readonly GridNode[] _neighbourBuffer = new GridNode[8];
+
 		#endregion
 
 #if UNITY_EDITOR
@@ -64,10 +61,8 @@ namespace Kope.Feature.PathFindingNew.PathFinding {
 		/// </summary>
 		/// <param name="graphManager">The graph topology provider.</param>
 		/// <param name="config">Configuration settings controlling search limits, heuristic types, and greediness.</param>
-		public AStar(Graphmanager graphManager, PathFindingConfig config) {
-			this._graphManager = graphManager;
-			this._config = config;
-
+		public AStar(GraphManager graphManager, PathFindingConfig config)
+		: base(graphManager, config) {
 			int capacity = config.InitialCapacity;
 			this._nodeRecords = new Dictionary<Vec2Int, PathFindingNode>(capacity);
 			this._openSet = new QuadPriorityQueue<PathFindingNode, int>(capacity);
@@ -85,6 +80,7 @@ namespace Kope.Feature.PathFindingNew.PathFinding {
 #endif
 		}
 
+
 		/// <summary>
 		/// Finds the shortest walkable path between two points using Weighted A*.
 		/// </summary>
@@ -93,17 +89,12 @@ namespace Kope.Feature.PathFindingNew.PathFinding {
 		/// <param name="movementCapability">Movement modes supported by the querying agent.</param>
 		/// <param name="recorder">Optional editor recorder for step-by-step pathfinding visualization.</param>
 		/// <returns>A <see cref="PathFindingResult"/> containing status metadata and execution metrics.</returns>
-		public PathFindingResult FindPath(
+		public override PathFindingResult FindPath(
 			Vec2Int start,
 			Vec2Int end,
 			MovementCapability movementCapability,
 			PathfindingRecorder recorder = null) {
 
-			if (!this._graphManager.TryGetNode(start, out _) || !this._graphManager.TryGetNode(end, out _)) {
-				return CreateErrorResult(PathFindingStatus.InvalidStartOrEnd, EmptyPath);
-			}
-
-			// Reset query state
 			this._nodeRecords.Clear();
 			this._openSet.Clear();
 			this._closedSet.Clear();
@@ -234,7 +225,7 @@ namespace Kope.Feature.PathFindingNew.PathFinding {
 				}
 			}
 
-			return CreateErrorResult(PathFindingStatus.NoPathFound, EmptyPath);
+			return CreateErrorResult(PathFindingStatus.NoPathFound);
 		}
 
 		/// <summary>
@@ -262,19 +253,6 @@ namespace Kope.Feature.PathFindingNew.PathFinding {
 			// 		pos => this._graphManager.IsWalkable(pos, movementCapability)
 			// ));
 			return path;
-		}
-
-
-		private PathFindingResult CreateErrorResult(PathFindingStatus resultType, List<Vec2Int> path) {
-			return new PathFindingResult(
-				resultType,
-				path,
-				this._graphManager.TotalNodeCount,
-				this._closedSet.Count,
-				this._openSet.Count,
-				this._config.CostCalculationType,
-				this._config.GreedyNess
-			);
 		}
 	}
 }
