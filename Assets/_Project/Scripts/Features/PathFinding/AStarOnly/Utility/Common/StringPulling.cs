@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Kope.Feature.PathFindingNew.Utility;
-using UnityEngine;
 
 public static class PathSmoother {
 	/// <summary>

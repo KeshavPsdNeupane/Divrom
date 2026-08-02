@@ -54,7 +54,7 @@ namespace Kope.Feature.PathFindingNew.Storage {
 		/// Bakes fresh authoring tile data into internal persistent storage and forces rehydration of runtime caches.
 		/// </summary>
 		/// <param name="gridNodeDict">Authoring tile domain lookup dictionary.</param>
-		public void SetGridData(Dictionary<Vec2Int, TEditor> gridNodeDict) {
+		public void SetGridData(TEditor gridNodeDict) {
 			// Clear existing runtime cache prior to mutation
 			ClearRuntimeCache();
 
@@ -73,7 +73,7 @@ namespace Kope.Feature.PathFindingNew.Storage {
 		/// Internal serialization handler implemented by concrete storage assets to bake <typeparamref name="TEditor"/> data.
 		/// </summary>
 		/// <param name="gridNodeDict">Authoring tile domain lookup dictionary to serialize.</param>
-		protected abstract void SetGridDataInternal(Dictionary<Vec2Int, TEditor> gridNodeDict);
+		protected abstract void SetGridDataInternal(TEditor gridNodeDict);
 
 #if UNITY_EDITOR
 		/// <summary>
@@ -97,6 +97,8 @@ namespace Kope.Feature.PathFindingNew.Storage {
 	/// Concrete non-generic base class alias for standard tile terrain storage assets.
 	/// Maps <see cref="TileTerrainData"/> authoring data to <see cref="GridNode"/> runtime execution nodes.
 	/// </summary>
-	public abstract class GridDataStorageBase : GridDataStorageBaseGeneric<TileTerrainData, GridNode> {
+	public abstract class GridDataStorageBase : GridDataStorageBaseGeneric
+	<IDictionary<ushort, List<(Vec2Int position, TileTerrainData data)>>, GridNode> {
+		public abstract Dictionary<ushort, List<Vec2Int>> RegionArea { get; }
 	}
 }

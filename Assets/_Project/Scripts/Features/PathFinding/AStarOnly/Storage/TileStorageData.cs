@@ -24,3 +24,15 @@ public struct GridStorageData {
 	public readonly MovementCapability[] AllowedCapabilities => this._ac;
 	public readonly int[] QCostMultiplier => this._qC;
 }
+[System.Serializable]
+public struct RegionStorageData {
+	[SerializeField, ReadOnly] ushort[] _rId;
+	[SerializeField, ReadOnly] GridStorageData[] _rdata;
+
+	public readonly ushort[] RegionId => this._rId;
+	public readonly GridStorageData[] RegionData => this._rdata;
+	public RegionStorageData(ushort[] regionId, GridStorageData[] regionData) {
+		this._rId = regionId;
+		this._rdata = regionData;
+	}
+}

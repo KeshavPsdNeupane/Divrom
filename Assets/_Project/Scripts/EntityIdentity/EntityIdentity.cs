@@ -13,27 +13,40 @@ namespace Kope.EntityIdentity {
 		PROP = 1,
 	}
 
+
+
 	/// <summary>
-	/// Defines an entity's movement capabilities, determining which terrain types or 
-	/// environments it can traverse. 
-	/// <para>This is a compile-time fixed set. Add new movement types here and recompile 
-	/// as needed to extend the pathfinding system.</para>
+	/// Bitmask defining an entity's movement capabilities and the environment types it can traverse.
 	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// <b>Extensibility:</b> This is a compile-time fixed flag set. Add new movement types 
+	/// using unique bit values (e.g., <c>1 &lt;&lt; 3</c>, <c>1 &lt;&lt; 4</c>).
+	/// </para>
+	/// <para>
+	/// <b>Serialization Warning:</b> Never alter existing underlying flag values once in production, 
+	/// as doing so will corrupt saved data and break backward compatibility.
+	/// </para>
+	/// </remarks>
 	[Flags]
 	public enum MovementCapability {
 		/// <summary>
-		/// Indicates the entity has no traversal capabilities and cannot move 
-		/// through any terrain. Note: Unlike most enums where 0 is a default/fallback, 
-		/// here 0 explicitly represents an inability to move.
+		/// Indicates complete immobility. Unlike typical default enums, explicit <c>0</c> 
+		/// signifies that the entity cannot traverse any terrain.
 		/// </summary>
-		None = 0,
-		/// <summary>Can traverse ground-based paths.</summary>
+		NoAbilityToMove = 0,
+
+		/// <summary>Can traverse ground and terrestrial paths.</summary>
 		Move = 1 << 0,
-		/// <summary>Can traverse water-based paths.</summary>
+
+		/// <summary>Can traverse liquid and water-based paths.</summary>
 		Swim = 1 << 1,
-		/// <summary>Can traverse air-based paths.</summary>
+
+		/// <summary>Can traverse airborne and elevated paths.</summary>
 		Fly = 1 << 2,
 	}
+
+
 
 	/// <summary>
 	/// Determines the tactical relationship and targeting matrix rules 

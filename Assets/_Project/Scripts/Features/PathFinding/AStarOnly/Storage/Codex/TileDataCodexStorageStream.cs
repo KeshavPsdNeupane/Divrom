@@ -50,45 +50,49 @@ namespace Kope.Feature.PathFindingNew.Storage {
 	/// Implements <see cref="ITileDataCodex{TBake, TStorage, TRuntime}"/> mapping authoring <see cref="TileTerrainData"/> 
 	/// <c>-&gt;</c> storage <see cref="TileStorageData"/> <c>-&gt;</c> runtime <see cref="GridNode"/>.
 	/// </summary>
-	public readonly struct TileDataCodexStorageStream : ITileDataCodex<TileTerrainData, GridStorageData, GridNode> {
-
+	public readonly struct TileDataCodexStorageStream :
+	IRegionDataCodex {
 		#region Interface Implementations (Instance Dispatch)
 
 		/// <inheritdoc />
-		public GridStorageData Bake(IDictionary<Vec2Int, TileTerrainData> tileDict) =>
-			BakeStatic(tileDict);
+		public RegionStorageData Bake(IDictionary<ushort, List<(Vec2Int position, TileTerrainData data)>> tileDict) {
+			return BakeStatic(tileDict);
+		}
 
 		/// <inheritdoc />
-		public Dictionary<Vec2Int, GridNode> Hydrate(in GridStorageData storageData) =>
+		public Dictionary<Vec2Int, GridNode> Hydrate(in RegionStorageData storageData) =>
 			HydrateStatic(in storageData);
 
+
+		public static RegionStorageData EMPTY_REGION_STORAGE = new(
+					new ushort[0],
+					new GridStorageData[0]
+				);
 		#endregion
 
 		#region Baking Pipeline (Encode: Tile Domain -> Storage Domain)
 
 		/// <summary>
 		/// Flattens a spatial dictionary of authoring tiles (<see cref="TileTerrainData"/>) into a bit-packed 
-		/// <see cref="GridStorageData"/> primitive payload. Quantizes cost multipliers down to 10-bit integer 
+		/// <see cref="RegionStorageData"/> primitive payload. Quantizes cost multipliers down to 10-bit integer 
 		/// streams and packs coordinates into 64-bit integers.
 		/// </summary>
 		/// <param name="tileDict">Authoring tile domain lookup dictionary.</param>
-		/// <returns>A primitive Structure-of-Arrays <see cref="GridStorageData"/> container.</returns>
-		public static GridStorageData BakeStatic(IDictionary<Vec2Int, TileTerrainData> tileDict) {
+		/// <returns>A primitive Structure-of-Arrays <see cref="RegionStorageData"/> container.</returns>
+		public static RegionStorageData BakeStatic(IDictionary<ushort, List<(Vec2Int position, TileTerrainData data)>> tileDict) {
 			int count = tileDict != null ? tileDict.Count : 0;
+
+			if (tileDict == null || count == 0) {
+				return EMPTY_REGION_STORAGE;
+			}
 
 			// ======================================================================================
 			// STEP 1: CONTIGUOUS PRIMITIVE BUFFER ALLOCATION
 			// Instantiate pure primitive arrays matching exact total count. Zero dynamic resizing.
 			// ======================================================================================
-			long[] pPos = new long[count];
-			byte[] isTraversable = new byte[count];
-			TileType[] biomeType = new TileType[count];
-			MovementCapability[] allowedCapabilities = new MovementCapability[count];
-			int[] qCostMul = new int[count];
 
-			if (tileDict == null || count == 0) {
-				return new GridStorageData(pPos, isTraversable, biomeType, allowedCapabilities, qCostMul);
-			}
+			ushort[] regionIds = new ushort[count];
+			List<GridStorageData> regionDataList = new List<GridStorageData>(count);
 
 			// ======================================================================================
 			// STEP 2: SEQUENTIAL STREAM WRITING & BIT-PACKING
@@ -96,31 +100,36 @@ namespace Kope.Feature.PathFindingNew.Storage {
 			// ======================================================================================
 			int index = 0;
 			foreach (var kvp in tileDict) {
-				Vec2Int pos = kvp.Key;
-				TileTerrainData terrain = kvp.Value;
+				regionIds[index] = kvp.Key;
 
-				// 2a. Bit-pack 2D position (X in high 32 bits, Y in low 32 bits)
-				pPos[index] = SpatialBitPacker.PackVec2(pos);
+				int tileCount = kvp.Value.Count;
+				long[] pPos = new long[tileCount];
+				byte[] isTraversable = new byte[tileCount];
+				TileType[] biomeType = new TileType[tileCount];
+				MovementCapability[] allowedCapabilities = new MovementCapability[tileCount];
+				int[] qCostMul = new int[tileCount];
 
-				// 2b. Pack boolean state and primitive enums
-				isTraversable[index] = SpatialBitPacker.ConvertBoolToByte(terrain.IsTraversable);
-				biomeType[index] = terrain.TileType;
-				allowedCapabilities[index] = terrain.AllowedCapabilities;
+				int tileIndex = 0;
+				foreach (var (pos, data) in kvp.Value) {
+					pPos[tileIndex] = SpatialBitPacker.PackVec2(pos);
+					isTraversable[tileIndex] = SpatialBitPacker.ConvertBoolToByte(data.IsTraversable);
+					biomeType[tileIndex] = data.TileType;
+					allowedCapabilities[tileIndex] = data.AllowedCapabilities;
+					qCostMul[tileIndex] = SpatialBitPacker.PackCostMultipliers(
+						data.MoveCostMultiplier, data.SwimCostMultiplier, data.FlyCostMultiplier);
+					tileIndex++;
+				}
 
-				// 2c. Quantize and bit-pack Move, Swim, and Fly costs into a single 32-bit int (10 bits each)
-				qCostMul[index] = SpatialBitPacker.PackCostMultipliers(
-					terrain.MoveCostMultiplier,
-					terrain.SwimCostMultiplier,
-					terrain.FlyCostMultiplier
-				);
+				// ======================================================================================
+				// STEP 3: PAYLOAD CONSTRUCT ASSIGNMENT (STORAGE DOMAIN)
+				// ======================================================================================
+				GridStorageData regionData = new(pPos, isTraversable, biomeType, allowedCapabilities, qCostMul);
+				regionDataList.Add(regionData);
 
 				index++;
 			}
 
-			// ======================================================================================
-			// STEP 3: PAYLOAD CONSTRUCT ASSIGNMENT (STORAGE DOMAIN)
-			// ======================================================================================
-			return new GridStorageData(pPos, isTraversable, biomeType, allowedCapabilities, qCostMul);
+			return new RegionStorageData(regionIds, regionDataList.ToArray());
 		}
 
 		#endregion
@@ -128,19 +137,16 @@ namespace Kope.Feature.PathFindingNew.Storage {
 		#region Hydration Pipeline (Decode: Storage Domain -> Grid Data Domain)
 
 		/// <summary>
-		/// Reads baked primitive arrays from the storage domain (<see cref="GridStorageData"/>), bit-unpacks 
+		/// Reads baked primitive arrays from the storage domain (<see cref="RegionStorageData"/>), bit-unpacks 
 		/// coordinates and cost multipliers, and reconstructs the runtime grid domain payload (<see cref="Dictionary{Vec2Int, GridNode}"/>).
 		/// </summary>
 		/// <param name="storageData">The packed primitive storage container to decode.</param>
 		/// <returns>An $O(1)$ runtime grid dictionary containing hydrated <see cref="GridNode"/> structures.</returns>
-		public static Dictionary<Vec2Int, GridNode> HydrateStatic(in GridStorageData storageData) {
-			long[] pPos = storageData.PackedPosition;
-			byte[] isTraversable = storageData.IsTraversable;
-			TileType[] tileType = storageData.TileType;
-			MovementCapability[] allowedCapabilities = storageData.AllowedCapabilities;
-			int[] qCostMul = storageData.QCostMultiplier;
+		public static Dictionary<Vec2Int, GridNode> HydrateStatic(in RegionStorageData storageData) {
+			ushort[] regionIds = storageData.RegionId;
+			GridStorageData[] regionData = storageData.RegionData;
 
-			int count = pPos != null ? pPos.Length : 0;
+			int count = regionData.Length;
 
 			// Pre-allocate exact dictionary capacity to eliminate internal rehashing/resizing overhead in Grid Domain
 			var tileDict = new Dictionary<Vec2Int, GridNode>(count);
@@ -152,29 +158,40 @@ namespace Kope.Feature.PathFindingNew.Storage {
 			// Iterate over all packed arrays sequentially and dequantize into runtime GridNode structures.
 			// ======================================================================================
 			for (int i = 0; i < count; i++) {
-				// 1. Unpack 2D vector coordinate
-				Vec2Int pos = SpatialBitPacker.UnpackVec2(pPos[i]);
+				int jcount = regionData[i].PackedPosition.Length;
+				ushort regionId = regionIds[i];
+				var currentRegionData = regionData[i];
+				for (int j = 0; j < jcount; j++) {
 
-				// 2. Unpack boolean traversability
-				bool traversable = SpatialBitPacker.ConvertByteToBool(isTraversable[i]);
+					// just grab the current region's data for this tile index
+					var tileType = currentRegionData.TileType[j];
+					var allowedCapabilities = currentRegionData.AllowedCapabilities[j];
 
-				// 3. Dequantize 30-bit packed cost word into (moveCost, swimCost, flyCost)
-				(float moveCost, float swimCost, float flyCost) = SpatialBitPacker.UnpackCostMultipliers(qCostMul[i]);
+					// 1. Unpack 2D vector coordinate
+					Vec2Int pos = SpatialBitPacker.UnpackVec2(currentRegionData.PackedPosition[j]);
+					// 2. Unpack boolean traversability
+					bool traversable = SpatialBitPacker.ConvertByteToBool(currentRegionData.IsTraversable[j]);
 
-				// 4. Instantiate GridNode runtime struct for the Grid Data Domain
-				tileDict[pos] = new GridNode(
-					pos,
-					tileType[i],
-					allowedCapabilities[i],
-					traversable,
-					moveCost,
-					swimCost,
-					flyCost
-				);
+					// 3. Dequantize 30-bit packed cost word into (moveCost, swimCost, flyCost)
+					(float moveCost, float swimCost, float flyCost) = SpatialBitPacker.UnpackCostMultipliers(currentRegionData.QCostMultiplier[j]);
+
+					// 4. Instantiate GridNode runtime struct for the Grid Data Domain
+					tileDict[pos] = new GridNode(
+						regionId,
+						pos,
+						tileType,
+						allowedCapabilities,
+						traversable,
+						moveCost,
+						swimCost,
+						flyCost
+					);
+				}
 			}
 
 			return tileDict;
 		}
+
 
 		#endregion
 	}

@@ -13,7 +13,7 @@ public readonly struct GridNode : System.IEquatable<GridNode> {
 	public const int DIAGONAL_COST = 14;
 
 
-
+	private readonly ushort regionId;
 	private readonly Vec2Int position;
 	private readonly TileType tileType;
 	private readonly MovementCapability movementType;
@@ -22,6 +22,7 @@ public readonly struct GridNode : System.IEquatable<GridNode> {
 	private readonly float swimCostMultiplier;
 	private readonly float flyCostMultiplier;
 
+	public ushort RegionId => this.regionId;
 	/// <summary> Grid coordinate position of this node. </summary>
 	public readonly Vec2Int Position => this.position;
 
@@ -32,6 +33,7 @@ public readonly struct GridNode : System.IEquatable<GridNode> {
 	/// Initializes a new immutable <see cref="GridNode"/> instance.
 	/// </summary>
 	public GridNode(
+		ushort regionId,
 		Vec2Int position,
 		TileType tileType,
 		MovementCapability movementType,
@@ -40,6 +42,7 @@ public readonly struct GridNode : System.IEquatable<GridNode> {
 		float swimCostMultiplier,
 		float flyCostMultiplier) {
 
+		this.regionId = regionId;
 		this.position = position;
 		this.tileType = tileType;
 		this.movementType = movementType;
@@ -56,7 +59,7 @@ public readonly struct GridNode : System.IEquatable<GridNode> {
 	/// <returns><c>true</c> if the node is walkable and shares at least one compatible mode; otherwise, <c>false</c>.</returns>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public bool IsTraversable(MovementCapability validModes) =>
-		this.isTraversable && (validModes & this.movementType) != MovementCapability.None;
+		this.isTraversable && this.tileType != TileType.VOID && (validModes & this.movementType) != MovementCapability.NoAbilityToMove;
 
 	/// <summary>
 	/// Evaluates the lowest movement cost multiplier among all modes shared between this node and the agent.
@@ -71,7 +74,7 @@ public readonly struct GridNode : System.IEquatable<GridNode> {
 		// `validModes & X` to already be nonzero). Hoisting the intersection once removes 3
 		// redundant ANDs and 3 redundant zero-checks per call with identical results.
 		MovementCapability compatible = validModes & this.movementType;
-		if (compatible == MovementCapability.None) return -1f;
+		if (compatible == MovementCapability.NoAbilityToMove) return -1f;
 
 		float bestCost = -1f;
 		if ((compatible & MovementCapability.Move) != 0) {
@@ -103,10 +106,10 @@ public readonly struct GridNode : System.IEquatable<GridNode> {
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public bool TryGetTraversalCost(MovementCapability validModes, out float costMultiplier) {
 		costMultiplier = -1f;
-		if (!this.isTraversable) return false;
+		if (!this.isTraversable || this.tileType == TileType.VOID) return false;
 
 		MovementCapability compatible = validModes & this.movementType;
-		if (compatible == MovementCapability.None) return false;
+		if (compatible == MovementCapability.NoAbilityToMove) return false;
 
 		if ((compatible & MovementCapability.Move) != 0) {
 			costMultiplier = this.moveCostMultiplier;
@@ -122,6 +125,7 @@ public readonly struct GridNode : System.IEquatable<GridNode> {
 	}
 
 	#region Heuristic Distance Calculations
+
 
 	/// <summary>
 	/// Calculates the estimated Manhattan (4-directional grid) heuristic cost <c>h(n)</c> from position <paramref name="a"/> to <paramref name="b"/>.

@@ -3,6 +3,7 @@ using Kope.Core.Attribute;
 using Kope.Feature.PathFindingNew.Tile;
 using Kope.Feature.PathFindingNew.Utility;
 using UnityEngine;
+using ZLinq;
 
 namespace Kope.Feature.PathFindingNew.Storage {
 
@@ -34,7 +35,12 @@ namespace Kope.Feature.PathFindingNew.Storage {
 			MessageSeverity.Warning
 		)]
 		[Header("Baked Global Data")]
-		[SerializeField] private GridStorageData _gridStorageData;
+		[SerializeField] private RegionStorageData _regionStorageData;
+
+		/// <summary>
+		/// A dictionary mapping region IDs to the list of tile positions that belong to that region.
+		/// </summary>
+		private Dictionary<ushort, List<Vec2Int>> _regionArea;
 
 		private Dictionary<Vec2Int, GridNode> _gridNodeDict;
 
@@ -48,22 +54,49 @@ namespace Kope.Feature.PathFindingNew.Storage {
 			}
 		}
 
+#if UNITY_EDITOR
+		// why this is not directly serialized from the Codex? Because Codex is for storage, 
+		// and this is a editor gizmo visualization, which is not needed at runtime. So we keep 
+		// it separate to avoid unnecessary data in the build.
+		public override Dictionary<ushort, List<Vec2Int>> RegionArea {
+			get {
+				if (this._regionArea == null) {
+					if (this._gridNodeDict == null) {
+						BuildRuntimeCache();
+					}
+
+					this._regionArea = this._gridNodeDict.AsValueEnumerable()
+						.GroupBy(kvp => kvp.Value.RegionId)
+						.ToDictionary(
+							group => group.Key,
+							group => group.AsValueEnumerable().Select(kvp => kvp.Key).ToList()
+						);
+				}
+
+				return this._regionArea;
+			}
+		}
+#endif
+
 		/// <inheritdoc />
 		public override void ClearRuntimeCache() {
+			this._regionArea?.Clear();
 			this._gridNodeDict?.Clear();
+
+			this._regionArea = null;
 			this._gridNodeDict = null;
 		}
 
-		/// <inheritdoc />
-		protected override void SetGridDataInternal(Dictionary<Vec2Int, TileTerrainData> gridNodeDict) {
-			this._gridStorageData = TileDataCodexStorageStream.BakeStatic(gridNodeDict);
+
+		protected override void SetGridDataInternal(IDictionary<ushort, List<(Vec2Int position, TileTerrainData data)>> gridNodeDict) {
+			this._regionStorageData = TileDataCodexStorageStream.BakeStatic(gridNodeDict);
 		}
 
 		/// <summary>
 		/// Hydrates internal bit-packed storage (`TileStorageData`) into the active runtime dictionary (`GridNode`).
 		/// </summary>
 		private void BuildRuntimeCache() {
-			this._gridNodeDict ??= TileDataCodexStorageStream.HydrateStatic(this._gridStorageData);
+			this._gridNodeDict ??= TileDataCodexStorageStream.HydrateStatic(this._regionStorageData);
 		}
 	}
 }

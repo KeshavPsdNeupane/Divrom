@@ -13,7 +13,11 @@ namespace Kope.Feature.PathFindingNew.Tile {
 		// ==========================================
 		// 0 - 199: TEMPERATE / BASIC TERRAIN
 		// ==========================================
-		None = 0,
+
+		// this represent void or uninitialized tile, which should be treated as non-traversable by default
+		// u can imagine this just like a "null" or "void" in MineCraft, where it represents empty 
+		// space or uninitialized terrain
+		VOID = 0,
 		Grass = 1,
 		Dirt = 2,
 		Mud = 3,
@@ -103,6 +107,21 @@ namespace Kope.Feature.PathFindingNew.Tile {
 
 	[Serializable]
 	public struct TileTerrainData : ITerrainData<TileTerrainData> {
+		/// <summary>
+		/// Sentinel region ID assigned to tiles that do not belong to any traversable region.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Indicates that a tile is uninitialized, out-of-bounds, or intrinsically impassable, 
+		/// rendering it completely excluded from pathfinding queries.
+		/// </para>
+		/// <para>
+		/// Unlike valid region IDs (which isolate distinct, connected landmasses), this special 
+		/// ID is shared universally across all non-traversable tiles, regardless of whether 
+		/// they touch or are physically separated.
+		/// </para>
+		/// </remarks>
+		public const ushort NON_TRAVERSABLE_REGION_ID = 0;
 		[SerializeField, Tooltip(
 			"Editor visualization color.\n" +
 			"• Used for gizmos, editor grid overlays, and debugging visual paths.\n" +
@@ -112,18 +131,19 @@ namespace Kope.Feature.PathFindingNew.Tile {
 		private Color _tileColor;
 
 		[SerializeField, Tooltip(
-			"Biome classification of this tile.\n" +
-			"• Decouples semantic environment identity from physical pathing costs.\n" +
-			"• Allows for biome-based logic like a fire enemy not being able to traverse water tiles," +
-			" or a frost enemy avoiding lava tiles."
+			"Semantic environment identity of this tile.\n" +
+			"• Decouples environmental traits from physical pathing costs.\n" +
+			"• Enables capability-based logic (e.g., fire entities avoiding water, frost entities avoiding lava).\n" +
+			"• 'TileType.Void' denotes uninitialized or intrinsically impassable terrain. Unlike IsTraversable, " +
+			"it provides semantic context for why a tile cannot be traversed."
 		)]
 		private TileType _tileType;
 
 		[SerializeField, Tooltip(
-			"Master traversal toggle.\n" +
-			"• Acts as a hard obstacle override (e.g. solid stone walls, total voids).\n" +
-			"• If set to FALSE, NO entity can enter this tile under any circumstance, " +
-			"enabling fast path rejection before checking capabilities."
+			"Master traversal override toggle.\n" +
+			"• Acts as a hard obstacle override (e.g., solid stone walls, outer boundaries).\n" +
+			"• When FALSE, blocks ALL entities unconditionally, enabling immediate pathfinding rejection " +
+			"before checking individual capabilities."
 		)]
 		private bool _isTraversable;
 
@@ -212,7 +232,7 @@ namespace Kope.Feature.PathFindingNew.Tile {
 			// Master override: if tile is not traversable, block everyone immediately
 			if (!this._isTraversable) return false;
 
-			return (this._allowedCapabilities & agentCapability) != MovementCapability.None;
+			return (this._allowedCapabilities & agentCapability) != MovementCapability.NoAbilityToMove;
 		}
 
 		/// <summary>
@@ -229,7 +249,7 @@ namespace Kope.Feature.PathFindingNew.Tile {
 			MovementCapability validModes = this._allowedCapabilities & agentCapability;
 
 			// 2. Capability check
-			if (validModes == MovementCapability.None) {
+			if (validModes == MovementCapability.NoAbilityToMove) {
 				return float.PositiveInfinity;
 			}
 

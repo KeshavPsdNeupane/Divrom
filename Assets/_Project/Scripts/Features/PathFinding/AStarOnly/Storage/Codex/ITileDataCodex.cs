@@ -43,20 +43,26 @@ namespace Kope.Feature.PathFindingNew.Storage {
 	/// <typeparam name="TBake">The authoring tile domain data type (e.g., <see cref="TileTerrainData"/>).</typeparam>
 	/// <typeparam name="TStorage">The primitive storage domain container type (e.g., <see cref="GridStorageData"/>).</typeparam>
 	/// <typeparam name="TRuntime">The runtime grid data domain node type (e.g., <see cref="GridNode"/>).</typeparam>
-	public interface ITileDataCodex<TBake, TStorage, TRuntime> {
+	public interface ITileDataCodex<TBaseDict, TStorage, TRuntime> {
 
 		/// <summary>
 		/// Bakes an authoring tile domain dictionary (<typeparamref name="TBake"/>) into a primitive storage domain payload (<typeparamref name="TStorage"/>).
 		/// </summary>
 		/// <param name="tileDict">Dictionary containing authoring tile terrain data.</param>
 		/// <returns>A bit-packed primitive storage container instance.</returns>
-		TStorage Bake(IDictionary<Vec2Int, TBake> tileDict);
+		TStorage Bake(TBaseDict tileDict);
 
 		/// <summary>
 		/// Re-hydrates a primitive storage domain payload (<typeparamref name="TStorage"/>) into the execution grid data domain lookup dictionary mapping coordinates to <typeparamref name="TRuntime"/> nodes.
 		/// </summary>
 		/// <param name="storageData">The baked primitive storage container to decode.</param>
 		/// <returns>An $O(1)$ spatial lookup dictionary mapping grid coordinates to runtime grid nodes.</returns>
-		Dictionary<Vec2Int, TRuntime> Hydrate(in TStorage storageData);
+		TRuntime Hydrate(in TStorage storageData);
 	}
+
+
+	public interface IRegionDataCodex :
+	ITileDataCodex<IDictionary<ushort, List<(Vec2Int position, TileTerrainData data)>>,
+	 RegionStorageData,
+	 Dictionary<Vec2Int, GridNode>> { }
 }
