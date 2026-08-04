@@ -99,6 +99,6 @@ namespace Kope.Feature.PathFindingNew.Storage {
 	/// </summary>
 	public abstract class GridDataStorageBase : GridDataStorageBaseGeneric
 	<IDictionary<ushort, List<(Vec2Int position, TileTerrainData data)>>, GridNode> {
-		public abstract Dictionary<ushort, List<Vec2Int>> RegionArea { get; }
+		public abstract Dictionary<ushort, Vec2Int[]> RegionTilePositions { get; }
 	}
 }

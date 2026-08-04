@@ -59,10 +59,18 @@ namespace Kope.Feature.PathFindingNew.Storage {
 		/// <returns>An $O(1)$ spatial lookup dictionary mapping grid coordinates to runtime grid nodes.</returns>
 		TRuntime Hydrate(in TStorage storageData);
 	}
-
+	public class RuntimeDataCache {
+		public Dictionary<Vec2Int, GridNode> GridData { get; }
+		public Dictionary<ushort, Vec2Int[]> RegionData { get; }
+		public RuntimeDataCache(Dictionary<Vec2Int, GridNode> gridData,
+		Dictionary<ushort, Vec2Int[]> regionData) {
+			this.GridData = gridData;
+			this.RegionData = regionData;
+		}
+	}
 
 	public interface IRegionDataCodex :
 	ITileDataCodex<IDictionary<ushort, List<(Vec2Int position, TileTerrainData data)>>,
 	 RegionStorageData,
-	 Dictionary<Vec2Int, GridNode>> { }
+	 RuntimeDataCache> { }
 }

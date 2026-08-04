@@ -159,6 +159,7 @@ public readonly struct GridNode : System.IEquatable<GridNode> {
 	/// <param name="b">Target grid position.</param>
 	/// <param name="toCostMultiplier">Cost multiplier of the destination tile.</param>
 	/// <returns>The estimated heuristic cost <c>h(n)</c> to reach the target.</returns>
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static int ManhattanDistanceTo(Vec2Int a, Vec2Int b, float toCostMultiplier = 1f) {
 		int distance = Vec2Int.ManhattanDistanceTo(a, b);
 		return Mathf.RoundToInt(distance * toCostMultiplier) * DIRECT_COST;
@@ -172,6 +173,7 @@ public readonly struct GridNode : System.IEquatable<GridNode> {
 	/// <param name="b">Target grid position.</param>
 	/// <param name="toCostMultiplier">Cost multiplier of the destination tile.</param>
 	/// <returns>The estimated straight-line heuristic cost <c>h(n)</c> to reach the target.</returns>
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static int EuclideanDistanceTo(Vec2Int a, Vec2Int b, float toCostMultiplier = 1f) {
 		return Mathf.RoundToInt(Vec2Int.EuclideanDistanceTo(a, b) * toCostMultiplier) * DIRECT_COST;
 	}
@@ -184,6 +186,7 @@ public readonly struct GridNode : System.IEquatable<GridNode> {
 	/// <param name="b">Target grid position.</param>
 	/// <param name="toCostMultiplier">Cost multiplier of the destination tile.</param>
 	/// <returns>The estimated 8-way heuristic cost <c>h(n)</c> to reach the target.</returns>
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static int OctileDistanceTo(Vec2Int a, Vec2Int b, float toCostMultiplier = 1f) {
 		return Mathf.RoundToInt(Vec2Int.OctileDistanceTo(a, b) * toCostMultiplier) * DIAGONAL_COST;
 	}
@@ -194,26 +197,27 @@ public readonly struct GridNode : System.IEquatable<GridNode> {
 	/// <summary>
 	/// Evaluates equality based strictly on spatial position (unique key per tile).
 	/// </summary>
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public bool Equals(GridNode other) {
 		return this.position == other.position;
 	}
-
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public override bool Equals(object obj) {
 		return obj is GridNode other && this.Equals(other);
 	}
-
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public override int GetHashCode() {
 		return this.position.GetHashCode();
 	}
-
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator ==(GridNode left, GridNode right) {
 		return left.Equals(right);
 	}
-
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator !=(GridNode left, GridNode right) {
 		return !left.Equals(right);
 	}
-
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public override string ToString() {
 		return $"GridNode(Position: {this.position}, MovementType: {this.movementType}, IsTraversable: {this.isTraversable}, " +
 			   $"MoveCostMultiplier: {this.moveCostMultiplier}, SwimCostMultiplier: {this.swimCostMultiplier}, FlyCostMultiplier: {this.flyCostMultiplier})";

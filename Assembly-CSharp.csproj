@@ -62,7 +62,6 @@
     <Compile Include="Assets/_Project/Scripts/Features/AnimationCurve/Curve.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/AStarOnly/Utility/Gizmos/GizmoPlaybackController.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/StatBased/ResistanceStatModifierEffect.cs" />
-    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/AStarOnly/AStar/PathFindindManager.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/AStarOnly/Utility/Common/SpatialBitPacker.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/ConcreteClass/AreaTargeting/AreaTargetingStrategy3D.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/AStarOnly/AStar/PathFindingNode.cs" />
@@ -75,6 +74,7 @@
     <Compile Include="Assets/_Project/Scripts/Features/PathFinding/AStarOnly/Utility/Common/Vec2Int.cs" />
     <Compile Include="Assets/_Project/Scripts/UI/UIState/InGameUI/GameplayUIController.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/HealBased/HealEffectSetting.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/AStarOnly/AStar/PathFindingService.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Ability/ExampleAbility.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/HealBased/InstantHealEffect.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/Inventory/PlayerItemCollector.cs" />
@@ -121,6 +121,7 @@
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Targeting/ConcreteClass/AreaTargeting/AreaTargetingStrategy.cs" />
     <Compile Include="Assets/_Project/Scripts/Managers/ItemDragDropManager.cs" />
     <Compile Include="Assets/_Project/Scripts/UI/Menu/TabController.cs" />
+    <Compile Include="Assets/_Project/Scripts/Features/PathFinding/AStarOnly/Graph/RegionSplitCheckLookUp.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/DamageBased/DamageEffectSetting.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Ability/HealBased/HealAbility.cs" />
     <Compile Include="Assets/_Project/Scripts/Features/AbilitySystem/Effect/StatBased/BasicStatModifierEffect.cs" />

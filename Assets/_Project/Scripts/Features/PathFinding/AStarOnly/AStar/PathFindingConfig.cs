@@ -103,6 +103,18 @@ namespace Kope.Feature.PathFindingNew.PathFinding {
 			Greediness = greediness;
 		}
 
+		public PathFindingResult CopyWithNewPath(List<Vec2Int> newPath) {
+			return new PathFindingResult(
+				Status,
+				newPath,
+				TotalNodes,
+				TotalNodeEvaluations,
+				TotalNodeExpansions,
+				CostCalculationType,
+				Greediness
+			);
+		}
+
 	}
 
 

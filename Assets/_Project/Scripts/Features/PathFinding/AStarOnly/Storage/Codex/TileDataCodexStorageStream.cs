@@ -60,7 +60,7 @@ namespace Kope.Feature.PathFindingNew.Storage {
 		}
 
 		/// <inheritdoc />
-		public Dictionary<Vec2Int, GridNode> Hydrate(in RegionStorageData storageData) =>
+		public RuntimeDataCache Hydrate(in RegionStorageData storageData) =>
 			HydrateStatic(in storageData);
 
 
@@ -142,16 +142,17 @@ namespace Kope.Feature.PathFindingNew.Storage {
 		/// </summary>
 		/// <param name="storageData">The packed primitive storage container to decode.</param>
 		/// <returns>An $O(1)$ runtime grid dictionary containing hydrated <see cref="GridNode"/> structures.</returns>
-		public static Dictionary<Vec2Int, GridNode> HydrateStatic(in RegionStorageData storageData) {
+		public static RuntimeDataCache HydrateStatic(in RegionStorageData storageData) {
 			ushort[] regionIds = storageData.RegionId;
 			GridStorageData[] regionData = storageData.RegionData;
 
 			int count = regionData.Length;
 
 			// Pre-allocate exact dictionary capacity to eliminate internal rehashing/resizing overhead in Grid Domain
+			var regionDataDict = new Dictionary<ushort, Vec2Int[]>(count);
 			var tileDict = new Dictionary<Vec2Int, GridNode>(count);
 
-			if (count == 0) return tileDict;
+			if (count == 0) return new RuntimeDataCache(tileDict, new Dictionary<ushort, Vec2Int[]>());
 
 			// ======================================================================================
 			// FAST SEQUENTIAL READ OVER STREAM BUFFERS
@@ -161,17 +162,20 @@ namespace Kope.Feature.PathFindingNew.Storage {
 				int jcount = regionData[i].PackedPosition.Length;
 				ushort regionId = regionIds[i];
 				var currentRegionData = regionData[i];
+				Vec2Int[] regionPositions = new Vec2Int[jcount];
+
 				for (int j = 0; j < jcount; j++) {
+					// 1. Unpack 2D vector coordinate
+					Vec2Int pos = SpatialBitPacker.UnpackVec2(currentRegionData.PackedPosition[j]);
+					// fill the region positions array for this region
+					regionPositions[j] = pos;
+
+					// 2. Unpack boolean traversability
+					bool traversable = SpatialBitPacker.ConvertByteToBool(currentRegionData.IsTraversable[j]);
 
 					// just grab the current region's data for this tile index
 					var tileType = currentRegionData.TileType[j];
 					var allowedCapabilities = currentRegionData.AllowedCapabilities[j];
-
-					// 1. Unpack 2D vector coordinate
-					Vec2Int pos = SpatialBitPacker.UnpackVec2(currentRegionData.PackedPosition[j]);
-					// 2. Unpack boolean traversability
-					bool traversable = SpatialBitPacker.ConvertByteToBool(currentRegionData.IsTraversable[j]);
-
 					// 3. Dequantize 30-bit packed cost word into (moveCost, swimCost, flyCost)
 					(float moveCost, float swimCost, float flyCost) = SpatialBitPacker.UnpackCostMultipliers(currentRegionData.QCostMultiplier[j]);
 
@@ -187,12 +191,12 @@ namespace Kope.Feature.PathFindingNew.Storage {
 						flyCost
 					);
 				}
+				// 5. Assign the region's positions array to the region dictionary
+				regionDataDict[regionId] = regionPositions;
 			}
 
-			return tileDict;
+			return new RuntimeDataCache(tileDict, regionDataDict);
 		}
-
-
 		#endregion
 	}
 }

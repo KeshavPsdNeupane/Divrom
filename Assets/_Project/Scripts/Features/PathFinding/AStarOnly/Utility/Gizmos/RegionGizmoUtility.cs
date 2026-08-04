@@ -49,7 +49,7 @@ namespace Kope.Feature.PathFindingNew.Baking {
 		/// <param name="labelColor">Color of the region labels. Alpha is always forced to 1 (labels never render transparent), regardless of what's passed in. Defaults to white.</param>
 		/// <param name="labelBackgroundColor">Background box color behind each label, for readability over the fill. Null uses the default translucent black; pass Color.clear to disable the background entirely.</param>
 		public static void OnGizmoDraw(
-			IReadOnlyDictionary<ushort, List<Vec2Int>> regionNodePosition,
+			IReadOnlyDictionary<ushort, Vec2Int[]> regionNodePosition,
 			Tilemap tilemap,
 			Color nonTraversableColor,
 			float alpha = 0.6f,
@@ -96,7 +96,7 @@ namespace Kope.Feature.PathFindingNew.Baking {
 
 			// Pass 1: fill every region's tiles first.
 			foreach (var (regionId, positions) in regionNodePosition) {
-				if (positions == null || positions.Count == 0) continue;
+				if (positions == null || positions.Length == 0) continue;
 
 				bool isNonTraversable = regionId == TileTerrainData.NON_TRAVERSABLE_REGION_ID;
 
@@ -117,7 +117,7 @@ namespace Kope.Feature.PathFindingNew.Baking {
 			// gets a label.
 			if (showLabels) {
 				foreach (var (regionId, positions) in regionNodePosition) {
-					if (positions == null || positions.Count == 0) continue;
+					if (positions == null || positions.Length == 0) continue;
 					if (regionId == TileTerrainData.NON_TRAVERSABLE_REGION_ID) continue;
 
 					Vec2Int centroidPosition = GetSampledCentroidPosition(positions);
@@ -166,21 +166,21 @@ namespace Kope.Feature.PathFindingNew.Baking {
 		/// or otherwise non-convex, where the raw average could land in a gap
 		/// that isn't actually part of the region.
 		/// </summary>
-		private static Vec2Int GetSampledCentroidPosition(List<Vec2Int> positionList) {
+		private static Vec2Int GetSampledCentroidPosition(Vec2Int[] positionArray) {
 			long sumX = 0;
 			long sumY = 0;
-			foreach (var position in positionList) {
+			foreach (var position in positionArray) {
 				sumX += position.X;
 				sumY += position.Y;
 			}
 
-			float centroidX = (float)sumX / positionList.Count;
-			float centroidY = (float)sumY / positionList.Count;
+			float centroidX = (float)sumX / positionArray.Length;
+			float centroidY = (float)sumY / positionArray.Length;
 
-			Vec2Int closestPosition = positionList[0];
+			Vec2Int closestPosition = positionArray[0];
 			float closestSqrDist = float.MaxValue;
 
-			foreach (var position in positionList) {
+			foreach (var position in positionArray) {
 				float dx = position.X - centroidX;
 				float dy = position.Y - centroidY;
 				float sqrDist = (dx * dx) + (dy * dy);
@@ -190,7 +190,6 @@ namespace Kope.Feature.PathFindingNew.Baking {
 					closestPosition = position;
 				}
 			}
-
 			return closestPosition;
 		}
 

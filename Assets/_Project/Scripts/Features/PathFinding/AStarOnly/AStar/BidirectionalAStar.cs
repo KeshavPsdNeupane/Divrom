@@ -118,7 +118,7 @@ namespace Kope.Feature.PathFindingNew.PathFinding {
 		// interleaved within one.
 		private readonly GridNode[] _fetchBuffer = new GridNode[8];
 		private readonly GridNode[] _neighbourBuffer = new GridNode[8];
-		private GridNode _startNode, _endNode;
+
 
 #if UNITY_EDITOR
 		private readonly List<Vec2Int> _recorderOpenListCache;
@@ -157,33 +157,6 @@ namespace Kope.Feature.PathFindingNew.PathFinding {
 		}
 
 
-		/// <summary>
-		/// Performs a pre-check to determine if the pathfinding operation is feasible.
-		/// </summary>
-		/// <param name="start">Starting grid coordinate.</param>
-		/// <param name="end">Destination target grid coordinate.</param>
-		/// <param name="movementCapability">Bitmask of movement modes supported by the querying agent.</param>
-		/// <returns>A <see cref="PathFindingResult"/> containing status metadata and execution metrics.</returns>
-		public PathFindingResult PreCheckFeasibility(Vec2Int start, Vec2Int end, MovementCapability movementCapability) {
-			if (this._startNode.Position == this._endNode.Position) {
-				return CreateErrorResult(PathFindingStatus.StartEqualsEnd);
-			}
-			// 2. Reachability check
-			if (this._startNode.RegionId != this._endNode.RegionId) {
-				return CreateErrorResult(PathFindingStatus.UnReachableTarget);
-			}
-
-			// 3. Node Existence & Traversability
-			if (!this._graphManager.TryGetNode(start, out this._startNode) ||
-				!this._graphManager.TryGetNode(end, out this._endNode) ||
-				!this._startNode.IsTraversable(movementCapability) ||
-				!this._endNode.IsTraversable(movementCapability)) {
-				return CreateErrorResult(PathFindingStatus.InvalidStartOrEnd);
-			}
-			return CreateErrorResult(PathFindingStatus.Success);
-		}
-
-
 
 		/// <summary>
 		/// Finds the shortest walkable path between two points using bidirectional Weighted A*.
@@ -198,8 +171,6 @@ namespace Kope.Feature.PathFindingNew.PathFinding {
 			Vec2Int end,
 			MovementCapability movementCapability,
 			PathfindingRecorder recorder = null) {
-			this._startNode = default;
-			this._endNode = default;
 
 			this._forward.Clear();
 			this._backward.Clear();
@@ -357,6 +328,7 @@ namespace Kope.Feature.PathFindingNew.PathFinding {
 
 			ReadOnlySpan<GridNode> neighbors = this._graphManager.TryGetNeighbors(
 				currentRecord.Position,
+				movementCapability,
 				this._fetchBuffer,
 				this._neighbourBuffer,
 				out byte diagonalMask

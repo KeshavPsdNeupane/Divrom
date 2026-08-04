@@ -171,6 +171,7 @@ namespace Kope.Feature.PathFindingNew.PathFinding {
 				// edge correctly instead of guessing from the selected heuristic type.
 				ReadOnlySpan<GridNode> neighbors = this._graphManager.TryGetNeighbors(
 					currentRecord.Position,
+					movementCapability,
 					this._fetchBuffer,
 					this._neighbourBuffer,
 					out byte diagonalMask
@@ -244,14 +245,6 @@ namespace Kope.Feature.PathFindingNew.PathFinding {
 			}
 
 			path.Reverse();
-			// // Decoupled from the recorder on purpose: FinalPath is set straight from the result, so
-			// // FinalPathOnly (and the end-of-animation reveal) works even with recording off.
-			// path = PathSmoother.StringPull(
-			// 	path,
-			// 	(fromPoint, toPoint) => PathSmoother.HasLineOfSight(
-			// 		fromPoint, toPoint,
-			// 		pos => this._graphManager.IsWalkable(pos, movementCapability)
-			// ));
 			return path;
 		}
 	}

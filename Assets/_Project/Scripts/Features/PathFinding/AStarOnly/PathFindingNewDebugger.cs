@@ -38,6 +38,8 @@ public class PathFindingNewDebugger : MonoBehaviour {
 	[SerializeField, Tooltip("If true, the reachability check will be performed before pathfinding. Use" +
 	" with caution as it may lead to invalid paths.")]
 	private bool doReachabilityCheck = true;
+	[SerializeField, Tooltip("If true, the final path will be smoothed using string pulling. Disable for raw path output.")]
+	private bool stringPulling = true;
 
 	[Header("Recording Settings")]
 	[SerializeField, Tooltip(
@@ -107,7 +109,7 @@ public class PathFindingNewDebugger : MonoBehaviour {
 			return;
 		}
 
-		this._graphManager = new GraphManager(this.graphDataStorage.GridNodeDict);
+		this._graphManager = new GraphManager(this.graphDataStorage.GridNodeDict, this.graphDataStorage.RegionTilePositions);
 
 		PathFindingConfig config = new(
 			this.costCalculationType,
@@ -156,6 +158,7 @@ public class PathFindingNewDebugger : MonoBehaviour {
 			endVec,
 			this.capability,
 			this.doReachabilityCheck,
+			this.stringPulling,
 			this.enableRecording ? PathGizmos.Recorder : null
 		);
 		stopwatch.Stop();
@@ -169,8 +172,9 @@ public class PathFindingNewDebugger : MonoBehaviour {
 		if (this.enableRecording) {
 			resultLogBuilder.AppendLine("<b><color=#FFCC00>Note: Recorder is ACTIVE. This adds overhead to the timing metrics. Disable it for true production speed.</color></b>");
 		}
-		resultLogBuilder.Append($"<b>Algorithm:</b> {this.astarType}");
-		resultLogBuilder.AppendLine($"<b>Do Reachability Check:</b> {this.doReachabilityCheck}");
+		resultLogBuilder.Append($"<b>Algorithm:</b> {this.astarType}\t");
+		resultLogBuilder.Append($"<b>Do Reachability Check:</b> {this.doReachabilityCheck}\t");
+		resultLogBuilder.AppendLine($"<b>String Pulling:</b> {this.stringPulling}");
 		resultLogBuilder.AppendLine($"<b>Settings:</b> Cost: {this.costCalculationType} | Greediness: {this.greediness}");
 		resultLogBuilder.AppendLine(DescribePointRelationship(startVec, endVec));
 		resultLogBuilder.AppendLine($"<b>Timing:</b> {stopwatch.ElapsedMilliseconds}ms / {stopwatch.ElapsedTicks} ticks");
@@ -202,12 +206,15 @@ public class PathFindingNewDebugger : MonoBehaviour {
 		}
 
 		// Warmup run to ensure JIT compilation and cache warming before timing the actual runs.
+
+		// and benchmark are never recorded for replay, so we can pass null for the recorder to avoid overhead.
 		_ = this._pathFindingService.FindPath(
 					startVec,
 					endVec,
 					this.capability,
 					this.doReachabilityCheck,
-					this.enableRecording ? PathGizmos.Recorder : null
+					this.stringPulling,
+					null
 				);
 
 		long totalTicks = 0;
@@ -222,14 +229,18 @@ public class PathFindingNewDebugger : MonoBehaviour {
 		System.Diagnostics.Stopwatch stopwatch = new();
 
 		for (int i = 0; i < this.runCount; i++) {
+
 			stopwatch.Restart();
+			// and benchmark are never recorded for replay, so we can pass null for the recorder to avoid overhead.
 			finalResult = this._pathFindingService.FindPath(
-			   startVec,
-			   endVec,
-			   this.capability,
-			   this.doReachabilityCheck,
-			   this.enableRecording ? PathGizmos.Recorder : null
+				startVec,
+				endVec,
+				this.capability,
+				this.doReachabilityCheck,
+				this.stringPulling,
+				null
 		   );
+
 			stopwatch.Stop();
 
 			long ticks = stopwatch.ElapsedTicks;
@@ -242,29 +253,34 @@ public class PathFindingNewDebugger : MonoBehaviour {
 			totalMilliseconds += ms;
 		}
 
-		// Calculate Mean (Average)
+		// 1. Calculate Mean (Average)
 		double avgTicks = (double)totalTicks / this.runCount;
 		double avgMs = (double)totalMilliseconds / this.runCount;
 
-		// Calculate Median
-		Array.Sort(runTicks);
-		Array.Sort(runMilliseconds);
+		// 2. Clone array data before sorting so chronological order is preserved for individual breakdown logging
+		long[] sortedTicks = (long[])runTicks.Clone();
+		long[] sortedMs = (long[])runMilliseconds.Clone();
 
+		Array.Sort(sortedTicks);
+		Array.Sort(sortedMs);
+
+		// 3. Calculate Median using sorted arrays
 		double medianTicks;
 		double medianMs;
 		int mid = this.runCount / 2;
 		if (this.runCount % 2 == 0) {
-			medianTicks = (runTicks[mid - 1] + runTicks[mid]) / 2.0;
-			medianMs = (runMilliseconds[mid - 1] + runMilliseconds[mid]) / 2.0;
+			medianTicks = (sortedTicks[mid - 1] + sortedTicks[mid]) / 2.0;
+			medianMs = (sortedMs[mid - 1] + sortedMs[mid]) / 2.0;
 		} else {
-			medianTicks = runTicks[mid];
-			medianMs = runMilliseconds[mid];
+			medianTicks = sortedTicks[mid];
+			medianMs = sortedMs[mid];
 		}
 
 		StringBuilder resultLogBuilder = new();
 		resultLogBuilder.AppendLine("<b><color=#00FFFF>=== PATHFINDING N-TIMES BENCHMARK RESULT ===</color></b>");
-		resultLogBuilder.Append($"<b>Algorithm:</b> {this.astarType}");
-		resultLogBuilder.AppendLine($"\t<b>Do Reachability Check:</b> {this.doReachabilityCheck}");
+		resultLogBuilder.AppendLine($"<b>Algorithm:</b> {this.astarType}");
+		resultLogBuilder.Append($"<b>Do Reachability Check:</b> {this.doReachabilityCheck}\t");
+		resultLogBuilder.AppendLine($"<b>String Pulling:</b> {this.stringPulling}");
 		resultLogBuilder.AppendLine(DescribePointRelationship(startVec, endVec));
 		resultLogBuilder.AppendLine($"<b>Settings:</b> Cost: {this.costCalculationType} | Greediness: {this.greediness} | Runs: {this.runCount}");
 		resultLogBuilder.AppendLine($"<b>Mean (Average):</b> {avgMs:F2}ms / {avgTicks:F1} ticks per run");
@@ -273,8 +289,9 @@ public class PathFindingNewDebugger : MonoBehaviour {
 		// Append full path details only once using the existing helper method
 		AppendResultLog(resultLogBuilder, finalResult, startVec.ToString(), endVec.ToString());
 
-		resultLogBuilder.AppendLine("<b>--- Individual Run Breakdown ---</b>");
+		resultLogBuilder.AppendLine("<b>--- Individual Run Breakdown (Chronological) ---</b>");
 		for (int i = 0; i < this.runCount; i++) {
+			// Logs individual runs in actual execution order
 			resultLogBuilder.AppendLine($"Run {i + 1}: {runMilliseconds[i]}ms / {runTicks[i]} ticks");
 		}
 		resultLogBuilder.AppendLine("------------------------------------------------------------------------------------------------------------------");

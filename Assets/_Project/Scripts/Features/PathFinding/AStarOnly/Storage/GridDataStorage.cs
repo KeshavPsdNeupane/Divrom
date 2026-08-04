@@ -40,17 +40,15 @@ namespace Kope.Feature.PathFindingNew.Storage {
 		/// <summary>
 		/// A dictionary mapping region IDs to the list of tile positions that belong to that region.
 		/// </summary>
-		private Dictionary<ushort, List<Vec2Int>> _regionArea;
-
-		private Dictionary<Vec2Int, GridNode> _gridNodeDict;
+		private RuntimeDataCache _runtimeDataCache;
 
 		/// <inheritdoc />
 		public override Dictionary<Vec2Int, GridNode> GridNodeDict {
 			get {
-				if (this._gridNodeDict == null) {
+				if (this._runtimeDataCache == null) {
 					BuildRuntimeCache();
 				}
-				return this._gridNodeDict;
+				return this._runtimeDataCache.GridData;
 			}
 		}
 
@@ -58,33 +56,22 @@ namespace Kope.Feature.PathFindingNew.Storage {
 		// why this is not directly serialized from the Codex? Because Codex is for storage, 
 		// and this is a editor gizmo visualization, which is not needed at runtime. So we keep 
 		// it separate to avoid unnecessary data in the build.
-		public override Dictionary<ushort, List<Vec2Int>> RegionArea {
+		public override Dictionary<ushort, Vec2Int[]> RegionTilePositions {
 			get {
-				if (this._regionArea == null) {
-					if (this._gridNodeDict == null) {
-						BuildRuntimeCache();
-					}
-
-					this._regionArea = this._gridNodeDict.AsValueEnumerable()
-						.GroupBy(kvp => kvp.Value.RegionId)
-						.ToDictionary(
-							group => group.Key,
-							group => group.AsValueEnumerable().Select(kvp => kvp.Key).ToList()
-						);
+				if (this._runtimeDataCache == null) {
+					BuildRuntimeCache();
 				}
-
-				return this._regionArea;
+				return this._runtimeDataCache.RegionData;
 			}
 		}
 #endif
 
 		/// <inheritdoc />
 		public override void ClearRuntimeCache() {
-			this._regionArea?.Clear();
-			this._gridNodeDict?.Clear();
+			this._runtimeDataCache?.GridData.Clear();
+			this._runtimeDataCache?.RegionData.Clear();
 
-			this._regionArea = null;
-			this._gridNodeDict = null;
+			this._runtimeDataCache = null;
 		}
 
 
@@ -96,7 +83,7 @@ namespace Kope.Feature.PathFindingNew.Storage {
 		/// Hydrates internal bit-packed storage (`TileStorageData`) into the active runtime dictionary (`GridNode`).
 		/// </summary>
 		private void BuildRuntimeCache() {
-			this._gridNodeDict ??= TileDataCodexStorageStream.HydrateStatic(this._regionStorageData);
+			this._runtimeDataCache ??= TileDataCodexStorageStream.HydrateStatic(this._regionStorageData);
 		}
 	}
 }

@@ -69,12 +69,14 @@ namespace Kope.Feature.PathFindingNew.PathFinding {
 		/// <param name="gCost">The movement cost from the start node.</param>
 		/// <param name="hCost">The heuristic cost to the target goal.</param>
 		/// <param name="parentPosition">The grid coordinate of the parent node.</param>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public PathFindingNode(int x, int y, int gCost, int hCost, Vec2Int parentPosition) {
 			this.Position = new Vec2Int(x, y);
 			this.GCost = gCost;
 			this.HCost = hCost;
 			this.ParentPosition = parentPosition;
 		}
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public PathFindingNode(Vec2Int position, int gCost, int hCost, Vec2Int parentPosition = default) {
 			this.Position = position;
 			this.GCost = gCost;

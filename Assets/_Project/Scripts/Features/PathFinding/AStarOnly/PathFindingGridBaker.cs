@@ -208,10 +208,10 @@ namespace Kope.Feature.PathFindingNew.Baking {
 			if (this.terrainTilemap == null) return;
 
 #if UNITY_EDITOR
-			if (this.showRegion && this.gridDataStorage != null && this.gridDataStorage.RegionArea != null
-			&& this.gridDataStorage.RegionArea.Count > 0) {
+			if (this.showRegion && this.gridDataStorage != null && this.gridDataStorage.RegionTilePositions != null
+			&& this.gridDataStorage.RegionTilePositions.Count > 0) {
 				RegionGizmoUtility.OnGizmoDraw(
-					this.gridDataStorage.RegionArea,
+					this.gridDataStorage.RegionTilePositions,
 					this.terrainTilemap,
 					this.nonTraversableRegionColor,
 					this.regionGizmoAlpha,

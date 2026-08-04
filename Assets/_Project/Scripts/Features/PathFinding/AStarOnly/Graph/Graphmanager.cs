@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using Kope.EntityIdentity;
 using Kope.Feature.PathFindingNew.Utility;
 using UnityEngine;
+
 
 namespace Kope.Feature.PathFindingNew.Graph {
 
@@ -66,16 +68,22 @@ namespace Kope.Feature.PathFindingNew.Graph {
             };
 		}
 
-		private const int INITIAL_CAPACITY = 512;
+		private const int INITIAL_NODE_CAPACITY = 512;
+		private const int INITIAL_REGION_CAPACITY = 32;
+
+		private readonly Dictionary<ushort, Vec2Int[]> regionTilePositions;
 		private readonly Dictionary<Vec2Int, GridNode> nodes;
 		public int TotalNodeCount => nodes.Count;
 
 		public GraphManager() {
-			nodes = new Dictionary<Vec2Int, GridNode>(INITIAL_CAPACITY);
+			nodes = new Dictionary<Vec2Int, GridNode>(INITIAL_NODE_CAPACITY);
+			regionTilePositions = new Dictionary<ushort, Vec2Int[]>(INITIAL_REGION_CAPACITY);
 		}
 
-		public GraphManager(Dictionary<Vec2Int, GridNode> nodes) {
+		public GraphManager(Dictionary<Vec2Int, GridNode> nodes, Dictionary<ushort, Vec2Int[]> regionTilePositions) {
 			this.nodes = nodes;
+			this.regionTilePositions = regionTilePositions;
+			//LogSize();
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -83,20 +91,18 @@ namespace Kope.Feature.PathFindingNew.Graph {
 			return nodes.ContainsKey(position);
 		}
 
-
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public bool TryGetNode(Vec2Int position, out GridNode node) {
 			return nodes.TryGetValue(position, out node);
 		}
 
-		/// <summary>
-		/// Backward-compatible overload for callers that don't need per-neighbor diagonal info
-		/// (e.g. editor/visualization code). Forwards to the full overload and discards the mask.
-		/// </summary>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public ReadOnlySpan<GridNode> TryGetNeighbors(Vec2Int position, GridNode[] fetchBuffer, Span<GridNode> neighborsBuffer) {
-			return TryGetNeighbors(position, fetchBuffer, neighborsBuffer, out _);
+		public bool IsWalkable(Vec2Int position, MovementCapability movementCapability) {
+			return nodes.TryGetValue(position, out GridNode node) && node.IsTraversable(movementCapability);
 		}
+
+
+
 
 		/// <summary>
 		/// Tries to find and filter valid 8-directional neighbors for a node at the specified position.
@@ -114,7 +120,8 @@ namespace Kope.Feature.PathFindingNew.Graph {
 		/// </list>
 		/// </para>
 		/// </summary>
-		/// <param name="position">The grid coordinate of the node whose neighbors are being evaluated.</param>
+		/// <param name="position">The grid coordinate of the node whose neighbors are being evaluated.</param>\
+		/// <param name="movementCapability">The movement capability used to filter walkable neighbors.</param>
 		/// <param name="fetchBuffer">A scratchpad array (at least length 8) used to temporarily hold raw spatial lookups.</param>
 		/// <param name="neighborsBuffer">A span/array container where final walkability-filtered and rule-validated neighbors are written.</param>
 		/// <param name="diagonalMask">
@@ -125,28 +132,14 @@ namespace Kope.Feature.PathFindingNew.Graph {
 		/// </param>
 		/// <returns>A zero-allocation <see cref="ReadOnlySpan{GridNode}"/> view representing the valid subset of filtered neighbors.</returns>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public ReadOnlySpan<GridNode> TryGetNeighbors(Vec2Int position, GridNode[] fetchBuffer,
-		 Span<GridNode> neighborsBuffer, out byte diagonalMask) {
-			// NOTE: no longer clearing fetchBuffer here. The second pass below only ever reads
-			// fetchBuffer[i] when walkableMask's bit i is set, and walkableMask is a fresh local
-			// that only gets bits set for slots actually written in the first pass this call —
-			// so a stale slot from a previous invocation can never be read. The clear was pure
-			// overhead on a buffer touched every single node expansion in the search loop.
+		public ReadOnlySpan<GridNode> TryGetNeighbors(Vec2Int position, MovementCapability movementCapability,
+		 GridNode[] fetchBuffer, Span<GridNode> neighborsBuffer, out byte diagonalMask) {
 			byte walkableMask = 0;
-
 			for (int i = 0; i < 8; i++) {
 				Vec2Int nPos = position + Constants.NEIGHBOR_OFFSET[i];
 
-				if (nodes.TryGetValue(nPos, out GridNode nNode)) {
+				if (nodes.TryGetValue(nPos, out GridNode nNode) && nNode.IsTraversable(movementCapability)) {
 #if UNITY_EDITOR
-					// Diagnostic only — zero cost in builds. AStar.FindPath trusts GridNode.Position
-					// (baked into the struct when the grid was built), NOT the dictionary key nPos
-					// that was just used to look it up, when it computes neighborPos for cost/path
-					// calculations. If those two ever disagree, the search will silently walk to
-					// whatever position GridNode.Position claims instead of the actual neighbor cell —
-					// which can look like the search "skipping" or "jumping" across cells. This check
-					// catches that the moment a mismatched node is fetched, so you can trace it back
-					// to whatever populates GridNodeDict.
 					if (nNode.Position != nPos) {
 						Debug.LogError(
 							$"[Graphmanager] Node position mismatch: dictionary key {nPos} holds a GridNode " +
@@ -191,7 +184,7 @@ namespace Kope.Feature.PathFindingNew.Graph {
 		/// use by the benchmark suite (<c>PathFindingNewDebugger.RunBenchmarkSuite</c>). Both ends
 		/// of a pair are drawn independently, so a pair may occasionally land on the same node or
 		/// on two disconnected nodes — the benchmark's warmup call already treats
-		/// <see cref="Kope.Feature.PathFindingNew.PathFinding.PathFindingStatus.InvalidStartOrEnd"/> as a skip, and a
+		/// <see cref="PathFinding.PathFindingStatus.InvalidStartOrEnd"/> as a skip, and a
 		/// same-node or no-path pair is still a valid (if trivial/zero-length) timing sample, so
 		/// no extra filtering is done here.
 		/// </summary>
@@ -212,8 +205,49 @@ namespace Kope.Feature.PathFindingNew.Graph {
 
 			return pairs;
 		}
-		public bool IsWalkable(Vec2Int position, MovementCapability movementCapability) {
-			return nodes.TryGetValue(position, out GridNode node) && node.IsTraversable(movementCapability);
+
+
+		private void LogSize() {
+			// --- 1. NODES DICTIONARY CALCULATION ---
+			// Change 'isGridNodeClass' to true if GridNode is a 'class', false if it is a 'struct'
+			bool isGridNodeClass = false;
+
+			int nodeCapacity = nodes.Count; // Estimate (Dictionaries allocate in capacity buckets)
+			int vec2Size = 8; // Vec2Int is 2x int32 = 8 bytes
+			int gridNodeValueSize = isGridNodeClass ? 8 : Marshal.SizeOf<GridNode>(); // Pointer vs Struct
+
+			// Entry struct = int hashCode (4B) + int next (4B) + Vec2Int key (8B) + GridNode value
+			int nodeEntrySize = 16 + gridNodeValueSize;
+
+			long nodesDictMemory = 64                               // Dictionary instance overhead
+								 + 24 + (nodeCapacity * 4)        // int[] buckets array header + elements
+								 + 24 + (nodeCapacity * nodeEntrySize); // Entry[] entries array header + elements
+
+			if (isGridNodeClass) {
+				// If GridNode is a class, add heap overhead (24B header + fields) per instance
+				nodesDictMemory += nodes.Count * (24 + Marshal.SizeOf<GridNode>());
+			}
+
+			// --- 2. REGION DICTIONARY CALCULATION ---
+			int regionCapacity = regionTilePositions.Count;
+			// Entry struct = int hashCode (4B) + int next (4B) + ushort key (2B + 2B pad) + Vec2Int[] ref (8B) = 20B (padded to 24B)
+			int regionEntrySize = 24;
+
+			long regionDictMemory = 64
+								  + 24 + (regionCapacity * 4)
+								  + 24 + (regionCapacity * regionEntrySize);
+
+			// Add actual heap memory used by all Vec2Int[] child arrays
+			foreach (var tileArray in regionTilePositions.Values) {
+				if (tileArray != null) {
+					// 24-byte C# array header + (length * 8 bytes per Vec2Int)
+					regionDictMemory += 24 + (tileArray.Length * vec2Size);
+				}
+			}
+
+			Debug.Log($"[GraphManager] Initialized with {nodes.Count} nodes and {regionTilePositions.Count} regions.");
+			Debug.Log($"Nodes Dict: {nodesDictMemory} bytes (~{nodesDictMemory / 1024f:F1} KB) | Region Dict: {regionDictMemory} bytes (~{regionDictMemory / 1024f:F1} KB)");
+
 		}
 	}
 }

@@ -1,6 +1,7 @@
 using System;
 using Kope.EntityIdentity;
 using Kope.Feature.PathFindingNew.Interface;
+using Kope.Feature.PathFindingNew.Utility;
 using UnityEngine;
 
 namespace Kope.Feature.PathFindingNew.Tile {
@@ -108,6 +109,18 @@ namespace Kope.Feature.PathFindingNew.Tile {
 	[Serializable]
 	public struct TileTerrainData : ITerrainData<TileTerrainData> {
 		/// <summary>
+		/// Minimum cost multiplier bound (<c>0.1f</c>), cascaded directly from <see cref="SpatialBitPacker.MIN_COST_MULT"/>.<br/>
+		/// <b>Note:</b> Ensures 1:1 alignment with SpatialBitPacker's 10-bit LUT to prevent cost distortion.
+		/// </summary>
+		public const float MIN_COST_MULT = SpatialBitPacker.MIN_COST_MULT;
+
+		/// <summary>
+		/// Maximum cost multiplier bound (<c>10.0f</c>), cascaded directly from <see cref="SpatialBitPacker.MAX_COST_MULT"/>.<br/>
+		/// <b>Note:</b> Ensures 1:1 alignment with SpatialBitPacker's 10-bit LUT to prevent cost distortion.
+		/// </summary>
+		public const float MAX_COST_MULT = SpatialBitPacker.MAX_COST_MULT;
+
+		/// <summary>
 		/// Sentinel region ID assigned to tiles that do not belong to any traversable region.
 		/// </summary>
 		/// <remarks>
@@ -154,7 +167,7 @@ namespace Kope.Feature.PathFindingNew.Tile {
 		)]
 		private MovementCapability _allowedCapabilities;
 
-		[SerializeField, Range(0.1f, 10f), Tooltip(
+		[SerializeField, Range(MIN_COST_MULT, MAX_COST_MULT), Tooltip(
 			"Pathfinding cost multiplier when traversing on Ground (Move):\n" +
 			"• 1.0 = Baseline standard cost\n" +
 			"• < 1.0 = Preferred route (e.g. paved road, smooth stone)\n" +
@@ -163,14 +176,14 @@ namespace Kope.Feature.PathFindingNew.Tile {
 		)]
 		private float _moveCostMultiplier;
 
-		[SerializeField, Range(0.1f, 10f), Tooltip(
+		[SerializeField, Range(MIN_COST_MULT, MAX_COST_MULT), Tooltip(
 			"Pathfinding cost multiplier when traversing via Water (Swim):\n" +
 			"• Defines path weight for swimming entities.\n" +
 			"• Lower values encourage aquatic/swimming agents to route through water body channels."
 		)]
 		private float _swimCostMultiplier;
 
-		[SerializeField, Range(0.1f, 10f), Tooltip(
+		[SerializeField, Range(MIN_COST_MULT, MAX_COST_MULT), Tooltip(
 			"Pathfinding cost multiplier when traversing via Air (Fly):\n" +
 			"• Defines path weight for flying units.\n" +
 			"• Allows flyers to prefer direct routes across chasms or mountains that block ground units."
