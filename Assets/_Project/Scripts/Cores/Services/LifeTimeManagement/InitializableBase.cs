@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using Kope.Core.Collections.Extensions;
 using UnityEngine;
 namespace Kope.Core.LifeTimeManagement {
@@ -26,6 +27,11 @@ namespace Kope.Core.LifeTimeManagement {
 		/// </summary>
 		public bool IsInitialized { get; protected set; } = false;
 
+		/// <summary>
+		/// To log the error message only once when the component is not initialized.
+		/// this prevent spamming the console with the same error message.
+		/// </summary>
+		private bool _alreadyLoggedInitWarning = false;
 		/// <summary>
 		/// Cached string representation of the full GameObject transform tree route to this component.
 		/// </summary>
@@ -102,10 +108,11 @@ namespace Kope.Core.LifeTimeManagement {
 		/// Logs a detailed warnings tracking path if called while <see cref="IsInitialized"/> remains false.
 		/// </summary>
 		public virtual void CheckInit() {
-			if (!this.IsInitialized) {
+			if (!this.IsInitialized && !this._alreadyLoggedInitWarning) {
 				Debug.LogWarning($"[The component {this.GetType().Name}] has not been initialized. " +
 				$"Call Init() on {this.HieararchyPath}." +
 				$" Is it registered in InitLifecycleManager?", this);
+				this._alreadyLoggedInitWarning = true;
 			}
 		}
 		#endregion
@@ -133,8 +140,9 @@ namespace Kope.Core.LifeTimeManagement {
 		#endregion
 
 		#region  Helper Methods
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		private void GeneratePath() {
-			this._hiearchyPath = $"(GameObject):{this.GetGameObjectHierarchyPath()}";
+			this._hiearchyPath = this.GetFullHierarchyPath();
 		}
 		#endregion
 	}

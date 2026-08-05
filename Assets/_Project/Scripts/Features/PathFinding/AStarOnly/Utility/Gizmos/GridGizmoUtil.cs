@@ -19,10 +19,12 @@ namespace Kope.Feature.PathFindingNew.Utility {
 		/// <summary>World-space size of one grid cell along X and Y. Change this if your grid isn't unit-sized.</summary>
 		public const float CellSize = 1f;
 
-		/// <summary>Fraction of CellSize actually drawn, leaving a thin gap between adjacent cells so the grid reads clearly in the Scene view.</summary>
+		/// <summary>Fraction of CellSize actually drawn, leaving a thin gap between adjacent 
+		/// cells so the grid reads clearly in the Scene view.</summary>
 		private const float FillRatio = 0.95f;
 
-		/// <summary>Depth thickness of the flat slab along Z — just enough for DrawCube to render as a visible plate rather than a zero-depth plane.</summary>
+		/// <summary>Depth thickness of the flat slab along Z — just enough for DrawCube to 
+		/// render as a visible plate rather than a zero-depth plane.</summary>
 		private const float SlabThickness = 0.02f;
 
 		/// <summary>

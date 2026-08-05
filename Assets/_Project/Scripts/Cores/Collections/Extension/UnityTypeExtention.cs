@@ -1,4 +1,5 @@
 
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace Kope.Core.Collections.Extensions {
@@ -15,6 +16,7 @@ namespace Kope.Core.Collections.Extensions {
 		/// </summary>
 		/// <param name="obj"></param>
 		/// <returns></returns>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static string GetFullHierarchyPath(this MonoBehaviour behaviour) {
 			return $"(GameObjectPath: {behaviour.GetGameObjectHierarchyPath()})";
 		}

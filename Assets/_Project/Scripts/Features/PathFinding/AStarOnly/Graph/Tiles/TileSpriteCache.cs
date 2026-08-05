@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Text;
 using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 
@@ -11,7 +13,7 @@ namespace Kope.Feature.PathFindingNew.Utility {
 	/// The cache is cleared when the application is loaded to ensure that no 
 	/// stale sprites are kept in memory.
 	/// </summary>
-	public static partial class TileSpriteCache {
+	public static partial class SpriteTextureCache {
 		[AutoStaticsCleanup]
 		private static readonly Dictionary<Color32, Sprite> Cache = new();
 		/// <summary>
@@ -43,10 +45,20 @@ namespace Kope.Feature.PathFindingNew.Utility {
 				1f
 			);
 
-			newSprite.name = $"HHSI_Tile_Cache_{color32.r}_{color32.g}_{color32.b}";
+			newSprite.name = $"SPRITE_TEXT_{color32.r}_{color32.g}_{color32.b}";
 			Cache[color32] = newSprite;
 
 			return newSprite;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Texture2D GetOrCreateTexture(Color color) {
+			// so that we don't create a new sprite, but just return the texture
+			// this is useful for the region gizmo utility, which needs to draw a texture
+			// instead of a sprite, and we don't want to create a new sprite for every
+			// region, since that would be wasteful and unnecessary
+			// we can just use the same texture for all regions of the same color
+			return GetOrCreate(color).texture;
 		}
 
 		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -64,6 +76,15 @@ namespace Kope.Feature.PathFindingNew.Utility {
 				Object.Destroy(sprite);
 			}
 			Cache.Clear();
+		}
+
+		public static void DisplayCacheContents() {
+			StringBuilder sb = new();
+			sb.AppendLine($"SpriteTextureCache contains {Cache.Count} entries:");
+			foreach (var kvp in Cache) {
+				sb.AppendLine($"Color: {kvp.Key}, Sprite: {kvp.Value.name}");
+			}
+			Debug.Log(sb.ToString());
 		}
 	}
 }

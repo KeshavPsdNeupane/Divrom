@@ -8,6 +8,7 @@ using Kope.Core.EntityComponentRegistry;
 using Kope.Actor.States;
 using Kope.EntityComponentSystem;
 using Kope.AI.AIBlackBoard;
+using Kope.AI.Interface;
 
 namespace Kope.AI {
 
@@ -208,6 +209,12 @@ namespace Kope.AI {
 			this._currentPlanEnumerator = null;
 		}
 		#endregion
-	}
 
+
+		public void OnDrawGizmos() {
+			if (this._currentAction != null && this._currentAction is IGizmoDrawable gizmoAction) {
+				gizmoAction.DrawGizmos();
+			}
+		}
+	}
 }

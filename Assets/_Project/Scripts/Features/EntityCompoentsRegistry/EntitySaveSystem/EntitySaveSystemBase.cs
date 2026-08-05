@@ -10,7 +10,7 @@ namespace Kope.Core.Identity {
 	public abstract class EntitySaveSystemBase<TConfig, TDetail, TPacket> : MonoBehaviour
 		where TConfig : EntityConfig {
 
-		[SerializeField] protected EntityInstanceNew entityInstance;
+		[SerializeField] protected EntityInstance entityInstance;
 
 		// SaveId -> concrete component instance, rebuilt per entity each time components
 		// are (re)registered. This is the ONLY place component ids get resolved to a type/
@@ -20,7 +20,10 @@ namespace Kope.Core.Identity {
 		// is not, since only one concrete type for a given id can exist on it at once.
 		private readonly Dictionary<string, ISaveable> _saveIdToComponent = new();
 
-		protected SavableEntityRegistry _savableEntityRegistry;
+		// Registered into EntityRegistry independently of EntityInstance's own
+		// registration - this system only ever touches the save-provider tables and
+		// never the live mob/prop entity tables. EntityInstance has no idea this happens.
+		protected EntityRegistry _entityRegistry;
 
 		public HashedTag UniqueID {
 			get {
@@ -41,16 +44,15 @@ namespace Kope.Core.Identity {
 
 			var registry = this.entityInstance.ComponentsRegistryForSaveSystemOnly;
 			registry.Register(this);
-			this.entityInstance.SetSavable(true);
 
-			if (!ServiceLocator.SceneServiceLocator.Instance.TryGetService<SavableEntityRegistry>(out var savableRegistry)) {
-				Debug.LogError($"[{GetType().Name}] No SavableEntityRegistry found in the scene." +
-				" Please ensure that a SavableEntityRegistry is present and properly initialized " +
+			if (!ServiceLocator.SceneServiceLocator.Instance.TryGetService<EntityRegistry>(out var entityRegistry)) {
+				Debug.LogError($"[{GetType().Name}] No EntityRegistry found in the scene." +
+				" Please ensure that an EntityRegistry is present and properly initialized " +
 				$"in the scene for EntitySaveSystem to function correctly.{this.GetFullHierarchyPath()}", this.gameObject);
 				return;
 			}
 
-			this._savableEntityRegistry = savableRegistry;
+			this._entityRegistry = entityRegistry;
 			RegisterSaveDataChunk();
 			RegisterToGlobalRegistry();
 		}
@@ -92,7 +94,7 @@ namespace Kope.Core.Identity {
 		}
 
 		private void UnRegisterTheEntity(EntityDetailBase detail) {
-			this._savableEntityRegistry.UnregisterEntity(this.UniqueID);
+			this._entityRegistry.UnregisterEntity(this.UniqueID);
 		}
 
 		protected abstract void RegisterToGlobalRegistry();

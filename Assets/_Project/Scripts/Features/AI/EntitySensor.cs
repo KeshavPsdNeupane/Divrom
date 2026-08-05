@@ -51,7 +51,7 @@ public class EntitySensor : SensorBase {
 			Debug.LogWarning($"[EntitySensor] Context is not assigned for {gameObject.name}. Cannot register detected entity." + this._parentGOHiearchPathMessage);
 			return;
 		}
-		var entityInstance = other.GetComponentInParent<EntityInstanceNew>();
+		var entityInstance = other.GetComponentInParent<EntityInstance>();
 		if (entityInstance == null) return;
 		this.contextNew.RegisterEntityContext(entityInstance.EntityDetail);
 	}
@@ -61,7 +61,7 @@ public class EntitySensor : SensorBase {
 			Debug.LogWarning($"[EntitySensor] Context is not assigned for {gameObject.name}. Cannot remove detected entity." + this._parentGOHiearchPathMessage);
 			return;
 		}
-		var entityInstance = other.GetComponentInParent<EntityInstanceNew>();
+		var entityInstance = other.GetComponentInParent<EntityInstance>();
 
 		if (entityInstance == null) return;
 		this.contextNew.RemoveEntityContext(entityInstance.EntityDetail);

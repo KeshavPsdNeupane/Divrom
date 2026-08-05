@@ -43,14 +43,7 @@ namespace Kope.Core.LifeTimeManagement {
 		protected virtual void Awake() {
 			if (this.canSelfServe) {
 				Init();
-				// check after the init to make sure all components are initialized, if not log a warning
 				CheckInit();
-				// Debug.Log($"[{this.name}] InitLifecycleManager Awake completed. " +
-				// $"InitCount: {_initializable.Count}, UpdateCount: {_updatables.Count}," +
-				// $" FixedUpdateCount: {_fixedUpdatables.Count}", this);
-				// foreach (var init in _initializable) {
-				// 	Debug.Log($"[{init.GetType().Name}] IsInitialized: {init.IsInitialized}", (MonoBehaviour)init);
-				// }
 			}
 		}
 
@@ -151,7 +144,8 @@ namespace Kope.Core.LifeTimeManagement {
 					return;
 				}
 
-				// If it is a container (like ECR), we process the container itself first so it can register dependencies internally
+				// If it is a container (like ECR), we process the container itself first 
+				// so it can register dependencies internally
 				if (!this._initializable.Contains(initable)) {
 					this._initializable.Add(initable);
 				}

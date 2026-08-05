@@ -3,7 +3,7 @@ using Kope.EntityIdentity;
 
 
 namespace Kope.Core.Identity {
-	public class PropInstance : EntityInstanceNew {
+	public class PropInstance : EntityInstance {
 		[SerializeField] private PropType propType;
 		[SerializeField] private EntityNature nature = EntityNature.STATIC;
 

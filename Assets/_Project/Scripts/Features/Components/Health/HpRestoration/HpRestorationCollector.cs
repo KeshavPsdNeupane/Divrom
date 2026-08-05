@@ -19,7 +19,7 @@ namespace Kope.Component {
 
 		public override void OnDetect(Collider2D other) {
 			if (this.healthComponent == null) return;
-			if (!other.TryGetComponent<EntityInstanceNew>(out var entityInstance)) {
+			if (!other.TryGetComponent<EntityInstance>(out var entityInstance)) {
 				Debug.LogWarning($"[HpRestorationCollector] Detected collider {other.name} does not have an EntityManager component. Cannot restore HP." + this._parentGOHiearchPathMessage, other.gameObject);
 				return;
 			}

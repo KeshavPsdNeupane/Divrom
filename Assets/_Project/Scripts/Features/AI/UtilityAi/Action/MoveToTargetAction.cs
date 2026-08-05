@@ -1,12 +1,13 @@
 using System;
 using Kope.AI.AIBlackBoard;
+using Kope.AI.Interface;
 using Kope.AI.Utility;
 using Kope.Component.Movement;
 using ThirdParty;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "MoveTowardAction", menuName = "Scriptable Objects/AI/Utility/Actions/MoveTowardAction")]
-public class MoveTowardAction : ActionSO {
+public class MoveTowardAction : ActionSO, IGizmoDrawable {
 	[SerializeField, Tooltip("This defines the deadzone around the target." +
 	"If this entity is near this radius the action will be assumed to be completed, and the entity will stop moving." +
 	"Finally make sure this is almost same as the deadzone defined in the TargetDistanceConsideration to avoid jittery movement" +
@@ -129,4 +130,13 @@ public class MoveTowardAction : ActionSO {
 	}
 
 
+	public void DrawGizmos() {
+		if (this._readOnlyTargetTransform == null) return;
+		var targetPosition = this._readOnlyTargetTransform.position;
+		var currentPosition = this._selfMovementComponent.Position;
+		// just draw line to the target position, since the deadzone is already 
+		// visualized by the TargetDistanceConsideration
+		Gizmos.color = Color.yellow;
+		Gizmos.DrawLine(targetPosition, currentPosition);
+	}
 }

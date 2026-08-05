@@ -8,7 +8,7 @@ namespace Kope.Core.Identity {
 	PropEntitySavePacket>, IPropEntitySavePacketProvider {
 
 		protected override void RegisterToGlobalRegistry() {
-			this._savableEntityRegistry.RegisterPropEntity(this);
+			this._entityRegistry.RegisterSavableEntity(this);
 		}
 
 		protected override PropEntitySavePacket CreateSavePacket(HashedTag uid, PropConfig config, Dictionary<string, ISaveData> data) {

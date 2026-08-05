@@ -7,7 +7,7 @@ namespace Kope.EntityComponentSystem {
 	/// <remarks>
 	/// This is a marker interface used to identify types that can be stored, queried,
 	/// and managed by the ECS. It intentionally defines no members, allowing components
-	/// to remain lightweight and focused solely on holding data.
+	/// to remain lightweight and focused solely on their data and the logic they encapsulate.
 	/// <br/><br/>
 	/// Components are typically implemented as small, modular types that describe a
 	/// specific aspect of an entity, such as health, movement, inventory, or state.
@@ -47,7 +47,7 @@ namespace Kope.EntityComponentSystem {
 	/// <list type="bullet">
 	/// <item>
 	/// <description><see cref="IInitializable"/> is a primitive, low-level contract. System managers 
-	/// or data assets can be initializable <i>without</i> being ECS components.</description>
+	/// or data assets can be initializable <i>without</i> being ECR components.</description>
 	/// </item>
 	/// <item>
 	/// <description>A component, however, can never bypass the explicit initialization loop. All 
@@ -59,7 +59,7 @@ namespace Kope.EntityComponentSystem {
 	/// <para>
 	///  <b>IMPORTANT ARCHITECTURAL ADVICE</b>:<br/>
 	/// Never inherit from <see cref="ComponentBase"/> or implement <see cref="IComponent"/> on a UI script. 
-	/// User Interface (UI) elements exist outside the domain boundaries of the ECS system. They are presentation 
+	/// User Interface (UI) elements exist outside the domain boundaries of the ECR system. They are presentation 
 	/// layer scripts, not gameplay entity components, and should not be registered or treated as part of the core ECS.
 	/// </para>
 	/// </remarks>

@@ -34,8 +34,8 @@ namespace Kope.Feature.PathFindingNew.Baking {
 		// A 1x1 texture reused across draws for the label's background box —
 		// cheaper than an actual text outline, and only regenerated when the
 		// requested background color actually changes.
-		private static Texture2D _labelBackgroundTexture;
-		private static Color _labelBackgroundTextureColor;
+		private static Texture2D LABEL_BACKGROUND_TEXTURE;
+		private static Color LABEL_BACKGROUND_TEXTURE_COLOR;
 
 		/// <summary>
 		/// Draws colored Gizmos for all regions, including Region 0 (non-traversable),
@@ -201,19 +201,9 @@ namespace Kope.Feature.PathFindingNew.Baking {
 		/// don't reallocate a texture each time.
 		/// </summary>
 		private static Texture2D GetOrCreateLabelBackgroundTexture(Color color) {
-			if (_labelBackgroundTexture != null && _labelBackgroundTextureColor == color) {
-				return _labelBackgroundTexture;
-			}
-
-			if (_labelBackgroundTexture == null) {
-				_labelBackgroundTexture = new Texture2D(1, 1) { hideFlags = HideFlags.HideAndDontSave };
-			}
-
-			_labelBackgroundTexture.SetPixel(0, 0, color);
-			_labelBackgroundTexture.Apply();
-			_labelBackgroundTextureColor = color;
-
-			return _labelBackgroundTexture;
+			// delegate to the shared sprite/texture cache, so we don't have to manage a separate 
+			// texture cache just for this utility
+			return SpriteTextureCache.GetOrCreateTexture(color);
 		}
 #endif
 

@@ -14,7 +14,7 @@ namespace Kope.Feature.PathFindingNew.TBase {
 	}
 	public abstract class GridTileBase<T> : GridTile<T> where T : struct, ITerrainData<T> {
 		public override void GetTileData(Vector3Int position, ITilemap tilemap, ref TileData tileData) {
-			tileData.sprite = TileSpriteCache.GetOrCreate(this.data.TileColor);
+			tileData.sprite = SpriteTextureCache.GetOrCreate(this.data.TileColor);
 			tileData.color = Color.white;
 			tileData.flags = TileFlags.None;
 		}

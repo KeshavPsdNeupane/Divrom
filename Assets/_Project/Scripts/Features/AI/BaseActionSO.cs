@@ -2,7 +2,14 @@ using System;
 using UnityEngine;
 using Kope.Core.EntityComponentRegistry;
 using Kope.AI.AIBlackBoard;
+using System.Runtime.CompilerServices;
 
+
+namespace Kope.AI.Interface {
+	public interface IGizmoDrawable {
+		void DrawGizmos();
+	}
+}
 namespace Kope.AI {
 	public enum ExecutionActionStatus : short {
 		NotInitialized = 0,
@@ -10,6 +17,7 @@ namespace Kope.AI {
 		Success = 20,
 		Failure = 99
 	}
+
 
 	/// <summary>
 	/// Base action type for any AI system.
@@ -88,7 +96,6 @@ namespace Kope.AI {
 		protected abstract void OnEndOrAbort();
 		public abstract void TickUpdate();
 		public abstract void TickFixedUpdate();
-
 
 
 		/// <summary>

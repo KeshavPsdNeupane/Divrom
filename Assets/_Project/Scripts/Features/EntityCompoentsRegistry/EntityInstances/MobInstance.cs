@@ -3,7 +3,7 @@ using Kope.EntityIdentity;
 
 namespace Kope.Core.Identity {
 
-	public class MobInstance : EntityInstanceNew {
+	public class MobInstance : EntityInstance {
 		[SerializeField] private EntityRelation relation;
 		[SerializeField] private RaceEnum race;
 		[SerializeField] private GenderEnum gender;
@@ -11,10 +11,20 @@ namespace Kope.Core.Identity {
 		public override EntityType Type => EntityType.MOB;
 		private MobConfig _cachedConfig;
 		private MobEntityDetail _cachedDetail;
+
+
+
 		public override EntityConfig Config {
 			get {
 				this._cachedConfig ??= new MobConfig(entityName, relation, race, gender);
 				return this._cachedConfig;
+			}
+		}
+
+		public bool IsPlayer {
+			get {
+				this._cachedConfig ??= (MobConfig)this.Config;
+				return this._cachedConfig.Relation == EntityRelation.PLAYER;
 			}
 		}
 

@@ -8,7 +8,7 @@ namespace Kope.Core.Identity {
 	MobEntitySavePacket>, IMobEntitySavePacketProvider {
 
 		protected override void RegisterToGlobalRegistry() {
-			this._savableEntityRegistry.RegisterMobEntity(this);
+			this._entityRegistry.RegisterSavableEntity(this);
 		}
 
 		protected override MobEntitySavePacket CreateSavePacket(HashedTag uid, MobConfig config, Dictionary<string, ISaveData> data) {
